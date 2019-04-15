@@ -10,4 +10,6 @@ public abstract class Agent
 	public abstract void move(double dx, double dy);
 	
 	public Point2D.Double getPosition() {return position;}
+	
+	public boolean alive = true;
 }

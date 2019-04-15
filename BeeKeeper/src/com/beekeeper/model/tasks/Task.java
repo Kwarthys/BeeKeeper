@@ -1,5 +1,6 @@
 package com.beekeeper.model.tasks;
 
+import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.parameters.ModelParameters;
 
 public abstract class Task
@@ -17,7 +18,11 @@ public abstract class Task
 		threshold += ModelParameters.TASK_FORGET_RATE;
 	}
 	
+	public abstract boolean checkInterrupt(StimuliLoad load);
+	
+	public abstract double compute(StimuliLoad load);
+	
 	public abstract void execute();
 	
-	public void interrupt(){}
+	public abstract void interrupt();
 }

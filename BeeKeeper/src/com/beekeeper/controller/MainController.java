@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import com.beekeeper.ihm.BeeDrawer;
 import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.model.agent.AdultBee;
-import com.beekeeper.model.agent.Agent;
 
 public class MainController
 {
-	ArrayList<Agent> bees = new ArrayList<>();
+	ArrayList<AdultBee> bees = new ArrayList<>();
 	BeeWindow w;
 	private BeeDrawer drawer;
 	
@@ -30,14 +29,20 @@ public class MainController
 	{
 		while(true)
 		{
-			for(Agent bee : bees)
+			for(AdultBee bee : bees)
 			{
 				bee.live();
 			}
 
-			System.out.println("aaaaaaaaa");
 			this.drawer.setBees(bees);
 			this.w.repaint();
+			
+			try {
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
