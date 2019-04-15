@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.beekeeper.model.stimuli.StimuliLoad;
-import com.beekeeper.model.stimuli.pheromones.PheromoneLoad;
+import com.beekeeper.model.stimuli.external.ExternalStimuliLoad;
 import com.beekeeper.model.tasks.Task;
 
 public class AdultBee extends EmptyBee
@@ -16,7 +16,7 @@ public class AdultBee extends EmptyBee
 	public AdultBee()
 	{
 		fillTaskList();
-		this.position = new Point2D.Double(Math.random()*300, Math.random()*300);
+		this.position = new Point2D.Double(Math.random()*600, Math.random()*600);
 
 		this.energy = Math.random();
 	}
@@ -112,7 +112,7 @@ public class AdultBee extends EmptyBee
 
 	private StimuliLoad getStimuliLoad()
 	{
-		return new StimuliLoad(new PheromoneLoad(), this.energy);
+		return new StimuliLoad(this.pheromoneLoad, this.energy);
 	}
 
 	private Task forageForWork()

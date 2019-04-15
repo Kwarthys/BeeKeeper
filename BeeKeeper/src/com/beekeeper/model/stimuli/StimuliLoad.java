@@ -1,15 +1,15 @@
 package com.beekeeper.model.stimuli;
 
-import com.beekeeper.model.stimuli.pheromones.PheromoneLoad;
+import com.beekeeper.model.stimuli.external.ExternalStimuliLoad;
 
 public class StimuliLoad
 {
-	public PheromoneLoad phs;
+	public ExternalStimuliLoad phs;
 	public double beeEnergy;
 	
-	public StimuliLoad(PheromoneLoad phs, double beeEnergy)
+	public StimuliLoad(ExternalStimuliLoad exts, double beeEnergy)
 	{
-		this.phs = phs;
+		this.phs = exts;
 		this.beeEnergy = beeEnergy;
 	}
 }
