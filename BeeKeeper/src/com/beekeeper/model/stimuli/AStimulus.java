@@ -1,7 +1,5 @@
 package com.beekeeper.model.stimuli;
 
-import java.awt.geom.Point2D;
-
 import com.beekeeper.model.stimuli.external.ExternalStimuli;
 
 public abstract class AStimulus
@@ -10,16 +8,13 @@ public abstract class AStimulus
 	protected double transmissibility;
 	protected ExternalStimuli type;
 	
-	protected Point2D.Double emiterAgentPos;
-	
 	protected double amount;
 	
 	public ExternalStimuli getStimulusType() {return type;}
 	
-	public AStimulus(Point2D.Double agentPos, double d)
+	public AStimulus(double d)
 	{
 		this.amount = d;
-		this.emiterAgentPos = agentPos;
 	}
 
 	public void evaporate()
@@ -29,6 +24,11 @@ public abstract class AStimulus
 		{
 			amount = 0;
 		}
+	}
+	
+	public void add(double amount)
+	{
+		this.amount += amount;
 	}
 	
 	public double getAmount() {return this.amount;}

@@ -20,9 +20,9 @@ public class MainController
 	
 	public MainController()
 	{
-		sManager = new StimuliManager();	
+		sManager = new StimuliManager(bees);	
 		
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 50; i++)
 		{
 			bees.add(new AdultBee(sManager.getNewServices()));
 		}
@@ -33,6 +33,8 @@ public class MainController
 		}
 		
 		this.drawer = new BeeDrawer();
+		MainController.this.drawer.setBees(bees);
+		
 		new BeeWindow(drawer);
 		
 		programLoop();
@@ -52,7 +54,6 @@ public class MainController
 			SwingUtilities.invokeLater(new Runnable() {				
 				@Override
 				public void run() {
-					MainController.this.drawer.setBees(bees);
 					MainController.this.drawer.repaint();					
 				}
 			});

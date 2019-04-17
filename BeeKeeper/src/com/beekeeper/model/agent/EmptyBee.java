@@ -16,6 +16,8 @@ public abstract class EmptyBee extends Agent
 	{
 		this.stimuliManagerServices = stimuliManagerServices;
 		setEnergy(Math.random()*0.8+0.2);
+		
+		pheromoneLoad = new ExternalStimuliLoad(this.position);
 	}
 	
 	public BeeType getBeeType() {return this.type;}

@@ -1,48 +1,32 @@
 package com.beekeeper.model.stimuli.external;
 
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 
-import com.beekeeper.parameters.ModelParameters;
+import com.beekeeper.model.stimuli.AStimulus;
 
 public class ExternalStimuliLoad
 {	
-	private HashMap<ExternalStimuli, Double> pheromonesLoadMap = new HashMap<>();
-
+	private HashMap<ExternalStimuli, AStimulus> pheromonesLoadMap = new HashMap<>();
+	public Point2D.Double emiterPos;
 	
-	public ExternalStimuliLoad hungerLarvae(double amount)
+	public ExternalStimuliLoad(Point2D.Double pos)
 	{
-		pheromonesLoadMap.put(ExternalStimuli.HungryLarvae, amount);
-		return this;
+		this.emiterPos = pos;
 	}
 	
-	private ExternalStimuliLoad addAny(ExternalStimuli key, double amount)
+	public ExternalStimuliLoad emit(AStimulus s)
 	{
+		ExternalStimuli key = s.getStimulusType();
+		double amount = s.getAmount();
 		if(pheromonesLoadMap.containsKey(key))
 		{
-			pheromonesLoadMap.put(key, amount + pheromonesLoadMap.get(key));
+			pheromonesLoadMap.get(key).add(amount);
 		}
 		else
 		{
-			pheromonesLoadMap.put(key, amount);			
+			pheromonesLoadMap.put(key, s);			
 		}
-		return this;
-	}
-
-	
-	public ExternalStimuliLoad addHngerLarvae(double amount)
-	{
-		return addAny(ExternalStimuli.HungryLarvae, amount);
-	}
-	
-	public ExternalStimuliLoad hungerBee(double amount)
-	{
-		pheromonesLoadMap.put(ExternalStimuli.HungerBee, amount);
-		return this;
-	}
-	
-	public ExternalStimuliLoad dance(double amount)
-	{
-		pheromonesLoadMap.put(ExternalStimuli.Dance, amount);
 		return this;
 	}
 	
@@ -50,7 +34,7 @@ public class ExternalStimuliLoad
 	{
 		if(pheromonesLoadMap.containsKey(p))
 		{
-			return pheromonesLoadMap.get(p);
+			return pheromonesLoadMap.get(p).getAmount();
 		}
 		else
 		{
@@ -60,19 +44,9 @@ public class ExternalStimuliLoad
 
 	public void evaporate()
 	{
-		pheromonesLoadMap.forEach((ph,amount) -> {
-			switch(ph) {
-			case Dance:
-				break;
-			case HungerBee:
-				break;
-			case HungryLarvae:
-				amount *= ModelParameters.TIME_DECAY_HungryLarvae; //NOT the right thing to do
-				break;
-			default:
-				break;
-			
-			}
+		pheromonesLoadMap.forEach((ph,stimulus) -> {
+			stimulus.evaporate();
 		});
+		pheromonesLoadMap.entrySet().removeIf(entry -> entry.getValue().getAmount() == 0);
 	}
 }

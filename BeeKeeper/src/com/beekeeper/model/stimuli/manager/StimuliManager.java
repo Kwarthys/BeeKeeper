@@ -5,7 +5,6 @@ import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
 import com.beekeeper.model.agent.EmptyBee;
-import com.beekeeper.model.stimuli.AStimulus;
 import com.beekeeper.model.stimuli.external.ExternalStimuliLoad;
 
 public class StimuliManager
@@ -20,7 +19,7 @@ public class StimuliManager
 	public ExternalStimuliLoad getAllStimuliAround(Point2D.Double position)
 	{
 		//TODO StimuliManager getAllStimuliAround
-		return new ExternalStimuliLoad();
+		return new ExternalStimuliLoad(null);
 	}
 	
 	public void updateStimuli()
