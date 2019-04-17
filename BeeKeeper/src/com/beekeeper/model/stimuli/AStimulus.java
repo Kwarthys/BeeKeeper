@@ -19,8 +19,8 @@ public abstract class AStimulus
 
 	public void evaporate()
 	{
-		amount *= timeDecay;
-		if(amount > 0.01)
+		amount *= (1-timeDecay);
+		if(amount < 0.01)
 		{
 			amount = 0;
 		}
@@ -28,6 +28,7 @@ public abstract class AStimulus
 	
 	public void add(double amount)
 	{
+		System.out.println("thisamount " + this.amount + " + " + amount);
 		this.amount += amount;
 	}
 	

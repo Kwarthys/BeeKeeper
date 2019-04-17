@@ -2,6 +2,7 @@ package com.beekeeper.model.agent;
 
 import java.awt.geom.Point2D;
 
+import com.beekeeper.model.stimuli.external.ExternalStimuli;
 import com.beekeeper.model.stimuli.external.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
@@ -21,6 +22,7 @@ public class BroodBee extends EmptyBee {
 		if(this.getEnergy() < 0.7)
 		{
 			this.pheromoneLoad.emit(new HungryLarvaeStimulus(0.7-this.getEnergy()));
+			System.out.println(this.ID + " " + this.pheromoneLoad.getPheromoneAmount(ExternalStimuli.HungryLarvae));
 		}
 	}
 

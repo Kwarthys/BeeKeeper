@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.EmptyBee;
+import com.beekeeper.model.stimuli.external.ExternalStimuli;
 
 @SuppressWarnings("serial")
 public class BeeDrawer extends JPanel{
@@ -22,20 +23,27 @@ public class BeeDrawer extends JPanel{
 		
 		for(EmptyBee a : agents)
 		{
+			int x = (int)a.getPosition().x;
+			int y = (int)a.getPosition().y;
+			
 			switch(a.getBeeType())
 			{
 			case ADULT_BEE:
 				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
-				g.fillOval((int)a.getPosition().x-2, (int)a.getPosition().y-2, 4, 4);
+				g.fillOval(x-2, y-2, 4, 4);
 				g.setColor(Color.BLACK);
-				g.drawOval((int)a.getPosition().x-2, (int)a.getPosition().y-2, 4, 4);
+				g.drawOval(x-2, y-2, 4, 4);
 				break;
 			
 			case BROOD_BEE:
+				int phs = (int)(a.getExternalStimuli().getPheromoneAmount(ExternalStimuli.HungryLarvae) * 10);
+				System.out.println(phs);
+				g.setColor(Color.GREEN);
+				g.fillOval(x-phs/2, y-phs/2, phs, phs);
 				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
-				g.fillRect((int)a.getPosition().x-2, (int)a.getPosition().y-2, 4, 4);
+				g.fillRect(x-2, y-2, 4, 4);
 				g.setColor(Color.BLACK);
-				g.drawRect((int)a.getPosition().x-2, (int)a.getPosition().y-2, 4, 4);
+				g.drawRect(x-2, y-2, 4, 4);
 				break;
 			}
 			

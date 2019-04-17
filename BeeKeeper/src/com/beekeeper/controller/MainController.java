@@ -22,14 +22,14 @@ public class MainController
 	{
 		sManager = new StimuliManager(bees);	
 		
-		for(int i = 0; i < 50; i++)
-		{
-			bees.add(new AdultBee(sManager.getNewServices()));
-		}
-		
 		for(int i = 0; i < 5; i++)
 		{
 			bees.add(new BroodBee(sManager.getNewServices()));
+		}
+		
+		for(int i = 0; i < 50; i++)
+		{
+			bees.add(new AdultBee(sManager.getNewServices()));
 		}
 		
 		this.drawer = new BeeDrawer();
