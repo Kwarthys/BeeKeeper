@@ -13,13 +13,14 @@ import com.beekeeper.model.stimuli.manager.StimuliManager;
 
 public class MainController
 {
-	ArrayList<EmptyBee> bees = new ArrayList<>();
-	BeeWindow w;
+	private ArrayList<EmptyBee> bees = new ArrayList<>();
 	private BeeDrawer drawer;
+	
+	private StimuliManager sManager;
 	
 	public MainController()
 	{
-		StimuliManager sManager = new StimuliManager();	
+		sManager = new StimuliManager();	
 		
 		for(int i = 0; i < 5; i++)
 		{
@@ -32,7 +33,7 @@ public class MainController
 		}
 		
 		this.drawer = new BeeDrawer();
-		this.w = new BeeWindow(drawer);
+		new BeeWindow(drawer);
 		
 		programLoop();
 	}
@@ -45,6 +46,8 @@ public class MainController
 			{
 				bee.live();
 			}
+			
+			sManager.updateStimuli();
 			
 			SwingUtilities.invokeLater(new Runnable() {				
 				@Override

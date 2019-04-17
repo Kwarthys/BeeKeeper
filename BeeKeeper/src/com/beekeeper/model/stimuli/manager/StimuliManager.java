@@ -2,23 +2,49 @@ package com.beekeeper.model.stimuli.manager;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.ArrayList;
 
+import com.beekeeper.model.agent.EmptyBee;
 import com.beekeeper.model.stimuli.AStimulus;
 import com.beekeeper.model.stimuli.external.ExternalStimuliLoad;
 
 public class StimuliManager
 {
-
+	private ArrayList<EmptyBee> agents;
+	
+	public StimuliManager(ArrayList<EmptyBee> agents)
+	{
+		this.agents = agents;
+	}
 
 	public ExternalStimuliLoad getAllStimuliAround(Point2D.Double position)
 	{
 		//TODO StimuliManager getAllStimuliAround
-		return null;
+		return new ExternalStimuliLoad();
 	}
-
-	public void emitStimulus(AStimulus s)
+	
+	public void updateStimuli()
 	{
-		// TODO StimuliManager emitStimulus(AStimulus s)
+		for(EmptyBee bee : agents)
+		{
+			ExternalStimuliLoad load = bee.getExternalStimuli();
+			load.evaporate();
+		}
+		
+		/*
+		for(AStimulus s : stimuli)
+		{
+			s.evaporate();
+		}
+		for(int i = 0; i < stimuli.size(); ++i)
+		{
+			if(stimuli.get(i).getAmount() == 0)
+			{
+				stimuli.remove(i);
+				--i;
+			}
+		}
+		*/
 	}
 
 	public StimuliManagerServices getNewServices()
@@ -28,12 +54,6 @@ public class StimuliManager
 			@Override
 			public ExternalStimuliLoad getAllStimuliAround(Double position) {
 				return StimuliManager.this.getAllStimuliAround(position);
-			}
-
-			@Override
-			public void emitStimulus(AStimulus s) {
-				StimuliManager.this.emitStimulus(s);
-
 			}
 		};
 	}

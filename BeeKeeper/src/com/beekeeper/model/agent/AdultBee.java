@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.beekeeper.model.stimuli.StimuliLoad;
+import com.beekeeper.model.stimuli.external.ExternalStimuli;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -77,6 +78,33 @@ public class AdultBee extends EmptyBee
 		idleTask.energyCost = -0.05;
 
 		taskList.add(idleTask);
+		
+		Task feedLarvaeTask = new Task() {			
+			@Override
+			public void execute() {
+				//TODO run towards larvae and feed it
+				System.out.println("Executing LarvaeFeeding");
+			}
+
+			@Override
+			public double compute(StimuliLoad load) {
+				return load.phs.getPheromoneAmount(ExternalStimuli.HungryLarvae);
+			}
+
+			@Override
+			public void interrupt() {
+				currentTask = null;
+			}
+
+			@Override
+			public boolean checkInterrupt(StimuliLoad load) {
+				return load.beeEnergy < 0.2;
+			}
+		};	
+
+		feedLarvaeTask.energyCost = 0.05;
+
+		taskList.add(feedLarvaeTask);
 	}
 
 	public void randomMove()
@@ -87,6 +115,8 @@ public class AdultBee extends EmptyBee
 
 	@Override
 	public void live() {
+		
+		this.pheromoneLoad = stimuliManagerServices.getAllStimuliAround(getPosition());
 		
 		if(currentTask == null)
 		{

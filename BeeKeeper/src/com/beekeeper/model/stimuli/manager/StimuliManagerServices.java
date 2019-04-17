@@ -8,5 +8,4 @@ import com.beekeeper.model.stimuli.external.ExternalStimuliLoad;
 public interface StimuliManagerServices
 {
 	public ExternalStimuliLoad getAllStimuliAround(Point2D.Double position);
-	public void emitStimulus(AStimulus s);
 }
