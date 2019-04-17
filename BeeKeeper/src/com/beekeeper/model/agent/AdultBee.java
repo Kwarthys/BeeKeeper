@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.beekeeper.model.stimuli.StimuliLoad;
-import com.beekeeper.model.stimuli.external.ExternalStimuliLoad;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
 public class AdultBee extends EmptyBee
@@ -13,15 +13,14 @@ public class AdultBee extends EmptyBee
 
 	protected Task currentTask = null;
 
-	public AdultBee()
+	public AdultBee(StimuliManagerServices stimuliManagerServices)
 	{
+		super(stimuliManagerServices);
 		fillTaskList();
 		this.position = new Point2D.Double(Math.random()*600, Math.random()*600);
-
-		this.energy = Math.random();
+		
+		this.type = BeeType.ADULT_BEE;
 	}
-	
-	public double getEnergy() {return this.energy;}
 
 	@Override
 	protected void fillTaskList()
@@ -99,10 +98,9 @@ public class AdultBee extends EmptyBee
 		}
 		else
 		{
-			this.energy -= currentTask.energyCost;
+			this.addToEnergy(-currentTask.energyCost);
 			currentTask.execute();
 		}
-		this.energy = this.energy < 0 ? 0 : this.energy > 1 ? 1 : this.energy; //Clamp energy between 0 and 1
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class AdultBee extends EmptyBee
 
 	private StimuliLoad getStimuliLoad()
 	{
-		return new StimuliLoad(this.pheromoneLoad, this.energy);
+		return new StimuliLoad(this.pheromoneLoad, this.getEnergy());
 	}
 
 	private Task forageForWork()

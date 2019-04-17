@@ -2,21 +2,33 @@ package com.beekeeper.controller;
 
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import com.beekeeper.ihm.BeeDrawer;
 import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.model.agent.AdultBee;
+import com.beekeeper.model.agent.BroodBee;
+import com.beekeeper.model.agent.EmptyBee;
+import com.beekeeper.model.stimuli.manager.StimuliManager;
 
 public class MainController
 {
-	ArrayList<AdultBee> bees = new ArrayList<>();
+	ArrayList<EmptyBee> bees = new ArrayList<>();
 	BeeWindow w;
 	private BeeDrawer drawer;
 	
 	public MainController()
-	{		
-		for(int i = 0; i < 500; i++)
+	{
+		StimuliManager sManager = new StimuliManager();	
+		
+		for(int i = 0; i < 5; i++)
 		{
-			bees.add(new AdultBee());
+			bees.add(new AdultBee(sManager.getNewServices()));
+		}
+		
+		for(int i = 0; i < 5; i++)
+		{
+			bees.add(new BroodBee(sManager.getNewServices()));
 		}
 		
 		this.drawer = new BeeDrawer();
@@ -29,13 +41,18 @@ public class MainController
 	{
 		while(true)
 		{
-			for(AdultBee bee : bees)
+			for(EmptyBee bee : bees)
 			{
 				bee.live();
 			}
-
-			this.drawer.setBees(bees);
-			this.w.repaint();
+			
+			SwingUtilities.invokeLater(new Runnable() {				
+				@Override
+				public void run() {
+					MainController.this.drawer.setBees(bees);
+					MainController.this.drawer.repaint();					
+				}
+			});
 			
 			try {
 				Thread.sleep(30);

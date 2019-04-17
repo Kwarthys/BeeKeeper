@@ -1,15 +1,15 @@
 package com.beekeeper.model.stimuli.external;
 
 import com.beekeeper.model.stimuli.AStimulus;
+import com.beekeeper.parameters.ModelParameters;
 
 public class HungryLarvaeStimulus extends AStimulus
-{
-	private static double timeDecayHL = 0.1;
-	private static double transmissibilityHL = 0.1;
-	
-	public HungryLarvaeStimulus()
+{	
+	public HungryLarvaeStimulus(double d)
 	{
-		this.timeDecay = timeDecayHL;
-		this.transmissibility = transmissibilityHL;
+		super(d);
+		this.timeDecay = ModelParameters.TIME_DECAY_HungryLarvae;
+		this.transmissibility = ModelParameters.TRANSMISSIBILITY_HungryLarvae;
+		this.type = ExternalStimuli.HungryLarvae;
 	}
 }

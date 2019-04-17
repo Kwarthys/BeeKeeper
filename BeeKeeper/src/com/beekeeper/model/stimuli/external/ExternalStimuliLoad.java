@@ -9,7 +9,7 @@ public class ExternalStimuliLoad
 	
 	public ExternalStimuliLoad hungerLarvae(double amount)
 	{
-		pheromonesLoadMap.put(ExternalStimuli.HungerLarvae, amount);
+		pheromonesLoadMap.put(ExternalStimuli.HungryLarvae, amount);
 		return this;
 	}
 	
