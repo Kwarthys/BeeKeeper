@@ -1,8 +1,5 @@
 package com.beekeeper.model.agent;
 
-import java.awt.geom.Point2D;
-
-import com.beekeeper.model.stimuli.Stimuli;
 import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
@@ -11,8 +8,7 @@ public class BroodBee extends EmptyBee {
 
 	public BroodBee(StimuliManagerServices stimuliManagerServices) {
 		super(stimuliManagerServices);
-		this.type = BeeType.BROOD_BEE;		
-		this.position = new Point2D.Double(Math.random()*6, Math.random()*6);
+		this.type = BeeType.BROOD_BEE;
 		
 		this.stimuliLoad = new StimuliLoad(this.position);
 	}

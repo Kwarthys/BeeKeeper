@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class StimuliLoad
 {	
-	private HashMap<Stimuli, AStimulus> pheromonesLoadMap = new HashMap<>();
+	private HashMap<Stimulus, AStimulus> pheromonesLoadMap = new HashMap<>();
 	public Point2D.Double emiterPos;
 	
 	public StimuliLoad(Point2D.Double pos)
@@ -13,14 +13,14 @@ public class StimuliLoad
 		this.emiterPos = pos;
 	}
 	
-	public HashMap<Stimuli, AStimulus> getMapCopy()
+	public HashMap<Stimulus, AStimulus> getMapCopy()
 	{
-		return new HashMap<Stimuli, AStimulus>(pheromonesLoadMap);
+		return new HashMap<Stimulus, AStimulus>(pheromonesLoadMap);
 	}
 	
 	public StimuliLoad emit(AStimulus s)
 	{
-		Stimuli key = s.getStimulusType();
+		Stimulus key = s.getStimulusType();
 		double amount = s.getAmount();
 		if(pheromonesLoadMap.containsKey(key))
 		{
@@ -33,11 +33,23 @@ public class StimuliLoad
 		return this;
 	}
 	
-	public double getPheromoneAmount(Stimuli p)
+	public double getPheromoneAmount(Stimulus p)
 	{
 		if(pheromonesLoadMap.containsKey(p))
 		{
 			return pheromonesLoadMap.get(p).getAmount();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	public double getSensedStimulusAmount(Stimulus p, double distance)
+	{
+		if(pheromonesLoadMap.containsKey(p))
+		{
+			return pheromonesLoadMap.get(p).getAmountOverDistance(distance);
 		}
 		else
 		{

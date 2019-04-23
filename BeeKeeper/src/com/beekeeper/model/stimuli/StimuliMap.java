@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 public class StimuliMap
 {
-	private HashMap<Stimuli, Double> amounts = new HashMap<>();
+	private HashMap<Stimulus, Double> amounts = new HashMap<>();
 	
-	public void addAmount(Stimuli type, double amount)
+	public void addAmount(Stimulus type, double amount)
 	{
 		if(amounts.containsKey(type))
 		{
@@ -18,7 +18,7 @@ public class StimuliMap
 		}
 	}
 	
-	public double getAmount(Stimuli type)
+	public double getAmount(Stimulus type)
 	{
 		if(amounts.containsKey(type))
 		{

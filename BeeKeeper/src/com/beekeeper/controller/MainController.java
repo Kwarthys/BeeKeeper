@@ -1,5 +1,6 @@
 package com.beekeeper.controller;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
@@ -7,6 +8,7 @@ import javax.swing.SwingUtilities;
 import com.beekeeper.ihm.BeeDrawer;
 import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.model.agent.AdultBee;
+import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.BroodBee;
 import com.beekeeper.model.agent.EmptyBee;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
@@ -20,16 +22,33 @@ public class MainController
 	
 	public MainController()
 	{
+		MainControllerServices controlServices = new MainControllerServices() {			
+			@Override
+			public BroodBee getLarvaeByPos(Point2D.Double larvaePos) {
+				for(EmptyBee bee : bees)
+				{
+					if(bee.getBeeType() == BeeType.BROOD_BEE)
+					{
+						if(larvaePos.equals(bee.getPosition()))
+						{
+							return (BroodBee) bee;
+						}
+					}
+				}
+				return null;
+			}
+		};
+		
 		sManager = new StimuliManager(bees);	
 		
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < 50; i++)
 		{
 			bees.add(new BroodBee(sManager.getNewServices()));
 		}
 		
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < 50; i++)
 		{
-			bees.add(new AdultBee(sManager.getNewServices()));
+			bees.add(new AdultBee(sManager.getNewServices(), controlServices));
 		}
 		
 		this.drawer = new BeeDrawer();

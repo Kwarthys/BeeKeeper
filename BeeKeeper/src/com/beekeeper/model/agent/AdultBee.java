@@ -3,7 +3,8 @@ package com.beekeeper.model.agent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import com.beekeeper.model.stimuli.Stimuli;
+import com.beekeeper.controller.MainControllerServices;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
@@ -15,15 +16,13 @@ public class AdultBee extends EmptyBee
 
 	protected Task currentTask = null;
 
-	public AdultBee(StimuliManagerServices stimuliManagerServices)
+	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		super(stimuliManagerServices);
 		fillTaskList();
-		this.position = new Point2D.Double(Math.random()*6, Math.random()*6);
-		
-		this.type = BeeType.ADULT_BEE;
-		
+		this.controllerServices = controllerServices;	
 		this.stimuliLoad = new StimuliLoad(this.position);
+		this.type = BeeType.ADULT_BEE;		
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class AdultBee extends EmptyBee
 		Task randomMoveTask = new Task() {			
 			@Override
 			public void execute() {
-				System.out.println("random walk");
+				//System.out.println("random walk");
 				AdultBee.this.randomMove();
 			}
 
@@ -52,7 +51,7 @@ public class AdultBee extends EmptyBee
 			}
 		};	
 
-		randomMoveTask.energyCost = 0.02;
+		randomMoveTask.energyCost = 0.01;
 
 		taskList.add(randomMoveTask);
 
@@ -60,7 +59,7 @@ public class AdultBee extends EmptyBee
 		Task idleTask = new Task() {			
 			@Override
 			public void execute() {
-				System.out.println("Resting");
+				//System.out.println("Resting");
 			}
 
 			@Override
@@ -82,17 +81,39 @@ public class AdultBee extends EmptyBee
 		idleTask.energyCost = -0.05;
 
 		taskList.add(idleTask);
-		
-		Task feedLarvaeTask = new Task() {			
+
+		Task feedLarvaeTask = new Task() {
+
+			private BroodBee target = null;
+
 			@Override
-			public void execute() {
-				//TODO run towards larvae and feed it
-				System.out.println("Executing LarvaeFeeding");
+			public void execute() {				
+				if(target == null)
+				{
+					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
+					target = controllerServices.getLarvaeByPos(targetpos);
+				}
+
+				if(target.getPosition().distance(getPosition()) < 0.1)
+				{
+					if(target.isHungry())
+					{
+						target.receiveFood(0.3);
+					}
+					else
+					{
+						this.interrupt();
+					}
+				}
+				else
+				{
+					AdultBee.this.moveTowards(target.getPosition());
+				}
 			}
 
 			@Override
 			public double compute(StimuliMap load) {
-				return load.getAmount(Stimuli.HungryLarvae);
+				return load.getAmount(Stimulus.HungryLarvae);
 			}
 
 			@Override
@@ -111,6 +132,19 @@ public class AdultBee extends EmptyBee
 		taskList.add(feedLarvaeTask);
 	}
 
+	protected void moveTowards(Point2D.Double position)
+	{
+		double speed = 0.5;
+		
+		double dx = position.getX() - this.position.getX();
+		double dy = position.getY() - this.position.getY();
+
+		dx = dx > speed ? speed : dx < -speed ? -speed : dx;
+		dy = dy > speed ? speed : dy < -speed ? -speed : dy;
+
+		move(dx, dy);
+	}
+
 	public void randomMove()
 	{
 		double speed = 1.0;
@@ -119,10 +153,10 @@ public class AdultBee extends EmptyBee
 
 	@Override
 	public void live() {
-		
+
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());
-		
-		
+
+
 		if(currentTask == null)
 		{
 			currentTask = forageForWork(s);
@@ -148,9 +182,9 @@ public class AdultBee extends EmptyBee
 	private Task forageForWork(StimuliMap load)
 	{
 		Task todo = taskList.get(0);
-		double taskScore = todo.compute(load);
-		
-		System.out.println(this.ID + " sensing " + load.getAmount(Stimuli.HungryLarvae) + ", energy at " + getEnergy());
+		double taskScore = todo.checkInterrupt(load) ? 0 : todo.compute(load);
+
+		//System.out.println(this.ID + " sensing " + load.getAmount(Stimuli.HungryLarvae) + ", energy at " + getEnergy());
 
 		for(int ti = 1; ti < taskList.size(); ++ti)
 		{
