@@ -8,4 +8,8 @@ public class ModelParameters
 
 	public static final double TIME_DECAY_HungryLarvae = 0.1;
 	public static final double TRANSMISSIBILITY_HungryLarvae = 0.5;
+	public static final double SMELL_RANGE_HungryLarvae = 0.9;
+	
+	
+	public static final double SMELL_THRESHOLD = 0.001;
 }

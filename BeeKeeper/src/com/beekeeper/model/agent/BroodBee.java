@@ -2,17 +2,19 @@ package com.beekeeper.model.agent;
 
 import java.awt.geom.Point2D;
 
-import com.beekeeper.model.stimuli.external.ExternalStimuli;
-import com.beekeeper.model.stimuli.external.HungryLarvaeStimulus;
+import com.beekeeper.model.stimuli.Stimuli;
+import com.beekeeper.model.stimuli.StimuliLoad;
+import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public class BroodBee extends EmptyBee {
 
 	public BroodBee(StimuliManagerServices stimuliManagerServices) {
 		super(stimuliManagerServices);
-		this.type = BeeType.BROOD_BEE;
+		this.type = BeeType.BROOD_BEE;		
+		this.position = new Point2D.Double(Math.random()*6, Math.random()*6);
 		
-		this.position = new Point2D.Double(Math.random()*600, Math.random()*600);
+		this.stimuliLoad = new StimuliLoad(this.position);
 	}
 
 	@Override
@@ -21,8 +23,8 @@ public class BroodBee extends EmptyBee {
 		this.addToEnergy(-0.01);
 		if(this.getEnergy() < 0.7)
 		{
-			this.pheromoneLoad.emit(new HungryLarvaeStimulus(0.7-this.getEnergy()));
-			System.out.println(this.ID + " " + this.pheromoneLoad.getPheromoneAmount(ExternalStimuli.HungryLarvae));
+			this.stimuliLoad.emit(new HungryLarvaeStimulus(0.7-this.getEnergy()));
+			//System.out.println(this.ID + " " + this.stimuliLoad.getPheromoneAmount(Stimuli.HungryLarvae));
 		}
 	}
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.EmptyBee;
-import com.beekeeper.model.stimuli.external.ExternalStimuli;
+import com.beekeeper.model.stimuli.Stimuli;
 
 @SuppressWarnings("serial")
 public class BeeDrawer extends JPanel{
@@ -36,8 +36,8 @@ public class BeeDrawer extends JPanel{
 				break;
 			
 			case BROOD_BEE:
-				int phs = (int)(a.getExternalStimuli().getPheromoneAmount(ExternalStimuli.HungryLarvae) * 10);
-				System.out.println(phs);
+				int phs = (int)(a.getExternalStimuli().getPheromoneAmount(Stimuli.HungryLarvae) * 10);
+				//System.out.println(phs);
 				g.setColor(Color.GREEN);
 				g.fillOval(x-phs/2, y-phs/2, phs, phs);
 				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));

@@ -1,13 +1,13 @@
 package com.beekeeper.model.agent;
 
-import com.beekeeper.model.stimuli.external.ExternalStimuliLoad;
+import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public abstract class EmptyBee extends Agent
 {
 	protected abstract void fillTaskList();
 	private double energy;
-	protected ExternalStimuliLoad pheromoneLoad;
+	protected StimuliLoad stimuliLoad;
 	protected StimuliManagerServices stimuliManagerServices;
 	
 	protected BeeType type;
@@ -16,8 +16,6 @@ public abstract class EmptyBee extends Agent
 	{
 		this.stimuliManagerServices = stimuliManagerServices;
 		setEnergy(Math.random()*0.8+0.2);
-		
-		pheromoneLoad = new ExternalStimuliLoad(this.position);
 	}
 	
 	public BeeType getBeeType() {return this.type;}
@@ -29,7 +27,7 @@ public abstract class EmptyBee extends Agent
 	}
 	
 	public double getEnergy() {return this.energy;}
-	public ExternalStimuliLoad getExternalStimuli() {return this.pheromoneLoad;}
+	public StimuliLoad getExternalStimuli() {return this.stimuliLoad;}
 	
 	protected void addToEnergy(double amount)
 	{

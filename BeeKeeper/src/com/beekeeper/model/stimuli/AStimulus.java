@@ -1,16 +1,17 @@
 package com.beekeeper.model.stimuli;
 
-import com.beekeeper.model.stimuli.external.ExternalStimuli;
-
 public abstract class AStimulus
 {
 	protected double timeDecay;
 	protected double transmissibility;
-	protected ExternalStimuli type;
+	protected double smellRange;
+	protected Stimuli type;
 	
 	protected double amount;
 	
-	public ExternalStimuli getStimulusType() {return type;}
+	public double getSmellRange() {return smellRange;}
+	
+	public Stimuli getStimulusType() {return type;}
 	
 	public AStimulus(double d)
 	{
@@ -28,7 +29,7 @@ public abstract class AStimulus
 	
 	public void add(double amount)
 	{
-		System.out.println("thisamount " + this.amount + " + " + amount);
+		//System.out.println("thisamount " + this.amount + " + " + amount);
 		this.amount += amount;
 	}
 	

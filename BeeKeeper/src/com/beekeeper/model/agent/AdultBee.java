@@ -3,8 +3,9 @@ package com.beekeeper.model.agent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import com.beekeeper.model.stimuli.Stimuli;
 import com.beekeeper.model.stimuli.StimuliLoad;
-import com.beekeeper.model.stimuli.external.ExternalStimuli;
+import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -18,9 +19,11 @@ public class AdultBee extends EmptyBee
 	{
 		super(stimuliManagerServices);
 		fillTaskList();
-		this.position = new Point2D.Double(Math.random()*600, Math.random()*600);
+		this.position = new Point2D.Double(Math.random()*6, Math.random()*6);
 		
 		this.type = BeeType.ADULT_BEE;
+		
+		this.stimuliLoad = new StimuliLoad(this.position);
 	}
 
 	@Override
@@ -29,12 +32,13 @@ public class AdultBee extends EmptyBee
 		Task randomMoveTask = new Task() {			
 			@Override
 			public void execute() {
+				System.out.println("random walk");
 				AdultBee.this.randomMove();
 			}
 
 			@Override
-			public double compute(StimuliLoad load) {
-				return load.beeEnergy;
+			public double compute(StimuliMap load) {
+				return AdultBee.this.getEnergy() > 0.8 ? 1:0;
 			}
 
 			@Override
@@ -43,8 +47,8 @@ public class AdultBee extends EmptyBee
 			}
 
 			@Override
-			public boolean checkInterrupt(StimuliLoad load) {
-				return load.beeEnergy < 0.1;
+			public boolean checkInterrupt(StimuliMap load) {
+				return AdultBee.this.getEnergy() < 0.1;
 			}
 		};	
 
@@ -56,12 +60,12 @@ public class AdultBee extends EmptyBee
 		Task idleTask = new Task() {			
 			@Override
 			public void execute() {
-				//do nothing
+				System.out.println("Resting");
 			}
 
 			@Override
-			public double compute(StimuliLoad load) {
-				return 1-load.beeEnergy;
+			public double compute(StimuliMap load) {
+				return AdultBee.this.getEnergy() < 0.2 ? 1:0;
 			}
 
 			@Override
@@ -70,8 +74,8 @@ public class AdultBee extends EmptyBee
 			}
 
 			@Override
-			public boolean checkInterrupt(StimuliLoad load) {
-				return load.beeEnergy > 0.7;
+			public boolean checkInterrupt(StimuliMap load) {
+				return AdultBee.this.getEnergy() > 0.9;
 			}
 		};	
 
@@ -87,8 +91,8 @@ public class AdultBee extends EmptyBee
 			}
 
 			@Override
-			public double compute(StimuliLoad load) {
-				return load.phs.getPheromoneAmount(ExternalStimuli.HungryLarvae);
+			public double compute(StimuliMap load) {
+				return load.getAmount(Stimuli.HungryLarvae);
 			}
 
 			@Override
@@ -97,8 +101,8 @@ public class AdultBee extends EmptyBee
 			}
 
 			@Override
-			public boolean checkInterrupt(StimuliLoad load) {
-				return load.beeEnergy < 0.2;
+			public boolean checkInterrupt(StimuliMap load) {
+				return AdultBee.this.getEnergy() < 0.2;
 			}
 		};	
 
@@ -116,15 +120,18 @@ public class AdultBee extends EmptyBee
 	@Override
 	public void live() {
 		
-		this.pheromoneLoad = stimuliManagerServices.getAllStimuliAround(getPosition());
+		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());
+		
 		
 		if(currentTask == null)
 		{
-			currentTask = forageForWork();
+			currentTask = forageForWork(s);
+			this.addToEnergy(-0.01);
 		}
-		else if(currentTask.checkInterrupt(getStimuliLoad()))
+		else if(currentTask.checkInterrupt(s))
 		{
 			currentTask.interrupt();
+			this.addToEnergy(-0.01);
 		}
 		else
 		{
@@ -138,22 +145,17 @@ public class AdultBee extends EmptyBee
 		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);	
 	}
 
-	private StimuliLoad getStimuliLoad()
+	private Task forageForWork(StimuliMap load)
 	{
-		return new StimuliLoad(this.pheromoneLoad, this.getEnergy());
-	}
-
-	private Task forageForWork()
-	{
-		StimuliLoad load = getStimuliLoad();
-
 		Task todo = taskList.get(0);
 		double taskScore = todo.compute(load);
+		
+		System.out.println(this.ID + " sensing " + load.getAmount(Stimuli.HungryLarvae) + ", energy at " + getEnergy());
 
 		for(int ti = 1; ti < taskList.size(); ++ti)
 		{
 			Task current = taskList.get(ti);
-			double currentScore = current.compute(load); 
+			double currentScore = current.checkInterrupt(load) ? 0 : current.compute(load); //Cannot choose a task that fulfills its interrupt 
 			if(currentScore > taskScore)
 			{
 				todo = current;
