@@ -47,6 +47,10 @@ public class BeeDrawer extends JPanel{
 				g.fillOval(x-2, y-2, 4, 4);
 				g.setColor(Color.BLACK);
 				g.drawOval(x-2, y-2, 4, 4);
+				/** DEBUG **/
+				if(a.target != null)
+					g.drawLine(x, y, (int)a.target.x, (int)a.target.y);
+				/***********/
 				break;
 
 			case BROOD_BEE:

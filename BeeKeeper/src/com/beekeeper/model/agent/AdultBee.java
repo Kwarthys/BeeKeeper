@@ -4,9 +4,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.beekeeper.controller.MainControllerServices;
-import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -33,11 +33,12 @@ public class AdultBee extends EmptyBee
 			public void execute() {
 				//System.out.println("random walk");
 				AdultBee.this.randomMove();
+				this.interrupt();
 			}
 
 			@Override
 			public double compute(StimuliMap load) {
-				return AdultBee.this.getEnergy() > 0.8 ? 1:0;
+				return AdultBee.this.getEnergy() > 0.8 ? 0.5:0;
 			}
 
 			@Override
@@ -52,6 +53,7 @@ public class AdultBee extends EmptyBee
 		};	
 
 		randomMoveTask.energyCost = 0.01;
+		randomMoveTask.taskName = "Random Walk";
 
 		taskList.add(randomMoveTask);
 
@@ -78,7 +80,8 @@ public class AdultBee extends EmptyBee
 			}
 		};	
 
-		idleTask.energyCost = -0.05;
+		idleTask.energyCost = -0.01;
+		idleTask.taskName = "Rest";
 
 		taskList.add(idleTask);
 
@@ -88,17 +91,19 @@ public class AdultBee extends EmptyBee
 
 			@Override
 			public void execute() {				
-				if(target == null)
-				{
+				//if(target == null)
+				//{
 					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
+					AdultBee.this.target = targetpos;
 					target = controllerServices.getLarvaeByPos(targetpos);
-				}
+				//}
 
 				if(target.getPosition().distance(getPosition()) < 0.1)
 				{
 					if(target.isHungry())
 					{
-						target.receiveFood(0.3);
+						target.receiveFood(0.2);
+						AdultBee.this.addToEnergy(-0.2);
 					}
 					else
 					{
@@ -113,21 +118,24 @@ public class AdultBee extends EmptyBee
 
 			@Override
 			public double compute(StimuliMap load) {
-				return load.getAmount(Stimulus.HungryLarvae);
+				return this.thresholdSigmoid(load.getAmount(Stimulus.HungryLarvae));
 			}
 
 			@Override
 			public void interrupt() {
+				target = null;
+				AdultBee.this.target = null;
 				currentTask = null;
 			}
 
 			@Override
 			public boolean checkInterrupt(StimuliMap load) {
-				return AdultBee.this.getEnergy() < 0.2;
+				return AdultBee.this.getEnergy() < 0.3 || load.getAmount(Stimulus.HungryLarvae) < 1;
 			}
 		};	
 
-		feedLarvaeTask.energyCost = 0.05;
+		feedLarvaeTask.energyCost = 0.001;
+		feedLarvaeTask.taskName = "Feed Larvae";
 
 		taskList.add(feedLarvaeTask);
 	}
@@ -184,7 +192,6 @@ public class AdultBee extends EmptyBee
 		Task todo = taskList.get(0);
 		double taskScore = todo.checkInterrupt(load) ? 0 : todo.compute(load);
 
-		//System.out.println(this.ID + " sensing " + load.getAmount(Stimuli.HungryLarvae) + ", energy at " + getEnergy());
 
 		for(int ti = 1; ti < taskList.size(); ++ti)
 		{
@@ -194,8 +201,12 @@ public class AdultBee extends EmptyBee
 			{
 				todo = current;
 				taskScore = currentScore;
+				if(ti==2)
+					System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
 			}
 		}
+
+		//System.out.println(this.ID + " sensing " + load.getAmount(Stimulus.HungryLarvae) + ", energy at " + getEnergy());
 
 		return todo;
 	}

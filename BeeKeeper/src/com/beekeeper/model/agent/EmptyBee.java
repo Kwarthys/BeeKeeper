@@ -14,6 +14,8 @@ public abstract class EmptyBee extends Agent
 	protected StimuliManagerServices stimuliManagerServices;
 	protected MainControllerServices controllerServices;
 	
+	public Point2D.Double target = null;
+	
 	protected BeeType type;
 	
 	public EmptyBee(StimuliManagerServices stimuliManagerServices)
@@ -21,7 +23,7 @@ public abstract class EmptyBee extends Agent
 		this.stimuliManagerServices = stimuliManagerServices;
 		setEnergy(Math.random()*0.8+0.2);
 		
-		this.position = new Point2D.Double(10+Math.random()*500, 10+Math.random()*500);
+		this.position = new Point2D.Double(100+Math.random()*300, 100+Math.random()*300);
 	}
 	
 	public BeeType getBeeType() {return this.type;}
@@ -35,12 +37,12 @@ public abstract class EmptyBee extends Agent
 	public void receiveFood(double amount)
 	{
 		this.addToEnergy(amount);
-		System.out.println(ID + " receiving food to " + energy);
+		//System.out.println(ID + " receiving food to " + energy);
 	}
 	
 	public boolean isHungry()
 	{
-		return this.energy < 0.5;
+		return this.energy < 0.8;
 	}
 	
 	public double getEnergy() {return this.energy;}

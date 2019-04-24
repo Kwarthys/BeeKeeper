@@ -5,8 +5,9 @@ import com.beekeeper.parameters.ModelParameters;
 
 public abstract class Task
 {
-	public double threshold;
+	public double threshold = 3;
 	public double energyCost;
+	public String taskName = "default";
 
 	public void learn()
 	{
@@ -16,6 +17,11 @@ public abstract class Task
 	public void forget()
 	{
 		threshold += ModelParameters.TASK_FORGET_RATE;
+	}
+	
+	public double thresholdSigmoid(double s)
+	{
+		return s*s / ( s*s + threshold*threshold);
 	}
 	
 	public abstract boolean checkInterrupt(StimuliMap load);
