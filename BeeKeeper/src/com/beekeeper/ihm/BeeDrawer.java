@@ -8,12 +8,16 @@ import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.EmptyBee;
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.Stimulus;
 
 @SuppressWarnings("serial")
 public class BeeDrawer extends JPanel{
 
 	private ArrayList<EmptyBee> agents = new ArrayList<>();
+	private ArrayList<CombCell> cells = new ArrayList<>();
+	
+	private double zoom = 2;
 
 
 	@Override
@@ -21,6 +25,25 @@ public class BeeDrawer extends JPanel{
 
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		
+		paintPheromones(g);
+		paintActors(g);
+
+		g.dispose();
+	}
+	
+	protected void paintPheromones(Graphics g)
+	{		
+		for(CombCell c : cells)
+		{
+			int x = (int)c.getPosition().x;
+			int y = (int)c.getPosition().y;
+			
+			int phs = (int)(c.getExternalStimuli().getPheromoneAmount(Stimulus.FoodSmell) * 5);
+			g.setColor(Color.RED);
+			g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+			
+		}
 
 		for(EmptyBee a : agents)
 		{
@@ -31,8 +54,20 @@ public class BeeDrawer extends JPanel{
 			{
 				int phs = (int)(a.getExternalStimuli().getPheromoneAmount(Stimulus.HungryLarvae) * 5);
 				g.setColor(Color.GREEN);
-				g.fillOval(x-phs/2, y-phs/2, phs, phs);
+				g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
 			}
+		}
+	}
+	
+	protected void paintActors(Graphics g)
+	{
+		for(CombCell c : cells)
+		{
+			int x = (int)c.getPosition().x;
+			int y = (int)c.getPosition().y;
+			
+			g.setColor(Color.BLACK);
+			g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
 		}
 
 		for(EmptyBee a : agents)
@@ -44,31 +79,33 @@ public class BeeDrawer extends JPanel{
 			{
 			case ADULT_BEE:
 				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
-				g.fillOval(x-2, y-2, 4, 4);
+				g.fillOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				g.setColor(Color.BLACK);
-				g.drawOval(x-2, y-2, 4, 4);
+				g.drawOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				/** DEBUG **/
 				if(a.target != null)
-					g.drawLine(x, y, (int)a.target.x, (int)a.target.y);
+					g.drawLine((int)(x*zoom), (int)(y*zoom), (int)(a.target.x*zoom), (int)(a.target.y*zoom));
 				/***********/
 				break;
 
 			case BROOD_BEE:
 				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
-				g.fillRect(x-2, y-2, 4, 4);
+				g.fillRect((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				g.setColor(Color.BLACK);
-				g.drawRect(x-2, y-2, 4, 4);
+				g.drawRect((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				break;
 			}
-
 		}
-
-		g.dispose();
 	}
 
 	public void setBees(ArrayList<EmptyBee> agents)
 	{
 		this.agents = agents;
+	}
+
+	public void setCells(ArrayList<CombCell> cells)
+	{
+		this.cells = cells;
 	}
 
 }

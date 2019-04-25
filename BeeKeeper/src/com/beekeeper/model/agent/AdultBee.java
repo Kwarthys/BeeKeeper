@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.beekeeper.controller.MainControllerServices;
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
@@ -87,7 +88,8 @@ public class AdultBee extends EmptyBee
 
 		Task feedLarvaeTask = new Task() {
 
-			private BroodBee target = null;
+			private BroodBee targetLarvae = null;
+			private CombCell targetFood = null;
 
 			@Override
 			public void execute() {				
@@ -95,14 +97,14 @@ public class AdultBee extends EmptyBee
 				//{
 					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
 					AdultBee.this.target = targetpos;
-					target = controllerServices.getLarvaeByPos(targetpos);
+					targetLarvae = controllerServices.getLarvaeByPos(targetpos);
 				//}
 
-				if(target.getPosition().distance(getPosition()) < 0.1)
+				if(targetLarvae.getPosition().distance(getPosition()) < 0.1)
 				{
-					if(target.isHungry())
+					if(targetLarvae.isHungry())
 					{
-						target.receiveFood(0.2);
+						targetLarvae.receiveFood(0.2);
 						AdultBee.this.addToEnergy(-0.2);
 					}
 					else
@@ -112,7 +114,7 @@ public class AdultBee extends EmptyBee
 				}
 				else
 				{
-					AdultBee.this.moveTowards(target.getPosition());
+					AdultBee.this.moveTowards(targetLarvae.getPosition());
 				}
 			}
 
@@ -123,7 +125,7 @@ public class AdultBee extends EmptyBee
 
 			@Override
 			public void interrupt() {
-				target = null;
+				targetLarvae = null;
 				AdultBee.this.target = null;
 				currentTask = null;
 			}

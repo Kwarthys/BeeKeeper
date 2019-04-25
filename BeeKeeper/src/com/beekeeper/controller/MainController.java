@@ -11,11 +11,13 @@ import com.beekeeper.model.agent.AdultBee;
 import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.BroodBee;
 import com.beekeeper.model.agent.EmptyBee;
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 
 public class MainController
 {
 	private ArrayList<EmptyBee> bees = new ArrayList<>();
+	private ArrayList<CombCell> cells = new ArrayList<>();
 	private BeeDrawer drawer;
 	
 	private StimuliManager sManager;
@@ -39,11 +41,16 @@ public class MainController
 			}
 		};
 		
-		sManager = new StimuliManager(bees);	
+		sManager = new StimuliManager(bees, cells);	
 		
 		for(int i = 0; i < 10; i++)
 		{
 			bees.add(new BroodBee(sManager.getNewServices()));
+		}
+		
+		for(int i = 0; i < 10; i++)
+		{
+			cells.add(new CombCell());
 		}
 		
 		for(int i = 0; i < 80; i++)
@@ -51,8 +58,9 @@ public class MainController
 			bees.add(new AdultBee(sManager.getNewServices(), controlServices));
 		}
 		
-		this.drawer = new BeeDrawer();
-		MainController.this.drawer.setBees(bees);
+		this.drawer = new BeeDrawer();		
+		this.drawer.setBees(bees);
+		this.drawer.setCells(cells);
 		
 		new BeeWindow(drawer);
 		
@@ -66,6 +74,10 @@ public class MainController
 			for(EmptyBee bee : bees)
 			{
 				bee.live();
+			}
+			for(CombCell cell : cells)
+			{
+				cell.live();
 			}
 			
 			sManager.updateStimuli();

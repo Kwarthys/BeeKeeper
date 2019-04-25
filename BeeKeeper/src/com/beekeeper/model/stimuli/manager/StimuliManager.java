@@ -5,18 +5,21 @@ import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
 import com.beekeeper.model.agent.EmptyBee;
-import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.parameters.ModelParameters;
 
 public class StimuliManager
 {
 	private ArrayList<EmptyBee> agents;
+	private ArrayList<CombCell> cells;
 	
-	public StimuliManager(ArrayList<EmptyBee> agents)
+	public StimuliManager(ArrayList<EmptyBee> agents, ArrayList<CombCell> cells)
 	{
 		this.agents = agents;
+		this.cells = cells;
 	}
 
 	public StimuliMap getAllStimuliAround(Point2D.Double position)
@@ -26,6 +29,12 @@ public class StimuliManager
 		for(EmptyBee bee : agents)
 		{
 			StimuliLoad load = bee.getExternalStimuli();
+			addPerceptionOf(load, perception, position);
+		}
+
+		for(CombCell cell : cells)
+		{
+			StimuliLoad load = cell.getExternalStimuli();
 			addPerceptionOf(load, perception, position);
 		}		
 		
@@ -72,6 +81,17 @@ public class StimuliManager
 			}
 		}
 		
+		for(CombCell cell : cells)
+		{
+			StimuliLoad load = cell.getExternalStimuli();
+			
+			if(strongestPos == null || strongestAmount < load.getSensedStimulusAmount(type, load.emiterPos.distance(sensorPos)))
+			{
+				strongestAmount = load.getSensedStimulusAmount(type, load.emiterPos.distance(sensorPos));
+				strongestPos = load.emiterPos;
+			}
+		}
+		
 		return strongestPos;
 	}
 	
@@ -80,6 +100,10 @@ public class StimuliManager
 		for(EmptyBee bee : agents)
 		{
 			bee.getExternalStimuli().evaporate();
+		}
+		for(CombCell cell : cells)
+		{
+			cell.getExternalStimuli().evaporate();
 		}
 	}
 

@@ -13,6 +13,7 @@ public abstract class EmptyBee extends Agent
 	protected StimuliLoad stimuliLoad;
 	protected StimuliManagerServices stimuliManagerServices;
 	protected MainControllerServices controllerServices;
+	protected double stomach;
 	
 	public Point2D.Double target = null;
 	

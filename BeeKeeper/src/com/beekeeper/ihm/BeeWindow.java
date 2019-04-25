@@ -18,7 +18,7 @@ public class BeeWindow extends JFrame
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
 		container.add(drawer, BorderLayout.CENTER);
-		setSize(1000,600);
+		setSize(1000,1000);
 
 		this.setContentPane(container);
 		
