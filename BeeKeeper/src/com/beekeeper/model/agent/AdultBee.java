@@ -90,10 +90,13 @@ public class AdultBee extends EmptyBee
 
 			private BroodBee targetLarvae = null;
 			private CombCell targetFood = null;
+			
+			private boolean gettingFood = true;
 
 			@Override
 			public void execute() {
-				if(AdultBee.this.stomach > 0.7)
+				gettingFood = AdultBee.this.stomach < 0.7;
+				if(!gettingFood)
 				{
 
 					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
@@ -104,8 +107,8 @@ public class AdultBee extends EmptyBee
 					{
 						if(targetLarvae.isHungry())
 						{
-							targetLarvae.receiveFood(0.2);
-							AdultBee.this.stomach -= 0.2;
+							targetLarvae.receiveFood(0.5);
+							AdultBee.this.stomach -= 0.1;
 						}
 						else
 						{
@@ -125,7 +128,8 @@ public class AdultBee extends EmptyBee
 
 					if(targetpos.distance(getPosition()) < 0.1)
 					{
-						AdultBee.this.stomach += targetFood.takeFood(1-AdultBee.this.stomach);
+						AdultBee.this.stomach += targetFood.takeFood(Math.min(1-AdultBee.this.stomach, 0.1));
+						AdultBee.this.addToEnergy(1);
 					}
 					else
 					{
@@ -149,7 +153,14 @@ public class AdultBee extends EmptyBee
 
 			@Override
 			public boolean checkInterrupt(StimuliMap load) {
-				return AdultBee.this.getEnergy() < 0.3 || load.getAmount(Stimulus.HungryLarvae) < 1;
+				if(gettingFood)
+				{
+					return AdultBee.this.getEnergy() < 0.3;
+				}
+				else
+				{
+					return AdultBee.this.getEnergy() < 0.3 || load.getAmount(Stimulus.HungryLarvae) < 1;					
+				}
 			}
 		};	
 

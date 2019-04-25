@@ -16,7 +16,7 @@ public class BroodBee extends EmptyBee {
 	@Override
 	public void live()
 	{
-		this.addToEnergy(-0.01);
+		this.addToEnergy(-0.005);
 		if(this.getEnergy() < 0.7)
 		{
 			this.stimuliLoad.emit(new HungryLarvaeStimulus(0.7-this.getEnergy()));

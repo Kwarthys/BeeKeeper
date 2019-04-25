@@ -66,7 +66,7 @@ public class MainController
 			cells.add(new CombCell());
 		}
 		
-		for(int i = 0; i < 80; i++)
+		for(int i = 0; i < 400; i++)
 		{
 			bees.add(new AdultBee(sManager.getNewServices(), controlServices));
 		}

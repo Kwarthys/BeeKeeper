@@ -27,11 +27,10 @@ public class CombCell
 	
 	public double takeFood(double max)
 	{
-		if(this.foodAmount < max)
+		if(this.foodAmount > max)
 		{
-			double value = this.foodAmount;
 			this.foodAmount -= max;
-			return value;
+			return max;
 		}
 		else
 		{

@@ -10,9 +10,9 @@ public class ModelParameters
 	public static final double TRANSMISSIBILITY_HungryLarvae = 0.5;
 	public static final double SMELL_RANGE_HungryLarvae = 0.95;
 
-	public static final double TIME_DECAY_FoodSmell = 0.08;
+	public static final double TIME_DECAY_FoodSmell = 0.1;
 	public static final double TRANSMISSIBILITY_FoodSmell = 0.1;
-	public static final double SMELL_RANGE_FoodSmell = 0.99;
+	public static final double SMELL_RANGE_FoodSmell = 0.95;
 	
 	
 	public static final double SMELL_THRESHOLD = 0.001;
