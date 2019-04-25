@@ -1,6 +1,7 @@
 package com.beekeeper.controller;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
@@ -39,16 +40,28 @@ public class MainController
 				}
 				return null;
 			}
+
+			@Override
+			public CombCell getCellByPos(Double targetPos) {
+				for(CombCell cell : cells)
+				{
+					if(targetPos.equals(cell.getPosition()))
+					{
+						return cell;
+					}					
+				}
+				return null;
+			}
 		};
 		
 		sManager = new StimuliManager(bees, cells);	
 		
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 30; i++)
 		{
 			bees.add(new BroodBee(sManager.getNewServices()));
 		}
 		
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 60; i++)
 		{
 			cells.add(new CombCell());
 		}

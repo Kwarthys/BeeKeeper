@@ -9,6 +9,8 @@ public class CombCell
 {
 	protected Point2D.Double position;
 	protected StimuliLoad stimuliLoad;
+	
+	protected double foodAmount = 0;
 
 	public CombCell()
 	{
@@ -18,7 +20,25 @@ public class CombCell
 	
 	public void live()
 	{
-		this.stimuliLoad.emit(new FoodSmellStimulus(1));
+		foodAmount += 0.01;
+		foodAmount = foodAmount > 3 ? 3 : foodAmount;
+		this.stimuliLoad.emit(new FoodSmellStimulus(foodAmount));
+	}
+	
+	public double takeFood(double max)
+	{
+		if(this.foodAmount < max)
+		{
+			double value = this.foodAmount;
+			this.foodAmount -= max;
+			return value;
+		}
+		else
+		{
+			double value = this.foodAmount;
+			this.foodAmount = 0;
+			return value;
+		}
 	}
 	
 	public Point2D.Double getPosition(){return this.position;}

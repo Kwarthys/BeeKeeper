@@ -92,30 +92,47 @@ public class AdultBee extends EmptyBee
 			private CombCell targetFood = null;
 
 			@Override
-			public void execute() {				
-				//if(target == null)
-				//{
+			public void execute() {
+				if(AdultBee.this.stomach > 0.7)
+				{
+
 					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
 					AdultBee.this.target = targetpos;
 					targetLarvae = controllerServices.getLarvaeByPos(targetpos);
-				//}
 
-				if(targetLarvae.getPosition().distance(getPosition()) < 0.1)
-				{
-					if(targetLarvae.isHungry())
+					if(targetpos.distance(getPosition()) < 0.1)
 					{
-						targetLarvae.receiveFood(0.2);
-						AdultBee.this.addToEnergy(-0.2);
+						if(targetLarvae.isHungry())
+						{
+							targetLarvae.receiveFood(0.2);
+							AdultBee.this.stomach -= 0.2;
+						}
+						else
+						{
+							this.interrupt();
+						}
 					}
 					else
 					{
-						this.interrupt();
+						AdultBee.this.moveTowards(targetpos);
 					}
 				}
 				else
 				{
-					AdultBee.this.moveTowards(targetLarvae.getPosition());
+					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.FoodSmell);
+					AdultBee.this.target = targetpos;
+					targetFood = controllerServices.getCellByPos(targetpos);
+
+					if(targetpos.distance(getPosition()) < 0.1)
+					{
+						AdultBee.this.stomach += targetFood.takeFood(1-AdultBee.this.stomach);
+					}
+					else
+					{
+						AdultBee.this.moveTowards(targetpos);
+					}
 				}
+
 			}
 
 			@Override
@@ -145,7 +162,7 @@ public class AdultBee extends EmptyBee
 	protected void moveTowards(Point2D.Double position)
 	{
 		double speed = 0.5;
-		
+
 		double dx = position.getX() - this.position.getX();
 		double dy = position.getY() - this.position.getY();
 
