@@ -20,7 +20,7 @@ public class MyUtils
 		return new CustomRule<Point2D.Double>() {			
 			@Override
 			public boolean isValid(Point2D.Double t) {
-				return t.distance(center) >= radius;
+				return t.distance(center) <= radius;
 			}
 		};
 	}

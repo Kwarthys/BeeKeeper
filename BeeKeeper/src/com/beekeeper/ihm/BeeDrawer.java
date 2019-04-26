@@ -19,11 +19,14 @@ public class BeeDrawer extends JPanel{
 	
 	private double zoom = 2;
 
+	private Color hungryLarvaePhColor = new Color(30,200,30);
+	private Color foodPhColor = new Color(200,30,30);
+
 
 	@Override
 	protected void paintComponent(Graphics g) {
 
-		g.setColor(Color.WHITE);
+		g.setColor(new Color(70,60,60));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		paintPheromones(g);
@@ -40,7 +43,7 @@ public class BeeDrawer extends JPanel{
 			int y = (int)c.getPosition().y;
 			
 			int phs = (int)(c.getExternalStimuli().getPheromoneAmount(Stimulus.FoodSmell) * 5);
-			g.setColor(Color.RED);
+			g.setColor(foodPhColor);
 			g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
 			
 		}
@@ -53,7 +56,7 @@ public class BeeDrawer extends JPanel{
 			if(a.getBeeType() == BeeType.BROOD_BEE)
 			{
 				int phs = (int)(a.getExternalStimuli().getPheromoneAmount(Stimulus.HungryLarvae) * 5);
-				g.setColor(Color.GREEN);
+				g.setColor(hungryLarvaePhColor);
 				g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
 			}
 		}
@@ -66,7 +69,7 @@ public class BeeDrawer extends JPanel{
 			int x = (int)c.getPosition().x;
 			int y = (int)c.getPosition().y;
 			
-			g.setColor(Color.BLACK);
+			g.setColor(Color.WHITE);
 			g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
 		}
 
@@ -80,18 +83,21 @@ public class BeeDrawer extends JPanel{
 			case ADULT_BEE:
 				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
 				g.fillOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
-				g.setColor(Color.BLACK);
+				g.setColor(Color.WHITE);
 				g.drawOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				/** DEBUG **/
 				if(a.target != null)
+				{
+					g.setColor(Color.GRAY);
 					g.drawLine((int)(x*zoom), (int)(y*zoom), (int)(a.target.x*zoom), (int)(a.target.y*zoom));
+				}
 				/***********/
 				break;
 
 			case BROOD_BEE:
 				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
 				g.fillRect((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
-				g.setColor(Color.BLACK);
+				g.setColor(Color.WHITE);
 				g.drawRect((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				break;
 			}
