@@ -100,6 +100,11 @@ public class AdultBee extends EmptyBee
 				{
 
 					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
+					if(targetpos == null)
+					{
+						this.interrupt();
+						return;
+					}
 					AdultBee.this.target = targetpos;
 					targetLarvae = controllerServices.getLarvaeByPos(targetpos);
 
@@ -123,6 +128,11 @@ public class AdultBee extends EmptyBee
 				else
 				{
 					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.FoodSmell);
+					if(targetpos == null)
+					{
+						this.interrupt();
+						return;
+					}
 					AdultBee.this.target = targetpos;
 					targetFood = controllerServices.getCellByPos(targetpos);
 

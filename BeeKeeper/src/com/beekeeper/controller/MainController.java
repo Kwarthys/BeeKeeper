@@ -16,6 +16,7 @@ import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.utils.CustomRule;
+import com.beekeeper.utils.MyUtils;
 
 public class MainController
 {
@@ -60,9 +61,9 @@ public class MainController
 		
 		Point2D.Double center = new Point2D.Double(250,250);
 
-		spawnBroodCells(100, getDonutPointRule(center, 0, 50), sManager.getNewServices());
+		spawnBroodCells(100, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices());
 
-		spawnCombCells(10, getDonutPointRule(center, 50, 60));
+		spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60));
 
 		for(int i = 0; i < 400; i++)
 		{
@@ -82,12 +83,8 @@ public class MainController
 	{		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double pointCandidate = new Point2D.Double(100+Math.random()*300, 100+Math.random()*300);
-			while(!rule.isValid(pointCandidate))
-			{
-				pointCandidate = new Point2D.Double(100+Math.random()*300, 100+Math.random()*300);
-			}
-			cells.add(new CombCell(pointCandidate.getX(), pointCandidate.getY()));
+			Point2D.Double point = MyUtils.getPointInRule(300, 100, rule);
+			cells.add(new CombCell(point.getX(), point.getY()));
 		}
 	}
 
@@ -95,24 +92,9 @@ public class MainController
 	{		
 		for(int i = 0; i < 30; i++)
 		{
-			Point2D.Double pointCandidate = new Point2D.Double(100+Math.random()*300, 100+Math.random()*300);
-			while(!rule.isValid(pointCandidate))
-			{
-				pointCandidate = new Point2D.Double(100+Math.random()*300, 100+Math.random()*300);
-			}
-			bees.add(new BroodBee(services, pointCandidate.getX(), pointCandidate.getY()));
+			Point2D.Double point = MyUtils.getPointInRule(300, 100, rule);
+			bees.add(new BroodBee(services, point.getX(), point.getY()));
 		}
-	}
-
-	private CustomRule<Point2D.Double> getDonutPointRule(Point2D.Double center, double innerRadius, double outterRadius)
-	{
-		return new CustomRule<Point2D.Double>() {			
-			@Override
-			public boolean isValid(Point2D.Double t) {
-				double distance = t.distance(center);
-				return distance > innerRadius && distance < outterRadius;
-			}
-		};
 	}
 
 	private void programLoop()

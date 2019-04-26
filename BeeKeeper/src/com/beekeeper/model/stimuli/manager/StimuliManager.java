@@ -92,6 +92,10 @@ public class StimuliManager
 			}
 		}
 		
+		if(strongestAmount == 0)
+		{
+			return null;
+		}
 		return strongestPos;
 	}
 	
