@@ -32,6 +32,7 @@ public class CombCell
 	
 	public double takeFood(double max)
 	{
+		//System.out.println("FoodTaken : " + this.foodAmount + " - " + max);
 		if(this.foodAmount > max)
 		{
 			this.foodAmount -= max;

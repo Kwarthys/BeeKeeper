@@ -159,6 +159,7 @@ public class AdultBee extends EmptyBee
 				targetLarvae = null;
 				AdultBee.this.target = null;
 				currentTask = null;
+				this.forget();
 			}
 
 			@Override
@@ -241,13 +242,15 @@ public class AdultBee extends EmptyBee
 			{
 				todo = current;
 				taskScore = currentScore;
-				if(ti==2)
+				/*if(ti==2)
+				{
 					System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
+				}*/
 			}
 		}
 
-		//System.out.println(this.ID + " sensing " + load.getAmount(Stimulus.HungryLarvae) + ", energy at " + getEnergy());
-
+		//System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
+		todo.learn();
 		return todo;
 	}
 }

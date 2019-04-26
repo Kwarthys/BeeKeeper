@@ -3,6 +3,7 @@ package com.beekeeper.controller;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
 
@@ -61,7 +62,7 @@ public class MainController
 		
 		Point2D.Double center = new Point2D.Double(250,250);
 
-		spawnBroodCells(100, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices());
+		spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices());
 
 		spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60));
 
@@ -90,7 +91,7 @@ public class MainController
 
 	private void spawnBroodCells(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services)
 	{		
-		for(int i = 0; i < 30; i++)
+		for(int i = 0; i < number; i++)
 		{
 			Point2D.Double point = MyUtils.getPointInRule(300, 100, rule);
 			bees.add(new BroodBee(services, point.getX(), point.getY()));
@@ -105,6 +106,14 @@ public class MainController
 			{
 				bee.live();
 			}
+			
+			bees.removeIf(new Predicate<EmptyBee>() {
+				@Override
+				public boolean test(EmptyBee t) {
+					return !t.alive;
+				}
+			});
+			
 			for(CombCell cell : cells)
 			{
 				cell.live();

@@ -2,11 +2,11 @@ package com.beekeeper.parameters;
 
 public class ModelParameters
 {
-	public static final double TASK_FORGET_RATE = 0.1;
+	public static final double TASK_FORGET_RATE = 0.01;
 	public static final double TASK_LEARN_RATE = 0.1;
 
 
-	public static final double TIME_DECAY_HungryLarvae = 0.05;
+	public static final double TIME_DECAY_HungryLarvae = 0.1;
 	public static final double TRANSMISSIBILITY_HungryLarvae = 0.5;
 	public static final double SMELL_RANGE_HungryLarvae = 0.90;
 

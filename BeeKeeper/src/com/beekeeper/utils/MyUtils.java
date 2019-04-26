@@ -27,7 +27,7 @@ public class MyUtils
 	
 	public static Point2D.Double getPointInRule(double range, double offset, CustomRule<Point2D.Double> rule)
 	{
-		Point2D.Double pointCandidate = new Point2D.Double(offset+Math.random()*range, offset+Math.random()*range);
+		Point2D.Double pointCandidate = new Point2D.Double(offset + Math.random()*range, offset + Math.random()*range);
 		while(!rule.isValid(pointCandidate))
 		{
 			pointCandidate = new Point2D.Double(offset + Math.random()*range, offset + Math.random()*range);
