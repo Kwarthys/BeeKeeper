@@ -14,7 +14,12 @@ public class CombCell
 
 	public CombCell()
 	{
-		this.position = new Point2D.Double(100+Math.random()*300, 100+Math.random()*300);
+		this(100+Math.random()*300, 100+Math.random()*300);
+	}
+
+	public CombCell(double x, double y)
+	{
+		this.position = new Point2D.Double(x,y);
 		this.stimuliLoad = new StimuliLoad(this.position);
 	}
 	

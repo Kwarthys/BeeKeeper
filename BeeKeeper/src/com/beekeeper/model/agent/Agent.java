@@ -24,4 +24,10 @@ public abstract class Agent
 	{
 		this.ID = getNextID();
 	}
+	
+	public Agent(Double x, Double y)
+	{
+		this();
+		this.position = new Point2D.Double(x,y);
+	}
 }

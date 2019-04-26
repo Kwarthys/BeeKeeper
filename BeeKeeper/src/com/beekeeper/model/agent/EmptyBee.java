@@ -21,10 +21,14 @@ public abstract class EmptyBee extends Agent
 	
 	public EmptyBee(StimuliManagerServices stimuliManagerServices)
 	{
+		this(stimuliManagerServices, 100+Math.random()*300, 100+Math.random()*300);
+	}
+	
+	public EmptyBee(StimuliManagerServices stimuliManagerServices, double x, double y)
+	{
+		super(x,y);
 		this.stimuliManagerServices = stimuliManagerServices;
 		setEnergy(Math.random()*0.8+0.2);
-		
-		this.position = new Point2D.Double(100+Math.random()*300, 100+Math.random()*300);
 	}
 	
 	public BeeType getBeeType() {return this.type;}
