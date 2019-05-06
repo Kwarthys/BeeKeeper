@@ -1,8 +1,10 @@
 package com.beekeeper.model.agent;
 
 import com.beekeeper.model.stimuli.StimuliLoad;
+import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
+import com.beekeeper.model.tasks.Task;
 
 public class BroodBee extends EmptyBee {
 
@@ -18,6 +20,8 @@ public class BroodBee extends EmptyBee {
 		{
 			this.addToEnergy(0.5);
 		}
+		
+		fillTaskList();
 	}
 
 	@Override
@@ -31,16 +35,13 @@ public class BroodBee extends EmptyBee {
 		if(getEnergy() == 0)
 		{
 			this.alive = false;
-			System.out.println(ID + " died of starvation, how sad.");
+			System.err.println(ID + " died of starvation, how sad.");
 			return;
 		}
 		
-		this.addToEnergy(-0.0005);
-		if(this.getEnergy() < 0.9)
-		{
-			this.stimuliLoad.emit(new HungryLarvaeStimulus(1-this.getEnergy()));
-			//System.out.println(this.ID + " " + this.stimuliLoad.getPheromoneAmount(Stimuli.HungryLarvae));
-		}
+		this.addToEnergy(-currentTask.energyCost);
+		currentTask.execute();
+		
 		
 	}
 
@@ -48,5 +49,39 @@ public class BroodBee extends EmptyBee {
 	public void move(double dx, double dy) {}
 
 	@Override
-	protected void fillTaskList() {}
+	protected void fillTaskList() 
+	{
+		Task askFood = new Task() {			
+			@Override
+			public void execute() {
+				if(BroodBee.this.getEnergy() < 0.9)
+				{
+					BroodBee.this.stimuliLoad.emit(new HungryLarvaeStimulus(1-BroodBee.this.getEnergy()));
+					//System.out.println(this.ID + " " + this.stimuliLoad.getPheromoneAmount(Stimuli.HungryLarvae));
+				}
+			}
+
+			@Override
+			public double compute(StimuliMap load) {
+				return 1;
+			}
+
+			@Override
+			public void interrupt() {
+				BroodBee.this.currentTask = null;
+			}
+
+			@Override
+			public boolean checkInterrupt(StimuliMap load) {
+				return false;
+			}
+		};	
+
+		askFood.energyCost = 0.001;
+		askFood.taskName = "LarvaeAskFood";
+
+		taskList.add(askFood);
+		
+		currentTask = askFood;
+	}
 }

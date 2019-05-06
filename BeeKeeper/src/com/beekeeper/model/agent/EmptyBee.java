@@ -1,23 +1,31 @@
 package com.beekeeper.model.agent;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
+import com.beekeeper.model.tasks.Task;
 
 public abstract class EmptyBee extends Agent
 {
+	protected ArrayList<Task> taskList = new ArrayList<>();
 	protected abstract void fillTaskList();
+	
 	private double energy;
 	protected StimuliLoad stimuliLoad;
 	protected StimuliManagerServices stimuliManagerServices;
 	protected MainControllerServices controllerServices;
 	protected double stomach;
 	
+	protected Task currentTask;
+	
 	public Point2D.Double target = null;
 	
 	protected BeeType type;
+	
+	public Task getCurrentTask() {return currentTask;}
 	
 	public EmptyBee(StimuliManagerServices stimuliManagerServices)
 	{

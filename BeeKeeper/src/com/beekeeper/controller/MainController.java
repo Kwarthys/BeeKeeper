@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
 
+import com.beekeeper.controller.logger.MyLogger;
 import com.beekeeper.ihm.BeeDrawer;
 import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.model.agent.AdultBee;
@@ -16,6 +17,7 @@ import com.beekeeper.model.agent.EmptyBee;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
+import com.beekeeper.model.tasks.Task;
 import com.beekeeper.utils.CustomRule;
 import com.beekeeper.utils.MyUtils;
 
@@ -24,6 +26,8 @@ public class MainController
 	private ArrayList<EmptyBee> bees = new ArrayList<>();
 	private ArrayList<CombCell> cells = new ArrayList<>();
 	private BeeDrawer drawer;
+	
+	private MyLogger logger = new MyLogger();
 
 	private StimuliManager sManager;
 
@@ -55,6 +59,11 @@ public class MainController
 					}					
 				}
 				return null;
+			}
+
+			@Override
+			public void logMyTaskSwitch(Task newTask, int beeID) {
+				MainController.this.logger.logTask(beeID, newTask.taskName);				
 			}
 		};
 

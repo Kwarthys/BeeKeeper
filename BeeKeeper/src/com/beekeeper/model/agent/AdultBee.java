@@ -1,7 +1,6 @@
 package com.beekeeper.model.agent;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.comb.cell.CombCell;
@@ -13,10 +12,8 @@ import com.beekeeper.model.tasks.Task;
 
 public class AdultBee extends EmptyBee
 {
-	protected ArrayList<Task> taskList = new ArrayList<>();	
-
-	protected Task currentTask = null;
-
+	private boolean randomWalking = false;
+	
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		super(stimuliManagerServices);
@@ -34,6 +31,7 @@ public class AdultBee extends EmptyBee
 			public void execute() {
 				//System.out.println("random walk");
 				AdultBee.this.randomMove();
+				randomWalking = true;
 				this.interrupt();
 			}
 
@@ -95,7 +93,15 @@ public class AdultBee extends EmptyBee
 
 			@Override
 			public void execute() {
-				gettingFood = AdultBee.this.stomach < 0.7;
+				if(gettingFood)
+				{
+					gettingFood = AdultBee.this.stomach < 0.9;					
+				}
+				else
+				{
+					gettingFood = AdultBee.this.stomach < 0.1;
+				}
+				
 				if(!gettingFood)
 				{
 
@@ -242,15 +248,17 @@ public class AdultBee extends EmptyBee
 			{
 				todo = current;
 				taskScore = currentScore;
-				/*if(ti==2)
-				{
-					System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
-				}*/
 			}
 		}
 
 		//System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
 		todo.learn();
+		
+		if(!(todo.taskName.equals("Random Walk") && randomWalking))
+			controllerServices.logMyTaskSwitch(todo, this.ID);
+		
+		randomWalking = todo.taskName.equals("Random Walk");
+		
 		return todo;
 	}
 }
