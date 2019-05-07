@@ -189,15 +189,18 @@ public class AdultBee extends EmptyBee
 
 	protected void moveTowards(Point2D.Double position)
 	{
-		double speed = 0.5;
-
+		double speed = 1;
+		
 		double dx = position.getX() - this.position.getX();
 		double dy = position.getY() - this.position.getY();
+		
+		Point2D.Double vector = new Point2D.Double(dx,dy);
+		double norme = vector.distance(new Point2D.Double(0,0));
 
-		dx = dx > speed ? speed : dx < -speed ? -speed : dx;
-		dy = dy > speed ? speed : dy < -speed ? -speed : dy;
+		vector.x = vector.getX() / norme * Math.min(speed, norme);
+		vector.y = vector.getY() / norme * Math.min(speed, norme);
 
-		move(dx, dy);
+		move(vector.x, vector.y);
 	}
 
 	public void randomMove()

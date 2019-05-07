@@ -10,14 +10,16 @@ import javax.swing.JPanel;
 public class BeeWindow extends JFrame
 {
 	
-	public BeeWindow(ArrayList<CombDrawer> drawers)
+	public BeeWindow(Grapher grapher, ArrayList<CombDrawer> drawers)
 	{	
 		setTitle("BeeKeeper");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel container = new JPanel();
-		container.setLayout(new GridLayout(0,drawers.size()));
+		container.setLayout(new GridLayout(0,drawers.size()+1));
+		
+		container.add(grapher);
 		
 		for(CombDrawer drawer : drawers)
 		{			

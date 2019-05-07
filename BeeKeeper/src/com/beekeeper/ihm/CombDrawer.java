@@ -19,14 +19,14 @@ public class CombDrawer extends JPanel{
 	
 	private double zoom = 2;
 
-	private Color hungryLarvaePhColor = new Color(30,200,30);
-	private Color foodPhColor = new Color(200,30,30);
+	private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
+	private Color foodPhColor = GraphicParams.foodPhColor;
 
 
 	@Override
 	protected void paintComponent(Graphics g) {
 
-		g.setColor(new Color(70,60,60));
+		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		paintPheromones(g);

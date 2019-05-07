@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 
 import com.beekeeper.controller.logger.MyLogger;
-import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.BeeWindow;
+import com.beekeeper.ihm.CombDrawer;
+import com.beekeeper.ihm.Grapher;
 import com.beekeeper.model.agent.AdultBee;
 import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.BroodBee;
@@ -32,6 +33,8 @@ public class MainController
 	private MyLogger logger = new MyLogger();
 
 	private StimuliManager sManager;
+	
+	private BeeWindow window;
 	
 	private MainControllerServices controlServices = new MainControllerServices() {			
 		@Override
@@ -79,7 +82,7 @@ public class MainController
 
 		for(int i = 0; i < 400; i++)
 		{
-			bees.add(new AdultBee(sManager.getNewServices(), controlServices));
+			bees.add(new AdultBee(sManager.getNewServices(), this.controlServices));
 		}
 		
 		this.combs.add(new Comb(bees, cells));
@@ -90,8 +93,10 @@ public class MainController
 		
 		ArrayList<CombDrawer> drawers = new ArrayList<CombDrawer>();
 		drawers.add(drawer);
+		
+		Grapher g = new Grapher(bees);
 
-		new BeeWindow(drawers);
+		this.window = new BeeWindow(g,drawers);
 
 		programLoop();
 	}
@@ -129,7 +134,7 @@ public class MainController
 			SwingUtilities.invokeLater(new Runnable() {				
 				@Override
 				public void run() {
-					MainController.this.drawer.repaint();					
+					MainController.this.window.repaint();					
 				}
 			});
 
