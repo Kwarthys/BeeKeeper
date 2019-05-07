@@ -77,7 +77,7 @@ public class BroodBee extends EmptyBee {
 			}
 		};	
 
-		askFood.energyCost = 0.001;
+		askFood.energyCost = 0.002;
 		askFood.taskName = "LarvaeAskFood";
 
 		taskList.add(askFood);

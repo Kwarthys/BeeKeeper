@@ -1,6 +1,7 @@
 package com.beekeeper.ihm;
 
-import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -9,15 +10,19 @@ import javax.swing.JPanel;
 public class BeeWindow extends JFrame
 {
 	
-	public BeeWindow(BeeDrawer drawer)
+	public BeeWindow(ArrayList<CombDrawer> drawers)
 	{	
 		setTitle("BeeKeeper");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel container = new JPanel();
-		container.setLayout(new BorderLayout());
-		container.add(drawer, BorderLayout.CENTER);
+		container.setLayout(new GridLayout(0,drawers.size()));
+		
+		for(CombDrawer drawer : drawers)
+		{			
+			container.add(drawer);
+		}
 		setSize(1000,1000);
 
 		this.setContentPane(container);

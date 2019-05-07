@@ -18,8 +18,7 @@ public class WritterThread extends Thread {
 			try {
 				LogWork w = work.take();
 				w.writer.write(w.logString);
-				System.out.print(w.logString);
-				//System.out.println(" " + work.size());
+				//System.out.print(w.logString);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

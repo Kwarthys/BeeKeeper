@@ -12,7 +12,7 @@ import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.Stimulus;
 
 @SuppressWarnings("serial")
-public class BeeDrawer extends JPanel{
+public class CombDrawer extends JPanel{
 
 	private ArrayList<EmptyBee> agents = new ArrayList<>();
 	private ArrayList<CombCell> cells = new ArrayList<>();
