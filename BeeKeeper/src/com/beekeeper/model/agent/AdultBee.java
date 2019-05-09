@@ -104,6 +104,7 @@ public class AdultBee extends EmptyBee
 
 			@Override
 			public void execute() {
+				taskDuration++;
 				if(gettingFood)
 				{
 					gettingFood = AdultBee.this.stomach < 0.9;					
@@ -123,7 +124,12 @@ public class AdultBee extends EmptyBee
 						return;
 					}
 					AdultBee.this.target = targetpos;
-					targetLarvae = controllerServices.getLarvaeByPos(targetpos);
+					targetLarvae = controllerServices.getLarvaeByPos(targetpos, combID);
+					if(targetLarvae == null)
+					{
+						System.err.println("Missing larvae");
+						return;
+					}
 
 					if(targetpos.distance(getPosition()) < 0.1)
 					{
@@ -151,7 +157,7 @@ public class AdultBee extends EmptyBee
 						return;
 					}
 					AdultBee.this.target = targetpos;
-					targetFood = controllerServices.getCellByPos(targetpos);
+					targetFood = controllerServices.getCellByPos(targetpos, combID);
 
 					if(targetpos.distance(getPosition()) < 0.1)
 					{
@@ -176,7 +182,7 @@ public class AdultBee extends EmptyBee
 				targetLarvae = null;
 				AdultBee.this.target = null;
 				currentTask = null;
-				this.forget();
+				this.learn(taskDuration);
 			}
 
 			@Override
@@ -266,12 +272,13 @@ public class AdultBee extends EmptyBee
 		}
 
 		//System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
-		todo.learn();
 		
 		if(!(todo.taskName.equals("Random Walk") && randomWalking) && log)
 			controllerServices.logMyTaskSwitch(todo, this.ID);
 		
 		randomWalking = todo.taskName.equals("Random Walk");
+		
+		taskDuration=0;
 		
 		return todo;
 	}

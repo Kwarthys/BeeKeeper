@@ -68,7 +68,6 @@ public class TaskGrapher extends JPanel{
 			
 			g2d.setColor(hungerColor);
 			int barHeight = (int) (graphHeight*hungerHistory.get(i));
-			System.out.println("BarHeight " + barHeight);
 			g2d.fillRect(borderMargin+step*i-step/4, borderMargin+graphHeight-barHeight, step/2, barHeight);
 			
 			for(Entry<String, Integer> set : d.data.entrySet())
@@ -120,7 +119,6 @@ public class TaskGrapher extends JPanel{
 				max += 1;
 			}
 		}
-		System.out.println(total + " / " + max);
 		return total/max;
 	}
 

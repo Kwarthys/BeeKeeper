@@ -24,9 +24,7 @@ import com.beekeeper.utils.MyUtils;
 
 public class MainController
 {
-	private ArrayList<EmptyBee> bees = new ArrayList<>();
-	private ArrayList<CombCell> cells = new ArrayList<>();
-	private CombDrawer drawer;
+	ArrayList<CombDrawer> drawers = new ArrayList<CombDrawer>();
 	
 	private ArrayList<Comb> combs = new ArrayList<Comb>();
 	
@@ -38,8 +36,8 @@ public class MainController
 	
 	private MainControllerServices controlServices = new MainControllerServices() {			
 		@Override
-		public BroodBee getLarvaeByPos(Point2D.Double larvaePos) {
-			for(EmptyBee bee : bees)
+		public BroodBee getLarvaeByPos(Point2D.Double larvaePos, int combID) {
+			for(EmptyBee bee : combs.get(combID).getAgents())
 			{
 				if(bee.getBeeType() == BeeType.BROOD_BEE)
 				{
@@ -53,8 +51,8 @@ public class MainController
 		}
 
 		@Override
-		public CombCell getCellByPos(Double targetPos) {
-			for(CombCell cell : cells)
+		public CombCell getCellByPos(Double targetPos, int combID) {
+			for(CombCell cell : combs.get(combID).getCells())
 			{
 				if(targetPos.equals(cell.getPosition()))
 				{
@@ -72,27 +70,37 @@ public class MainController
 
 	public MainController()
 	{
-		sManager = new StimuliManager(bees, cells);	
+		ArrayList<EmptyBee> totalBees = new ArrayList<>();
+		ArrayList<CombCell> totalCells = new ArrayList<>();
+		
+		sManager = new StimuliManager(totalBees, totalCells);	
 		
 		Point2D.Double center = new Point2D.Double(100,100);
-
-		spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices(), bees);
-
-		spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60), cells);
 		
-		spawnWorkers(400, MyUtils.getCirclePointRule(center, 70), sManager.getNewServices(), this.controlServices, bees);
-
+		for(int i = 0; i < 1; ++i)
+		{
+			ArrayList<EmptyBee> bees = new ArrayList<>();
+			ArrayList<CombCell> cells = new ArrayList<>();
+			
+			spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices(), bees);
+			spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60), cells);		
+			spawnWorkers(400, MyUtils.getCirclePointRule(center, 70), sManager.getNewServices(), this.controlServices, bees);
+			
+			Comb c = new Comb(bees, cells);
+			c.setID(i);
+			this.combs.add(c);
+			
+			CombDrawer drawer = new CombDrawer();
+			drawer.setBees(bees);
+			drawer.setCells(cells);
+			
+			this.drawers.add(drawer);
+			
+			totalBees.addAll(bees);
+			totalCells.addAll(cells);
+		}
 		
-		this.combs.add(new Comb(bees, cells));
-
-		this.drawer = new CombDrawer();		
-		this.drawer.setBees(bees);
-		this.drawer.setCells(cells);
-		
-		ArrayList<CombDrawer> drawers = new ArrayList<CombDrawer>();
-		drawers.add(drawer);
-		
-		TaskGrapher g = new TaskGrapher(bees);
+		TaskGrapher g = new TaskGrapher(totalBees);
 
 		this.window = new BeeWindow(g,drawers);
 

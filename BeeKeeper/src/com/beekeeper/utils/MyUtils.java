@@ -35,4 +35,10 @@ public class MyUtils
 		
 		return pointCandidate;
 	}
+	
+	
+	public static double sigmoid(double s, double t)
+	{
+		return s*s / ( s*s + t*t);
+	}
 }

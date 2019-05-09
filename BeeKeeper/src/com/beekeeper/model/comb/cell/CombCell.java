@@ -13,6 +13,8 @@ public class CombCell
 	protected double maxCellLoad = 1;
 	
 	protected double foodAmount = 0;
+	
+	protected int combID = -1;
 
 	public CombCell()
 	{
@@ -50,4 +52,9 @@ public class CombCell
 	
 	public Point2D.Double getPosition(){return this.position;}
 	public StimuliLoad getExternalStimuli() {return this.stimuliLoad;}
+
+	public void setCombID(int id)
+	{
+		this.combID = id;
+	}
 }

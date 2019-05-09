@@ -19,6 +19,10 @@ public abstract class EmptyBee extends Agent
 	protected MainControllerServices controllerServices;
 	protected double stomach;
 	
+	protected int taskDuration = 0;
+	
+	protected int combID = -1;
+	
 	protected Task currentTask;
 	
 	public Point2D.Double target = null;
@@ -65,5 +69,10 @@ public abstract class EmptyBee extends Agent
 	{
 		this.energy += amount;
 		this.energy = this.energy < 0 ? 0 : this.energy > 1 ? 1 : this.energy; //Clamp energy between 0 and 1
+	}
+
+	public void setCombID(int id)
+	{
+		this.combID = id;
 	}
 }

@@ -2,11 +2,10 @@ package com.beekeeper.model.agent;
 
 import java.awt.geom.Point2D;
 
+import com.beekeeper.utils.IDManager;
+
 public abstract class Agent
-{
-	private static int indexCounter = 1;
-	private static int getNextID() {return indexCounter++;}
-	
+{	
 	protected Point2D.Double position;
 	
 	protected int ID;
@@ -22,7 +21,7 @@ public abstract class Agent
 	
 	public Agent()
 	{
-		this.ID = getNextID();
+		this.ID = IDManager.getNextID();
 	}
 	
 	public Agent(Double x, Double y)

@@ -8,14 +8,19 @@ import com.beekeeper.model.comb.cell.CombCell;
 
 public class Comb
 {
-	public ArrayList<EmptyBee> agents;
+	private ArrayList<EmptyBee> agents;
 	private ArrayList<CombCell> cells;
+	
+	public int ID;
 	
 	public Comb(ArrayList<EmptyBee> agents, ArrayList<CombCell> cells)
 	{
 		this.agents = agents;
 		this.cells = cells;
 	}
+
+	public ArrayList<EmptyBee> getAgents(){return agents;}
+	public ArrayList<CombCell> getCells(){return cells;}
 	
 	public void liveAgents()
 	{
@@ -37,6 +42,18 @@ public class Comb
 		for(CombCell c : cells)
 		{
 			c.live();
+		}
+	}
+
+	public void setID(int id)
+	{
+		for(CombCell c : cells)
+		{
+			c.setCombID(id);
+		}
+		for(EmptyBee b : agents)
+		{
+			b.setCombID(id);
 		}
 	}
 }

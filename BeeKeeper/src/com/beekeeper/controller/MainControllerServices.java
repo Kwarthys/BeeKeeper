@@ -8,9 +8,9 @@ import com.beekeeper.model.tasks.Task;
 
 public interface MainControllerServices
 {
-	public BroodBee getLarvaeByPos(Point2D.Double larvaePos);
+	public BroodBee getLarvaeByPos(Point2D.Double larvaePos, int combID);
 
-	public CombCell getCellByPos(Point2D.Double targetpos);
+	public CombCell getCellByPos(Point2D.Double targetpos, int combID);
 	
 	public void logMyTaskSwitch(Task newTask, int beeID);
 }
