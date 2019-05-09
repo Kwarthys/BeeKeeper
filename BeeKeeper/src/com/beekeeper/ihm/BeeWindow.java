@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 public class BeeWindow extends JFrame
 {
 	
-	public BeeWindow(Grapher grapher, ArrayList<CombDrawer> drawers)
+	public BeeWindow(TaskGrapher grapher, ArrayList<CombDrawer> drawers)
 	{	
 		setTitle("BeeKeeper");
 		

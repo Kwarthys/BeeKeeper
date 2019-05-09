@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import com.beekeeper.controller.logger.MyLogger;
 import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
-import com.beekeeper.ihm.Grapher;
+import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.AdultBee;
 import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.BroodBee;
@@ -74,16 +74,14 @@ public class MainController
 	{
 		sManager = new StimuliManager(bees, cells);	
 		
-		Point2D.Double center = new Point2D.Double(250,250);
+		Point2D.Double center = new Point2D.Double(100,100);
 
 		spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices(), bees);
 
 		spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60), cells);
+		
+		spawnWorkers(400, MyUtils.getCirclePointRule(center, 70), sManager.getNewServices(), this.controlServices, bees);
 
-		for(int i = 0; i < 400; i++)
-		{
-			bees.add(new AdultBee(sManager.getNewServices(), this.controlServices));
-		}
 		
 		this.combs.add(new Comb(bees, cells));
 
@@ -94,7 +92,7 @@ public class MainController
 		ArrayList<CombDrawer> drawers = new ArrayList<CombDrawer>();
 		drawers.add(drawer);
 		
-		Grapher g = new Grapher(bees);
+		TaskGrapher g = new TaskGrapher(bees);
 
 		this.window = new BeeWindow(g,drawers);
 
@@ -105,7 +103,7 @@ public class MainController
 	{		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double point = MyUtils.getPointInRule(300, 100, rule);
+			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
 			cells.add(new CombCell(point.getX(), point.getY()));
 		}
 	}
@@ -114,8 +112,17 @@ public class MainController
 	{		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double point = MyUtils.getPointInRule(300, 100, rule);
+			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
 			bees.add(new BroodBee(services, point.getX(), point.getY()));
+		}
+	}
+
+	private void spawnWorkers(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices, ArrayList<EmptyBee> bees)
+	{		
+		for(int i = 0; i < number; i++)
+		{
+			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
+			bees.add(new AdultBee(services, controllerServices, point.getX(), point.getY()));
 		}
 	}
 

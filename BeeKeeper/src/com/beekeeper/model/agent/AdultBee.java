@@ -16,7 +16,12 @@ public class AdultBee extends EmptyBee
 	
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
-		super(stimuliManagerServices);
+		this(stimuliManagerServices, controllerServices, 200+Math.random()*100, 200+Math.random()*100);
+	}
+		
+	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
+	{
+		super(stimuliManagerServices, x,y);
 		fillTaskList();
 		this.controllerServices = controllerServices;	
 		this.stimuliLoad = new StimuliLoad(this.position);
@@ -32,12 +37,18 @@ public class AdultBee extends EmptyBee
 				//System.out.println("random walk");
 				AdultBee.this.randomMove();
 				randomWalking = true;
-				this.interrupt();
+				//this.interrupt();
+				StimuliMap s = stimuliManagerServices.getAllStimuliAround(position);
+				Task detectedTask = forageForWork(s, false);
+				if(detectedTask.compute(s) > currentTask.compute(s))
+				{
+					this.interrupt();
+				}
 			}
 
 			@Override
 			public double compute(StimuliMap load) {
-				return AdultBee.this.getEnergy() > 0.8 ? 0.5:0;
+				return AdultBee.this.getEnergy() > 0.5 ? 0.7:0;
 			}
 
 			@Override
@@ -236,8 +247,8 @@ public class AdultBee extends EmptyBee
 	public void move(double dx, double dy) {
 		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);	
 	}
-
-	private Task forageForWork(StimuliMap load)
+	
+	private Task forageForWork(StimuliMap load, boolean log)
 	{
 		Task todo = taskList.get(0);
 		double taskScore = todo.checkInterrupt(load) ? 0 : todo.compute(load);
@@ -257,11 +268,16 @@ public class AdultBee extends EmptyBee
 		//System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
 		todo.learn();
 		
-		if(!(todo.taskName.equals("Random Walk") && randomWalking))
+		if(!(todo.taskName.equals("Random Walk") && randomWalking) && log)
 			controllerServices.logMyTaskSwitch(todo, this.ID);
 		
 		randomWalking = todo.taskName.equals("Random Walk");
 		
 		return todo;
+	}
+
+	private Task forageForWork(StimuliMap load)
+	{
+		return forageForWork(load, true);
 	}
 }
