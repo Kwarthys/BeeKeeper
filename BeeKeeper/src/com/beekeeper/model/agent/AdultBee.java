@@ -158,6 +158,11 @@ public class AdultBee extends EmptyBee
 					}
 					AdultBee.this.target = targetpos;
 					targetFood = controllerServices.getCellByPos(targetpos, combID);
+					if(targetFood == null)
+					{
+						System.err.println("No food " + combID);
+						return;
+					}
 
 					if(targetpos.distance(getPosition()) < 0.1)
 					{

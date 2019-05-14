@@ -47,6 +47,7 @@ public class Comb
 
 	public void setID(int id)
 	{
+		ID = id;
 		for(CombCell c : cells)
 		{
 			c.setCombID(id);

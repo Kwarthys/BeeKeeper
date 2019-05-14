@@ -3,6 +3,7 @@ package com.beekeeper.controller;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
 
@@ -31,6 +32,8 @@ public class MainController
 	private MyLogger logger = new MyLogger();
 
 	private StimuliManager sManager;
+	
+	private ArrayList<EmptyBee> totalBees;
 	
 	private BeeWindow window;
 	
@@ -70,10 +73,8 @@ public class MainController
 
 	public MainController()
 	{
-		ArrayList<EmptyBee> totalBees = new ArrayList<>();
-		ArrayList<CombCell> totalCells = new ArrayList<>();
-		
-		sManager = new StimuliManager(totalBees, totalCells);	
+		totalBees = new ArrayList<>();
+		ArrayList<CombCell> totalCells = new ArrayList<>();		
 		
 		Point2D.Double center = new Point2D.Double(100,100);
 		
@@ -81,6 +82,8 @@ public class MainController
 		{
 			ArrayList<EmptyBee> bees = new ArrayList<>();
 			ArrayList<CombCell> cells = new ArrayList<>();
+			
+			sManager = new StimuliManager(bees, cells);
 			
 			spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices(), bees);
 			spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60), cells);		
@@ -142,7 +145,14 @@ public class MainController
 			{
 				c.liveAgents();
 				c.liveCells();
-			}
+			}		
+			
+			totalBees.removeIf(new Predicate<EmptyBee>() {
+				@Override
+				public boolean test(EmptyBee t) {
+					return !t.alive;
+				}
+			});
 
 			sManager.updateStimuli();
 
