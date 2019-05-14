@@ -2,6 +2,7 @@ package com.beekeeper.model.agent;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliLoad;
@@ -74,5 +75,17 @@ public abstract class EmptyBee extends Agent
 	public void setCombID(int id)
 	{
 		this.combID = id;
+	}
+	
+	public HashMap<String, Double> getAllThresholds()
+	{
+		HashMap<String, Double> ts = new HashMap<String, Double>();
+		
+		for(Task t : taskList)
+		{
+			ts.put(t.taskName, t.threshold);
+		}
+		
+		return ts;
 	}
 }

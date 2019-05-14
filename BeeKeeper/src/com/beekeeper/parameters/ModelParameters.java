@@ -2,7 +2,7 @@ package com.beekeeper.parameters;
 
 public class ModelParameters
 {
-	public static final double TASK_LEARN_RATE = 0.01;
+	public static final double TASK_LEARN_RATE = 0.5;
 
 
 	public static final double TIME_DECAY_HungryLarvae = 0.1;

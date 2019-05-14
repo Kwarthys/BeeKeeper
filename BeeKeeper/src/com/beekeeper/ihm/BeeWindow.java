@@ -25,7 +25,7 @@ public class BeeWindow extends JFrame
 		{			
 			container.add(drawer);
 		}
-		setSize(1200,500);
+		setSize(1200,800);
 
 		this.setContentPane(container);
 		
