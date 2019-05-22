@@ -3,6 +3,7 @@ package com.beekeeper.controller;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
@@ -11,16 +12,13 @@ import com.beekeeper.controller.logger.MyLogger;
 import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
-import com.beekeeper.model.agent.AdultBee;
 import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.BroodBee;
 import com.beekeeper.model.agent.EmptyBee;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
-import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
-import com.beekeeper.utils.CustomRule;
 import com.beekeeper.utils.MyUtils;
 
 public class MainController
@@ -33,9 +31,9 @@ public class MainController
 
 	private StimuliManager sManager;
 	
-	private ArrayList<EmptyBee> totalBees;
-	
 	private BeeWindow window;
+	
+	private AgentFactory agentFactory;
 	
 	private MainControllerServices controlServices = new MainControllerServices() {			
 		@Override
@@ -73,7 +71,8 @@ public class MainController
 
 	public MainController()
 	{
-		totalBees = new ArrayList<>();
+		this.agentFactory = new AgentFactory();
+		
 		ArrayList<CombCell> totalCells = new ArrayList<>();		
 		
 		Point2D.Double center = new Point2D.Double(100,100);
@@ -85,9 +84,9 @@ public class MainController
 			
 			sManager = new StimuliManager(bees, cells);
 			
-			spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices(), bees);
-			spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60), cells);		
-			spawnWorkers(400, MyUtils.getCirclePointRule(center, 70), sManager.getNewServices(), this.controlServices, bees);
+			bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices()));
+			cells.addAll(agentFactory.spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60)));		
+			bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sManager.getNewServices(), this.controlServices));
 			
 			Comb c = new Comb(bees, cells);
 			c.setID(i);
@@ -99,55 +98,41 @@ public class MainController
 			
 			this.drawers.add(drawer);
 			
-			totalBees.addAll(bees);
 			totalCells.addAll(cells);
 		}
 		
-		TaskGrapher g = new TaskGrapher(totalBees);
+		TaskGrapher g = new TaskGrapher(agentFactory.allAgents);
 
 		this.window = new BeeWindow(g,drawers);
 
 		programLoop();
 	}
 
-	private void spawnCombCells(int number, CustomRule<Point2D.Double> rule, ArrayList<CombCell> cells)
-	{		
-		for(int i = 0; i < number; i++)
-		{
-			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
-			cells.add(new CombCell(point.getX(), point.getY()));
-		}
-	}
-
-	private void spawnBroodCells(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services, ArrayList<EmptyBee> bees)
-	{		
-		for(int i = 0; i < number; i++)
-		{
-			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
-			bees.add(new BroodBee(services, point.getX(), point.getY()));
-		}
-	}
-
-	private void spawnWorkers(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices, ArrayList<EmptyBee> bees)
-	{		
-		for(int i = 0; i < number; i++)
-		{
-			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
-			bees.add(new AdultBee(services, controllerServices, point.getX(), point.getY()));
-		}
-	}
-
 	private void programLoop()
 	{
 		while(true)
 		{
+			//Collections.shuffle(agentFactory.allAgents);
+			
+			ArrayList<EmptyBee> copy = new ArrayList<>(agentFactory.allAgents);
+			Collections.shuffle(copy);
+			
+			for(EmptyBee b : copy)
+			{
+				b.live();
+			}
+			
+			for(CombCell c : agentFactory.allCells)
+			{
+				c.live();
+			}
+			
 			for(Comb c : combs)
 			{
-				c.liveAgents();
-				c.liveCells();
-			}		
+				c.removeTheDead();
+			}
 			
-			totalBees.removeIf(new Predicate<EmptyBee>() {
+			agentFactory.allAgents.removeIf(new Predicate<EmptyBee>() {
 				@Override
 				public boolean test(EmptyBee t) {
 					return !t.alive;

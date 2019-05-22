@@ -42,7 +42,7 @@ public class CombDrawer extends JPanel{
 			int x = (int)c.getPosition().x;
 			int y = (int)c.getPosition().y;
 			
-			int phs = (int)(c.getExternalStimuli().getPheromoneAmount(Stimulus.FoodSmell) * 5);
+			int phs = (int)(c.getExternalStimuli().getPheromoneAmount(Stimulus.FoodSmell));
 			g.setColor(foodPhColor);
 			g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
 			

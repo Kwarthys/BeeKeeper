@@ -36,7 +36,7 @@ public class StimuliManager
 		{
 			StimuliLoad load = cell.getExternalStimuli();
 			addPerceptionOf(load, perception, position);
-		}		
+		}
 		
 		return perception;
 	}

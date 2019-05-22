@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliLoad;
+import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -20,7 +21,7 @@ public abstract class EmptyBee extends Agent
 	protected MainControllerServices controllerServices;
 	protected double stomach;
 	
-	protected int taskDuration = 0;
+	protected StimuliMap lastPercievedMap;
 	
 	protected int combID = -1;
 	
@@ -87,5 +88,9 @@ public abstract class EmptyBee extends Agent
 		}
 		
 		return ts;
+	}
+
+	public StimuliMap getPercievedStimuli() {
+		return lastPercievedMap;
 	}
 }

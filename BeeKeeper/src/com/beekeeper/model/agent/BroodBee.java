@@ -54,7 +54,7 @@ public class BroodBee extends EmptyBee {
 		Task askFood = new Task() {			
 			@Override
 			public void execute() {
-				if(BroodBee.this.getEnergy() < 0.9)
+				if(BroodBee.this.getEnergy() < 0.5)
 				{
 					BroodBee.this.stimuliLoad.emit(new HungryLarvaeStimulus(1-BroodBee.this.getEnergy()));
 					//System.out.println(this.ID + " " + this.stimuliLoad.getPheromoneAmount(Stimuli.HungryLarvae));
@@ -77,7 +77,7 @@ public class BroodBee extends EmptyBee {
 			}
 		};	
 
-		askFood.energyCost = 0.002;
+		askFood.energyCost = 0.001;
 		askFood.taskName = "LarvaeAskFood";
 
 		taskList.add(askFood);

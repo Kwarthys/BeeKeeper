@@ -21,29 +21,6 @@ public class Comb
 
 	public ArrayList<EmptyBee> getAgents(){return agents;}
 	public ArrayList<CombCell> getCells(){return cells;}
-	
-	public void liveAgents()
-	{
-		for(EmptyBee b : agents)
-		{
-			b.live();
-		}
-				
-		agents.removeIf(new Predicate<EmptyBee>() {
-			@Override
-			public boolean test(EmptyBee t) {
-				return !t.alive;
-			}
-		});
-	}
-	
-	public void liveCells()
-	{
-		for(CombCell c : cells)
-		{
-			c.live();
-		}
-	}
 
 	public void setID(int id)
 	{
@@ -56,5 +33,15 @@ public class Comb
 		{
 			b.setCombID(id);
 		}
+	}
+
+	public void removeTheDead()
+	{	
+		agents.removeIf(new Predicate<EmptyBee>() {
+			@Override
+			public boolean test(EmptyBee t) {
+				return !t.alive;
+			}
+		});
 	}
 }

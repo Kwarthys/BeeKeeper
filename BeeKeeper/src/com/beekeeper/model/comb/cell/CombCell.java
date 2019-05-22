@@ -10,7 +10,7 @@ public class CombCell
 	protected Point2D.Double position;
 	protected StimuliLoad stimuliLoad;
 	
-	protected double maxCellLoad = 1;
+	protected double maxCellLoad = 2;
 	
 	protected double foodAmount = 0;
 	
@@ -19,6 +19,7 @@ public class CombCell
 	public CombCell()
 	{
 		this(100+Math.random()*300, 100+Math.random()*300);
+		foodAmount = Math.random();
 	}
 
 	public CombCell(double x, double y)
@@ -29,7 +30,7 @@ public class CombCell
 	
 	public void live()
 	{
-		foodAmount += 0.01;
+		foodAmount += 0.1;
 		foodAmount = foodAmount > maxCellLoad ? maxCellLoad : foodAmount;
 		this.stimuliLoad.emit(new FoodSmellStimulus(foodAmount));
 	}

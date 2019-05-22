@@ -104,10 +104,10 @@ public class AdultBee extends EmptyBee
 
 			@Override
 			public void execute() {
-				taskDuration++;
+				this.learn();
 				if(gettingFood)
 				{
-					gettingFood = AdultBee.this.stomach < 0.9;					
+					gettingFood = AdultBee.this.stomach < 0.9;
 				}
 				else
 				{
@@ -138,10 +138,6 @@ public class AdultBee extends EmptyBee
 							targetLarvae.receiveFood(0.5);
 							AdultBee.this.stomach -= 0.1;
 						}
-						else
-						{
-							this.interrupt();
-						}
 					}
 					else
 					{
@@ -154,6 +150,7 @@ public class AdultBee extends EmptyBee
 					if(targetpos == null)
 					{
 						this.interrupt();
+						System.err.println("Interrupt caused by Food Not Found");
 						return;
 					}
 					AdultBee.this.target = targetpos;
@@ -166,8 +163,9 @@ public class AdultBee extends EmptyBee
 
 					if(targetpos.distance(getPosition()) < 0.1)
 					{
-						AdultBee.this.stomach += targetFood.takeFood(Math.min(1-AdultBee.this.stomach, 0.1));
-						AdultBee.this.addToEnergy(1);
+						AdultBee.this.stomach += targetFood.takeFood(Math.min(1-AdultBee.this.stomach, 0.5));
+						AdultBee.this.addToEnergy(1);							
+
 					}
 					else
 					{
@@ -187,18 +185,19 @@ public class AdultBee extends EmptyBee
 				targetLarvae = null;
 				AdultBee.this.target = null;
 				currentTask = null;
-				this.learn(taskDuration);
+				gettingFood = false;
+				this.forget();
 			}
 
 			@Override
 			public boolean checkInterrupt(StimuliMap load) {
 				if(gettingFood)
 				{
-					return AdultBee.this.getEnergy() < 0.3;
+					return AdultBee.this.getEnergy() < 0.3 || load.getAmount(Stimulus.HungryLarvae) == 0;
 				}
 				else
 				{
-					return AdultBee.this.getEnergy() < 0.3 || load.getAmount(Stimulus.HungryLarvae) < 1;					
+					return AdultBee.this.getEnergy() < 0.2 || load.getAmount(Stimulus.HungryLarvae) < 1;					
 				}
 			}
 		};	
@@ -235,6 +234,8 @@ public class AdultBee extends EmptyBee
 	public void live() {
 
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());
+		
+		lastPercievedMap = s;
 
 
 		if(currentTask == null)
@@ -282,8 +283,6 @@ public class AdultBee extends EmptyBee
 			controllerServices.logMyTaskSwitch(todo, this.ID);
 		
 		randomWalking = todo.taskName.equals("Random Walk");
-		
-		taskDuration=0;
 		
 		return todo;
 	}

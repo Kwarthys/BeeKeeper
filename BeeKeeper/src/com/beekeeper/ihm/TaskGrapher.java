@@ -14,6 +14,9 @@ import javax.swing.JPanel;
 import com.beekeeper.ihm.model.EmployementData;
 import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.EmptyBee;
+import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.parameters.ModelParameters;
 
 @SuppressWarnings("serial")
 public class TaskGrapher extends JPanel{
@@ -38,6 +41,7 @@ public class TaskGrapher extends JPanel{
 
 	public TaskGrapher(ArrayList<EmptyBee> bees)
 	{
+		//this.bees = new ArrayList<EmptyBee>(bees);
 		this.bees = bees;
 	}
 
@@ -120,10 +124,21 @@ public class TaskGrapher extends JPanel{
 			EmptyBee b = bees.get(i);
 			HashMap<String, Double> allTs = b.getAllThresholds();
 			
+			g.setColor(GraphicParams.hungryLarvaePhColor);
+			
+			int amount = 0;
+			StimuliMap map = b.getPercievedStimuli();
+			if(map != null)
+			{
+				amount = (int) map.getAmount(Stimulus.HungryLarvae);
+			}
+			
+			g.fillRect((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), baseLineY, 1, amount);
+			
 			for(Entry<String, Double> set : allTs.entrySet())
 			{
 				g.setColor(getColorFor(set.getKey()));
-				g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), (int) (baseLineY - set.getValue() * graphHeight / 2 / 10), 5, 5);				
+				g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), (int) (baseLineY - set.getValue() * graphHeight / 2 / ModelParameters.MAX_TASK_THRESHOLD), 5, 5);				
 			}
 			
 			
