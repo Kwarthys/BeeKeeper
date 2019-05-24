@@ -16,7 +16,7 @@ public class CombDrawer extends JPanel{
 
 	private ArrayList<EmptyBee> agents = new ArrayList<>();
 	private ArrayList<CombCell> cells = new ArrayList<>();
-	
+
 	private double zoom = 2;
 
 	private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
@@ -28,47 +28,47 @@ public class CombDrawer extends JPanel{
 
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		
+
 		paintPheromones(g);
 		paintActors(g);
 
 		g.dispose();
 	}
-	
+
 	protected void paintPheromones(Graphics g)
 	{		
 		for(CombCell c : cells)
 		{
 			int x = (int)c.getPosition().x;
 			int y = (int)c.getPosition().y;
-			
+
 			int phs = (int)(c.getExternalStimuli().getPheromoneAmount(Stimulus.FoodSmell));
 			g.setColor(foodPhColor);
 			g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-			
+
 		}
 
 		for(EmptyBee a : agents)
 		{
+			boolean fill = false;
+			
 			int x = (int)a.getPosition().x;
 			int y = (int)a.getPosition().y;
-			
-			if(a.getBeeType() == BeeType.BROOD_BEE)
-			{
-				int phs = (int)(a.getStimuliLoad().getPheromoneAmount(Stimulus.HungryLarvae) * 5);
-				g.setColor(hungryLarvaePhColor);
-				g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-			}
+
+			int phs = (int)(a.getStimuliLoad().getPheromoneAmount(Stimulus.HungryLarvae) * 15);
+			g.setColor(hungryLarvaePhColor);
+			g.drawOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+
 		}
 	}
-	
+
 	protected void paintActors(Graphics g)
 	{
 		for(CombCell c : cells)
 		{
 			int x = (int)c.getPosition().x;
 			int y = (int)c.getPosition().y;
-			
+
 			g.setColor(Color.WHITE);
 			g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
 		}

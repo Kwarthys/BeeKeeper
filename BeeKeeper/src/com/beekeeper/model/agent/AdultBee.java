@@ -124,15 +124,17 @@ public class AdultBee extends EmptyBee
 						return;
 					}
 					AdultBee.this.target = targetpos;
-					targetLarvae = controllerServices.getLarvaeByPos(targetpos, combID);
-					if(targetLarvae == null)
-					{
-						System.err.println("Missing larvae");
-						return;
-					}
 
 					if(targetpos.distance(getPosition()) < 0.1)
 					{
+						targetLarvae = controllerServices.getLarvaeByPos(targetpos, combID);
+						
+						if(targetLarvae == null)
+						{
+							//System.err.println("No larvae there");
+							return;
+						}
+						
 						if(targetLarvae.isHungry())
 						{
 							targetLarvae.receiveFood(0.5);

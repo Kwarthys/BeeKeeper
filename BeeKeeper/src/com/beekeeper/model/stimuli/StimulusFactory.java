@@ -12,18 +12,22 @@ public class StimulusFactory
 		switch(key)
 		{
 		case Dance:
+			System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
 		case Energy:
+			System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
 		case FoodSmell:
 			s = new FoodSmellStimulus(amount);
 			break;
 		case HungerBee:
+			System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
 		case HungryLarvae:
 			s = new HungryLarvaeStimulus(amount);
 			break;
 		default:
+			System.err.println("Stimulus Factory - default shouldn't happen");
 			break;
 		
 		}

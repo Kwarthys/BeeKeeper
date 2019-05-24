@@ -57,7 +57,7 @@ public class StimuliLoad
 		}
 	}
 	
-	private boolean setAmount(Stimulus key, double amount)
+	private void setAmount(Stimulus key, double amount)
 	{
 		if(pheromonesLoadMap.containsKey(key))
 		{
@@ -65,10 +65,8 @@ public class StimuliLoad
 		}
 		else
 		{
-			return false;
+			emit(StimulusFactory.get(key, amount));
 		}
-		
-		return true;
 	}
 
 	public void evaporate()
@@ -81,13 +79,16 @@ public class StimuliLoad
 
 	public void contact(StimuliLoad externalStimuli)
 	{
-		this.pheromonesLoadMap.forEach((key, stimulus) -> {
-			double mean = stimulus.amount + externalStimuli.getPheromoneAmount(key) / 2;
-			stimulus.amount = mean;
-			if(!externalStimuli.setAmount(key, mean))
+		for(Stimulus key : Stimulus.values())
+		{
+			double mean = this.getPheromoneAmount(key) + externalStimuli.getPheromoneAmount(key) / 2;
+			if(mean != 0)
 			{
-				externalStimuli.emit(StimulusFactory.get(key, mean));
+				this.setAmount(key, mean);
+				externalStimuli.setAmount(key, mean);
+				
+				//System.out.println(mean + " = " + externalStimuli.getPheromoneAmount(key));
 			}
-		});
+		}
 	}
 }
