@@ -65,7 +65,7 @@ public abstract class EmptyBee extends Agent
 	}
 	
 	public double getEnergy() {return this.energy;}
-	public StimuliLoad getExternalStimuli() {return this.stimuliLoad;}
+	public StimuliLoad getStimuliLoad() {return this.stimuliLoad;}
 	
 	protected void addToEnergy(double amount)
 	{

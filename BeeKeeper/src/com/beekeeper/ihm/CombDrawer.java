@@ -55,7 +55,7 @@ public class CombDrawer extends JPanel{
 			
 			if(a.getBeeType() == BeeType.BROOD_BEE)
 			{
-				int phs = (int)(a.getExternalStimuli().getPheromoneAmount(Stimulus.HungryLarvae) * 5);
+				int phs = (int)(a.getStimuliLoad().getPheromoneAmount(Stimulus.HungryLarvae) * 5);
 				g.setColor(hungryLarvaePhColor);
 				g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
 			}

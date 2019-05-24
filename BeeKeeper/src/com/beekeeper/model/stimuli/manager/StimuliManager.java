@@ -28,7 +28,7 @@ public class StimuliManager
 
 		for(EmptyBee bee : agents)
 		{
-			StimuliLoad load = bee.getExternalStimuli();
+			StimuliLoad load = bee.getStimuliLoad();
 			addPerceptionOf(load, perception, position);
 		}
 
@@ -72,7 +72,7 @@ public class StimuliManager
 		Point2D.Double strongestPos = null;
 		for(EmptyBee bee : agents)
 		{
-			StimuliLoad load = bee.getExternalStimuli();
+			StimuliLoad load = bee.getStimuliLoad();
 			
 			if(strongestPos == null || strongestAmount < load.getSensedStimulusAmount(type, load.emiterPos.distance(sensorPos)))
 			{
@@ -103,7 +103,7 @@ public class StimuliManager
 	{
 		for(EmptyBee bee : agents)
 		{
-			bee.getExternalStimuli().evaporate();
+			bee.getStimuliLoad().evaporate();
 		}
 		for(CombCell cell : cells)
 		{

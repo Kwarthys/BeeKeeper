@@ -137,6 +137,8 @@ public class AdultBee extends EmptyBee
 						{
 							targetLarvae.receiveFood(0.5);
 							AdultBee.this.stomach -= 0.1;
+							
+							stimuliLoad.contact(targetLarvae.getStimuliLoad());
 						}
 					}
 					else
