@@ -25,7 +25,7 @@ public abstract class EmptyBee extends Agent
 	
 	protected int combID = -1;
 	
-	protected Task currentTask;
+	protected Task currentTask = null;
 	
 	public Point2D.Double target = null;
 	
@@ -33,19 +33,82 @@ public abstract class EmptyBee extends Agent
 	
 	public Task getCurrentTask() {return currentTask;}
 	
-	public EmptyBee(StimuliManagerServices stimuliManagerServices)
+	public EmptyBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
-		this(stimuliManagerServices, 150+Math.random()*200, 150+Math.random()*200);
+		this(stimuliManagerServices, controllerServices, 150+Math.random()*200, 150+Math.random()*200);
 	}
 	
-	public EmptyBee(StimuliManagerServices stimuliManagerServices, double x, double y)
+	public EmptyBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
 	{
 		super(x,y);
 		this.stimuliManagerServices = stimuliManagerServices;
+		this.controllerServices = controllerServices;
 		setEnergy(Math.random()*0.8+0.2);
 	}
 	
 	public BeeType getBeeType() {return this.type;}
+	
+	public void live()
+	{
+		if(alive == false)
+		{
+			return;
+		}
+		
+		if(getEnergy() == 0)
+		{
+			alive = false;
+			return;
+		}
+		
+		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());		
+		lastPercievedMap = s;
+
+		if(currentTask != null)
+		{
+			if(currentTask.checkInterrupt(s))
+			{
+				currentTask.interrupt();
+				this.addToEnergy(-0.01);
+			}
+			else
+			{
+				this.addToEnergy(-currentTask.energyCost);
+				currentTask.execute();
+			}
+		}
+		
+		if(currentTask == null) //we need to do that even if we got in the previous if (after each execute current task might be null)
+		{			
+			chooseNewTask(s);
+			this.addToEnergy(-0.01);
+		}
+	}
+	
+	protected Task findATask(StimuliMap load)
+	{
+		Task todo = taskList.get(0);
+		double taskScore = todo.checkInterrupt(load) ? 0 : todo.compute(load);
+		
+		for(int ti = 1; ti < taskList.size(); ++ti)
+		{
+			Task current = taskList.get(ti);
+			double currentScore = current.checkInterrupt(load) ? 0 : current.compute(load); //Cannot choose a task that fulfills its interrupt 
+			if(currentScore > taskScore)
+			{
+				todo = current;
+				taskScore = currentScore;
+			}
+		}
+		
+		return todo;
+	}
+	
+	protected void chooseNewTask(StimuliMap load)
+	{
+		currentTask = findATask(load);
+		controllerServices.logMyTaskSwitch(currentTask, this.ID);
+	}
 	
 	public void setEnergy(double amount)
 	{

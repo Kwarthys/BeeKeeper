@@ -187,8 +187,8 @@ public class TaskGrapher extends JPanel{
 		colors.add(Color.WHITE);
 		colors.add(Color.LIGHT_GRAY);
 		colors.add(Color.YELLOW);
-		colors.add(Color.GREEN);
 		colors.add(new Color(150,150,255));		
+		colors.add(Color.GREEN);
 
 		return colors;
 	}

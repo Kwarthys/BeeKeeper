@@ -86,7 +86,7 @@ public class MainController
 			
 			sManagers.add(sm);
 			
-			bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
+			bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices(), this.controlServices));
 			cells.addAll(agentFactory.spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60)));		
 			bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
 			

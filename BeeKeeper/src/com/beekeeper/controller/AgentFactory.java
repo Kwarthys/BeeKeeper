@@ -32,14 +32,14 @@ public class AgentFactory
 		return cells;
 	}
 
-	public ArrayList<EmptyBee> spawnBroodCells(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services)
+	public ArrayList<EmptyBee> spawnBroodCells(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices)
 	{
 		ArrayList<EmptyBee> bees = new ArrayList<EmptyBee>();
 		
 		for(int i = 0; i < number; i++)
 		{
 			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
-			EmptyBee bee = new BroodBee(services, point.getX(), point.getY());
+			EmptyBee bee = new BroodBee(services, controllerServices, point.getX(), point.getY());
 			bees.add(bee);
 			allAgents.add(bee);
 		}

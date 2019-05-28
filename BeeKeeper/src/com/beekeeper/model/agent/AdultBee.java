@@ -11,9 +11,7 @@ import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
 public class AdultBee extends EmptyBee
-{
-	private boolean randomWalking = false;
-	
+{	
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		this(stimuliManagerServices, controllerServices, 200+Math.random()*100, 200+Math.random()*100);
@@ -21,9 +19,8 @@ public class AdultBee extends EmptyBee
 		
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
 	{
-		super(stimuliManagerServices, x,y);
+		super(stimuliManagerServices, controllerServices, x,y);
 		fillTaskList();
-		this.controllerServices = controllerServices;	
 		this.stimuliLoad = new StimuliLoad(this.position);
 		this.type = BeeType.ADULT_BEE;		
 	}
@@ -34,12 +31,10 @@ public class AdultBee extends EmptyBee
 		Task randomMoveTask = new Task() {			
 			@Override
 			public void execute() {
-				//System.out.println("random walk");
 				AdultBee.this.randomMove();
-				randomWalking = true;
-				//this.interrupt();
+
 				StimuliMap s = stimuliManagerServices.getAllStimuliAround(position);
-				Task detectedTask = forageForWork(s, false);
+				Task detectedTask = findATask(s);
 				if(detectedTask.compute(s) > currentTask.compute(s))
 				{
 					this.interrupt();
@@ -235,64 +230,7 @@ public class AdultBee extends EmptyBee
 	}
 
 	@Override
-	public void live() {
-
-		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());
-		
-		lastPercievedMap = s;
-
-
-		if(currentTask == null)
-		{
-			currentTask = forageForWork(s);
-			this.addToEnergy(-0.01);
-		}
-		else if(currentTask.checkInterrupt(s))
-		{
-			currentTask.interrupt();
-			this.addToEnergy(-0.01);
-		}
-		else
-		{
-			this.addToEnergy(-currentTask.energyCost);
-			currentTask.execute();
-		}
-	}
-
-	@Override
 	public void move(double dx, double dy) {
 		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);	
-	}
-	
-	private Task forageForWork(StimuliMap load, boolean log)
-	{
-		Task todo = taskList.get(0);
-		double taskScore = todo.checkInterrupt(load) ? 0 : todo.compute(load);
-
-
-		for(int ti = 1; ti < taskList.size(); ++ti)
-		{
-			Task current = taskList.get(ti);
-			double currentScore = current.checkInterrupt(load) ? 0 : current.compute(load); //Cannot choose a task that fulfills its interrupt 
-			if(currentScore > taskScore)
-			{
-				todo = current;
-				taskScore = currentScore;
-			}
-		}
-
-		//System.out.println(this.ID + " chose task " + todo.taskName + " sensing " + load.getAmount(Stimulus.HungryLarvae) + "HL with energy at " + getEnergy());
-		
-		if(!(todo.taskName.equals("Random Walk") && randomWalking) && log)
-			controllerServices.logMyTaskSwitch(todo, this.ID);
-		
-		randomWalking = todo.taskName.equals("Random Walk");
-		
-		return todo;
-	}
-
-	private Task forageForWork(StimuliMap load)
-	{
-		return forageForWork(load, true);
 	}
 }

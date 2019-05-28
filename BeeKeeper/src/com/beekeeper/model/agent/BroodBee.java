@@ -1,5 +1,6 @@
 package com.beekeeper.model.agent;
 
+import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
@@ -8,12 +9,12 @@ import com.beekeeper.model.tasks.Task;
 
 public class BroodBee extends EmptyBee {
 
-	public BroodBee(StimuliManagerServices stimuliManagerServices) {
-		this(stimuliManagerServices, 200+Math.random()*100, 200+Math.random()*100);
+	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices) {
+		this(stimuliManagerServices, controllerServices, 200+Math.random()*100, 200+Math.random()*100);
 	}
 
-	public BroodBee(StimuliManagerServices stimuliManagerServices, double x, double y) {
-		super(stimuliManagerServices,x,y);
+	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y) {
+		super(stimuliManagerServices, controllerServices, x,y);
 		this.type = BeeType.BROOD_BEE;
 		this.stimuliLoad = new StimuliLoad(this.position);
 		if(this.getEnergy() < 0.5)
@@ -37,6 +38,11 @@ public class BroodBee extends EmptyBee {
 			this.alive = false;
 			System.err.println(ID + " died of starvation, how sad.");
 			return;
+		}
+		
+		if(currentTask == null)
+		{
+			chooseNewTask(getPercievedStimuli());
 		}
 		
 		this.addToEnergy(-currentTask.energyCost);
@@ -81,7 +87,5 @@ public class BroodBee extends EmptyBee {
 		askFood.taskName = "LarvaeAskFood";
 
 		taskList.add(askFood);
-		
-		currentTask = askFood;
 	}
 }
