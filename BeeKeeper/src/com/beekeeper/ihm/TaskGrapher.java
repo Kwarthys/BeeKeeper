@@ -2,6 +2,7 @@ package com.beekeeper.ihm;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
@@ -43,6 +44,9 @@ public class TaskGrapher extends JPanel{
 	{
 		//this.bees = new ArrayList<EmptyBee>(bees);
 		this.bees = bees;
+		Dimension size = new Dimension((int)(borderMargin * 2 + graphWidth * 1.2), (int)(borderMargin*2 + graphHeight*1.6));
+		this.setPreferredSize(size);
+		this.setMinimumSize(size);
 	}
 
 	@Override
@@ -112,7 +116,7 @@ public class TaskGrapher extends JPanel{
 	{
 		int graphStartX = borderMargin + graphWidth / 2;
 		int graphStartY = 2*borderMargin + graphHeight;
-		
+
 		int baseLineY = graphStartY + graphHeight/2;
 
 		g.setColor(Color.LIGHT_GRAY);
@@ -123,25 +127,25 @@ public class TaskGrapher extends JPanel{
 		{
 			EmptyBee b = bees.get(i);
 			HashMap<String, Double> allTs = b.getAllThresholds();
-			
+
 			g.setColor(GraphicParams.hungryLarvaePhColor);
-			
+
 			int amount = 0;
 			StimuliMap map = b.getPercievedStimuli();
 			if(map != null)
 			{
 				amount = (int) map.getAmount(Stimulus.HungryLarvae);
 			}
-			
+
 			g.fillRect((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), baseLineY, 1, amount);
-			
+
 			for(Entry<String, Double> set : allTs.entrySet())
 			{
 				g.setColor(getColorFor(set.getKey()));
 				g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), (int) (baseLineY - set.getValue() * graphHeight / 2 / ModelParameters.MAX_TASK_THRESHOLD), 5, 5);				
 			}
-			
-			
+
+
 		}
 	}
 

@@ -27,9 +27,9 @@ public class MainController
 	
 	private ArrayList<Comb> combs = new ArrayList<Comb>();
 	
+	private ArrayList<StimuliManager> sManagers = new ArrayList<>();
+	
 	private MyLogger logger = new MyLogger();
-
-	private StimuliManager sManager;
 	
 	private BeeWindow window;
 	
@@ -77,16 +77,18 @@ public class MainController
 		
 		Point2D.Double center = new Point2D.Double(100,100);
 		
-		for(int i = 0; i < 1; ++i)
+		for(int i = 0; i < 2; ++i)
 		{
 			ArrayList<EmptyBee> bees = new ArrayList<>();
 			ArrayList<CombCell> cells = new ArrayList<>();
 			
-			sManager = new StimuliManager(bees, cells);
+			StimuliManager sm = new StimuliManager(bees, cells);
 			
-			bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sManager.getNewServices()));
+			sManagers.add(sm);
+			
+			bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			cells.addAll(agentFactory.spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60)));		
-			bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sManager.getNewServices(), this.controlServices));
+			bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
 			
 			Comb c = new Comb(bees, cells);
 			c.setID(i);
@@ -139,7 +141,10 @@ public class MainController
 				}
 			});
 
-			sManager.updateStimuli();
+			for(StimuliManager s : sManagers)
+			{
+				s.updateStimuli();
+			}
 
 			SwingUtilities.invokeLater(new Runnable() {				
 				@Override

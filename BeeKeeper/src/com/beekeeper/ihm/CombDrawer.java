@@ -1,12 +1,12 @@
 package com.beekeeper.ihm;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import com.beekeeper.model.agent.BeeType;
 import com.beekeeper.model.agent.EmptyBee;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.Stimulus;
@@ -21,6 +21,12 @@ public class CombDrawer extends JPanel{
 
 	private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
 	private Color foodPhColor = GraphicParams.foodPhColor;
+	
+	public CombDrawer()
+	{
+		this.setPreferredSize(new Dimension(400,400));
+		this.setMinimumSize(new Dimension(350,350));
+	}
 
 
 	@Override
@@ -50,7 +56,7 @@ public class CombDrawer extends JPanel{
 
 		for(EmptyBee a : agents)
 		{
-			boolean fill = false;
+			//boolean fill = false;
 			
 			int x = (int)a.getPosition().x;
 			int y = (int)a.getPosition().y;
