@@ -3,33 +3,25 @@ package com.beekeeper.model.comb;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-import com.beekeeper.model.agent.EmptyBee;
-import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.agent.Agent;
 
 public class Comb
 {
-	private ArrayList<EmptyBee> agents;
-	private ArrayList<CombCell> cells;
+	private ArrayList<Agent> agents;
 	
 	public int ID;
 	
-	public Comb(ArrayList<EmptyBee> agents, ArrayList<CombCell> cells)
+	public Comb(ArrayList<Agent> bees)
 	{
-		this.agents = agents;
-		this.cells = cells;
+		this.agents = bees;
 	}
 
-	public ArrayList<EmptyBee> getAgents(){return agents;}
-	public ArrayList<CombCell> getCells(){return cells;}
+	public ArrayList<Agent> getAgents(){return agents;}
 
 	public void setID(int id)
 	{
 		ID = id;
-		for(CombCell c : cells)
-		{
-			c.setCombID(id);
-		}
-		for(EmptyBee b : agents)
+		for(Agent b : agents)
 		{
 			b.setCombID(id);
 		}
@@ -37,9 +29,9 @@ public class Comb
 
 	public void removeTheDead()
 	{	
-		agents.removeIf(new Predicate<EmptyBee>() {
+		agents.removeIf(new Predicate<Agent>() {
 			@Override
-			public boolean test(EmptyBee t) {
+			public boolean test(Agent t) {
 				return !t.alive;
 			}
 		});

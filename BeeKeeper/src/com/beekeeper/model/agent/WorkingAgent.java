@@ -5,48 +5,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
-import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
-public abstract class EmptyBee extends Agent
+public abstract class WorkingAgent extends EmitterAgent
 {
 	protected ArrayList<Task> taskList = new ArrayList<>();
 	protected abstract void fillTaskList();
 	
 	private double energy;
-	protected StimuliLoad stimuliLoad;
-	protected StimuliManagerServices stimuliManagerServices;
+	
 	protected MainControllerServices controllerServices;
 	protected double stomach;
 	
 	protected StimuliMap lastPercievedMap;
 	
-	protected int combID = -1;
-	
 	protected Task currentTask = null;
 	
 	public Point2D.Double target = null;
 	
-	protected BeeType type;
-	
 	public Task getCurrentTask() {return currentTask;}
 	
-	public EmptyBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
+	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		this(stimuliManagerServices, controllerServices, 150+Math.random()*200, 150+Math.random()*200);
 	}
 	
-	public EmptyBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
+	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
 	{
-		super(x,y);
-		this.stimuliManagerServices = stimuliManagerServices;
+		super(x,y, stimuliManagerServices);
 		this.controllerServices = controllerServices;
 		setEnergy(Math.random()*0.8+0.2);
 	}
-	
-	public BeeType getBeeType() {return this.type;}
 	
 	public void live()
 	{
@@ -63,6 +54,8 @@ public abstract class EmptyBee extends Agent
 		
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());		
 		lastPercievedMap = s;
+		
+		//System.out.println(ID + " living ! " + s.getAmount(Stimulus.HungryLarvae));
 
 		if(currentTask != null)
 		{
@@ -128,7 +121,6 @@ public abstract class EmptyBee extends Agent
 	}
 	
 	public double getEnergy() {return this.energy;}
-	public StimuliLoad getStimuliLoad() {return this.stimuliLoad;}
 	
 	protected void addToEnergy(double amount)
 	{

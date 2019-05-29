@@ -1,16 +1,16 @@
-package com.beekeeper.model.agent;
+package com.beekeeper.model.agent.implem;
 
 import java.awt.geom.Point2D;
 
 import com.beekeeper.controller.MainControllerServices;
-import com.beekeeper.model.comb.cell.CombCell;
-import com.beekeeper.model.stimuli.StimuliLoad;
+import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
-public class AdultBee extends EmptyBee
+public class AdultBee extends WorkingAgent
 {	
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
@@ -21,8 +21,7 @@ public class AdultBee extends EmptyBee
 	{
 		super(stimuliManagerServices, controllerServices, x,y);
 		fillTaskList();
-		this.stimuliLoad = new StimuliLoad(this.position);
-		this.type = BeeType.ADULT_BEE;		
+		this.type = AgentType.ADULT_BEE;		
 	}
 
 	@Override
@@ -93,7 +92,7 @@ public class AdultBee extends EmptyBee
 		Task feedLarvaeTask = new Task() {
 
 			private BroodBee targetLarvae = null;
-			private CombCell targetFood = null;
+			private FoodSource targetFood = null;
 			
 			private boolean gettingFood = true;
 
@@ -153,7 +152,7 @@ public class AdultBee extends EmptyBee
 						return;
 					}
 					AdultBee.this.target = targetpos;
-					targetFood = controllerServices.getCellByPos(targetpos, combID);
+					targetFood = controllerServices.getFoodSourceByPos(targetpos, combID);
 					if(targetFood == null)
 					{
 						System.err.println("No food " + combID);

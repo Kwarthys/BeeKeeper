@@ -12,11 +12,11 @@ import com.beekeeper.controller.logger.MyLogger;
 import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
-import com.beekeeper.model.agent.BeeType;
-import com.beekeeper.model.agent.BroodBee;
-import com.beekeeper.model.agent.EmptyBee;
+import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.implem.BroodBee;
+import com.beekeeper.model.agent.implem.FoodSource;
 import com.beekeeper.model.comb.Comb;
-import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.utils.MyUtils;
@@ -38,69 +38,46 @@ public class MainController
 	private MainControllerServices controlServices = new MainControllerServices() {			
 		@Override
 		public BroodBee getLarvaeByPos(Point2D.Double larvaePos, int combID) {
-			for(EmptyBee bee : combs.get(combID).getAgents())
-			{
-				if(bee.getBeeType() == BeeType.BROOD_BEE)
-				{
-					if(larvaePos.equals(bee.getPosition()))
-					{
-						return (BroodBee) bee;
-					}
-				}
-			}
-			return null;
-		}
-
-		@Override
-		public CombCell getCellByPos(Double targetPos, int combID) {
-			for(CombCell cell : combs.get(combID).getCells())
-			{
-				if(targetPos.equals(cell.getPosition()))
-				{
-					return cell;
-				}					
-			}
-			return null;
+			return (BroodBee)getAgentByPos(larvaePos, AgentType.BROOD_BEE, combID);
 		}
 
 		@Override
 		public void logMyTaskSwitch(Task newTask, int beeID) {
 			MainController.this.logger.logTask(beeID, newTask.taskName);				
 		}
+
+		@Override
+		public FoodSource getFoodSourceByPos(Double pos, int combID) {
+			return (FoodSource)getAgentByPos(pos, AgentType.FOOD_SOURCE, combID);
+		}
 	};
 
 	public MainController()
 	{
-		this.agentFactory = new AgentFactory();
-		
-		ArrayList<CombCell> totalCells = new ArrayList<>();		
+		this.agentFactory = new AgentFactory();	
 		
 		Point2D.Double center = new Point2D.Double(100,100);
 		
 		for(int i = 0; i < 2; ++i)
 		{
-			ArrayList<EmptyBee> bees = new ArrayList<>();
-			ArrayList<CombCell> cells = new ArrayList<>();
+			ArrayList<Agent> bees = new ArrayList<>();
 			
-			StimuliManager sm = new StimuliManager(bees, cells);
+			StimuliManager sm = new StimuliManager(bees);
 			
 			sManagers.add(sm);
 			
 			bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices(), this.controlServices));
-			cells.addAll(agentFactory.spawnCombCells(30, MyUtils.getDonutPointRule(center, 50, 60)));		
+			bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
 			bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
 			
-			Comb c = new Comb(bees, cells);
+			Comb c = new Comb(bees);
 			c.setID(i);
 			this.combs.add(c);
 			
 			CombDrawer drawer = new CombDrawer();
 			drawer.setBees(bees);
-			drawer.setCells(cells);
 			
 			this.drawers.add(drawer);
-			
-			totalCells.addAll(cells);
 		}
 		
 		TaskGrapher g = new TaskGrapher(agentFactory.allAgents);
@@ -109,6 +86,21 @@ public class MainController
 
 		programLoop();
 	}
+	
+	private Agent getAgentByPos(Point2D.Double pos, AgentType type, int combID)
+	{
+		for(Agent bee : combs.get(combID).getAgents())
+		{
+			if(bee.getBeeType() == type)
+			{
+				if(pos.equals(bee.getPosition()))
+				{
+					return bee;
+				}
+			}
+		}
+		return null;
+	}
 
 	private void programLoop()
 	{
@@ -116,17 +108,12 @@ public class MainController
 		{
 			//Collections.shuffle(agentFactory.allAgents);
 			
-			ArrayList<EmptyBee> copy = new ArrayList<>(agentFactory.allAgents);
+			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
 			Collections.shuffle(copy);
 			
-			for(EmptyBee b : copy)
+			for(Agent b : copy)
 			{
 				b.live();
-			}
-			
-			for(CombCell c : agentFactory.allCells)
-			{
-				c.live();
 			}
 			
 			for(Comb c : combs)
@@ -134,9 +121,9 @@ public class MainController
 				c.removeTheDead();
 			}
 			
-			agentFactory.allAgents.removeIf(new Predicate<EmptyBee>() {
+			agentFactory.allAgents.removeIf(new Predicate<Agent>() {
 				@Override
-				public boolean test(EmptyBee t) {
+				public boolean test(Agent t) {
 					return !t.alive;
 				}
 			});
@@ -156,7 +143,6 @@ public class MainController
 			try {
 				Thread.sleep(30);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

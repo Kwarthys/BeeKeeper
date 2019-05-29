@@ -9,6 +9,11 @@ public abstract class Agent
 	protected Point2D.Double position;
 	
 	protected int ID;
+	
+	protected int combID = -1;
+	
+	protected AgentType type;	
+	public AgentType getBeeType() {return this.type;}
 
 	public abstract void live();
 	public abstract void move(double dx, double dy);
@@ -22,6 +27,11 @@ public abstract class Agent
 	public Agent()
 	{
 		this.ID = IDManager.getNextID();
+	}
+	
+	public void setCombID(int id)
+	{
+		this.combID = id;
 	}
 	
 	public Agent(Double x, Double y)

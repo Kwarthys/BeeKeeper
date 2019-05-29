@@ -2,28 +2,36 @@ package com.beekeeper.ihm.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.beekeeper.model.agent.EmptyBee;
+
+import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.WorkingAgent;
 
 public class EmployementData
 {
 	public HashMap<String, Integer> data = new HashMap<String, Integer>();
 	
-	public static EmployementData getDataFromList(ArrayList<EmptyBee> bees)
+	public static EmployementData getDataFromList(ArrayList<Agent> bees)
 	{
 		EmployementData d = new EmployementData();
 		
-		for(EmptyBee b : bees)
+		for(Agent a : bees)
 		{
-			if(b.getCurrentTask() == null)
+			AgentType at = a.getBeeType();
+			if(at == AgentType.ADULT_BEE || at == AgentType.BROOD_BEE)
 			{
-				d.incrementKey("SwitchingTask");
-			}
-			else
-			{
-				String taskName = b.getCurrentTask().taskName;
-				d.incrementKey(taskName);				
-			}
-			
+				WorkingAgent b = (WorkingAgent) a;
+				
+				if(b.getCurrentTask() == null)
+				{
+					d.incrementKey("SwitchingTask");
+				}
+				else
+				{
+					String taskName = b.getCurrentTask().taskName;
+					d.incrementKey(taskName);				
+				}
+			}			
 		}		
 		
 		return d;
