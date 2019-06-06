@@ -22,7 +22,6 @@ public class StimuliManager
 
 	public StimuliMap getAllStimuliAround(Point2D.Double position)
 	{
-		System.out.println(agents.size());
 		StimuliMap perception = new StimuliMap();
 
 		for(Agent bee : agents)

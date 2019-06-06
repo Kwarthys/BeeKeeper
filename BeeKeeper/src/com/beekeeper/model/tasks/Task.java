@@ -10,16 +10,17 @@ public abstract class Task
 	public double energyCost;
 	public String taskName = "default";
 	public int midDuration = 20;
+	public boolean printLearning = false;
 
 	public void learn()
 	{
-		threshold -= ModelParameters.TASK_LEARN_RATE / midDuration;
+		threshold -= ModelParameters.TASK_LEARN_RATE;
 		checkThresholdBoundary();
 	}
 	
 	public void forget()
 	{
-		threshold += ModelParameters.TASK_LEARN_RATE;
+		threshold += ModelParameters.TASK_FORGET_RATE;
 		checkThresholdBoundary();
 	}
 	

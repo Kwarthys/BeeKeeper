@@ -9,6 +9,7 @@ import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public class AdultBee extends WorkingAgent
 {	
@@ -98,7 +99,6 @@ public class AdultBee extends WorkingAgent
 
 			@Override
 			public void execute() {
-				this.learn();
 				if(gettingFood)
 				{
 					gettingFood = AdultBee.this.stomach < 0.9;
@@ -184,7 +184,6 @@ public class AdultBee extends WorkingAgent
 				AdultBee.this.target = null;
 				currentTask = null;
 				gettingFood = false;
-				this.forget();
 			}
 
 			@Override
@@ -202,6 +201,8 @@ public class AdultBee extends WorkingAgent
 
 		feedLarvaeTask.energyCost = 0.001;
 		feedLarvaeTask.taskName = "Feed Larvae";
+		feedLarvaeTask.printLearning = true;
+		feedLarvaeTask.threshold = Math.random() * ModelParameters.MAX_TASK_THRESHOLD;
 
 		taskList.add(feedLarvaeTask);
 	}

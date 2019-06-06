@@ -68,6 +68,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			{
 				this.addToEnergy(-currentTask.energyCost);
 				currentTask.execute();
+				this.learnTask(currentTask);
 			}
 		}
 		
@@ -143,6 +144,34 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		
 		return ts;
+	}
+	
+	public HashMap<String, Double> getAllPrintableThresholds()
+	{
+		HashMap<String, Double> ts = new HashMap<String, Double>();
+		
+		for(Task t : taskList)
+		{
+			if(t.printLearning)
+				ts.put(t.taskName, t.threshold);
+		}
+		
+		return ts;
+	}
+	
+	protected void learnTask(Task toLearn)
+	{
+		for(Task t : taskList)
+		{
+			if(t == toLearn)
+			{
+				t.learn();
+			}
+			else
+			{
+				t.forget();
+			}
+		}
 	}
 
 	public StimuliMap getPercievedStimuli() {

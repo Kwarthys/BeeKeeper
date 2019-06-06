@@ -11,7 +11,7 @@ public class EmployementData
 {
 	public HashMap<String, Integer> data = new HashMap<String, Integer>();
 	
-	public static EmployementData getDataFromList(ArrayList<Agent> bees)
+	private static EmployementData getDataFromList(ArrayList<Agent> bees, boolean filterPrints)
 	{
 		EmployementData d = new EmployementData();
 		
@@ -28,13 +28,26 @@ public class EmployementData
 				}
 				else
 				{
-					String taskName = b.getCurrentTask().taskName;
-					d.incrementKey(taskName);				
+					if(!(filterPrints && !b.getCurrentTask().printLearning))
+					{
+						String taskName = b.getCurrentTask().taskName;
+						d.incrementKey(taskName);										
+					}
 				}
 			}			
 		}		
 		
 		return d;
+	}
+
+	public static EmployementData getDataToPrintFromList(ArrayList<Agent> bees)
+	{
+		return getDataFromList(bees, true);
+	}
+	
+	public static EmployementData getDataFromList(ArrayList<Agent> bees)
+	{
+		return getDataFromList(bees, false);
 	}
 	
 	public int get(String key)

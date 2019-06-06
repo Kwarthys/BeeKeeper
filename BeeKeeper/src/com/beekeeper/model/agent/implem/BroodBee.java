@@ -26,32 +26,6 @@ public class BroodBee extends WorkingAgent {
 	}
 
 	@Override
-	public void live()
-	{
-		if(!this.alive)
-		{
-			return;
-		}
-		
-		if(getEnergy() == 0)
-		{
-			this.alive = false;
-			System.err.println(ID + " died of starvation, how sad.");
-			return;
-		}
-		
-		if(currentTask == null)
-		{
-			chooseNewTask(getPercievedStimuli());
-		}
-		
-		this.addToEnergy(-currentTask.energyCost);
-		currentTask.execute();
-		
-		
-	}
-
-	@Override
 	public void move(double dx, double dy) {}
 
 	@Override
@@ -60,16 +34,12 @@ public class BroodBee extends WorkingAgent {
 		Task askFood = new Task() {			
 			@Override
 			public void execute() {
-				if(BroodBee.this.getEnergy() < 0.5)
-				{
-					BroodBee.this.stimuliLoad.emit(new HungryLarvaeStimulus(1-BroodBee.this.getEnergy()));
-					//System.out.println(this.ID + " " + this.stimuliLoad.getPheromoneAmount(Stimuli.HungryLarvae));
-				}
+				BroodBee.this.stimuliLoad.emit(new HungryLarvaeStimulus(1-BroodBee.this.getEnergy()));				
 			}
 
 			@Override
 			public double compute(StimuliMap load) {
-				return 1;
+				return getEnergy();
 			}
 
 			@Override
@@ -79,7 +49,7 @@ public class BroodBee extends WorkingAgent {
 
 			@Override
 			public boolean checkInterrupt(StimuliMap load) {
-				return false;
+				return getEnergy() > 0.5;
 			}
 		};	
 
@@ -87,5 +57,32 @@ public class BroodBee extends WorkingAgent {
 		askFood.taskName = "LarvaeAskFood";
 
 		taskList.add(askFood);
+		
+		
+		
+		Task rest = new Task() {			
+			@Override
+			public void execute(){}
+
+			@Override
+			public double compute(StimuliMap load) {
+				return 1-getEnergy();
+			}
+
+			@Override
+			public void interrupt() {
+				BroodBee.this.currentTask = null;
+			}
+
+			@Override
+			public boolean checkInterrupt(StimuliMap load) {
+				return getEnergy() < 0.5;
+			}
+		};	
+
+		rest.energyCost = 0.001;
+		rest.taskName = "LarvaeRest";
+
+		taskList.add(rest);
 	}
 }

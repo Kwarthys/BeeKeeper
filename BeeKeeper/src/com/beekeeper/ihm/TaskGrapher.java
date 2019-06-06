@@ -131,7 +131,7 @@ public class TaskGrapher extends JPanel{
 			{
 
 				WorkingAgent b = (WorkingAgent)bees.get(i);
-				HashMap<String, Double> allTs = b.getAllThresholds();
+				HashMap<String, Double> allTs = b.getAllPrintableThresholds();
 
 				g.setColor(GraphicParams.hungryLarvaePhColor);
 

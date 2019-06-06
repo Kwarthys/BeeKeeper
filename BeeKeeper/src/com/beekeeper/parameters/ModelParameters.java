@@ -3,6 +3,7 @@ package com.beekeeper.parameters;
 public class ModelParameters
 {
 	public static final double TASK_LEARN_RATE = 1;
+	public static final double TASK_FORGET_RATE = 0.1;
 
 
 	public static final double TIME_DECAY_HungryLarvae = 0.1;
@@ -16,5 +17,5 @@ public class ModelParameters
 	
 	public static final double SMELL_THRESHOLD = 0.001;
 	
-	public static final double MAX_TASK_THRESHOLD = 15;
+	public static final double MAX_TASK_THRESHOLD = 100;
 }
