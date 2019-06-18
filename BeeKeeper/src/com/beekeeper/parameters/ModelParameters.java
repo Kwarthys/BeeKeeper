@@ -18,4 +18,5 @@ public class ModelParameters
 	public static final double SMELL_THRESHOLD = 0.001;
 	
 	public static final double MAX_TASK_THRESHOLD = 100;
+	public static final double HIVE_THERMAL_RESISTANCE = 15;
 }

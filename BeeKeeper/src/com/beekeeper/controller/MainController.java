@@ -17,6 +17,7 @@ import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.agent.implem.FoodSource;
 import com.beekeeper.model.comb.Comb;
+import com.beekeeper.model.hive.BeeHive;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.utils.MyUtils;
@@ -35,6 +36,10 @@ public class MainController
 	
 	private AgentFactory agentFactory;
 	
+	private BeeHive hive;
+	
+	private int simuStep = 0;
+	
 	private MainControllerServices controlServices = new MainControllerServices() {			
 		@Override
 		public BroodBee getLarvaeByPos(Point2D.Double larvaePos, int combID) {
@@ -50,6 +55,11 @@ public class MainController
 		public FoodSource getFoodSourceByPos(Double pos, int combID) {
 			return (FoodSource)getAgentByPos(pos, AgentType.FOOD_SOURCE, combID);
 		}
+
+		@Override
+		public double getHiveTemperature(){
+			return hive.getTemperature();
+		}
 	};
 
 	public MainController()
@@ -57,6 +67,8 @@ public class MainController
 		this.agentFactory = new AgentFactory();	
 		
 		Point2D.Double center = new Point2D.Double(100,100);
+		
+		this.hive = new BeeHive();
 		
 		for(int i = 0; i < 2; ++i)
 		{
@@ -132,6 +144,8 @@ public class MainController
 			{
 				s.updateStimuli();
 			}
+			
+			this.hive.computeInternalTemperature(Math.cos(simuStep++ * 1.0 / 300) * 10 + 15);
 
 			SwingUtilities.invokeLater(new Runnable() {				
 				@Override

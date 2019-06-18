@@ -13,4 +13,6 @@ public interface MainControllerServices
 	public FoodSource getFoodSourceByPos(Point2D.Double pos, int combID);
 	
 	public void logMyTaskSwitch(Task newTask, int beeID);
+	
+	public double getHiveTemperature();
 }
