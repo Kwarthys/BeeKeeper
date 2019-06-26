@@ -9,6 +9,8 @@ import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.model.tasks.generaltasks.RandomMoveTask;
+import com.beekeeper.model.tasks.generaltasks.RestTask;
 import com.beekeeper.parameters.ModelParameters;
 
 public class AdultBee extends WorkingAgent
@@ -28,67 +30,9 @@ public class AdultBee extends WorkingAgent
 	@Override
 	protected void fillTaskList()
 	{
-		Task randomMoveTask = new Task() {			
-			@Override
-			public void execute() {
-				AdultBee.this.randomMove();
+		taskList.add(new RandomMoveTask(this));
 
-				StimuliMap s = stimuliManagerServices.getAllStimuliAround(position);
-				Task detectedTask = findATask(s);
-				if(detectedTask.compute(s) > currentTask.compute(s))
-				{
-					this.interrupt();
-				}
-			}
-
-			@Override
-			public double compute(StimuliMap load) {
-				return AdultBee.this.getEnergy() > 0.5 ? 0.7:0;
-			}
-
-			@Override
-			public void interrupt() {
-				currentTask = null;
-			}
-
-			@Override
-			public boolean checkInterrupt(StimuliMap load) {
-				return AdultBee.this.getEnergy() < 0.1;
-			}
-		};	
-
-		randomMoveTask.energyCost = 0.01;
-		randomMoveTask.taskName = "Random Walk";
-
-		taskList.add(randomMoveTask);
-
-
-		Task idleTask = new Task() {			
-			@Override
-			public void execute() {
-				//System.out.println("Resting");
-			}
-
-			@Override
-			public double compute(StimuliMap load) {
-				return AdultBee.this.getEnergy() < 0.2 ? 1:0;
-			}
-
-			@Override
-			public void interrupt() {
-				currentTask = null;
-			}
-
-			@Override
-			public boolean checkInterrupt(StimuliMap load) {
-				return AdultBee.this.getEnergy() > 0.9;
-			}
-		};	
-
-		idleTask.energyCost = -0.01;
-		idleTask.taskName = "Rest";
-
-		taskList.add(idleTask);
+		taskList.add(new RestTask(this));
 
 		Task feedLarvaeTask = new Task() {
 
@@ -205,32 +149,5 @@ public class AdultBee extends WorkingAgent
 		feedLarvaeTask.threshold = Math.random() * ModelParameters.MAX_TASK_THRESHOLD;
 
 		taskList.add(feedLarvaeTask);
-	}
-
-	protected void moveTowards(Point2D.Double position)
-	{
-		double speed = 1;
-		
-		double dx = position.getX() - this.position.getX();
-		double dy = position.getY() - this.position.getY();
-		
-		Point2D.Double vector = new Point2D.Double(dx,dy);
-		double norme = vector.distance(new Point2D.Double(0,0));
-
-		vector.x = vector.getX() / norme * Math.min(speed, norme);
-		vector.y = vector.getY() / norme * Math.min(speed, norme);
-
-		move(vector.x, vector.y);
-	}
-
-	public void randomMove()
-	{
-		double speed = 1.0;
-		this.move((Math.random()*2-1*speed), (Math.random()*2-1)*speed);
-	}
-
-	@Override
-	public void move(double dx, double dy) {
-		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);	
 	}
 }

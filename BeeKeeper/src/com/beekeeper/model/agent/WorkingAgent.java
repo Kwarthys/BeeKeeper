@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -13,8 +14,6 @@ public abstract class WorkingAgent extends EmitterAgent
 {
 	protected ArrayList<Task> taskList = new ArrayList<>();
 	protected abstract void fillTaskList();
-	
-	private double energy;
 	
 	protected MainControllerServices controllerServices;
 	protected double stomach;
@@ -26,6 +25,8 @@ public abstract class WorkingAgent extends EmitterAgent
 	public Point2D.Double target = null;
 	
 	public Task getCurrentTask() {return currentTask;}
+	
+	public void interruptTask() {currentTask = null;}
 	
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
@@ -79,7 +80,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 	}
 	
-	protected Task findATask(StimuliMap load)
+	public Task findATask(StimuliMap load)
 	{
 		Task todo = taskList.get(0);
 		double taskScore = todo.checkInterrupt(load) ? 0 : todo.compute(load);
@@ -98,16 +99,15 @@ public abstract class WorkingAgent extends EmitterAgent
 		return todo;
 	}
 	
+	public EmitterAgent getAgentByTypeNPos(AgentType type, Point2D.Double pos)
+	{
+		return controllerServices.getAgentByTypeNPos(type, pos, this.combID);
+	}
+	
 	protected void chooseNewTask(StimuliMap load)
 	{
 		currentTask = findATask(load);
 		controllerServices.logMyTaskSwitch(currentTask, this.ID);
-	}
-	
-	public void setEnergy(double amount)
-	{
-		this.energy = 0;
-		addToEnergy(amount);
 	}
 	
 	public void receiveFood(double amount)
@@ -118,15 +118,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	public boolean isHungry()
 	{
-		return this.energy < 0.8;
-	}
-	
-	public double getEnergy() {return this.energy;}
-	
-	protected void addToEnergy(double amount)
-	{
-		this.energy += amount;
-		this.energy = this.energy < 0 ? 0 : this.energy > 1 ? 1 : this.energy; //Clamp energy between 0 and 1
+		return getEnergy() < 0.8;
 	}
 
 	public void setCombID(int id)
@@ -176,5 +168,9 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public StimuliMap getPercievedStimuli() {
 		return lastPercievedMap;
+	}
+
+	public Point2D.Double getPosOfStrongestEmitter(Stimulus targetSmell) {
+		return this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), targetSmell);
 	}
 }

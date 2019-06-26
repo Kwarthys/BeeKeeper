@@ -14,6 +14,7 @@ import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.agent.implem.FoodSource;
 import com.beekeeper.model.comb.Comb;
@@ -59,6 +60,11 @@ public class MainController
 		@Override
 		public double getHiveTemperature(){
 			return hive.getTemperature();
+		}
+
+		@Override
+		public EmitterAgent getAgentByTypeNPos(AgentType type, Double pos, int combID) {
+			return (EmitterAgent)getAgentByPos(pos, type, combID);
 		}
 	};
 

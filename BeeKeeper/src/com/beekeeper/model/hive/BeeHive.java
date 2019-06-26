@@ -13,9 +13,9 @@ public class BeeHive
 	
 	public void computeInternalTemperature(double outsideTemp)
 	{
-		System.out.print("Inside : " + getTemperature() + " | outside " + outsideTemp + " -> ");
+		//System.out.print("Inside : " + getTemperature() + " | outside " + outsideTemp + " -> ");
 		this.temperature += (outsideTemp - this.temperature)/ModelParameters.HIVE_THERMAL_RESISTANCE;
-		System.out.println(getTemperature());
+		//System.out.println(getTemperature());
 	}
 	
 	public double getTemperature()
