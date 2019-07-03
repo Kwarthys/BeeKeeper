@@ -4,10 +4,13 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.implem.AdultBee;
 import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.agent.implem.FoodSource;
+import com.beekeeper.model.agent.implem.TestAgent;
+import com.beekeeper.model.agent.implem.TestEmitterAgent;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.utils.CustomRule;
 import com.beekeeper.utils.MyUtils;
@@ -30,6 +33,37 @@ public class AgentFactory
 		}
 		
 		return cells;
+	}
+	
+	
+	public ArrayList<EmitterAgent> spawnTestEmitterAgent(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services)
+	{
+		ArrayList<EmitterAgent> agents = new ArrayList<>();
+		
+		for(int i = 0; i < number; i++)
+		{
+			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
+			TestEmitterAgent c = new TestEmitterAgent(services, point.getX(), point.getY()); 
+			agents.add(c);
+			allAgents.add(c);
+		}
+		
+		return agents;
+	}
+
+	public ArrayList<WorkingAgent> spawnTestAgents(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices)
+	{
+		ArrayList<WorkingAgent> agents = new ArrayList<WorkingAgent>();
+		
+		for(int i = 0; i < number; i++)
+		{
+			Point2D.Double point = MyUtils.getPointInRule(300, 0, rule);
+			WorkingAgent bee = new TestAgent(services, controllerServices, point.getX(), point.getY());
+			agents.add(bee);
+			allAgents.add(bee);
+		}
+		
+		return agents;
 	}
 
 	public ArrayList<WorkingAgent> spawnBroodCells(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices)

@@ -13,7 +13,7 @@ public class FoodSource extends EmitterAgent
 
 	public FoodSource(double x, double y, StimuliManagerServices stimuliManagerServices)
 	{
-		super(x, y, stimuliManagerServices);
+		super(stimuliManagerServices, x, y);
 		this.type = AgentType.FOOD_SOURCE;
 	}
 

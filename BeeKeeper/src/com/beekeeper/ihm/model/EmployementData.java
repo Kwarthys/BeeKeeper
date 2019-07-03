@@ -18,7 +18,7 @@ public class EmployementData
 		for(Agent a : bees)
 		{
 			AgentType at = a.getBeeType();
-			if(at == AgentType.ADULT_BEE || at == AgentType.BROOD_BEE)
+			if(at == AgentType.ADULT_BEE || at == AgentType.BROOD_BEE || at == AgentType.TEST_AGENT)
 			{
 				WorkingAgent b = (WorkingAgent) a;
 				

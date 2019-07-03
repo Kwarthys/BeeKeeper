@@ -1,29 +1,36 @@
 package com.beekeeper.model.agent.implem;
 
-import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.AgentType;
-import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
-import com.beekeeper.model.tasks.generaltasks.EmittingTask;
 
-public class TestEmitterAgent extends WorkingAgent
+public class TestEmitterAgent extends EmitterAgent
 {
 	private static Stimulus[] stimuli = {Stimulus.StimulusA, Stimulus.StimulusB, Stimulus.StimulusC};
 	
 	private Stimulus smell;
 	
-	public TestEmitterAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y) {
-		super(stimuliManagerServices, controllerServices, x, y);
+	public TestEmitterAgent(StimuliManagerServices stimuliManagerServices, double x, double y) {
+		super(stimuliManagerServices, x, y);
 		
 		this.type = AgentType.TEST_EMITTERAGENT;
 		
-		smell = stimuli[(int)(Math.random() * 4)];		
+		smell = stimuli[(int)(Math.random() * 3)];
+		
+		this.setEnergy(Math.random() /2 + 0.5);
 	}
 
 	@Override
-	protected void fillTaskList() {
-		taskList.add(new EmittingTask(this, smell));
+	public void live() {
+		this.stimuliLoad.emit(StimulusFactory.get(this.smell, 1-this.getEnergy()));
+		this.addToEnergy(-0.001);
+		
+		if(this.getEnergy() < 0)
+		{
+			this.alive = false;
+		}
 	}
 
 }

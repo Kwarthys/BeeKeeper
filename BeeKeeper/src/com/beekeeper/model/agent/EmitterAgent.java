@@ -10,7 +10,7 @@ public abstract class EmitterAgent extends Agent
 	protected StimuliLoad stimuliLoad;
 	protected StimuliManagerServices stimuliManagerServices;
 
-	public EmitterAgent(double x, double y, StimuliManagerServices stimuliManagerServices)
+	public EmitterAgent(StimuliManagerServices stimuliManagerServices, double x, double y)
 	{
 		super(x,y);
 		this.stimuliManagerServices = stimuliManagerServices;

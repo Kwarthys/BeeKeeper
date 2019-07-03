@@ -6,10 +6,10 @@ import com.beekeeper.utils.MyUtils;
 
 public abstract class Task
 {
-	public double threshold = 5;
+	public double threshold = 1;
 	public double energyCost;
 	public String taskName = "default";
-	public int midDuration = 20;
+	//public int midDuration = 20;
 	public boolean printLearning = false;
 
 	public void learn()
@@ -26,7 +26,7 @@ public abstract class Task
 	
 	private void checkThresholdBoundary()
 	{
-		threshold = threshold < 1 ? 1 : threshold > ModelParameters.MAX_TASK_THRESHOLD ? ModelParameters.MAX_TASK_THRESHOLD : threshold;
+		threshold = MyUtils.clamp(threshold, ModelParameters.MIN_TASK_THRESHOLD, ModelParameters.MAX_TASK_THRESHOLD);
 	}
 	
 	public double thresholdSigmoid(double s)

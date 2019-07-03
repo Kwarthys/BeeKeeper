@@ -10,6 +10,7 @@ import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.utils.MyUtils;
 
 public class TypicalTask extends Task {
 	
@@ -29,11 +30,12 @@ public class TypicalTask extends Task {
 		
 		this.taskName = "Task " + targetSmell;
 		this.energyCost = 0.01;
+		this.printLearning = true;
 	}
 
 	@Override
 	public boolean checkInterrupt(StimuliMap load) {
-		return load.getAmount(targetSmell) < 0.1;
+		return load.getAmount(targetSmell) < 0.1 || agent.getEnergy() < 0.1 || agent.findATask(load) != this;
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class TypicalTask extends Task {
 			score += e.getValue() * load.getAmount(e.getKey());
 		}
 		
-		return score;
+		return MyUtils.sigmoid(score, threshold);
 	}
 
 	@Override
@@ -71,14 +73,14 @@ public class TypicalTask extends Task {
 			double transfer = targetNeeds > 0.1 ? 0.1 : targetNeeds;
 			
 			target.addToEnergy(transfer);
-			agent.addToEnergy(-0.6*transfer);
+			agent.addToEnergy(-0.7*threshold*transfer);
 			
 
-			this.energyCost = 0.003;
+			this.energyCost = 0;
 		}
 		else
 		{
-			this.energyCost = 0.01;
+			this.energyCost = 0.0001;
 			agent.moveTowards(targetpos);
 		}
 	}

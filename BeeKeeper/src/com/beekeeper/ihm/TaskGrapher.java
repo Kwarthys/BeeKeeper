@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 import com.beekeeper.ihm.model.EmployementData;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
-import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.parameters.ModelParameters;
@@ -125,39 +125,48 @@ public class TaskGrapher extends JPanel{
 		g.drawLine(graphStartX, graphStartY, graphStartX, baseLineY); //Left Bar
 		g.drawLine(graphStartX, baseLineY, graphStartX + graphWidth/2, baseLineY); //Bot Bar
 
-		for(Integer i = 0; i < bees.size(); ++i)
+		ArrayList<WorkingAgent> wlist = new ArrayList<WorkingAgent>();
+
+
+		for(int i = 0; i < bees.size(); ++i)
 		{
-			if(bees.get(i).getBeeType() == AgentType.ADULT_BEE)
+			if(bees.get(i).getBeeType() == AgentType.ADULT_BEE || bees.get(i).getBeeType() == AgentType.TEST_AGENT)
 			{
-
-				WorkingAgent b = (WorkingAgent)bees.get(i);
-				HashMap<String, Double> allTs = b.getAllPrintableThresholds();
-
-				g.setColor(GraphicParams.hungryLarvaePhColor);
-
-				int amount = 0;
-				StimuliMap map = b.getPercievedStimuli();
-				if(map != null)
-				{
-					amount = (int) map.getAmount(Stimulus.HungryLarvae);
-				}
-
-				g.fillRect((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), baseLineY, 1, amount);
-
-				for(Entry<String, Double> set : allTs.entrySet())
-				{
-					g.setColor(getColorFor(set.getKey()));
-					g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), (int) (baseLineY - set.getValue() * graphHeight / 2 / ModelParameters.MAX_TASK_THRESHOLD), 5, 5);				
-				}
-
+				wlist.add((WorkingAgent)bees.get(i));
 			}
+		}
+
+		for(int i = 0; i < wlist.size(); ++i)
+		{
+			WorkingAgent b = wlist.get(i);
+			HashMap<String, Double> allTs = b.getAllPrintableThresholds();
+
+			g.setColor(GraphicParams.hungryLarvaePhColor);
+
+			int amount = 0;
+			StimuliMap map = b.getPercievedStimuli();
+			if(map != null)
+			{
+				amount = (int) map.getAmount(Stimulus.StimulusA);
+				//amount += (int) map.getAmount(Stimulus.StimulusB);
+				//amount += (int) map.getAmount(Stimulus.StimulusC);
+			}
+
+			g.fillRect((int) (graphStartX + i * graphWidth / 2.0 / wlist.size()), baseLineY, 1, amount);
+
+			for(Entry<String, Double> set : allTs.entrySet())
+			{
+				g.setColor(getColorFor(set.getKey()));
+				g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / wlist.size()), (int) (baseLineY - set.getValue() * graphHeight / 2.0 / ModelParameters.MAX_TASK_THRESHOLD), 5, 5);				
+			}
+
 		}
 	}
 
 	/**
 	 * 
 	 * @param bees list to compute from
-	 * @return a double [0;1], 1 means evevry larvae has 100% hunger
+	 * @return a double [0;1], 1 means every larvae has 100% hunger
 	 */
 	private double getTotalBroodHunger(ArrayList<Agent> bees)
 	{
@@ -165,9 +174,9 @@ public class TaskGrapher extends JPanel{
 		double max = 0; //double for operation purposes
 		for(Agent b : bees)
 		{
-			if(b.getBeeType() == AgentType.BROOD_BEE)
+			if(b.getBeeType() == AgentType.BROOD_BEE || b.getBeeType() == AgentType.TEST_EMITTERAGENT)
 			{
-				total += (1-((BroodBee) b).getEnergy());
+				total += (1-((EmitterAgent) b).getEnergy());
 				max += 1;
 			}
 		}

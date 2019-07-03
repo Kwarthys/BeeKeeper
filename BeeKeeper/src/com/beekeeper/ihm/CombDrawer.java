@@ -55,7 +55,7 @@ public class CombDrawer extends JPanel{
 			
 			for(Stimulus s : Stimulus.values())
 			{
-				int phs = (int)(ea.getStimuliLoad().getPheromoneAmount(s));
+				int phs = (int)(ea.getStimuliLoad().getPheromoneAmount(s) * 5);
 				
 				if(s == Stimulus.HungryLarvae)
 				{
@@ -66,6 +66,21 @@ public class CombDrawer extends JPanel{
 				else if(s == Stimulus.FoodSmell)
 				{
 					g.setColor(foodPhColor);
+					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+				else if(s == Stimulus.StimulusA)
+				{
+					g.setColor(Color.red);
+					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+				else if(s == Stimulus.StimulusB)
+				{
+					g.setColor(Color.green);
+					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+				else if(s == Stimulus.StimulusC)
+				{
+					g.setColor(Color.blue);
 					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
 				}
 			}	
@@ -107,6 +122,18 @@ public class CombDrawer extends JPanel{
 			case FOOD_SOURCE:
 				g.setColor(Color.WHITE);
 				g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
+				break;
+			case TEST_AGENT:
+				g.setColor(new Color(255, 255, 255));
+				g.fillOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
+				g.setColor(Color.WHITE);
+				g.drawOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
+				break;
+			case TEST_EMITTERAGENT:
+				g.setColor(Color.WHITE);
+				g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
+				break;
+			default:
 				break;
 			}
 		}

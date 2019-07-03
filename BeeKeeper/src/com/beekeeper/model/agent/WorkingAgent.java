@@ -7,6 +7,7 @@ import java.util.HashMap;
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -35,7 +36,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
 	{
-		super(x,y, stimuliManagerServices);
+		super(stimuliManagerServices, x, y);
 		this.controllerServices = controllerServices;
 		setEnergy(Math.random()*0.8+0.2);
 	}
@@ -53,8 +54,11 @@ public abstract class WorkingAgent extends EmitterAgent
 			return;
 		}
 		
-		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());		
+		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());
+		//System.out.println(s.getDisplayString());
+		normalizeLoad(s);
 		lastPercievedMap = s;
+		
 		
 		//System.out.println(ID + " living ! " + s.getAmount(Stimulus.HungryLarvae));
 
@@ -63,7 +67,6 @@ public abstract class WorkingAgent extends EmitterAgent
 			if(currentTask.checkInterrupt(s))
 			{
 				currentTask.interrupt();
-				this.addToEnergy(-0.01);
 			}
 			else
 			{
@@ -79,16 +82,18 @@ public abstract class WorkingAgent extends EmitterAgent
 			this.addToEnergy(-0.01);
 		}
 	}
-	
+
 	public Task findATask(StimuliMap load)
-	{
+	{		
 		Task todo = taskList.get(0);
-		double taskScore = todo.checkInterrupt(load) ? 0 : todo.compute(load);
+		double taskScore = todo.compute(load);
 		
 		for(int ti = 1; ti < taskList.size(); ++ti)
 		{
 			Task current = taskList.get(ti);
-			double currentScore = current.checkInterrupt(load) ? 0 : current.compute(load); //Cannot choose a task that fulfills its interrupt 
+			double currentScore = current.compute(load);
+			//if(currentScore != 0)
+				//System.out.println(current.taskName + " " + currentScore + " t:" + current.threshold + "\n" + load.getDisplayString());
 			if(currentScore > taskScore)
 			{
 				todo = current;
@@ -99,6 +104,17 @@ public abstract class WorkingAgent extends EmitterAgent
 		return todo;
 	}
 	
+	private void normalizeLoad(StimuliMap load)
+	{
+		for(Stimulus st : Stimulus.values())
+		{	
+			if(load.getAmount(st) != 0)
+			{
+				load.divideAmount(st, StimuliManager.normalisationCoef.get(st));
+			}
+		}
+	}
+
 	public EmitterAgent getAgentByTypeNPos(AgentType type, Point2D.Double pos)
 	{
 		return controllerServices.getAgentByTypeNPos(type, pos, this.combID);
@@ -158,6 +174,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			if(t == toLearn)
 			{
 				t.learn();
+				//System.out.println(this.ID + " Learning " + t.taskName);
 			}
 			else
 			{

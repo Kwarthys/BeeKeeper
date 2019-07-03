@@ -2,6 +2,8 @@ package com.beekeeper.utils;
 
 import java.awt.geom.Point2D;
 
+import com.beekeeper.parameters.ModelParameters;
+
 public class MyUtils
 {
 	public static CustomRule<Point2D.Double> getDonutPointRule(Point2D.Double center, double innerRadius, double outterRadius)
@@ -40,5 +42,11 @@ public class MyUtils
 	public static double sigmoid(double s, double t)
 	{
 		return s*s / ( s*s + t*t);
+	}
+	
+	
+	public static double clamp(double v, double down, double up)
+	{
+		return v < down ? down : v > up ? up : v;
 	}
 }

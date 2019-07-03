@@ -1,8 +1,9 @@
 package com.beekeeper.model.stimuli.manager;
 
+
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.EmitterAgent;
@@ -15,9 +16,41 @@ public class StimuliManager
 {
 	private ArrayList<Agent> agents = new ArrayList<>();
 	
+	public static final HashMap<Stimulus, Double> normalisationCoef = buildNormalisationCoef();
+	
 	public StimuliManager(ArrayList<Agent> agents)
 	{
 		this.agents = agents;
+	}
+
+	private static HashMap<Stimulus, Double> buildNormalisationCoef() {
+		
+		HashMap<Stimulus, Double> map = new HashMap<Stimulus, Double>();
+		
+		for(Stimulus s : Stimulus.values())
+		{
+			switch(s)
+			{
+			case Dance:
+				break;
+			case Energy:
+				map.put(s, 1.0);
+				break;
+			case FoodSmell:
+				break;
+			case HungerBee:
+				break;
+			case HungryLarvae:
+				break;
+			case StimulusA:
+			case StimulusB:
+			case StimulusC:
+				map.put(s, 30.0);
+				break;
+			}
+		}
+		
+		return map;
 	}
 
 	public StimuliMap getAllStimuliAround(Point2D.Double position)
@@ -58,7 +91,7 @@ public class StimuliManager
 		});
 	}
 	
-	private Point2D.Double getPosOfStrongestEmitter(Double sensorPos, Stimulus type)
+	private Point2D.Double getPosOfStrongestEmitter(Point2D.Double sensorPos, Stimulus type)
 	{
 		double strongestAmount = 0;
 		Point2D.Double strongestPos = null;
@@ -93,12 +126,12 @@ public class StimuliManager
 		return new StimuliManagerServices() {
 
 			@Override
-			public StimuliMap getAllStimuliAround(Double position) {
+			public StimuliMap getAllStimuliAround(Point2D.Double position) {
 				return StimuliManager.this.getAllStimuliAround(position);
 			}
 
 			@Override
-			public Point2D.Double getPosOfStrongestEmitter(Double sensorPos, Stimulus type) {
+			public Point2D.Double getPosOfStrongestEmitter(Point2D.Double sensorPos, Stimulus type) {
 				return StimuliManager.this.getPosOfStrongestEmitter(sensorPos, type);
 			}
 		};

@@ -76,7 +76,7 @@ public class MainController
 		
 		this.hive = new BeeHive();
 		
-		for(int i = 0; i < 2; ++i)
+		for(int i = 0; i < 1; ++i)
 		{
 			ArrayList<Agent> bees = new ArrayList<>();
 			
@@ -84,9 +84,12 @@ public class MainController
 			
 			sManagers.add(sm);
 			
-			bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices(), this.controlServices));
-			bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
-			bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
+			//bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices(), this.controlServices));
+			//bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
+			//bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
+			
+			bees.addAll(agentFactory.spawnTestEmitterAgent(100, MyUtils.getCirclePointRule(center, 100), sm.getNewServices()));
+			bees.addAll(agentFactory.spawnTestAgents(100, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));
 			
 			Comb c = new Comb(bees);
 			c.setID(i);
