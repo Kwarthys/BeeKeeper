@@ -22,7 +22,7 @@ public class RandomMoveTask extends Task {
 
 	@Override
 	public double compute(StimuliMap load) {
-		return agent.getEnergy() > 0.5 ? 0.7:0;
+		return agent.getEnergy() > 0.5 ? 0.05:0;
 	}
 
 	@Override

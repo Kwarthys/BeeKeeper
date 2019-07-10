@@ -41,8 +41,8 @@ public class TestAgent extends WorkingAgent {
 		taskList.add(new TypicalTask(this, inputsB, AgentType.TEST_EMITTERAGENT, Stimulus.StimulusB));
 		
 		HashMap<Stimulus, Double> inputsC = new HashMap<Stimulus, Double>();
-		inputsC.put(Stimulus.StimulusA, 0.5);
-		inputsC.put(Stimulus.StimulusB, -0.5);
+		inputsC.put(Stimulus.StimulusA, -1.0);
+		inputsC.put(Stimulus.StimulusB, 1.0);
 		inputsC.put(Stimulus.StimulusC, 1.0);
 		taskList.add(new TypicalTask(this, inputsC, AgentType.TEST_EMITTERAGENT, Stimulus.StimulusC));
 	}

@@ -3,10 +3,12 @@ package com.beekeeper.model.agent;
 import java.awt.geom.Point2D;
 
 import com.beekeeper.utils.IDManager;
+import com.beekeeper.utils.MyUtils;
 
 public abstract class Agent
 {	
 	protected Point2D.Double position;
+	protected double rotation = Math.random() * Math.PI * 2;
 	
 	protected int ID;
 	
@@ -18,6 +20,8 @@ public abstract class Agent
 	public abstract void live();
 	
 	public Point2D.Double getPosition() {return position;}
+	public double getRotation() {return rotation;}
+	
 	public int getID() {return ID;}
 	
 	public boolean alive = true;
@@ -59,10 +63,12 @@ public abstract class Agent
 	public void randomMove()
 	{
 		double speed = 1.0;
-		this.move((Math.random()*2-1*speed), (Math.random()*2-1)*speed);
+		this.rotation += (Math.random() - 0.5) * 0.8;
+		this.position.setLocation(this.position.x + speed * Math.cos(rotation), this.position.y + speed * Math.sin(rotation));
 	}
 
 	protected void move(double dx, double dy) {
-		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);	
+		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);
+		this.rotation = MyUtils.getRotFromDir(dx, dy);
 	}
 }

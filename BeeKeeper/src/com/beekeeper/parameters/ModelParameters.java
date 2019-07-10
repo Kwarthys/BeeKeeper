@@ -20,6 +20,11 @@ public class ModelParameters
 	public static final double MAX_TASK_THRESHOLD = 0.80;
 	public static final double MIN_TASK_THRESHOLD = 0.10;
 	
+	public static double getNormalisedThreshold(double t)
+	{
+		return t/(MAX_TASK_THRESHOLD-MIN_TASK_THRESHOLD) - MIN_TASK_THRESHOLD/(MAX_TASK_THRESHOLD-MIN_TASK_THRESHOLD);
+	}
+	
 	
 	public static final double HIVE_THERMAL_RESISTANCE = 15;
 	

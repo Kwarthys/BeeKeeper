@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.EmitterAgent;
+import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.implem.AdultBee;
 import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.parameters.ModelParameters;
 
 @SuppressWarnings("serial")
 public class CombDrawer extends JPanel{
@@ -94,6 +97,8 @@ public class CombDrawer extends JPanel{
 		{
 			int x = (int)a.getPosition().x;
 			int y = (int)a.getPosition().y;
+			
+			double r = a.getRotation();
 
 			switch(a.getBeeType())
 			{
@@ -124,10 +129,32 @@ public class CombDrawer extends JPanel{
 				g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
 				break;
 			case TEST_AGENT:
-				g.setColor(new Color(255, 255, 255));
-				g.fillOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
+				double rotX = -Math.cos(r);
+				double rotY = -Math.sin(r);
+				int thx = x + (int)(2*rotX);
+				int thy = y + (int)(2*rotY);
+				int abx = thx + (int)(2.5*rotX);
+				int aby = thy + (int)(2.5*rotY);
+				
+				WorkingAgent wa = (WorkingAgent) a;
+				HashMap<String, Double> ts = wa.getAllPrintableThresholds();
+
+				String taskA = "Task StimulusA";
+				String taskB = "Task StimulusB";
+				String taskC = "Task StimulusC";
+
+				int red = (int)(ts.containsKey(taskA) ? ModelParameters.getNormalisedThreshold(ts.get(taskA))*255 : 0);
+				int green = (int)(ts.containsKey(taskB) ? ModelParameters.getNormalisedThreshold(ts.get(taskB))*255 : 0);
+				int blue = (int)(ts.containsKey(taskC) ? ModelParameters.getNormalisedThreshold(ts.get(taskC))*255 : 0);
+				
+
 				g.setColor(Color.WHITE);
-				g.drawOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
+				g.fillOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
+				g.fillOval((int)(zoom*thx-2), (int)(zoom*thy-2), 4, 4);
+				g.setColor(new Color(255-red, 255-green, 255-blue));
+				g.fillOval((int)(zoom*abx-3), (int)(zoom*aby-3), 6, 6);
+				//g.setColor(Color.WHITE);
+				//g.drawOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				break;
 			case TEST_EMITTERAGENT:
 				g.setColor(Color.WHITE);

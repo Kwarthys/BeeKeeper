@@ -6,7 +6,7 @@ import com.beekeeper.utils.MyUtils;
 
 public abstract class Task
 {
-	public double threshold = 1;
+	public double threshold = 0.5;
 	public double energyCost;
 	public String taskName = "default";
 	//public int midDuration = 20;
