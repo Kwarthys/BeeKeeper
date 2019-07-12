@@ -10,6 +10,8 @@ public abstract class Agent
 	protected Point2D.Double position;
 	protected double rotation = Math.random() * Math.PI * 2;
 	
+	private double energy;
+	
 	protected int ID;
 	
 	protected int combID = -1;
@@ -70,5 +72,20 @@ public abstract class Agent
 	protected void move(double dx, double dy) {
 		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);
 		this.rotation = MyUtils.getRotFromDir(dx, dy);
+	}
+
+	
+	public double getEnergy() {return this.energy;}
+	
+	public void addToEnergy(double amount)
+	{
+		this.energy += amount;
+		this.energy = this.energy < 0 ? 0 : this.energy > 1 ? 1 : this.energy; //Clamp energy between 0 and 1
+	}
+	
+	public void setEnergy(double amount)
+	{
+		this.energy = 0;
+		addToEnergy(amount); //ensuring energy stays in [0;1]
 	}
 }

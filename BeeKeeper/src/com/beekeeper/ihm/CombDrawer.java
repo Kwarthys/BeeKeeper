@@ -131,10 +131,13 @@ public class CombDrawer extends JPanel{
 			case TEST_AGENT:
 				double rotX = -Math.cos(r);
 				double rotY = -Math.sin(r);
-				int thx = x + (int)(2*rotX);
-				int thy = y + (int)(2*rotY);
-				int abx = thx + (int)(2.5*rotX);
-				int aby = thy + (int)(2.5*rotY);
+				int headSize = 8;
+				int thoraxSize = 4;
+				int abdomenSize = 10;
+				int thx = x + (int)((headSize/2 + thoraxSize/2)/2*rotX);
+				int thy = y + (int)((headSize/2 + thoraxSize/2)/2*rotY);
+				int abx = thx + (int)((abdomenSize/2 + thoraxSize/2)/2*rotX);
+				int aby = thy + (int)((abdomenSize/2 + thoraxSize/2)/2*rotY);
 				
 				WorkingAgent wa = (WorkingAgent) a;
 				HashMap<String, Double> ts = wa.getAllPrintableThresholds();
@@ -148,13 +151,13 @@ public class CombDrawer extends JPanel{
 				int blue = (int)(ts.containsKey(taskC) ? ModelParameters.getNormalisedThreshold(ts.get(taskC))*255 : 0);
 				
 
-				g.setColor(Color.WHITE);
-				g.fillOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
-				g.fillOval((int)(zoom*thx-2), (int)(zoom*thy-2), 4, 4);
+				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
+				g.fillOval((int)(zoom*x-headSize/2), (int)(zoom*y-headSize/2), headSize, headSize);
 				g.setColor(new Color(255-red, 255-green, 255-blue));
-				g.fillOval((int)(zoom*abx-3), (int)(zoom*aby-3), 6, 6);
-				//g.setColor(Color.WHITE);
-				//g.drawOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
+				g.fillOval((int)(zoom*abx-abdomenSize/2), (int)(zoom*aby-abdomenSize/2), abdomenSize, abdomenSize);
+				g.setColor(Color.WHITE);
+				g.fillOval((int)(zoom*thx-thoraxSize/2), (int)(zoom*thy-thoraxSize/2), thoraxSize, thoraxSize);
+
 				break;
 			case TEST_EMITTERAGENT:
 				g.setColor(Color.WHITE);

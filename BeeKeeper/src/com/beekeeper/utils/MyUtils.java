@@ -50,16 +50,8 @@ public class MyUtils
 	
 	public static double getRotFromDir(double x2, double y2)
 	{
-		/*
-		double x1 = -1;
-		double y1 = 0;
-		double dot = Math.acos(x2*x1+y2*y1);
-		double det = x2*y1 - y2*x1;
-		double angle = Math.atan2(det, dot);
-		*/
-		//double angle = Math.acos(x2 / Math.sqrt(x2*x2 + y2*y2));
 		double angle = Math.atan2(y2, x2);
-		System.out.println("going " + x2 + ";" + y2 + " -> " + Math.toDegrees(angle));
+		//System.out.println("going " + x2 + ";" + y2 + " -> " + Math.toDegrees(angle));
 		return angle;
 	}
 }
