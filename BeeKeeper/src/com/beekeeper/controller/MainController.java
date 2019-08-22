@@ -95,8 +95,7 @@ public class MainController
 			c.setID(i);
 			this.combs.add(c);
 			
-			CombDrawer drawer = new CombDrawer();
-			drawer.setBees(bees);
+			CombDrawer drawer = new CombDrawer(c.getServices());
 			
 			this.drawers.add(drawer);
 		}

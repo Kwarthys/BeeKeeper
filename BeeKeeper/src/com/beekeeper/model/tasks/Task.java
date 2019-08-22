@@ -1,7 +1,6 @@
 package com.beekeeper.model.tasks;
 
 import com.beekeeper.model.stimuli.StimuliMap;
-import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
 public abstract class Task
@@ -12,6 +11,7 @@ public abstract class Task
 	//public int midDuration = 20;
 	public boolean printLearning = false;
 
+	/*
 	public void learn()
 	{
 		threshold -= ModelParameters.TASK_LEARN_RATE;
@@ -28,6 +28,7 @@ public abstract class Task
 	{
 		threshold = MyUtils.clamp(threshold, ModelParameters.MIN_TASK_THRESHOLD, ModelParameters.MAX_TASK_THRESHOLD);
 	}
+	*/
 	
 	public double thresholdSigmoid(double s)
 	{

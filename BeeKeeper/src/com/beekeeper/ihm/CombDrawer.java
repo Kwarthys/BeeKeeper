@@ -13,23 +13,33 @@ import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.implem.AdultBee;
 import com.beekeeper.model.agent.implem.BroodBee;
+import com.beekeeper.model.comb.CombServices;
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.parameters.ModelParameters;
 
 @SuppressWarnings("serial")
 public class CombDrawer extends JPanel{
 
-	private ArrayList<Agent> agents = new ArrayList<>();
+	private ArrayList<Agent> agents;
+	private ArrayList<CombCell> cells;
 
 	private double zoom = 2;
 
 	private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
 	private Color foodPhColor = GraphicParams.foodPhColor;
 	
-	public CombDrawer()
+	//private CombServices hostServices;
+	
+	public CombDrawer(CombServices c)
 	{
 		this.setPreferredSize(new Dimension(400,400));
 		this.setMinimumSize(new Dimension(350,350));
+		
+		//hostServices = c;
+
+		this.agents = c.getBees();
+		this.cells = c.getCells();
 	}
 
 
@@ -39,8 +49,9 @@ public class CombDrawer extends JPanel{
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-		paintPheromones(g);
-		paintActors(g);
+		//paintPheromones(g);
+		//paintActors(g);
+		paintCells(g);
 
 		g.dispose();
 	}
@@ -89,6 +100,37 @@ public class CombDrawer extends JPanel{
 			}	
 
 		}
+	}
+	
+	protected void paintCells(Graphics g)
+	{
+		int cellSize = 6;
+
+		g.setColor(Color.WHITE);
+		
+		boolean isOffset = true;
+		double offset;
+		
+		for(CombCell c : cells)
+		{
+			if(c.x == 0)
+				isOffset = !isOffset;
+			
+			//System.out.println(c.x + " " + c.y + " " + c.filled);
+			
+			offset = isOffset ? cellSize/2 : 0;
+			g.drawOval((int)((c.x*cellSize-cellSize/2+offset)*zoom), (int)((c.y*cellSize-cellSize/2)*zoom), (int)(cellSize*zoom), (int)(cellSize*zoom));
+			
+			if(c.filled)
+			{
+				g.setColor(GraphicParams.hungryLarvaePhColor);
+				g.fillOval((int)((c.x*cellSize-cellSize/3+offset)*zoom), (int)((c.y*cellSize-cellSize/3)*zoom), (int)(cellSize*2/3*zoom), (int)(cellSize*2/3*zoom));
+
+				g.setColor(Color.WHITE);
+			}
+		}
+		
+		
 	}
 
 	protected void paintActors(Graphics g)
@@ -167,11 +209,6 @@ public class CombDrawer extends JPanel{
 				break;
 			}
 		}
-	}
-
-	public void setBees(ArrayList<Agent> bees)
-	{
-		this.agents = bees;
 	}
 
 }

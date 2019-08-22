@@ -72,7 +72,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			{
 				this.addToEnergy(-currentTask.energyCost);
 				currentTask.execute();
-				this.learnTask(currentTask);
+				//this.learnTask(currentTask);
 			}
 		}
 		
@@ -167,6 +167,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		return ts;
 	}
 	
+	/*
 	protected void learnTask(Task toLearn)
 	{
 		for(Task t : taskList)
@@ -182,6 +183,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			}
 		}
 	}
+	*/
 
 	public StimuliMap getPercievedStimuli() {
 		return lastPercievedMap;
