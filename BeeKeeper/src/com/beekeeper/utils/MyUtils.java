@@ -41,4 +41,17 @@ public class MyUtils
 	{
 		return s*s / ( s*s + t*t);
 	}
+	
+	
+	public static double clamp(double v, double down, double up)
+	{
+		return v < down ? down : v > up ? up : v;
+	}
+	
+	public static double getRotFromDir(double x2, double y2)
+	{
+		double angle = Math.atan2(y2, x2);
+		//System.out.println("going " + x2 + ";" + y2 + " -> " + Math.toDegrees(angle));
+		return angle;
+	}
 }

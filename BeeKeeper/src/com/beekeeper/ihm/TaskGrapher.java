@@ -2,6 +2,7 @@ package com.beekeeper.ihm;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
@@ -12,13 +13,18 @@ import java.util.Map.Entry;
 import javax.swing.JPanel;
 
 import com.beekeeper.ihm.model.EmployementData;
-import com.beekeeper.model.agent.BeeType;
-import com.beekeeper.model.agent.EmptyBee;
+import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.EmitterAgent;
+import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.parameters.ModelParameters;
 
 @SuppressWarnings("serial")
 public class TaskGrapher extends JPanel{
 
-	private ArrayList<EmptyBee> bees;
+	private ArrayList<Agent> bees;
 
 	private ArrayList<EmployementData> jobData = new ArrayList<>();
 	private ArrayList<Double> hungerHistory = new ArrayList<>();
@@ -36,9 +42,13 @@ public class TaskGrapher extends JPanel{
 
 	private int step = 2;
 
-	public TaskGrapher(ArrayList<EmptyBee> bees)
+	public TaskGrapher(ArrayList<Agent> allAgents)
 	{
-		this.bees = bees;
+		//this.bees = new ArrayList<EmptyBee>(bees);
+		this.bees = allAgents;
+		Dimension size = new Dimension((int)(borderMargin * 2 + graphWidth * 1.2), (int)(borderMargin*2 + graphHeight*1.6));
+		this.setPreferredSize(size);
+		this.setMinimumSize(size);
 	}
 
 	@Override
@@ -108,42 +118,65 @@ public class TaskGrapher extends JPanel{
 	{
 		int graphStartX = borderMargin + graphWidth / 2;
 		int graphStartY = 2*borderMargin + graphHeight;
-		
+
 		int baseLineY = graphStartY + graphHeight/2;
 
 		g.setColor(Color.LIGHT_GRAY);
 		g.drawLine(graphStartX, graphStartY, graphStartX, baseLineY); //Left Bar
 		g.drawLine(graphStartX, baseLineY, graphStartX + graphWidth/2, baseLineY); //Bot Bar
 
-		for(Integer i = 0; i < bees.size(); ++i)
+		ArrayList<WorkingAgent> wlist = new ArrayList<WorkingAgent>();
+
+
+		for(int i = 0; i < bees.size(); ++i)
 		{
-			EmptyBee b = bees.get(i);
-			HashMap<String, Double> allTs = b.getAllThresholds();
-			
+			if(bees.get(i).getBeeType() == AgentType.ADULT_BEE || bees.get(i).getBeeType() == AgentType.TEST_AGENT)
+			{
+				wlist.add((WorkingAgent)bees.get(i));
+			}
+		}
+
+		for(int i = 0; i < wlist.size(); ++i)
+		{
+			WorkingAgent b = wlist.get(i);
+			HashMap<String, Double> allTs = b.getAllPrintableThresholds();
+
+			g.setColor(GraphicParams.hungryLarvaePhColor);
+
+			int amount = 0;
+			StimuliMap map = b.getPercievedStimuli();
+			if(map != null)
+			{
+				amount = (int) map.getAmount(Stimulus.StimulusA);
+				//amount += (int) map.getAmount(Stimulus.StimulusB);
+				//amount += (int) map.getAmount(Stimulus.StimulusC);
+			}
+
+			g.fillRect((int) (graphStartX + i * graphWidth / 2.0 / wlist.size()), baseLineY, 1, amount);
+
 			for(Entry<String, Double> set : allTs.entrySet())
 			{
 				g.setColor(getColorFor(set.getKey()));
-				g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / bees.size()), (int) (baseLineY - set.getValue() * graphHeight / 2 / 10), 5, 5);				
+				g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / wlist.size()), (int) (baseLineY - set.getValue() * graphHeight / 2.0 / ModelParameters.MAX_TASK_THRESHOLD), 5, 5);				
 			}
-			
-			
+
 		}
 	}
 
 	/**
 	 * 
 	 * @param bees list to compute from
-	 * @return a double [0;1], 1 means evevry larvae has 100% hunger
+	 * @return a double [0;1], 1 means every larvae has 100% hunger
 	 */
-	private double getTotalBroodHunger(ArrayList<EmptyBee> bees)
+	private double getTotalBroodHunger(ArrayList<Agent> bees)
 	{
 		double total = 0;
 		double max = 0; //double for operation purposes
-		for(EmptyBee b : bees)
+		for(Agent b : bees)
 		{
-			if(b.getBeeType() == BeeType.BROOD_BEE)
+			if(b.getBeeType() == AgentType.BROOD_BEE || b.getBeeType() == AgentType.TEST_EMITTERAGENT)
 			{
-				total += (1-b.getEnergy());
+				total += (1-((EmitterAgent) b).getEnergy());
 				max += 1;
 			}
 		}
@@ -168,8 +201,8 @@ public class TaskGrapher extends JPanel{
 		colors.add(Color.WHITE);
 		colors.add(Color.LIGHT_GRAY);
 		colors.add(Color.YELLOW);
-		colors.add(Color.GREEN);
 		colors.add(new Color(150,150,255));		
+		colors.add(Color.GREEN);
 
 		return colors;
 	}

@@ -1,0 +1,47 @@
+package com.beekeeper.model.agent.implem;
+
+import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.EmitterAgent;
+import com.beekeeper.model.stimuli.declarations.FoodSmellStimulus;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
+
+public class FoodSource extends EmitterAgent
+{
+	protected double maxCellLoad = 2;
+	
+	protected double foodAmount = 0;
+
+	public FoodSource(double x, double y, StimuliManagerServices stimuliManagerServices)
+	{
+		super(stimuliManagerServices, x, y);
+		this.type = AgentType.FOOD_SOURCE;
+	}
+
+
+	@Override
+	public void live()
+	{
+		foodAmount += 0.1;
+		foodAmount = foodAmount > maxCellLoad ? maxCellLoad : foodAmount;
+		this.stimuliLoad.emit(new FoodSmellStimulus(foodAmount));
+	}
+	
+	public double takeFood(double max)
+	{
+		//System.out.println("FoodTaken : " + this.foodAmount + " - " + max);
+		if(this.foodAmount > max)
+		{
+			this.foodAmount -= max;
+			return max;
+		}
+		else
+		{
+			double value = this.foodAmount;
+			this.foodAmount = 0;
+			return value;
+		}
+	}
+
+	@Override
+	public void move(double dx, double dy) {}
+}

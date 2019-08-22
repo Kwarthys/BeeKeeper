@@ -18,6 +18,20 @@ public class StimuliMap
 		}
 	}
 	
+	public String getDisplayString()
+	{
+		StringBuffer sb = new StringBuffer();
+		
+		amounts.forEach((k,v) -> {
+			sb.append(k);
+			sb.append(" :");
+			sb.append(v);
+			sb.append("\n");
+		});
+		
+		return sb.toString();
+	}
+	
 	public double getAmount(Stimulus type)
 	{
 		if(amounts.containsKey(type))
@@ -28,5 +42,10 @@ public class StimuliMap
 		{
 			return 0;
 		}
+	}
+
+	public void divideAmount(Stimulus st, double d)
+	{
+		amounts.put(st, amounts.get(st) / d);
 	}
 }

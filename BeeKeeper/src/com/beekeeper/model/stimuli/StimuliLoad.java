@@ -56,6 +56,18 @@ public class StimuliLoad
 			return 0;
 		}
 	}
+	
+	private void setAmount(Stimulus key, double amount)
+	{
+		if(pheromonesLoadMap.containsKey(key))
+		{
+			pheromonesLoadMap.get(key).amount = amount;
+		}
+		else
+		{
+			emit(StimulusFactory.get(key, amount));
+		}
+	}
 
 	public void evaporate()
 	{
@@ -63,5 +75,20 @@ public class StimuliLoad
 			stimulus.evaporate();
 		});
 		pheromonesLoadMap.entrySet().removeIf(entry -> entry.getValue().getAmount() == 0);
+	}
+
+	public void contact(StimuliLoad externalStimuli)
+	{
+		for(Stimulus key : Stimulus.values())
+		{
+			double mean = this.getPheromoneAmount(key) + externalStimuli.getPheromoneAmount(key) / 2;
+			if(mean != 0)
+			{
+				this.setAmount(key, mean);
+				externalStimuli.setAmount(key, mean);
+				
+				//System.out.println(mean + " = " + externalStimuli.getPheromoneAmount(key));
+			}
+		}
 	}
 }

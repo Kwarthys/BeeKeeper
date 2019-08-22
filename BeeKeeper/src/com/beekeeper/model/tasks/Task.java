@@ -6,22 +6,27 @@ import com.beekeeper.utils.MyUtils;
 
 public abstract class Task
 {
-	public double threshold = 3;
+	public double threshold = 0.5;
 	public double energyCost;
 	public String taskName = "default";
-	public int midDuration = 20;
+	//public int midDuration = 20;
+	public boolean printLearning = false;
 
-	public void learn(int duration)
+	public void learn()
 	{
-		System.out.print("Lasted " + duration + " mid is " + midDuration + " change of " + ModelParameters.TASK_LEARN_RATE * (MyUtils.sigmoid(duration, midDuration)*2-1));
-		threshold -= ModelParameters.TASK_LEARN_RATE * (MyUtils.sigmoid(duration, midDuration)*2-1);
-		System.out.println(" new TETA=" + threshold);
+		threshold -= ModelParameters.TASK_LEARN_RATE;
+		checkThresholdBoundary();
+	}
+	
+	public void forget()
+	{
+		threshold += ModelParameters.TASK_FORGET_RATE;
 		checkThresholdBoundary();
 	}
 	
 	private void checkThresholdBoundary()
 	{
-		threshold = threshold < 0 ? 0 : threshold > 10 ? 10 : threshold;
+		threshold = MyUtils.clamp(threshold, ModelParameters.MIN_TASK_THRESHOLD, ModelParameters.MAX_TASK_THRESHOLD);
 	}
 	
 	public double thresholdSigmoid(double s)

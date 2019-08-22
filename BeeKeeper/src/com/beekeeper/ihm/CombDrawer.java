@@ -1,26 +1,36 @@
 package com.beekeeper.ihm;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
-import com.beekeeper.model.agent.BeeType;
-import com.beekeeper.model.agent.EmptyBee;
-import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.EmitterAgent;
+import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.agent.implem.AdultBee;
+import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.parameters.ModelParameters;
 
 @SuppressWarnings("serial")
 public class CombDrawer extends JPanel{
 
-	private ArrayList<EmptyBee> agents = new ArrayList<>();
-	private ArrayList<CombCell> cells = new ArrayList<>();
-	
+	private ArrayList<Agent> agents = new ArrayList<>();
+
 	private double zoom = 2;
 
 	private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
 	private Color foodPhColor = GraphicParams.foodPhColor;
+	
+	public CombDrawer()
+	{
+		this.setPreferredSize(new Dimension(400,400));
+		this.setMinimumSize(new Dimension(350,350));
+	}
 
 
 	@Override
@@ -28,90 +38,140 @@ public class CombDrawer extends JPanel{
 
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		
+
 		paintPheromones(g);
 		paintActors(g);
 
 		g.dispose();
 	}
-	
-	protected void paintPheromones(Graphics g)
-	{		
-		for(CombCell c : cells)
-		{
-			int x = (int)c.getPosition().x;
-			int y = (int)c.getPosition().y;
-			
-			int phs = (int)(c.getExternalStimuli().getPheromoneAmount(Stimulus.FoodSmell) * 5);
-			g.setColor(foodPhColor);
-			g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-			
-		}
 
-		for(EmptyBee a : agents)
+	protected void paintPheromones(Graphics g)
+	{
+		for(Agent a : agents)
 		{
+			//boolean fill = false;
+			
+			EmitterAgent ea = (EmitterAgent) a;
+			
 			int x = (int)a.getPosition().x;
 			int y = (int)a.getPosition().y;
 			
-			if(a.getBeeType() == BeeType.BROOD_BEE)
+			for(Stimulus s : Stimulus.values())
 			{
-				int phs = (int)(a.getExternalStimuli().getPheromoneAmount(Stimulus.HungryLarvae) * 5);
-				g.setColor(hungryLarvaePhColor);
-				g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-			}
+				int phs = (int)(ea.getStimuliLoad().getPheromoneAmount(s) * 5);
+				
+				if(s == Stimulus.HungryLarvae)
+				{
+					//phs *= 15;
+					g.setColor(hungryLarvaePhColor);
+					g.drawOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+				else if(s == Stimulus.FoodSmell)
+				{
+					g.setColor(foodPhColor);
+					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+				else if(s == Stimulus.StimulusA)
+				{
+					g.setColor(Color.red);
+					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+				else if(s == Stimulus.StimulusB)
+				{
+					g.setColor(Color.green);
+					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+				else if(s == Stimulus.StimulusC)
+				{
+					g.setColor(Color.blue);
+					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
+				}
+			}	
+
 		}
 	}
-	
+
 	protected void paintActors(Graphics g)
 	{
-		for(CombCell c : cells)
-		{
-			int x = (int)c.getPosition().x;
-			int y = (int)c.getPosition().y;
-			
-			g.setColor(Color.WHITE);
-			g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
-		}
-
-		for(EmptyBee a : agents)
+		for(Agent a : agents)
 		{
 			int x = (int)a.getPosition().x;
 			int y = (int)a.getPosition().y;
+			
+			double r = a.getRotation();
 
 			switch(a.getBeeType())
 			{
 			case ADULT_BEE:
-				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
+				AdultBee b = (AdultBee) a;
+				g.setColor(new Color(255, 255-(int)(b.getEnergy()*255), 255-(int)(b.getEnergy()*255)));
 				g.fillOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				g.setColor(Color.WHITE);
 				g.drawOval((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				/** DEBUG **/
-				if(a.target != null)
+				if(b.target != null)
 				{
 					g.setColor(Color.GRAY);
-					g.drawLine((int)(x*zoom), (int)(y*zoom), (int)(a.target.x*zoom), (int)(a.target.y*zoom));
+					g.drawLine((int)(x*zoom), (int)(y*zoom), (int)(b.target.x*zoom), (int)(b.target.y*zoom));
 				}
 				/***********/
 				break;
 
 			case BROOD_BEE:
-				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
+				BroodBee bb = (BroodBee) a;
+				g.setColor(new Color(255, 255-(int)(bb.getEnergy()*255), 255-(int)(bb.getEnergy()*255)));
 				g.fillRect((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
 				g.setColor(Color.WHITE);
 				g.drawRect((int)(zoom*x-2), (int)(zoom*y-2), 4, 4);
+				break;
+			case FOOD_SOURCE:
+				g.setColor(Color.WHITE);
+				g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
+				break;
+			case TEST_AGENT:
+				double rotX = -Math.cos(r);
+				double rotY = -Math.sin(r);
+				int headSize = 8;
+				int thoraxSize = 4;
+				int abdomenSize = 10;
+				int thx = x + (int)((headSize/2 + thoraxSize/2)/2*rotX);
+				int thy = y + (int)((headSize/2 + thoraxSize/2)/2*rotY);
+				int abx = thx + (int)((abdomenSize/2 + thoraxSize/2)/2*rotX);
+				int aby = thy + (int)((abdomenSize/2 + thoraxSize/2)/2*rotY);
+				
+				WorkingAgent wa = (WorkingAgent) a;
+				HashMap<String, Double> ts = wa.getAllPrintableThresholds();
+
+				String taskA = "Task StimulusA";
+				String taskB = "Task StimulusB";
+				String taskC = "Task StimulusC";
+
+				int red = (int)(ts.containsKey(taskA) ? ModelParameters.getNormalisedThreshold(ts.get(taskA))*255 : 0);
+				int green = (int)(ts.containsKey(taskB) ? ModelParameters.getNormalisedThreshold(ts.get(taskB))*255 : 0);
+				int blue = (int)(ts.containsKey(taskC) ? ModelParameters.getNormalisedThreshold(ts.get(taskC))*255 : 0);
+				
+
+				g.setColor(new Color(255, 255-(int)(a.getEnergy()*255), 255-(int)(a.getEnergy()*255)));
+				g.fillOval((int)(zoom*x-headSize/2), (int)(zoom*y-headSize/2), headSize, headSize);
+				g.setColor(new Color(255-red, 255-green, 255-blue));
+				g.fillOval((int)(zoom*abx-abdomenSize/2), (int)(zoom*aby-abdomenSize/2), abdomenSize, abdomenSize);
+				g.setColor(Color.WHITE);
+				g.fillOval((int)(zoom*thx-thoraxSize/2), (int)(zoom*thy-thoraxSize/2), thoraxSize, thoraxSize);
+
+				break;
+			case TEST_EMITTERAGENT:
+				g.setColor(Color.WHITE);
+				g.drawRect((int)(zoom*x-4), (int)(zoom*y-4), 8, 8);
+				break;
+			default:
 				break;
 			}
 		}
 	}
 
-	public void setBees(ArrayList<EmptyBee> agents)
+	public void setBees(ArrayList<Agent> bees)
 	{
-		this.agents = agents;
-	}
-
-	public void setCells(ArrayList<CombCell> cells)
-	{
-		this.cells = cells;
+		this.agents = bees;
 	}
 
 }
