@@ -36,25 +36,4 @@ public class Comb
 			}
 		});
 	}
-	
-	public void liveCells()
-	{
-		for(CombCell c : cells)
-		{
-			c.live();
-		}
-	}
-
-	public void setID(int id)
-	{
-		ID = id;
-		for(CombCell c : cells)
-		{
-			c.setCombID(id);
-		}
-		for(EmptyBee b : agents)
-		{
-			b.setCombID(id);
-		}
-	}
 }
