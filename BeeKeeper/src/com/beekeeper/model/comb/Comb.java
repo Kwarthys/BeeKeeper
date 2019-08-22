@@ -24,6 +24,8 @@ public class Comb
 	
 	public void liveAgents()
 	{
+		//Collections.shuffle(agents);
+		
 		for(EmptyBee b : agents)
 		{
 			b.live();
