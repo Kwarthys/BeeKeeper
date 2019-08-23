@@ -9,13 +9,14 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.Agent;
-import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.implem.AdultBee;
 import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
-import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.model.stimuli.manager.StimuliManager;
+import com.beekeeper.model.stimuli.manager.StimuliManager.StimuliTile;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.parameters.ModelParameters;
 
 @SuppressWarnings("serial")
@@ -31,7 +32,9 @@ public class CombDrawer extends JPanel{
 	
 	//private CombServices hostServices;
 	
-	public CombDrawer(CombServices c)
+	private StimuliManagerServices stimuliManagerServices;
+	
+	public CombDrawer(CombServices c, StimuliManagerServices stimuliManagerServices)
 	{
 		this.setPreferredSize(new Dimension(400,400));
 		this.setMinimumSize(new Dimension(350,350));
@@ -40,6 +43,8 @@ public class CombDrawer extends JPanel{
 
 		this.agents = c.getBees();
 		this.cells = c.getCells();
+		
+		this.stimuliManagerServices = stimuliManagerServices;
 	}
 
 
@@ -58,47 +63,12 @@ public class CombDrawer extends JPanel{
 
 	protected void paintPheromones(Graphics g)
 	{
-		for(Agent a : agents)
+		g.setColor(Color.WHITE);
+		for(StimuliTile st : stimuliManagerServices.getTiles())
 		{
-			//boolean fill = false;
-			
-			EmitterAgent ea = (EmitterAgent) a;
-			
-			int x = (int)a.getPosition().x;
-			int y = (int)a.getPosition().y;
-			
-			for(Stimulus s : Stimulus.values())
-			{
-				int phs = 0;//(int)(ea.getStimuliLoad().getPheromoneAmount(s) * 5);
-				
-				if(s == Stimulus.HungryLarvae)
-				{
-					//phs *= 15;
-					g.setColor(hungryLarvaePhColor);
-					g.drawOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-				}
-				else if(s == Stimulus.FoodSmell)
-				{
-					g.setColor(foodPhColor);
-					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-				}
-				else if(s == Stimulus.StimulusA)
-				{
-					g.setColor(Color.red);
-					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-				}
-				else if(s == Stimulus.StimulusB)
-				{
-					g.setColor(Color.green);
-					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-				}
-				else if(s == Stimulus.StimulusC)
-				{
-					g.setColor(Color.blue);
-					g.fillOval((int)(x*zoom-phs/2), (int)(y*zoom-phs/2), phs, phs);
-				}
-			}	
-
+			int tileX = (int) st.position.x;
+			int tileY = (int) st.position.y;
+			g.fillRect(tileX, tileY, StimuliManager.atomSize, StimuliManager.atomSize);
 		}
 	}
 	

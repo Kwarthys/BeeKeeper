@@ -11,12 +11,14 @@ import com.beekeeper.utils.MyUtils;
 
 public class StimuliManager
 {	
-	private int atomSize = 10;
+	public static final int atomSize = 10;
 	
 	private ArrayList<StimuliTile> stimuliTiles = new ArrayList<>();
 	
 	public void smellEmit(Stimulus s, double amount, Point2D.Double position)
 	{
+		System.out.println("Emitting " + s);
+		
 		StimuliTile toEdit = getTileAt(position);
 		
 		if(toEdit == null)
@@ -40,7 +42,86 @@ public class StimuliManager
 	
 	public void updateStimuli()
 	{
-		//TODO
+		//TODO SPREAD
+		for(Stimulus smell : Stimulus.values())
+		{
+			for(StimuliTile st : stimuliTiles)
+			{
+				if(st.stimuliMap.getAmount(smell) != 0)
+				{
+					Point2D.Double next = new Point2D.Double(st.position.x, st.position.y);
+					StimuliTile currentTile;
+					double totalAmount = 0;
+
+					next.x += atomSize;			//RIGHT
+					currentTile = getTileAt(next, true);
+					totalAmount += currentTile.stimuliMap.getAmount(smell);
+					
+					
+					next.x -= 2*atomSize;		//LEFT
+					currentTile = getTileAt(next, true);
+					totalAmount += currentTile.stimuliMap.getAmount(smell);
+					
+					next.x += atomSize;			//BOT
+					next.y += atomSize;
+					currentTile = getTileAt(next, true);
+					totalAmount += currentTile.stimuliMap.getAmount(smell);
+					
+					next.y -= 2*atomSize;		//TOP
+					currentTile = getTileAt(next, true);
+					totalAmount += currentTile.stimuliMap.getAmount(smell);
+					
+					st.tmpAmount = (totalAmount + st.stimuliMap.getAmount(smell)) / 5;
+				}
+			}
+			
+			for(StimuliTile st : stimuliTiles)
+			{
+				System.out.println("Setting Amount of " + smell);
+				st.stimuliMap.setAmount(smell, st.tmpAmount);
+				
+				st.tmpAmount = 0;
+			}
+		}
+		
+		//EVAPORATE
+		for(StimuliTile st : stimuliTiles)
+		{
+			st.stimuliMap.evaporate();
+		}
+	}
+
+	private StimuliTile AddNewTileAt(Double position) {
+		StimuliTile st = new StimuliTile();
+		st.position = position;
+
+		st.position.x -= st.position.x % atomSize;
+		st.position.y -= st.position.y % atomSize;
+		
+		return st;
+	}
+	
+	protected StimuliTile getTileAt(Point2D.Double pos, boolean createIfNull)
+	{		
+		for(StimuliTile st : stimuliTiles)
+		{
+			if(MyUtils.distance(pos, st.position) <= atomSize && pos.x >= st.position.x && pos.y >= st.position.y)
+			{
+				return st;
+			}
+		}
+		
+		if(createIfNull)
+		{
+			return AddNewTileAt(pos);
+		}
+		
+		return null;
+	}
+	
+	protected StimuliTile getTileAt(Point2D.Double pos)
+	{		
+		return getTileAt(pos, false);
 	}
 
 	public StimuliManagerServices getNewServices()
@@ -56,35 +137,19 @@ public class StimuliManager
 			public void emit(Stimulus s, double amount, Point2D.Double position) {
 				smellEmit(s, amount, position);
 			}
-		};
-	}
 
-	private StimuliTile AddNewTileAt(Double position) {
-		StimuliTile st = new StimuliTile();
-		st.position = position;
-
-		st.position.x -= st.position.x % atomSize;
-		st.position.y -= st.position.y % atomSize;
-		
-		return st;
-	}
-	
-	protected StimuliTile getTileAt(Point2D.Double pos)
-	{		
-		for(StimuliTile st : stimuliTiles)
-		{
-			if(MyUtils.distance(pos, st.position) <= atomSize && pos.x >= st.position.x && pos.y >= st.position.y)
-			{
-				return st;
+			@Override
+			public ArrayList<StimuliTile> getTiles() {
+				return stimuliTiles;
 			}
-		}
-		
-		return null;
+		};
 	}
 	
 	public class StimuliTile
 	{
-		Point2D.Double position;
-		StimuliMap stimuliMap = new StimuliMap();
+		public Point2D.Double position;
+		public StimuliMap stimuliMap = new StimuliMap();
+		
+		double tmpAmount = 0;
 	}
 }

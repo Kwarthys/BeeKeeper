@@ -95,7 +95,7 @@ public class MainController
 			c.setID(i);
 			this.combs.add(c);
 			
-			CombDrawer drawer = new CombDrawer(c.getServices());
+			CombDrawer drawer = new CombDrawer(c.getServices(), sm.getNewServices());
 			
 			this.drawers.add(drawer);
 		}
