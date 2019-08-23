@@ -4,7 +4,7 @@ import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
-import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -34,7 +34,7 @@ public class BroodBee extends WorkingAgent {
 		Task askFood = new Task() {			
 			@Override
 			public void execute() {
-				BroodBee.this.stimuliLoad.emit(new HungryLarvaeStimulus(1-BroodBee.this.getEnergy()));				
+				BroodBee.this.emit(Stimulus.HungryLarvae, 1-BroodBee.this.getEnergy());				
 			}
 
 			@Override

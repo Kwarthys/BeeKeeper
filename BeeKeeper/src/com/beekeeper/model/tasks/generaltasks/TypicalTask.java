@@ -53,7 +53,7 @@ public class TypicalTask extends Task {
 	@Override
 	public void execute()
 	{
-		Point2D.Double targetpos = agent.getPosOfStrongestEmitter(targetSmell);
+		Point2D.Double targetpos = null; //TODO agent.getPosOfStrongestEmitter(targetSmell);
 		if(targetpos == null)
 		{
 			System.err.println("Emitter Not Found");

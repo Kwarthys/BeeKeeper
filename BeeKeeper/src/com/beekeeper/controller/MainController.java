@@ -80,7 +80,7 @@ public class MainController
 		{
 			ArrayList<Agent> bees = new ArrayList<>();
 			
-			StimuliManager sm = new StimuliManager(bees);
+			StimuliManager sm = new StimuliManager();
 			
 			sManagers.add(sm);
 			

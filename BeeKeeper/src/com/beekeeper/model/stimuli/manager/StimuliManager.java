@@ -2,123 +2,45 @@ package com.beekeeper.model.stimuli.manager;
 
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import com.beekeeper.model.agent.Agent;
-import com.beekeeper.model.agent.EmitterAgent;
-import com.beekeeper.model.stimuli.StimuliLoad;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.parameters.ModelParameters;
+import com.beekeeper.utils.MyUtils;
 
 public class StimuliManager
-{
-	private ArrayList<Agent> agents = new ArrayList<>();
+{	
+	private int atomSize = 10;
 	
-	public static final HashMap<Stimulus, Double> normalisationCoef = buildNormalisationCoef();
+	private ArrayList<StimuliTile> stimuliTiles = new ArrayList<>();
 	
-	public StimuliManager(ArrayList<Agent> agents)
+	public void smellEmit(Stimulus s, double amount, Point2D.Double position)
 	{
-		this.agents = agents;
-	}
-
-	private static HashMap<Stimulus, Double> buildNormalisationCoef() {
+		StimuliTile toEdit = getTileAt(position);
 		
-		HashMap<Stimulus, Double> map = new HashMap<Stimulus, Double>();
-		
-		for(Stimulus s : Stimulus.values())
+		if(toEdit == null)
 		{
-			switch(s)
-			{
-			case Dance:
-				break;
-			case Energy:
-				map.put(s, 1.0);
-				break;
-			case FoodSmell:
-				break;
-			case HungerBee:
-				break;
-			case HungryLarvae:
-				break;
-			case StimulusA:
-			case StimulusB:
-			case StimulusC:
-				map.put(s, 30.0);
-				break;
-			}
+			toEdit = AddNewTileAt(position);
+			stimuliTiles.add(toEdit);
 		}
 		
-		return map;
+		toEdit.stimuliMap.addAmount(s, amount);
 	}
 
 	public StimuliMap getAllStimuliAround(Point2D.Double position)
 	{
-		StimuliMap perception = new StimuliMap();
-
-		for(Agent bee : agents)
+		if(getTileAt(position) != null)
 		{
-			StimuliLoad load = ((EmitterAgent)bee).getStimuliLoad();
-			addPerceptionOf(load, perception, position);
+			return getTileAt(position).stimuliMap;
 		}
 		
-		return perception;
-	}
-	
-
-
-	public void addPerceptionOf(StimuliLoad load, StimuliMap perception, Point2D.Double receiverPos)
-	{
-		double distance = load.emiterPos.distance(receiverPos);
-		
-		load.getMapCopy().forEach((type, stimulus) -> {
-			double sensedAmount = 0;
-			
-			if(distance < 1)
-			{
-				sensedAmount = stimulus.getAmount();
-			}
-			else
-			{
-				sensedAmount = stimulus.getAmount() * Math.pow(stimulus.getSmellRange(), distance);
-			}
-			
-			if(sensedAmount >= ModelParameters.SMELL_THRESHOLD)
-			{				
-				perception.addAmount(type, sensedAmount);
-			}
-		});
-	}
-	
-	private Point2D.Double getPosOfStrongestEmitter(Point2D.Double sensorPos, Stimulus type)
-	{
-		double strongestAmount = 0;
-		Point2D.Double strongestPos = null;
-		for(Agent bee : agents)
-		{
-			StimuliLoad load = ((EmitterAgent)bee).getStimuliLoad();
-			
-			if(strongestPos == null || strongestAmount < load.getSensedStimulusAmount(type, load.emiterPos.distance(sensorPos)))
-			{
-				strongestAmount = load.getSensedStimulusAmount(type, load.emiterPos.distance(sensorPos));
-				strongestPos = load.emiterPos;
-			}
-		}
-		
-		if(strongestAmount == 0)
-		{
-			return null;
-		}
-		return strongestPos;
+		return new StimuliMap();
 	}
 	
 	public void updateStimuli()
 	{
-		for(Agent bee : agents)
-		{
-			((EmitterAgent)bee).getStimuliLoad().evaporate();
-		}
+		//TODO
 	}
 
 	public StimuliManagerServices getNewServices()
@@ -131,9 +53,38 @@ public class StimuliManager
 			}
 
 			@Override
-			public Point2D.Double getPosOfStrongestEmitter(Point2D.Double sensorPos, Stimulus type) {
-				return StimuliManager.this.getPosOfStrongestEmitter(sensorPos, type);
+			public void emit(Stimulus s, double amount, Point2D.Double position) {
+				smellEmit(s, amount, position);
 			}
 		};
+	}
+
+	private StimuliTile AddNewTileAt(Double position) {
+		StimuliTile st = new StimuliTile();
+		st.position = position;
+
+		st.position.x -= st.position.x % atomSize;
+		st.position.y -= st.position.y % atomSize;
+		
+		return st;
+	}
+	
+	protected StimuliTile getTileAt(Point2D.Double pos)
+	{		
+		for(StimuliTile st : stimuliTiles)
+		{
+			if(MyUtils.distance(pos, st.position) <= atomSize && pos.x >= st.position.x && pos.y >= st.position.y)
+			{
+				return st;
+			}
+		}
+		
+		return null;
+	}
+	
+	public class StimuliTile
+	{
+		Point2D.Double position;
+		StimuliMap stimuliMap = new StimuliMap();
 	}
 }

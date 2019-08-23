@@ -55,7 +55,7 @@ public class AdultBee extends WorkingAgent
 				if(!gettingFood)
 				{
 
-					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
+					Point2D.Double targetpos = null;//TODO AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.HungryLarvae);
 					if(targetpos == null)
 					{
 						this.interrupt();
@@ -78,7 +78,7 @@ public class AdultBee extends WorkingAgent
 							targetLarvae.receiveFood(0.5);
 							AdultBee.this.stomach -= 0.1;
 							
-							stimuliLoad.contact(targetLarvae.getStimuliLoad());
+							//TODO stimuliLoad.contact(targetLarvae.getStimuliLoad());
 						}
 					}
 					else
@@ -88,7 +88,7 @@ public class AdultBee extends WorkingAgent
 				}
 				else
 				{
-					Point2D.Double targetpos = AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.FoodSmell);
+					Point2D.Double targetpos = null; //TODO AdultBee.this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), Stimulus.FoodSmell);
 					if(targetpos == null)
 					{
 						this.interrupt();

@@ -6,8 +6,6 @@ import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliMap;
-import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
@@ -56,7 +54,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());
 		//System.out.println(s.getDisplayString());
-		normalizeLoad(s);
 		lastPercievedMap = s;
 		
 		
@@ -102,17 +99,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		
 		return todo;
-	}
-	
-	private void normalizeLoad(StimuliMap load)
-	{
-		for(Stimulus st : Stimulus.values())
-		{	
-			if(load.getAmount(st) != 0)
-			{
-				load.divideAmount(st, StimuliManager.normalisationCoef.get(st));
-			}
-		}
 	}
 
 	public EmitterAgent getAgentByTypeNPos(AgentType type, Point2D.Double pos)
@@ -187,9 +173,5 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public StimuliMap getPercievedStimuli() {
 		return lastPercievedMap;
-	}
-
-	public Point2D.Double getPosOfStrongestEmitter(Stimulus targetSmell) {
-		return this.stimuliManagerServices.getPosOfStrongestEmitter(getPosition(), targetSmell);
 	}
 }

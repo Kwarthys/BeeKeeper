@@ -2,7 +2,7 @@ package com.beekeeper.model.agent.implem;
 
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
-import com.beekeeper.model.stimuli.declarations.FoodSmellStimulus;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public class FoodSource extends EmitterAgent
@@ -23,7 +23,7 @@ public class FoodSource extends EmitterAgent
 	{
 		foodAmount += 0.1;
 		foodAmount = foodAmount > maxCellLoad ? maxCellLoad : foodAmount;
-		this.stimuliLoad.emit(new FoodSmellStimulus(foodAmount));
+		this.emit(Stimulus.FoodSmell, foodAmount);
 	}
 	
 	public double takeFood(double max)

@@ -69,7 +69,7 @@ public class CombDrawer extends JPanel{
 			
 			for(Stimulus s : Stimulus.values())
 			{
-				int phs = (int)(ea.getStimuliLoad().getPheromoneAmount(s) * 5);
+				int phs = 0;//(int)(ea.getStimuliLoad().getPheromoneAmount(s) * 5);
 				
 				if(s == Stimulus.HungryLarvae)
 				{

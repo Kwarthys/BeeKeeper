@@ -3,7 +3,6 @@ package com.beekeeper.model.agent.implem;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public class TestEmitterAgent extends EmitterAgent
@@ -24,7 +23,7 @@ public class TestEmitterAgent extends EmitterAgent
 
 	@Override
 	public void live() {
-		this.stimuliLoad.emit(StimulusFactory.get(this.smell, 1-this.getEnergy()));
+		emit(smell, 1-this.getEnergy());
 		this.addToEnergy(-0.001);
 		
 		if(this.getEnergy() < 0)

@@ -32,7 +32,7 @@ public class EmittingTask extends Task
 
 	@Override
 	public void execute(){
-		agent.getStimuliLoad().emit(StimulusFactory.get(smell, 1-agent.getEnergy()));
+		agent.emit(smell, 1-agent.getEnergy());
 	}
 
 	@Override

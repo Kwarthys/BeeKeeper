@@ -1,11 +1,12 @@
 package com.beekeeper.model.agent;
 
-import com.beekeeper.model.stimuli.StimuliLoad;
+import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public abstract class EmitterAgent extends Agent
-{	
-	protected StimuliLoad stimuliLoad;
+{
+	protected StimuliMap bodySmell;
 	protected StimuliManagerServices stimuliManagerServices;
 
 	public EmitterAgent(StimuliManagerServices stimuliManagerServices, double x, double y)
@@ -13,8 +14,13 @@ public abstract class EmitterAgent extends Agent
 		super(x,y);
 		this.stimuliManagerServices = stimuliManagerServices;
 		
-		this.stimuliLoad = new StimuliLoad(this.position);
+		this.bodySmell = new StimuliMap();
+	}
+	
+	public void emit(Stimulus s, double amount)
+	{
+		stimuliManagerServices.emit(s, amount, getPosition());
 	}
 
-	public StimuliLoad getStimuliLoad() {return this.stimuliLoad;}
+	public StimuliMap getBodySmells() {return this.bodySmell;}
 }

@@ -54,4 +54,9 @@ public class MyUtils
 		//System.out.println("going " + x2 + ";" + y2 + " -> " + Math.toDegrees(angle));
 		return angle;
 	}
+	
+	public static double distance(Point2D.Double p1, Point2D.Double p2)
+	{
+		return Point2D.Double.distance(p1.x, p1.y, p2.x, p2.y);
+	}
 }
