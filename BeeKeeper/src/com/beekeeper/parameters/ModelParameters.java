@@ -15,7 +15,7 @@ public class ModelParameters
 	public static final double SMELL_RANGE_FoodSmell = 0.95;
 	
 	
-	public static final double SMELL_THRESHOLD = 0.001;
+	public static final double SMELL_THRESHOLD = 0.02;
 
 	public static final double MAX_TASK_THRESHOLD = 0.80;
 	public static final double MIN_TASK_THRESHOLD = 0.10;

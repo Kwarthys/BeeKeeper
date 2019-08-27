@@ -39,12 +39,13 @@ public class StimuliMap
 		amounts.forEach((smell, amount) -> {
 			if(amount != 0)
 			{
-				//System.out.println(smell + " " + amount);
+				//System.out.print(smell + " " + amount);
 				amount *= StimulusFactory.get(smell, 0).timeDecay;
 				if(amount < ModelParameters.SMELL_THRESHOLD)
 				{
 					amount = 0.0;
-				}				
+				}
+				//System.out.println(" -> " + amount);		
 			}
 		});
 	}
@@ -66,8 +67,12 @@ public class StimuliMap
 		amounts.put(st, amounts.get(st) / d);
 	}
 
-	public void setAmount(Stimulus smell, double tmpAmount)
+	public void setAmount(Stimulus smell, double amount)
 	{
-		amounts.put(smell, tmpAmount);
+		if(amount < ModelParameters.SMELL_THRESHOLD)
+		{
+			amount = 0;
+		}
+		amounts.put(smell, amount);
 	}
 }

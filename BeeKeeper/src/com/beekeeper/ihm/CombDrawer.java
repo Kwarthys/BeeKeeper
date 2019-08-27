@@ -14,6 +14,7 @@ import com.beekeeper.model.agent.implem.AdultBee;
 import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManager.StimuliTile;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
@@ -54,9 +55,9 @@ public class CombDrawer extends JPanel{
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-		//paintPheromones(g);
-		//paintActors(g);
-		paintCells(g);
+		paintPheromones(g);
+		paintActors(g);
+		//paintCells(g);
 
 		g.dispose();
 	}
@@ -66,10 +67,16 @@ public class CombDrawer extends JPanel{
 		g.setColor(Color.WHITE);
 		for(StimuliTile st : stimuliManagerServices.getTiles())
 		{
+			double sA = st.stimuliMap.getAmount(Stimulus.StimulusA);
+			//System.out.println("PH Amount " + sA);
+			sA = sA > 15 ? 15 : sA;
+			int s = (int)(sA * 17);
+			g.setColor(new Color(s,s,s));
 			int tileX = (int) st.position.x;
 			int tileY = (int) st.position.y;
-			g.fillRect(tileX, tileY, StimuliManager.atomSize, StimuliManager.atomSize);
+			g.fillRect((int)(tileX*zoom), (int)(tileY*zoom), (int)(StimuliManager.atomSize*zoom), (int)(StimuliManager.atomSize*zoom));
 		}
+		//System.out.println("ENDTURN");
 	}
 	
 	protected void paintCells(Graphics g)

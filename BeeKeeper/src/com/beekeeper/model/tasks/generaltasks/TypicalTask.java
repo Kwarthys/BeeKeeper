@@ -56,7 +56,7 @@ public class TypicalTask extends Task {
 		Point2D.Double targetpos = null; //TODO agent.getPosOfStrongestEmitter(targetSmell);
 		if(targetpos == null)
 		{
-			System.err.println("Emitter Not Found - Typical task");
+			//System.err.println("Emitter Not Found - Typical task");
 			return;
 		}
 		agent.target = targetpos;
