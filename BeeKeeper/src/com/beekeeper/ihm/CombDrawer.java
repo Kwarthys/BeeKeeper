@@ -64,19 +64,25 @@ public class CombDrawer extends JPanel{
 
 	protected void paintPheromones(Graphics g)
 	{
-		g.setColor(Color.WHITE);
+		//double max = 0;
 		for(StimuliTile st : stimuliManagerServices.getTiles())
 		{
 			double sA = st.stimuliMap.getAmount(Stimulus.StimulusA);
-			//System.out.println("PH Amount " + sA);
-			sA = sA > 15 ? 15 : sA;
-			int s = (int)(sA * 17);
+			
+			//if(max < sA)max = sA;
+			
+			int cap = 4;
+			sA = sA > cap ? cap : sA;
+			int s = (int)(sA * 255 / cap);
+			
+			int tileX = (int) (st.position.x * zoom);
+			int tileY = (int) (st.position.y * zoom);
 			g.setColor(new Color(s,s,s));
-			int tileX = (int) st.position.x;
-			int tileY = (int) st.position.y;
-			g.fillRect((int)(tileX*zoom), (int)(tileY*zoom), (int)(StimuliManager.atomSize*zoom), (int)(StimuliManager.atomSize*zoom));
+			g.fillRect(tileX, tileY, (int)(StimuliManager.atomSize*zoom), (int)(StimuliManager.atomSize*zoom));
+			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
 		}
-		//System.out.println("ENDTURN");
+		
+		//if(max!=0)System.out.println("MAX: " + max);
 	}
 	
 	protected void paintCells(Graphics g)

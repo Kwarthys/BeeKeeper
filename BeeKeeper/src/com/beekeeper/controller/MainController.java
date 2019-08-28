@@ -88,7 +88,7 @@ public class MainController
 			//bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
 			//bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
 			
-			bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 100), sm.getNewServices()));
+			bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			bees.addAll(agentFactory.spawnTestAgents(3, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));
 			
 			Comb c = new Comb(bees);
@@ -165,7 +165,7 @@ public class MainController
 			});
 
 			try {
-				Thread.sleep(30);
+				Thread.sleep(30);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -4,9 +4,13 @@ package com.beekeeper.model.stimuli.manager;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import com.beekeeper.model.stimuli.AStimulus;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.model.stimuli.StimulusFactory;
+import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
 public class StimuliManager
@@ -17,7 +21,7 @@ public class StimuliManager
 
 	public void smellEmit(Stimulus s, double amount, Point2D.Double position)
 	{
-		System.out.println("Emitting " + amount + " of " + s);
+		//System.out.println("Emitting " + amount + " of " + s);
 
 		StimuliTile toEdit = getTileAt(position);
 
@@ -49,7 +53,7 @@ public class StimuliManager
 		int listSizeAtStart = stimuliTiles.size();
 
 		for(Stimulus smell : Stimulus.values())
-		{
+		{			
 			ArrayList<StimuliTile> newTiles = new ArrayList<>();
 
 			for(int i = 0; i < listSizeAtStart; ++i)
@@ -58,28 +62,28 @@ public class StimuliManager
 				StimuliTile st = stimuliTiles.get(i);
 				//System.out.println("Working on " + st.position.x + "|" + st.position.y);
 				
-				boolean initiator = st.stimuliMap.getAmount(smell) != 0;
+				double localAmount = st.stimuliMap.getAmount(smell);
 				
 				Point2D.Double neighborPoint = new Point2D.Double(st.position.x, st.position.y);
 				double totalAmount = 0;
 
 				neighborPoint.x += atomSize;			//RIGHT
 				//System.out.println("1");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, initiator);
+				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
 
 
 				neighborPoint.x -= 2*atomSize;			//LEFT
 				//System.out.println("2");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, initiator);
+				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
 
 				neighborPoint.x += atomSize;			//BOT
 				neighborPoint.y += atomSize;
 				//System.out.println("3");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, initiator);
+				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
 
 				neighborPoint.y -= 2*atomSize;			//TOP
 				//System.out.println("4");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, initiator);
+				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
 
 				st.tmpAmount = (totalAmount + st.stimuliMap.getAmount(smell)) / 5;
 			}
@@ -104,30 +108,37 @@ public class StimuliManager
 		//printAllTheTiles();
 
 		//EVAPORATE
-		for(StimuliTile st : stimuliTiles)
+		Iterator<StimuliTile> iterator = stimuliTiles.iterator();
+		while(iterator.hasNext())
 		{
+			StimuliTile st = iterator.next();
 			st.stimuliMap.evaporate();
+			
+			if(st.isEmpty())
+			{
+				//System.out.println("Removing a Tile : " + st);
+				iterator.remove();
+			}
 		}
 	}
 
 	/*
 	 * Can create new StimuliTiles, as a smell spreads to new tiles. Iterator is required to append those new tiles.
 	 */
-	private double manageASpread(Point2D.Double pos, Stimulus smell, ArrayList<StimuliTile> newTiles, boolean initiator)
+	private double manageASpread(Point2D.Double pos, Stimulus smell, ArrayList<StimuliTile> newTiles, double amount)
 	{
 		StimuliTile st = getTileAt(pos);
 		
 		if(st == null)
 		{
-			if(initiator)
+			if(amount/5 > ModelParameters.SMELL_THRESHOLD)
 			{
 				st = getNewTileAT(pos);
-				addIfNotInside(st, newTiles);				
+				st.stimuliMap.addAmount(smell, amount/5);
+				addIfNotInside(st, newTiles);
 			}
-			else
-			{
-				return 0;
-			}
+			
+			return 0;
 		}
 
 		return st.stimuliMap.getAmount(smell);
@@ -141,6 +152,7 @@ public class StimuliManager
 			if(st.position.equals(stToAdd.position))
 			{
 				//System.err.println("Removing " + st.position.x + "|" + st.position.y);
+				st.stimuliMap.addAllAmounts(stToAdd.stimuliMap);
 				return;
 			}
 		}
@@ -229,6 +241,11 @@ public class StimuliManager
 			sb.append(stimuliMap.getDisplayString());	
 			
 			return sb.toString();
+		}
+		
+		public boolean isEmpty()
+		{
+			return stimuliMap.isEmpty();
 		}
 	}
 }

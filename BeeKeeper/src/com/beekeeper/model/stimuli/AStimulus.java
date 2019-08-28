@@ -2,7 +2,7 @@ package com.beekeeper.model.stimuli;
 
 public abstract class AStimulus
 {
-	protected double timeDecay = 0.9;
+	protected double timeDecay = 0.95;
 	protected double transmissibility = 0.5;
 	protected double smellRange = 0.95;
 	protected Stimulus type;
@@ -12,6 +12,8 @@ public abstract class AStimulus
 	public double getSmellRange() {return smellRange;}
 	
 	public Stimulus getStimulusType() {return type;}
+	
+	public double getDecay() {return timeDecay;}
 	
 	public AStimulus(double d)
 	{

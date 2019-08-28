@@ -6,6 +6,8 @@ import com.beekeeper.parameters.ModelParameters;
 
 public class StimuliMap
 {
+	private int counter = (int)(Math.random()*1000);
+	
 	private HashMap<Stimulus, Double> amounts = new HashMap<>();
 	
 	public void addAmount(Stimulus type, double amount)
@@ -45,7 +47,9 @@ public class StimuliMap
 				{
 					amount = 0.0;
 				}
-				//System.out.println(" -> " + amount);		
+				
+				amounts.put(smell, amount);
+				//System.out.println(" -> " + amount);
 			}
 		});
 	}
@@ -74,5 +78,24 @@ public class StimuliMap
 			amount = 0;
 		}
 		amounts.put(smell, amount);
+	}
+
+	public boolean isEmpty()
+	{
+		for(double v : amounts.values())
+		{
+			if(v != 0)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void addAllAmounts(StimuliMap sm)
+	{
+		sm.amounts.forEach((smell, amount)->{
+			StimuliMap.this.addAmount(smell, amount);
+		});
 	}
 }
