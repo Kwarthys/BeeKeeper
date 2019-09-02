@@ -2,6 +2,7 @@ package com.beekeeper.model.tasks.generaltasks;
 
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Task;
 
 public class RandomMoveTask extends Task {

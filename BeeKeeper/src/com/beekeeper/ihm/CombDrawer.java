@@ -55,9 +55,9 @@ public class CombDrawer extends JPanel{
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-		paintPheromones(g);
+		//paintPheromones(g);
+		paintCells(g);
 		paintActors(g);
-		//paintCells(g);
 
 		g.dispose();
 	}
@@ -87,9 +87,9 @@ public class CombDrawer extends JPanel{
 	
 	protected void paintCells(Graphics g)
 	{
-		int cellSize = 6;
+		int cellSize = (int)ModelParameters.COMBCELL_SIZE;
 
-		g.setColor(Color.WHITE);
+		g.setColor(Color.GRAY);
 		
 		boolean isOffset = true;
 		double offset;
@@ -102,14 +102,14 @@ public class CombDrawer extends JPanel{
 			//System.out.println(c.x + " " + c.y + " " + c.filled);
 			
 			offset = isOffset ? cellSize/2 : 0;
-			g.drawOval((int)((c.x*cellSize-cellSize/2+offset)*zoom), (int)((c.y*cellSize-cellSize/2)*zoom), (int)(cellSize*zoom), (int)(cellSize*zoom));
+			g.drawOval((int)((c.x*cellSize+offset)*zoom), (int)((c.y*cellSize)*zoom), (int)(cellSize*zoom), (int)(cellSize*zoom));
 			
 			if(c.filled)
 			{
 				g.setColor(GraphicParams.hungryLarvaePhColor);
-				g.fillOval((int)((c.x*cellSize-cellSize/3+offset)*zoom), (int)((c.y*cellSize-cellSize/3)*zoom), (int)(cellSize*2/3*zoom), (int)(cellSize*2/3*zoom));
+				g.fillOval((int)((c.x*cellSize+offset)*zoom), (int)((c.y*cellSize)*zoom), (int)(cellSize*zoom), (int)(cellSize*zoom));
 
-				g.setColor(Color.WHITE);
+				g.setColor(Color.GRAY);
 			}
 		}
 		

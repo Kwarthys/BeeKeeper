@@ -19,4 +19,6 @@ public interface MainControllerServices
 	public EmitterAgent getAgentByTypeNPos(AgentType type, Point2D.Double pos, int combID);
 	
 	public double getHiveTemperature();
+	
+	public boolean isCellTaken(Point2D.Double cellPos, int combID);
 }
