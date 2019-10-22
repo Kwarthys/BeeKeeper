@@ -11,12 +11,12 @@ public class TestEmitterAgent extends EmitterAgent
 
 	private Stimulus smell;
 
-	public TestEmitterAgent(StimuliManagerServices stimuliManagerServices, double x, double y) {
-		super(stimuliManagerServices, x, y);
+	public TestEmitterAgent(StimuliManagerServices stimuliManagerServices) {
+		super(stimuliManagerServices);
 
 		this.type = AgentType.TEST_EMITTERAGENT;
 
-		//smell = stimuli[(int)(Math.random() * 3)];
+		smell = stimuli[(int)(Math.random() * 3)];
 		smell = Stimulus.StimulusA;
 
 		this.setEnergy(Math.random() /2 + 0.5);

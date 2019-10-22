@@ -1,7 +1,6 @@
 package com.beekeeper.controller;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
@@ -13,10 +12,6 @@ import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
-import com.beekeeper.model.agent.AgentType;
-import com.beekeeper.model.agent.EmitterAgent;
-import com.beekeeper.model.agent.implem.BroodBee;
-import com.beekeeper.model.agent.implem.FoodSource;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.hive.BeeHive;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
@@ -41,11 +36,7 @@ public class MainController
 	
 	private int simuStep = 0;
 	
-	private MainControllerServices controlServices = new MainControllerServices() {			
-		@Override
-		public BroodBee getLarvaeByPos(Point2D.Double larvaePos, int combID) {
-			return (BroodBee)getAgentByPos(larvaePos, AgentType.BROOD_BEE, combID);
-		}
+	private MainControllerServices controlServices = new MainControllerServices() {
 
 		@Override
 		public void logMyTaskSwitch(Task newTask, int beeID) {
@@ -53,18 +44,8 @@ public class MainController
 		}
 
 		@Override
-		public FoodSource getFoodSourceByPos(Double pos, int combID) {
-			return (FoodSource)getAgentByPos(pos, AgentType.FOOD_SOURCE, combID);
-		}
-
-		@Override
 		public double getHiveTemperature(){
 			return hive.getTemperature();
-		}
-
-		@Override
-		public EmitterAgent getAgentByTypeNPos(AgentType type, Double pos, int combID) {
-			return (EmitterAgent)getAgentByPos(pos, type, combID);
 		}
 	};
 
@@ -72,7 +53,7 @@ public class MainController
 	{
 		this.agentFactory = new AgentFactory();	
 		
-		Point2D.Double center = new Point2D.Double(100,100);
+		Point2D.Double center = new Point2D.Double(5,5);
 		
 		this.hive = new BeeHive();
 		
@@ -88,14 +69,15 @@ public class MainController
 			//bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
 			//bees.addAll(agentFactory.spawnWorkers(500, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
 			
-			bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			bees.addAll(agentFactory.spawnTestAgents(3, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));
+			Comb c = new Comb();
 			
-			Comb c = new Comb(bees);
+			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, c,MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
+			agentFactory.spawnTestAgents(10, c,MyUtils.getCirclePointRule(center, 4), sm.getServices(), this.controlServices);
+			
 			c.setID(i);
 			this.combs.add(c);
 			
-			CombDrawer drawer = new CombDrawer(c.getServices(), sm.getNewServices());
+			CombDrawer drawer = new CombDrawer(c.getServices(), sm.getServices());
 			
 			this.drawers.add(drawer);
 		}
@@ -105,21 +87,6 @@ public class MainController
 		this.window = new BeeWindow(g,drawers);
 
 		programLoop();
-	}
-	
-	private Agent getAgentByPos(Point2D.Double pos, AgentType type, int combID)
-	{
-		for(Agent bee : combs.get(combID).getAgents())
-		{
-			if(bee.getBeeType() == type)
-			{
-				if(pos.equals(bee.getPosition()))
-				{
-					return bee;
-				}
-			}
-		}
-		return null;
 	}
 
 	private void programLoop()

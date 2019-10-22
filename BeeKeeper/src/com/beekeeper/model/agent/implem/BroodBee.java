@@ -8,14 +8,10 @@ import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
 
-public class BroodBee extends WorkingAgent {
-
+public class BroodBee extends WorkingAgent
+{
 	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices) {
-		this(stimuliManagerServices, controllerServices, 200+Math.random()*100, 200+Math.random()*100);
-	}
-
-	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y) {
-		super(stimuliManagerServices, controllerServices, x,y);
+		super(stimuliManagerServices, controllerServices);
 		this.type = AgentType.BROOD_BEE;
 		if(this.getEnergy() < 0.5)
 		{
@@ -24,9 +20,6 @@ public class BroodBee extends WorkingAgent {
 		
 		fillTaskList();
 	}
-
-	@Override
-	public void move(double dx, double dy) {}
 
 	@Override
 	protected void fillTaskList() 

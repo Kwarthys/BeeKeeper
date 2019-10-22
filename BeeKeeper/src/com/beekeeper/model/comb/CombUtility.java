@@ -1,10 +1,11 @@
 package com.beekeeper.model.comb;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 import com.beekeeper.model.comb.cell.CombCell;
 
-public class CombManager
+public class CombUtility
 {
 	public static ArrayList<CombCell> fillCells(int x, int y, int combID)
 	{
@@ -12,7 +13,7 @@ public class CombManager
 		
 		for(int j = 0; j < y; j++)
 		{
-			for(int i = 0; i < x; i++)
+			for(int i = 0; i < x; i++)	
 			{
 				CombCell cb = new CombCell(i,j,combID);
 				cells.add(cb);
@@ -22,9 +23,11 @@ public class CombManager
 		return cells;
 	}
 	
-	public static ArrayList<Integer> getCellNeighbors(int cellX, int cellY, int sizeX, int sizeY)
+	public static ArrayList<Integer> getCellNeighbors(int cellX, int cellY, Dimension size)
 	{
 		ArrayList<Integer> cells = new ArrayList<>();
+		 int sizeX = size.width;
+		 int sizeY = size.height; 
 
 		int cellIndex = cellY * sizeY + cellX;
 		if(cellX != 0)

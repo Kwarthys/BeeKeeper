@@ -27,7 +27,7 @@ public class RandomMoveTask extends Task {
 
 	@Override
 	public void execute() {
-		agent.randomMove();
+		//agent.randomMove();
 
 		StimuliMap s = agent.getPercievedStimuli();
 		Task detectedTask = agent.findATask(s);

@@ -12,6 +12,16 @@ public class MyUtils
 				double distance = t.distance(center);
 				return distance >= innerRadius && distance < outterRadius;
 			}
+
+			@Override
+			public double getRange() {
+				return 2*outterRadius;
+			}
+
+			@Override
+			public double getOffset() {
+				return center.x-outterRadius;
+			}
 		};
 	}
 
@@ -22,11 +32,24 @@ public class MyUtils
 			public boolean isValid(Point2D.Double t) {
 				return t.distance(center) <= radius;
 			}
+
+			@Override
+			public double getRange() {
+				return 2*radius;
+			}
+
+			@Override
+			public double getOffset() {
+				return center.x-radius;
+			}
 		};
 	}
 	
-	public static Point2D.Double getPointInRule(double range, double offset, CustomRule<Point2D.Double> rule)
+	public static Point2D.Double getPointInRule(CustomRule<Point2D.Double> rule)
 	{
+		double offset = rule.getOffset();
+		double range = rule.getRange();
+		
 		Point2D.Double pointCandidate = new Point2D.Double(offset + Math.random()*range, offset + Math.random()*range);
 		while(!rule.isValid(pointCandidate))
 		{

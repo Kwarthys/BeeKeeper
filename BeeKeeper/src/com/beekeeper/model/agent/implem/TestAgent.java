@@ -13,9 +13,9 @@ import com.beekeeper.model.tasks.generaltasks.TypicalTask;
 
 public class TestAgent extends WorkingAgent {
 
-	public TestAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
+	public TestAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
-		super(stimuliManagerServices, controllerServices, x, y);
+		super(stimuliManagerServices, controllerServices);
 		this.type = AgentType.TEST_AGENT;
 		if(this.getEnergy() < 0.5)
 		{

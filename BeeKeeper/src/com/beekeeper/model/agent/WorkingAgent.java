@@ -29,12 +29,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
-		this(stimuliManagerServices, controllerServices, 150+Math.random()*200, 150+Math.random()*200);
-	}
-	
-	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, double x, double y)
-	{
-		super(stimuliManagerServices, x, y);
+		super(stimuliManagerServices);
 		this.controllerServices = controllerServices;
 		setEnergy(Math.random()*0.8+0.2);
 	}
@@ -52,7 +47,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			return;
 		}
 		
-		StimuliMap s = stimuliManagerServices.getAllStimuliAround(getPosition());
+		StimuliMap s = stimuliManagerServices.getAllStimuliAround(null); //TODO NULL HERE
 		//System.out.println(s.getDisplayString());
 		lastPercievedMap = s;
 		
@@ -99,11 +94,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		
 		return todo;
-	}
-
-	public EmitterAgent getAgentByTypeNPos(AgentType type, Point2D.Double pos)
-	{
-		return controllerServices.getAgentByTypeNPos(type, pos, this.combID);
 	}
 	
 	protected void chooseNewTask(StimuliMap load)

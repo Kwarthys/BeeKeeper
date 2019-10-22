@@ -11,9 +11,9 @@ public class FoodSource extends EmitterAgent
 	
 	protected double foodAmount = 0;
 
-	public FoodSource(double x, double y, StimuliManagerServices stimuliManagerServices)
+	public FoodSource(StimuliManagerServices stimuliManagerServices)
 	{
-		super(stimuliManagerServices, x, y);
+		super(stimuliManagerServices);
 		this.type = AgentType.FOOD_SOURCE;
 	}
 
@@ -41,7 +41,4 @@ public class FoodSource extends EmitterAgent
 			return value;
 		}
 	}
-
-	@Override
-	public void move(double dx, double dy) {}
 }

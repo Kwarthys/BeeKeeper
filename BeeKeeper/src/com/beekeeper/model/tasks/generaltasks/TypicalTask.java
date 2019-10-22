@@ -60,13 +60,13 @@ public class TypicalTask extends Task {
 			return;
 		}
 		agent.target = targetpos;
-		target = agent.getAgentByTypeNPos(targetType, targetpos);
+		//target = agent.getAgentByTypeNPos(targetType, targetpos);
 		if(target == null)
 		{
 			System.err.println("got an error here sir");
 			return;
 		}
-
+/*
 		if(targetpos.distance(agent.getPosition()) < 0.1)
 		{
 			double targetNeeds = 1-target.getEnergy();
@@ -81,8 +81,9 @@ public class TypicalTask extends Task {
 		else
 		{
 			this.energyCost = 0.0001;
-			agent.moveTowards(targetpos);
+			//agent.moveTowards(targetpos);
 		}
+*/
 	}
 	
 

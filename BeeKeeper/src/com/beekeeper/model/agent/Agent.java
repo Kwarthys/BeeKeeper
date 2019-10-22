@@ -2,14 +2,12 @@ package com.beekeeper.model.agent;
 
 import java.awt.geom.Point2D;
 
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.utils.IDManager;
 import com.beekeeper.utils.MyUtils;
 
 public abstract class Agent
 {	
-	protected Point2D.Double position;
-	protected double rotation = Math.random() * Math.PI * 2;
-	
 	private double energy;
 	
 	protected int ID;
@@ -21,12 +19,11 @@ public abstract class Agent
 
 	public abstract void live();
 	
-	public Point2D.Double getPosition() {return position;}
-	public double getRotation() {return rotation;}
-	
 	public int getID() {return ID;}
 	
 	public boolean alive = true;
+	
+	public CombCell hostCell;
 	
 	
 	public Agent()
@@ -38,14 +35,8 @@ public abstract class Agent
 	{
 		this.combID = id;
 	}
-	
-	public Agent(Double x, Double y)
-	{
-		this();
-		this.position = new Point2D.Double(x,y);
-	}
 
-
+/*
 	public void moveTowards(Point2D.Double position)
 	{
 		double speed = 1;
@@ -73,7 +64,7 @@ public abstract class Agent
 		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);
 		this.rotation = MyUtils.getRotFromDir(dx, dy);
 	}
-
+*/
 	
 	public double getEnergy() {return this.energy;}
 	
