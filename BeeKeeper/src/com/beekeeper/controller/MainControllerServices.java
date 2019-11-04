@@ -13,4 +13,6 @@ public interface MainControllerServices
 	public void logMyTaskSwitch(Task newTask, int beeID);
 	
 	public double getHiveTemperature();
+	
+	public boolean isCellTaken(Point2D.Double cellPos, int combID);
 }
