@@ -10,5 +10,8 @@ public interface CombServices
 	public ArrayList<Agent> getBees();
 	public ArrayList<CombCell> getCells();
 	
+	public ArrayList<Integer> getNeighbors(int x, int y);
+	public void askMoveToCell(Agent who, Integer where);
+	
 	public int getID();	
 }

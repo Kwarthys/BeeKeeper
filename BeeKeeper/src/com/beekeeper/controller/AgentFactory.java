@@ -1,6 +1,5 @@
 package com.beekeeper.controller;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -55,8 +54,6 @@ public class AgentFactory
 
 	public void spawnTestAgents(int number, Comb host, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices)
 	{
-		ArrayList<WorkingAgent> agents = new ArrayList<WorkingAgent>();
-		
 		for(int i = 0; i < number; i++)
 		{
 			Point2D.Double point = MyUtils.getPointInRule(rule);

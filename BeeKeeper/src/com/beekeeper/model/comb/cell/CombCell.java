@@ -1,6 +1,9 @@
 package com.beekeeper.model.comb.cell;
 
+import java.util.ArrayList;
+
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.comb.CombServices;
 
 public class CombCell
 {	
@@ -12,10 +15,23 @@ public class CombCell
 	public Agent visiting = null;
 	public Agent inside = null;
 	
-	public CombCell(int x, int y, int combID)
+	protected ArrayList<CombCell> neighbors;
+	
+	private CombServices cs;
+	
+	public CombCell(int x, int y, int combID, CombServices cs)
 	{
 		this.combID = combID;
 		this.x = x;
 		this.y = y;
+		this.cs = cs;
+	}
+
+	public ArrayList<Integer> getNeighbors() {
+		return cs.getNeighbors(x, y);
+	}
+
+	public void askMoveToCell(Agent who, Integer where) {
+		// TODO Auto-generated method stub		
 	}
 }

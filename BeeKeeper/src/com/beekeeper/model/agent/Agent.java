@@ -1,10 +1,9 @@
 package com.beekeeper.model.agent;
 
-import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.utils.IDManager;
-import com.beekeeper.utils.MyUtils;
 
 public abstract class Agent
 {	
@@ -52,14 +51,15 @@ public abstract class Agent
 
 		move(vector.x, vector.y);
 	}
-
+*/
 	public void randomMove()
 	{
-		double speed = 1.0;
-		this.rotation += (Math.random() - 0.5) * 0.8;
-		this.position.setLocation(this.position.x + speed * Math.cos(rotation), this.position.y + speed * Math.sin(rotation));
+		ArrayList<Integer> cells = hostCell.getNeighbors();
+		int r = (int) (Math.random() * cells.size());
+		
+		hostCell.askMoveTo(this, cells.get(r));
 	}
-
+/*
 	protected void move(double dx, double dy) {
 		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);
 		this.rotation = MyUtils.getRotFromDir(dx, dy);

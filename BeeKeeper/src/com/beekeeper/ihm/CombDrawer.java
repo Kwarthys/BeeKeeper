@@ -22,6 +22,8 @@ public class CombDrawer extends JPanel{
 	private ArrayList<CombCell> cells;
 
 	private double zoom = 2;
+	
+	private int CELL_SIZE = 6;
 
 	private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
 	private Color foodPhColor = GraphicParams.foodPhColor;
@@ -49,18 +51,12 @@ public class CombDrawer extends JPanel{
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-<<<<<<< HEAD
 		this.agents = cs.getBees();
 		this.cells = cs.getCells();
 
 		//paintPheromones(g);
 		paintCells(g);
-		//paintActors(g);
-=======
-		//paintPheromones(g);
-		paintCells(g);
 		paintActors(g);
->>>>>>> branch 'master' of https://github.com/Kwarthys/BeeKeeper
 
 		g.dispose();
 	}
@@ -90,9 +86,7 @@ public class CombDrawer extends JPanel{
 	
 	protected void paintCells(Graphics g)
 	{
-		int cellSize = (int)ModelParameters.COMBCELL_SIZE;
-
-		g.setColor(Color.GRAY);
+		g.setColor(Color.WHITE);
 		
 		boolean isOffset = true;
 		double offset;
@@ -104,23 +98,15 @@ public class CombDrawer extends JPanel{
 			
 			//System.out.println(c.x + " " + c.y + " " + c.filled);
 			
-			offset = isOffset ? cellSize/2 : 0;
-<<<<<<< HEAD
-			g.drawOval((int)((10+c.x*cellSize-cellSize/2+offset)*zoom), (int)((10+c.y*cellSize-cellSize/2)*zoom), (int)(cellSize*zoom), (int)(cellSize*zoom));
-=======
-			g.drawOval((int)((c.x*cellSize+offset)*zoom), (int)((c.y*cellSize)*zoom), (int)(cellSize*zoom), (int)(cellSize*zoom));
->>>>>>> branch 'master' of https://github.com/Kwarthys/BeeKeeper
+			offset = isOffset ? CELL_SIZE/2 : 0;
+			g.drawOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/2+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/2)*zoom), (int)(CELL_SIZE*zoom), (int)(CELL_SIZE*zoom));
 			
 			if(c.filled)
 			{
 				g.setColor(GraphicParams.hungryLarvaePhColor);
-<<<<<<< HEAD
-				g.fillOval((int)((10+c.x*cellSize-cellSize/3+offset)*zoom), (int)((10+c.y*cellSize-cellSize/3)*zoom), (int)(cellSize*2/3*zoom), (int)(cellSize*2/3*zoom));
-=======
-				g.fillOval((int)((c.x*cellSize+offset)*zoom), (int)((c.y*cellSize)*zoom), (int)(cellSize*zoom), (int)(cellSize*zoom));
->>>>>>> branch 'master' of https://github.com/Kwarthys/BeeKeeper
+				g.fillOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/3+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 
-				g.setColor(Color.GRAY);
+				g.setColor(Color.WHITE);
 			}
 		}
 		
@@ -129,9 +115,16 @@ public class CombDrawer extends JPanel{
 
 	protected void paintActors(Graphics g)
 	{
+		g.setColor(Color.RED);
 		for(Agent a : agents)
 		{
+			int offset = a.hostCell.y % 2 == 0 ? 0 : CELL_SIZE/2;
+
+			int x = 10+a.hostCell.x * CELL_SIZE - CELL_SIZE/3 + offset;
+			int y = 10+a.hostCell.y * CELL_SIZE - CELL_SIZE/3;
 			
+			g.fillOval((int)(x*zoom),(int)(y*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
+			System.out.println(a.hostCell.x + " " + a.hostCell.y);
 		}
 	}
 

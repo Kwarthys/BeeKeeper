@@ -47,20 +47,6 @@ public class MainController
 		public double getHiveTemperature(){
 			return hive.getTemperature();
 		}
-<<<<<<< HEAD
-=======
-
-		@Override
-		public EmitterAgent getAgentByTypeNPos(AgentType type, Double pos, int combID) {
-			return (EmitterAgent)getAgentByPos(pos, type, combID);
-		}
-
-		@Override
-		public boolean isCellTaken(Double cellPos, int combID) {
-			combs.get(combID).isCellTaken(cellPos);
-			return false;
-		}
->>>>>>> branch 'master' of https://github.com/Kwarthys/BeeKeeper
 	};
 
 	public MainController()
@@ -73,7 +59,7 @@ public class MainController
 		
 		for(int i = 0; i < 1; ++i)
 		{
-			ArrayList<Agent> bees = new ArrayList<>();
+			//ArrayList<Agent> bees = new ArrayList<>();
 			
 			StimuliManager sm = new StimuliManager();
 			
@@ -81,16 +67,13 @@ public class MainController
 			
 			//bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices(), this.controlServices));
 			//bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
-			bees.addAll(agentFactory.spawnWorkers(20, MyUtils.getCirclePointRule(center, 70), sm.getNewServices(), this.controlServices));
-			
-<<<<<<< HEAD
+			//bees.addAll(agentFactory.spawnWorkers(20, MyUtils.getCirclePointRule(center, 70), sm.getServices(), this.controlServices));
+	
 			Comb c = new Comb();
-=======
+
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));
->>>>>>> branch 'master' of https://github.com/Kwarthys/BeeKeeper
-			
+			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, c,MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			agentFactory.spawnTestAgents(10, c,MyUtils.getCirclePointRule(center, 4), sm.getServices(), this.controlServices);
 			

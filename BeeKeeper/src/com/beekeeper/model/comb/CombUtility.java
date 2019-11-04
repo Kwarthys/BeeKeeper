@@ -7,7 +7,7 @@ import com.beekeeper.model.comb.cell.CombCell;
 
 public class CombUtility
 {
-	public static ArrayList<CombCell> fillCells(int x, int y, int combID)
+	public static ArrayList<CombCell> fillCells(int x, int y, int combID, CombServices services)
 	{
 		ArrayList<CombCell> cells = new ArrayList<>();
 		
@@ -15,7 +15,7 @@ public class CombUtility
 		{
 			for(int i = 0; i < x; i++)	
 			{
-				CombCell cb = new CombCell(i,j,combID);
+				CombCell cb = new CombCell(i,j,combID, services);
 				cells.add(cb);
 			}
 		}		
