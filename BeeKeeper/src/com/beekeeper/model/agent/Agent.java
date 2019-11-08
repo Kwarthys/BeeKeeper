@@ -57,7 +57,7 @@ public abstract class Agent
 		ArrayList<Integer> cells = hostCell.getNeighbors();
 		int r = (int) (Math.random() * cells.size());
 		
-		hostCell.askMoveTo(this, cells.get(r));
+		hostCell.askMoveToCell(this, cells.get(r));
 	}
 /*
 	protected void move(double dx, double dy) {

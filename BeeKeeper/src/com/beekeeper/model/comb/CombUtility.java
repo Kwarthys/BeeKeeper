@@ -7,13 +7,13 @@ import com.beekeeper.model.comb.cell.CombCell;
 
 public class CombUtility
 {
-	public static ArrayList<CombCell> fillCells(int x, int y, int combID, CombServices services)
+	public static ArrayList<CombCell> fillCells(Dimension size, int combID, CombServices services)
 	{
 		ArrayList<CombCell> cells = new ArrayList<>();
 		
-		for(int j = 0; j < y; j++)
+		for(int j = 0; j < size.height; j++)
 		{
-			for(int i = 0; i < x; i++)	
+			for(int i = 0; i < size.width; i++)	
 			{
 				CombCell cb = new CombCell(i,j,combID, services);
 				cells.add(cb);
@@ -28,8 +28,10 @@ public class CombUtility
 		ArrayList<Integer> cells = new ArrayList<>();
 		 int sizeX = size.width;
 		 int sizeY = size.height; 
+		 
+		 int maxIndex = sizeX * sizeY;
 
-		int cellIndex = cellY * sizeY + cellX;
+		int cellIndex = cellY * sizeX + cellX;
 		if(cellX != 0)
 			cells.add(cellIndex -1);
 		if(cellX + 1 != sizeX)
@@ -38,14 +40,37 @@ public class CombUtility
 		int offset = cellY%2 == 0 ? 0:1;
 		
 		if(cellX + offset != 0)
-			cells.add(cellIndex - sizeY -1 + offset);
+		{
+			int index = cellIndex - sizeX -1 + offset;
+			if(index >= 0 && index < maxIndex)
+				cells.add(index);
+		}
 		if(cellX + offset != sizeX)
-			cells.add(cellIndex - sizeY + offset);
-
+		{
+			int index = cellIndex - sizeX + offset;
+			if(index >= 0 && index < maxIndex)
+				cells.add(index);
+		}
 		if(cellX + offset != 0)
-			cells.add(cellIndex + sizeY -1 + offset);
+		{
+			int index = cellIndex + sizeX -1 + offset;
+			if(index >= 0 && index < maxIndex)
+				cells.add(index);
+		}
 		if(cellX + offset != sizeX)
-			cells.add(cellIndex + sizeY + offset);				
+		{
+			int index = cellIndex + sizeX + offset;
+			if(index >= 0 && index < maxIndex)
+				cells.add(index);
+		}
+		
+		System.out.println("Nbors of " + cellX + "x" + cellY + " :");
+		for(Integer i : cells)
+		{
+			System.out.print(i + " ");
+		}
+		System.out.println();
+		
 		
 		return cells;
 	}

@@ -124,7 +124,7 @@ public class CombDrawer extends JPanel{
 			int y = 10+a.hostCell.y * CELL_SIZE - CELL_SIZE/3;
 			
 			g.fillOval((int)(x*zoom),(int)(y*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
-			System.out.println(a.hostCell.x + " " + a.hostCell.y);
+			//System.out.println(a.hostCell.x + " " + a.hostCell.y);
 		}
 	}
 

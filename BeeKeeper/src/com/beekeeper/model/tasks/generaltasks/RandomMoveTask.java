@@ -2,7 +2,6 @@ package com.beekeeper.model.tasks.generaltasks;
 
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
-import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Task;
 
 public class RandomMoveTask extends Task {
@@ -13,7 +12,7 @@ public class RandomMoveTask extends Task {
 		agent = a;
 		
 		taskName = "Random Walk";
-		energyCost = 0.01;
+		energyCost = 0.00;
 	}
 
 	@Override
@@ -28,14 +27,15 @@ public class RandomMoveTask extends Task {
 
 	@Override
 	public void execute() {
-		//agent.randomMove();
-
+		agent.randomMove();
+/*
 		StimuliMap s = agent.getPercievedStimuli();
 		Task detectedTask = agent.findATask(s);
 		if(detectedTask.compute(s) > agent.getCurrentTask().compute(s))
 		{
 			agent.interruptTask();
 		}
+*/
 	}
 
 	@Override

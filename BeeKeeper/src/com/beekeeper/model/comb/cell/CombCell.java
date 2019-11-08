@@ -32,6 +32,6 @@ public class CombCell
 	}
 
 	public void askMoveToCell(Agent who, Integer where) {
-		// TODO Auto-generated method stub		
+		cs.askMoveToCell(who, where);	
 	}
 }

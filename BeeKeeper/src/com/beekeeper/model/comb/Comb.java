@@ -42,28 +42,34 @@ public class Comb
 		@Override
 		public void askMoveToCell(Agent who, Integer where) {
 			CombCell newCell = cells.get(where);
-			if(isCellVisitEmpty(newCell.x, newCell.y))
+			if(newCell.visiting == null)
 			{				
 				who.hostCell.visiting = null;
 				who.hostCell = newCell;
-				//TODO FINISH HERE MOVE
+				newCell.visiting = who;
 			}
 		}
 	};
 	
 	public Comb()
 	{
-		cells = CombUtility.fillCells(size.width,size.height,ID, services);
-		/*
-		int azerrefgd = 59;
+		cells = CombUtility.fillCells(size,ID, services);
+		
+
+		testNeighborhood();
+	}
+	
+	protected void testNeighborhood()
+	{
+		int azerrefgd = 1;
 		
 		cells.get(azerrefgd).filled = true;
 		
 		for(Integer i : CombUtility.getCellNeighbors(cells.get(azerrefgd).x, cells.get(azerrefgd).y, size))
 		{
+			System.out.print(i + " ");
 			cells.get(i).filled = true;
 		}
-		*/
 	}
 
 	public ArrayList<Agent> getAgents(){return agents;}
