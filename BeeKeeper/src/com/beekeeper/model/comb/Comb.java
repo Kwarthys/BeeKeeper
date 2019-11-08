@@ -56,10 +56,10 @@ public class Comb
 		cells = CombUtility.fillCells(size,ID, services);
 		
 
-		testNeighborhood();
+		//testNeighborhood();
 	}
 	
-	protected void testNeighborhood()
+	protected void testNeighborhood() //Not private to avoid "not used" warning
 	{
 		int azerrefgd = 1;
 		

@@ -95,7 +95,7 @@ public class MainController
 	private void programLoop()
 	{
 		int turnIndex = 0;
-		while(turnIndex < 1)
+		while(turnIndex < 1000)
 		{
 			turnIndex++;
 			//Collections.shuffle(agentFactory.allAgents);

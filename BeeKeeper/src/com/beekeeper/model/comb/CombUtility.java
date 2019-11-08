@@ -64,14 +64,6 @@ public class CombUtility
 				cells.add(index);
 		}
 		
-		System.out.println("Nbors of " + cellX + "x" + cellY + " :");
-		for(Integer i : cells)
-		{
-			System.out.print(i + " ");
-		}
-		System.out.println();
-		
-		
 		return cells;
 	}
 }
