@@ -3,6 +3,7 @@ package com.beekeeper.ihm;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -54,7 +55,7 @@ public class CombDrawer extends JPanel{
 		this.agents = cs.getBees();
 		this.cells = cs.getCells();
 
-		//paintPheromones(g);
+		paintPheromones(g);
 		paintCells(g);
 		paintActors(g);
 
@@ -68,16 +69,17 @@ public class CombDrawer extends JPanel{
 		{
 			double sA = st.stimuliMap.getAmount(Stimulus.StimulusA);
 			
-			//if(max < sA)max = sA;
+			Point p = fromLinearToHex(st.position);
 			
 			int cap = 4;
 			sA = sA > cap ? cap : sA;
 			int s = (int)(sA * 255 / cap);
+
+			p.x -= CELL_SIZE/2;
+			p.y -= CELL_SIZE/2; 
 			
-			int tileX = (int) (st.position.x * zoom);
-			int tileY = (int) (st.position.y * zoom);
 			g.setColor(new Color(s,s,s));
-			g.fillRect(tileX, tileY, (int)(StimuliManager.atomSize*zoom), (int)(StimuliManager.atomSize*zoom));
+			g.fillRect((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
 		}
 		
@@ -118,14 +120,26 @@ public class CombDrawer extends JPanel{
 		g.setColor(Color.RED);
 		for(Agent a : agents)
 		{
-			int offset = a.hostCell.y % 2 == 0 ? 0 : CELL_SIZE/2;
+			
+			Point p = fromLinearToHex(a.getPosition());
 
-			int x = 10+a.hostCell.x * CELL_SIZE - CELL_SIZE/3 + offset;
-			int y = 10+a.hostCell.y * CELL_SIZE - CELL_SIZE/3;
+			int x = p.x - CELL_SIZE/3;
+			int y = p.y - CELL_SIZE/3;
 			
 			g.fillOval((int)(x*zoom),(int)(y*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 			//System.out.println(a.hostCell.x + " " + a.hostCell.y);
 		}
+	}
+	
+	
+	protected Point fromLinearToHex(Point p)
+	{
+		int offset = p.y % 2 == 0 ? 0 : CELL_SIZE/2;
+
+		int x = 10+p.x * CELL_SIZE + offset;
+		int y = 10+p.y * CELL_SIZE;
+
+		return new Point(x,y);
 	}
 
 }

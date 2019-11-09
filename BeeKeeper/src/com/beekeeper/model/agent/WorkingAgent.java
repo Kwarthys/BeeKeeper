@@ -1,5 +1,6 @@
 package com.beekeeper.model.agent;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			return;
 		}
 		
-		StimuliMap s = stimuliManagerServices.getAllStimuliAround(null); //TODO NULL HERE
+		StimuliMap s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
 		//System.out.println(s.getDisplayString());
 		lastPercievedMap = s;
 		

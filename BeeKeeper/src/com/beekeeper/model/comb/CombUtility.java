@@ -23,13 +23,20 @@ public class CombUtility
 		return cells;
 	}
 	
+	public static ArrayList<Integer> getCellNeighbors(int index, Dimension size)
+	{
+		int x = index % size.width;
+		int y = (index - x) / size.width;
+		return getCellNeighbors(x, y, size);
+	}
+	
 	public static ArrayList<Integer> getCellNeighbors(int cellX, int cellY, Dimension size)
 	{
 		ArrayList<Integer> cells = new ArrayList<>();
-		 int sizeX = size.width;
-		 int sizeY = size.height; 
+		int sizeX = size.width;
+		int sizeY = size.height; 
 		 
-		 int maxIndex = sizeX * sizeY;
+		int maxIndex = sizeX * sizeY;
 
 		int cellIndex = cellY * sizeX + cellX;
 		if(cellX != 0)

@@ -1,5 +1,7 @@
 package com.beekeeper.model.agent;
 
+import java.awt.Point;
+
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
@@ -18,7 +20,7 @@ public abstract class EmitterAgent extends Agent
 	
 	public void emit(Stimulus s, double amount)
 	{
-		stimuliManagerServices.emit(s, amount, null);
+		stimuliManagerServices.emit(s, amount, new Point(hostCell.x, hostCell.y));
 		//TODO replace NULL by something meaningful
 	}
 

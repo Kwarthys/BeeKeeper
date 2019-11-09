@@ -112,4 +112,8 @@ public class Comb
 		bee.hostCell = cell;
 		this.agents.add(bee);
 	}
+
+	public Dimension getDimension() {
+		return size;
+	}
 }

@@ -1,5 +1,6 @@
 package com.beekeeper.model.agent;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.beekeeper.model.comb.cell.CombCell;
@@ -33,6 +34,11 @@ public abstract class Agent
 	public void setCombID(int id)
 	{
 		this.combID = id;
+	}
+	
+	public Point getPosition()
+	{
+		return new Point(hostCell.x, hostCell.y);
 	}
 
 /*

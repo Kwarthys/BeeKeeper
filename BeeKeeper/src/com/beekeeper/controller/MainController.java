@@ -60,8 +60,9 @@ public class MainController
 		for(int i = 0; i < 1; ++i)
 		{
 			//ArrayList<Agent> bees = new ArrayList<>();
+			Comb c = new Comb();
 			
-			StimuliManager sm = new StimuliManager();
+			StimuliManager sm = new StimuliManager(c);
 			
 			sManagers.add(sm);
 			
@@ -69,7 +70,6 @@ public class MainController
 			//bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
 			//bees.addAll(agentFactory.spawnWorkers(20, MyUtils.getCirclePointRule(center, 70), sm.getServices(), this.controlServices));
 	
-			Comb c = new Comb();
 
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));

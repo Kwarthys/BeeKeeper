@@ -1,31 +1,32 @@
 package com.beekeeper.model.stimuli.manager;
 
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
+import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import com.beekeeper.model.comb.Comb;
+import com.beekeeper.model.comb.CombUtility;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
 public class StimuliManager
-{	
-	public static final int atomSize = 10;
-
-	private ArrayList<StimuliTile> stimuliTiles = new ArrayList<>();
+{
+	private ArrayList<StimuliTile> stimuliTiles;
+	
+	private Dimension gridSize;
 	
 	private StimuliManagerServices services = new StimuliManagerServices() {
 
 		@Override
-		public StimuliMap getAllStimuliAround(Point2D.Double position) {
+		public StimuliMap getAllStimuliAround(Point position) {
 			return StimuliManager.this.getAllStimuliAround(position);
 		}
 
 		@Override
-		public void emit(Stimulus s, double amount, Point2D.Double position) {
+		public void emit(Stimulus s, double amount, Point position) {
 			smellEmit(s, amount, position);
 		}
 
@@ -35,22 +36,26 @@ public class StimuliManager
 		}
 	};
 
-	public void smellEmit(Stimulus s, double amount, Point2D.Double position)
+	public StimuliManager(Comb c)
 	{
-		//System.out.println("Emitting " + amount + " of " + s);
-
-		StimuliTile toEdit = getTileAt(position);
-
-		if(toEdit == null)
+		stimuliTiles = new ArrayList<>();
+		
+		gridSize = new Dimension(c.getDimension());
+		for(int j = 0; j < gridSize.height; j++)
 		{
-			toEdit = getNewTileAT(position);			
-			stimuliTiles.add(toEdit);
+			for(int i = 0; i < gridSize.width; i++)
+			{
+				stimuliTiles.add(new StimuliTile(i,j));
+			}			
 		}
-
-		toEdit.stimuliMap.addAmount(s, amount);
 	}
 
-	public StimuliMap getAllStimuliAround(Point2D.Double position)
+	public void smellEmit(Stimulus s, double amount, Point position)
+	{
+		getTileAt(position).stimuliMap.addAmount(s, amount);
+	}
+
+	public StimuliMap getAllStimuliAround(Point position)
 	{
 		if(getTileAt(position) != null)
 		{
@@ -62,149 +67,51 @@ public class StimuliManager
 
 	public void updateStimuli()
 	{		
-		//System.out.println("tiles list size = " + stimuliTiles.size());
-		//TODO SPREAD
-		//System.out.println("Updating smells");
-		
-		int listSizeAtStart = stimuliTiles.size();
+		int size = gridSize.width * gridSize.height;
 
 		for(Stimulus smell : Stimulus.values())
-		{			
-			ArrayList<StimuliTile> newTiles = new ArrayList<>();
-
-			for(int i = 0; i < listSizeAtStart; ++i)
+		{
+			Double propag = 0.5;
+			
+			
+			for(int i = 0; i < size; ++i)
 			{
-				//System.out.println("tiles list size = " + stimuliTiles.size() + " now at " + i);
 				StimuliTile st = stimuliTiles.get(i);
-				//System.out.println("Working on " + st.position.x + "|" + st.position.y);
-				
 				double localAmount = st.stimuliMap.getAmount(smell);
 				
-				Point2D.Double neighborPoint = new Point2D.Double(st.position.x, st.position.y);
+				ArrayList<Integer> voisins = CombUtility.getCellNeighbors(i, gridSize);
+				
 				double totalAmount = 0;
+				for(Integer stIndex : voisins)
+				{
+					totalAmount += stimuliTiles.get(stIndex).stimuliMap.getAmount(smell) * (1-propag) / voisins.size();
+				}
 
-				neighborPoint.x += atomSize;			//RIGHT
-				//System.out.println("1");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
-
-
-				neighborPoint.x -= 2*atomSize;			//LEFT
-				//System.out.println("2");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
-
-				neighborPoint.x += atomSize;			//BOT
-				neighborPoint.y += atomSize;
-				//System.out.println("3");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
-
-				neighborPoint.y -= 2*atomSize;			//TOP
-				//System.out.println("4");
-				totalAmount += manageASpread(neighborPoint, smell, newTiles, localAmount);
-
-				st.tmpAmount = (totalAmount + st.stimuliMap.getAmount(smell)) / 5;
+				st.tmpAmount = (localAmount * propag + totalAmount) * 1;
 			}
 			
-			for(int i = 0; i < listSizeAtStart; ++i)
+			double granTotalAmount = 0;
+			for(int i = 0; i < size; ++i)
 			{
 				StimuliTile st = stimuliTiles.get(i);
 				if(st.tmpAmount != 0)
 				{
-					//System.out.println("Setting Amount of " + smell + " to " + st.tmpAmount);
 					st.stimuliMap.setAmount(smell, st.tmpAmount);
-
+					granTotalAmount += st.tmpAmount;
 					st.tmpAmount = 0;					
 				}
 
 			}
-
-			stimuliTiles.addAll(newTiles);
+			if(smell == Stimulus.StimulusA)
+				System.out.println("GranTotalAmount = " + granTotalAmount);
 		}
-
-		//System.err.println("smellTurnEnds");
+		
 		//printAllTheTiles();
-
-		//EVAPORATE
-		Iterator<StimuliTile> iterator = stimuliTiles.iterator();
-		while(iterator.hasNext())
-		{
-			StimuliTile st = iterator.next();
-			st.stimuliMap.evaporate();
-			
-			if(st.isEmpty())
-			{
-				//System.out.println("Removing a Tile : " + st);
-				iterator.remove();
-			}
-		}
 	}
 
-	/*
-	 * Can create new StimuliTiles, as a smell spreads to new tiles. Iterator is required to append those new tiles.
-	 */
-	private double manageASpread(Point2D.Double pos, Stimulus smell, ArrayList<StimuliTile> newTiles, double amount)
+	protected StimuliTile getTileAt(Point pos)
 	{
-		StimuliTile st = getTileAt(pos);
-		
-		if(st == null)
-		{
-			if(amount/5 > ModelParameters.SMELL_THRESHOLD)
-			{
-				st = getNewTileAT(pos);
-				st.stimuliMap.addAmount(smell, amount/5);
-				addIfNotInside(st, newTiles);
-			}
-			
-			return 0;
-		}
-
-		return st.stimuliMap.getAmount(smell);
-	}
-
-
-	private void addIfNotInside(StimuliTile stToAdd, ArrayList<StimuliTile> newTiles)
-	{
-		for(StimuliTile st : newTiles)
-		{
-			if(st.position.equals(stToAdd.position))
-			{
-				//System.err.println("Removing " + st.position.x + "|" + st.position.y);
-				st.stimuliMap.addAllAmounts(stToAdd.stimuliMap);
-				return;
-			}
-		}
-		
-		newTiles.add(stToAdd);
-		
-	}
-
-	private StimuliTile getNewTileAT(Double position) {
-		StimuliTile st = new StimuliTile();
-		
-		double x = position.x - position.x % atomSize;
-		double y = position.y - position.y % atomSize;
-		
-		st.position = new Point2D.Double(x,y);
-
-		//System.out.println("creating " + st.position.x + "|" + st.position.y);
-
-		return st;
-	}
-
-	protected StimuliTile getTileAt(Point2D.Double pos)
-	{
-		for(int i = 0; i < stimuliTiles.size(); ++i)
-		{
-			StimuliTile st = stimuliTiles.get(i);
-			
-			if(MyUtils.distance(pos, st.position) < atomSize && pos.x >= st.position.x && pos.y >= st.position.y)
-			{
-				//System.out.println(pos.x + "|" + pos.y + " found inside " + st.position.x + "|" + st.position.y);
-				return st;
-			}
-			//System.out.println(pos.x + "|" + pos.y + " not inside " + st.position.x + "|" + st.position.y);
-		}
-
-		return null;
+		return stimuliTiles.get(pos.y * gridSize.width + pos.x);
 	}
 
 	public StimuliManagerServices getServices()
@@ -212,7 +119,7 @@ public class StimuliManager
 		return services;
 	}	
 
-	private void printAllTheTiles()
+	protected void printAllTheTiles()
 	{
 		System.out.println("\n\nTiles :");
 		for(StimuliTile st : stimuliTiles)
@@ -224,10 +131,15 @@ public class StimuliManager
 
 	public class StimuliTile
 	{
-		public Point2D.Double position;
+		public Point position;
 		public StimuliMap stimuliMap = new StimuliMap();
 
 		double tmpAmount = 0;
+		
+		public StimuliTile(int x, int y)
+		{
+			position = new Point(x,y);
+		}
 		
 		@Override
 		public String toString()

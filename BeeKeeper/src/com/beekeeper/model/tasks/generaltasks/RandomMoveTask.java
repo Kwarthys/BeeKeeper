@@ -2,6 +2,7 @@ package com.beekeeper.model.tasks.generaltasks;
 
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Task;
 
 public class RandomMoveTask extends Task {
@@ -27,7 +28,8 @@ public class RandomMoveTask extends Task {
 
 	@Override
 	public void execute() {
-		agent.randomMove();
+		//agent.randomMove();
+		agent.emit(Stimulus.StimulusA, 1);
 /*
 		StimuliMap s = agent.getPercievedStimuli();
 		Task detectedTask = agent.findATask(s);

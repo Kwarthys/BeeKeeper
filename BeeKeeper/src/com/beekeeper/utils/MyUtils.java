@@ -1,5 +1,6 @@
 package com.beekeeper.utils;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 public class MyUtils
@@ -78,8 +79,13 @@ public class MyUtils
 		return angle;
 	}
 	
-	public static double distance(Point2D.Double p1, Point2D.Double p2)
+	public static double distance(Point p1, Point p2)
 	{
+		//System.out.println(p1 + " " + p2);
+		if(p1 == null || p2 == null)
+		{
+			System.err.println("null in MyUtils");
+		}
 		return Point2D.Double.distance(p1.x, p1.y, p2.x, p2.y);
 	}
 }
