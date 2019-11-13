@@ -79,8 +79,14 @@ public class CombDrawer extends JPanel{
 			p.y -= CELL_SIZE/2; 
 			
 			g.setColor(new Color(s,s,s));
-			g.fillRect((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
+			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
+			
+			p.y *= 3;
+			p.y += 300;
+			p.x *= 3;
+			
+			g.drawString(String.valueOf((int)(10*sA)), p.x, p.y);
 		}
 		
 		//if(max!=0)System.out.println("MAX: " + max);

@@ -3,7 +3,6 @@ package com.beekeeper.model.tasks.generaltasks;
 import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.model.tasks.Task;
 
 public class EmittingTask extends Task

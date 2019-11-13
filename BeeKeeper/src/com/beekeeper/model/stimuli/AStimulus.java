@@ -19,7 +19,7 @@ public abstract class AStimulus
 	{
 		this.amount = d;
 	}
-
+/*
 	public void evaporate()
 	{
 		amount *= (1-timeDecay);
@@ -28,7 +28,7 @@ public abstract class AStimulus
 			amount = 0;
 		}
 	}
-	
+	*/
 	public void add(double amount)
 	{
 		//System.out.println("thisamount " + this.amount + " + " + amount);

@@ -2,7 +2,6 @@ package com.beekeeper.model.stimuli.manager;
 
 
 import java.awt.Dimension;
-import java.awt.GradientPaint;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -10,7 +9,7 @@ import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombUtility;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.utils.MyUtils;
+import com.beekeeper.model.stimuli.StimulusFactory;
 
 public class StimuliManager
 {
@@ -71,8 +70,8 @@ public class StimuliManager
 
 		for(Stimulus smell : Stimulus.values())
 		{
-			Double propag = 0.5;
-			
+			double propag = StimulusFactory.getPropag(smell);
+			double evapRate = StimulusFactory.getEvapRate(smell);
 			
 			for(int i = 0; i < size; ++i)
 			{
@@ -87,7 +86,7 @@ public class StimuliManager
 					totalAmount += stimuliTiles.get(stIndex).stimuliMap.getAmount(smell) * (1-propag) / voisins.size();
 				}
 
-				st.tmpAmount = (localAmount * propag + totalAmount) * 1;
+				st.tmpAmount = (localAmount * propag + totalAmount) * evapRate;
 			}
 			
 			double granTotalAmount = 0;

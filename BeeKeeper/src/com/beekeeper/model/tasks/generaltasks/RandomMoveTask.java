@@ -9,6 +9,8 @@ public class RandomMoveTask extends Task {
 	
 	private WorkingAgent agent;
 	
+	//private boolean t = true;
+	
 	public RandomMoveTask(WorkingAgent a) {
 		agent = a;
 		
@@ -28,8 +30,8 @@ public class RandomMoveTask extends Task {
 
 	@Override
 	public void execute() {
-		//agent.randomMove();
-		agent.emit(Stimulus.StimulusA, 1);
+		agent.randomMove();
+		agent.emit(Stimulus.StimulusA, 2);
 /*
 		StimuliMap s = agent.getPercievedStimuli();
 		Task detectedTask = agent.findATask(s);

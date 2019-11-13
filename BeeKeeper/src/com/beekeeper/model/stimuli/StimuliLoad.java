@@ -68,7 +68,7 @@ public class StimuliLoad
 			emit(StimulusFactory.get(key, amount));
 		}
 	}
-
+/*
 	public void evaporate()
 	{
 		pheromonesLoadMap.forEach((ph,stimulus) -> {
@@ -76,7 +76,7 @@ public class StimuliLoad
 		});
 		pheromonesLoadMap.entrySet().removeIf(entry -> entry.getValue().getAmount() == 0);
 	}
-
+*/
 	public void contact(StimuliLoad externalStimuli)
 	{
 		for(Stimulus key : Stimulus.values())

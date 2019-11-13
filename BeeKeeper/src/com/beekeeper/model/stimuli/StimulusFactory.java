@@ -1,11 +1,27 @@
 package com.beekeeper.model.stimuli;
 
+import java.util.HashMap;
+
 import com.beekeeper.model.stimuli.declarations.FoodSmellStimulus;
 import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.declarations.TestStimulus;
 
 public class StimulusFactory
 {
+	private static HashMap<Stimulus, AStimulus> database = fillDataBase();
+	
+	private static HashMap<Stimulus, AStimulus> fillDataBase()
+	{
+		HashMap<Stimulus, AStimulus> database = new HashMap<Stimulus, AStimulus>();
+		
+		for(Stimulus smell : Stimulus.values())
+		{
+			database.put(smell, get(smell, 0));
+		}
+		
+		return database;
+	}
+	
 	public static AStimulus get(Stimulus key, double amount)
 	{
 		AStimulus s = null;
@@ -51,4 +67,41 @@ public class StimulusFactory
 		
 		return s;
 	}
+	
+	public static double getEvapRate(Stimulus smell)
+	{
+		if(checkDataBaseWith(smell))
+		{
+			return database.get(smell).getDecay();			
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	public static double getPropag(Stimulus smell)
+	{
+		if(checkDataBaseWith(smell))
+		{
+			return database.get(smell).transmissibility;			
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	private static boolean checkDataBaseWith(Stimulus smell)
+	{
+		if(database.get(smell) == null)
+		{
+			//System.err.println(smell + " Not Implemented");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
 }
