@@ -55,25 +55,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		//System.out.println(ID + " living ! " + s.getAmount(Stimulus.HungryLarvae));
 
-		if(currentTask != null)
-		{
-			if(currentTask.checkInterrupt(s))
-			{
-				currentTask.interrupt();
-			}
-			else
-			{
-				this.addToEnergy(-currentTask.energyCost);
-				currentTask.execute();
-				//this.learnTask(currentTask);
-			}
-		}
-		
-		if(currentTask == null) //we need to do that even if we got in the previous if (after each execute current task might be null)
-		{			
-			chooseNewTask(s);
-			this.addToEnergy(-0.01);
-		}
+		chooseNewTask(s).execute();
 	}
 
 	public Task findATask(StimuliMap load)
@@ -97,10 +79,12 @@ public abstract class WorkingAgent extends EmitterAgent
 		return todo;
 	}
 	
-	protected void chooseNewTask(StimuliMap load)
+	protected Task chooseNewTask(StimuliMap load)
 	{
 		currentTask = findATask(load);
 		controllerServices.logMyTaskSwitch(currentTask, this.ID);
+		
+		return currentTask;
 	}
 	
 	public void receiveFood(double amount)

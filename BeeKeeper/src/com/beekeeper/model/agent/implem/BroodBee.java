@@ -24,58 +24,6 @@ public class BroodBee extends WorkingAgent
 	@Override
 	protected void fillTaskList() 
 	{
-		Task askFood = new Task() {			
-			@Override
-			public void execute() {
-				BroodBee.this.emit(Stimulus.HungryLarvae, 1-BroodBee.this.getEnergy());				
-			}
-
-			@Override
-			public double compute(StimuliMap load) {
-				return getEnergy();
-			}
-
-			@Override
-			public void interrupt() {
-				BroodBee.this.currentTask = null;
-			}
-
-			@Override
-			public boolean checkInterrupt(StimuliMap load) {
-				return getEnergy() > 0.5;
-			}
-		};	
-
-		askFood.energyCost = 0.001;
-		askFood.taskName = "LarvaeAskFood";
-
-		taskList.add(askFood);
-		
-		
-		
-		Task rest = new Task() {			
-			@Override
-			public void execute(){}
-
-			@Override
-			public double compute(StimuliMap load) {
-				return 1-getEnergy();
-			}
-
-			@Override
-			public void interrupt() {
-				BroodBee.this.currentTask = null;
-			}
-
-			@Override
-			public boolean checkInterrupt(StimuliMap load) {
-				return getEnergy() < 0.5;
-			}
-		};	
-
-		rest.energyCost = 0.001;
-		rest.taskName = "LarvaeRest";
-
-		taskList.add(rest);
+		//TODO LARVA NO TASKS
 	}
 }

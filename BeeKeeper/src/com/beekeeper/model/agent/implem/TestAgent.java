@@ -5,6 +5,7 @@ import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.generaltasks.RandomMoveTask;
+import com.beekeeper.model.tasks.generaltasks.RestTask;
 
 public class TestAgent extends WorkingAgent {
 
@@ -24,6 +25,7 @@ public class TestAgent extends WorkingAgent {
 	protected void fillTaskList()
 	{
 		taskList.add(new RandomMoveTask(this));
+		taskList.add(new RestTask(this));
 		/*
 		taskList.add(new RestTask(this));
 		taskList.add(new RandomMoveTask(this));

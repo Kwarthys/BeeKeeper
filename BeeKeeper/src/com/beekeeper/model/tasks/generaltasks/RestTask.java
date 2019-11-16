@@ -2,37 +2,33 @@ package com.beekeeper.model.tasks.generaltasks;
 
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 
 public class RestTask extends Task
-{
-	private WorkingAgent agent;
-	
+{	
 	public RestTask(WorkingAgent a)
 	{
-		agent = a;
+		this.agent = a;
 		
 		this.energyCost = -0.01;
 		this.taskName = "Rest";
+		
+		rootActivity.addTaskNode(new Action() {			
+			@Override
+			public void execute() {
+				System.out.println("Resting");
+			}
+			
+			@Override
+			public boolean check() {
+				return true;
+			}
+		});
 	}
 
 	@Override
-	public boolean checkInterrupt(StimuliMap load) {
-		return agent.getEnergy() > 0.9;
+	public double compute(StimuliMap smap) {
+		return 0.2;
 	}
-
-	@Override
-	public double compute(StimuliMap load) {
-		return agent.getEnergy() < 0.2 ? 1:0;
-	}
-
-	@Override
-	public void execute(){}
-
-	@Override
-	public void interrupt()
-	{
-		agent.interruptTask();
-	}
-
 }
