@@ -32,4 +32,6 @@ public class ModelParameters
 	
 	
 	public static final double timeStepToSecondCoef = 0.1;
+	
+	public static final double MOTIVATION_STEP = 0.01;
 }

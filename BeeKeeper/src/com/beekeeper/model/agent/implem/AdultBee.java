@@ -19,8 +19,8 @@ public class AdultBee extends WorkingAgent
 	@Override
 	protected void fillTaskList()
 	{
-		taskList.add(new RandomMoveTask(this));
+		taskList.add(new RandomMoveTask(this.ownServices));
 
-		taskList.add(new RestTask(this));
+		taskList.add(new RestTask(this.ownServices));
 	}
 }

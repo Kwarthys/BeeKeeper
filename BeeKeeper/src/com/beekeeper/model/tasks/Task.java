@@ -1,6 +1,7 @@
 package com.beekeeper.model.tasks;
 
 import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.utils.MyUtils;
 
@@ -14,7 +15,12 @@ public abstract class Task
 	//public int midDuration = 20;
 	public boolean printLearning = false;
 	
-	protected WorkingAgent agent;
+	protected WorkingAgentServices agentServices;
+	
+	public Task(WorkingAgentServices agentServices)
+	{
+		this.agentServices = agentServices;
+	}
 	
 	protected double thresholdSigmoid(double s)
 	{
@@ -27,6 +33,6 @@ public abstract class Task
 	{
 		rootActivity.execute();
 		
-		agent.addToEnergy(-energyCost);
+		agentServices.addToEnergy(-energyCost);
 	}
 }

@@ -12,7 +12,6 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManager.StimuliTile;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
@@ -125,12 +124,14 @@ public class CombDrawer extends JPanel{
 	{
 		g.setColor(Color.RED);
 		for(Agent a : agents)
-		{
-			
+		{			
 			Point p = fromLinearToHex(a.getPosition());
 
 			int x = p.x - CELL_SIZE/3;
 			int y = p.y - CELL_SIZE/3;
+			
+			int e = (int)(a.getEnergy() * 255);
+			g.setColor(new Color(255,255-e,255-e));
 			
 			g.fillOval((int)(x*zoom),(int)(y*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 			//System.out.println(a.hostCell.x + " " + a.hostCell.y);

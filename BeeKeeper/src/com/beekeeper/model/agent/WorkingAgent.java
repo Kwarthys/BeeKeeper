@@ -7,8 +7,10 @@ import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public abstract class WorkingAgent extends EmitterAgent
 {
@@ -27,6 +29,35 @@ public abstract class WorkingAgent extends EmitterAgent
 	public Task getCurrentTask() {return currentTask;}
 	
 	public void interruptTask() {currentTask = null;}
+	
+	protected double motivation = 1;
+	
+	protected WorkingAgentServices ownServices = new WorkingAgentServices() {		
+		@Override
+		public double getEnergy() {
+			return WorkingAgent.this.getEnergy();
+		}
+		
+		@Override
+		public void emit(Stimulus smell, double amount) {
+			WorkingAgent.this.emit(smell, amount);
+		}
+		
+		@Override
+		public void addToEnergy(double amount) {
+			WorkingAgent.this.addToEnergy(amount);
+		}
+
+		@Override
+		public void randomMove() {
+			WorkingAgent.this.randomMove();			
+		}
+
+		@Override
+		public void dropMotivation() {
+			WorkingAgent.this.motivation -= ModelParameters.MOTIVATION_STEP;
+		}
+	};
 	
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
@@ -66,7 +97,17 @@ public abstract class WorkingAgent extends EmitterAgent
 		for(int ti = 1; ti < taskList.size(); ++ti)
 		{
 			Task current = taskList.get(ti);
-			double currentScore = current.compute(load);
+			double currentScore = 0;
+			
+			if(current == currentTask)
+			{
+				currentScore = motivation;
+			}
+			else
+			{				
+				currentScore = current.compute(load);
+			}
+			
 			//if(currentScore != 0)
 				//System.out.println(current.taskName + " " + currentScore + " t:" + current.threshold + "\n" + load.getDisplayString());
 			if(currentScore > taskScore)
@@ -81,7 +122,12 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected Task chooseNewTask(StimuliMap load)
 	{
-		currentTask = findATask(load);
+		Task newTask = findATask(load);
+		if(newTask != currentTask)
+		{
+			motivation = 1.0;
+		}
+		currentTask = newTask;
 		controllerServices.logMyTaskSwitch(currentTask, this.ID);
 		
 		return currentTask;
@@ -127,24 +173,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		return ts;
 	}
-	
-	/*
-	protected void learnTask(Task toLearn)
-	{
-		for(Task t : taskList)
-		{
-			if(t == toLearn)
-			{
-				t.learn();
-				//System.out.println(this.ID + " Learning " + t.taskName);
-			}
-			else
-			{
-				t.forget();
-			}
-		}
-	}
-	*/
 
 	public StimuliMap getPercievedStimuli() {
 		return lastPercievedMap;

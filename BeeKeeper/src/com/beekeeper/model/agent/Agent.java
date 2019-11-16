@@ -74,7 +74,7 @@ public abstract class Agent
 	
 	public double getEnergy() {return this.energy;}
 	
-	public void addToEnergy(double amount)
+	protected void addToEnergy(double amount)
 	{
 		this.energy += amount;
 		this.energy = this.energy < 0 ? 0 : this.energy > 1 ? 1 : this.energy; //Clamp energy between 0 and 1

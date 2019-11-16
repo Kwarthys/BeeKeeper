@@ -1,15 +1,15 @@
 package com.beekeeper.model.tasks.generaltasks;
 
-import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 
 public class RestTask extends Task
 {	
-	public RestTask(WorkingAgent a)
+	public RestTask(WorkingAgentServices agentServices)
 	{
-		this.agent = a;
+		super(agentServices);
 		
 		this.energyCost = -0.01;
 		this.taskName = "Rest";
@@ -18,6 +18,7 @@ public class RestTask extends Task
 			@Override
 			public void execute() {
 				System.out.println("Resting");
+				agentServices.dropMotivation();
 			}
 			
 			@Override

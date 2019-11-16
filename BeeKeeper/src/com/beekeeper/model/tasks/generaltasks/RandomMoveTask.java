@@ -1,6 +1,6 @@
 package com.beekeeper.model.tasks.generaltasks;
 
-import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
@@ -9,9 +9,9 @@ import com.beekeeper.model.tasks.Task;
 public class RandomMoveTask extends Task
 {
 	
-	public RandomMoveTask(WorkingAgent a)
+	public RandomMoveTask(WorkingAgentServices agentServices)
 	{
-		this.agent = a;
+		super(agentServices);
 		
 		taskName = "Random Walk";
 		energyCost = 0.1;
@@ -20,9 +20,9 @@ public class RandomMoveTask extends Task
 			
 			@Override
 			public void execute() {
-				System.out.println("RandomAction ! " + agent.getEnergy());
-				agent.randomMove();
-				agent.emit(Stimulus.StimulusA, 1);
+				System.out.println("RandomAction ! " + agentServices.getEnergy());
+				agentServices.randomMove();
+				agentServices.emit(Stimulus.StimulusA, 1);
 			}
 			
 			@Override
@@ -34,6 +34,6 @@ public class RandomMoveTask extends Task
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return agent.getEnergy();
+		return agentServices.getEnergy();
 	}
 }
