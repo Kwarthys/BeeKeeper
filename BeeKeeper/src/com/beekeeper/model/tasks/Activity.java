@@ -7,15 +7,17 @@ public class Activity implements TaskNode {
 	private ArrayList<TaskNode> nodes = new ArrayList<>();
 
 	@Override
-	public void execute() {
+	public Action execute() {
 		for(TaskNode t : nodes)
 		{
 			if(t.check())
 			{
-				t.execute();
-				return;
+				return t.execute();
 			}
 		}
+		
+		System.err.println("No tasknode available");
+		return null;
 	}
 
 	@Override

@@ -13,6 +13,7 @@ public class StimuliLoad
 		this.emiterPos = pos;
 	}
 	
+	
 	public HashMap<Stimulus, AStimulus> getMapCopy()
 	{
 		return new HashMap<Stimulus, AStimulus>(pheromonesLoadMap);

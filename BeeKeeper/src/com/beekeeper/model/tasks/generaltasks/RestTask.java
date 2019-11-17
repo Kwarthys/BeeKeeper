@@ -11,14 +11,16 @@ public class RestTask extends Task
 	{
 		super(agentServices);
 		
-		this.energyCost = -0.01;
+		this.energyCost = -0.05;
 		this.taskName = "Rest";
 		
-		rootActivity.addTaskNode(new Action() {			
+		rootActivity.addTaskNode(new Action(3) {			
 			@Override
-			public void execute() {
-				System.out.println("Resting");
+			public Action execute() {
+				//System.out.println("Resting");
 				agentServices.dropMotivation();
+				
+				return this;
 			}
 			
 			@Override

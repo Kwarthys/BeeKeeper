@@ -14,15 +14,18 @@ public class RandomMoveTask extends Task
 		super(agentServices);
 		
 		taskName = "Random Walk";
-		energyCost = 0.1;
+		energyCost = 0.01;
 		
-		rootActivity.addTaskNode(new Action() {
+		rootActivity.addTaskNode(new Action(2) {
 			
 			@Override
-			public void execute() {
-				System.out.println("RandomAction ! " + agentServices.getEnergy());
+			public Action execute() {
+				//System.out.println("RandomAction ! " + agentServices.getEnergy());
 				agentServices.randomMove();
-				agentServices.emit(Stimulus.StimulusA, 1);
+				agentServices.emit(Stimulus.StimulusA, 2);
+				agentServices.dropMotivation();
+				
+				return this;
 			}
 			
 			@Override

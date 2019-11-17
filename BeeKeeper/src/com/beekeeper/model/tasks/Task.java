@@ -1,6 +1,5 @@
 package com.beekeeper.model.tasks;
 
-import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.utils.MyUtils;
@@ -29,10 +28,9 @@ public abstract class Task
 	
 	public abstract double compute(StimuliMap smap);
 	
-	public void execute()
+	public Action execute()
 	{
-		rootActivity.execute();
-		
 		agentServices.addToEnergy(-energyCost);
+		return rootActivity.execute();		
 	}
 }

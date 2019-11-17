@@ -89,20 +89,20 @@ public class StimuliManager
 				st.tmpAmount = (localAmount * propag + totalAmount) * evapRate;
 			}
 			
-			double granTotalAmount = 0;
+			//double granTotalAmount = 0;
 			for(int i = 0; i < size; ++i)
 			{
 				StimuliTile st = stimuliTiles.get(i);
 				if(st.tmpAmount != 0)
 				{
 					st.stimuliMap.setAmount(smell, st.tmpAmount);
-					granTotalAmount += st.tmpAmount;
+					//granTotalAmount += st.tmpAmount;
 					st.tmpAmount = 0;					
 				}
 
 			}
-			if(smell == Stimulus.StimulusA)
-				System.out.println("GranTotalAmount = " + granTotalAmount);
+			//if(smell == Stimulus.StimulusA)
+				//System.out.println("GranTotalAmount = " + granTotalAmount);
 		}
 		
 		//printAllTheTiles();

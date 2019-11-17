@@ -9,6 +9,7 @@ import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
+import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
 
@@ -23,6 +24,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	protected StimuliMap lastPercievedMap;
 	
 	protected Task currentTask = null;
+	protected Action currentAction = null;
 	
 	public Point2D.Double target = null;
 	
@@ -86,7 +88,22 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		//System.out.println(ID + " living ! " + s.getAmount(Stimulus.HungryLarvae));
 
-		chooseNewTask(s).execute();
+		if(currentAction == null)
+		{
+			currentAction = chooseNewTask(s).execute();		
+			//System.out.println("Executing new Action");
+		}
+		else
+		{
+			currentAction.execute();
+			//System.out.println("Executing old Action");
+		}
+		
+		//If action is over, remove it
+		if(currentAction.advanceTimeStep())
+		{
+			currentAction = null;
+		}
 	}
 
 	public Task findATask(StimuliMap load)

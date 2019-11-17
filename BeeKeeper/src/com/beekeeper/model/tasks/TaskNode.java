@@ -2,7 +2,7 @@ package com.beekeeper.model.tasks;
 
 public interface TaskNode {
 
-	public void execute();
+	public Action execute();
 	
 	public boolean check();
 }

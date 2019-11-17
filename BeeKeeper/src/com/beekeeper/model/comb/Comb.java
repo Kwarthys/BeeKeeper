@@ -16,7 +16,7 @@ public class Comb
 	
 	public int ID;
 	
-	private Dimension size = new Dimension(10,10);
+	private Dimension size;
 	
 	private CombServices services = new CombServices() {		
 		@Override
@@ -51,12 +51,10 @@ public class Comb
 		}
 	};
 	
-	public Comb()
+	public Comb(Dimension combSize)
 	{
+		this.size = new Dimension(combSize);
 		cells = CombUtility.fillCells(size,ID, services);
-		
-
-		//testNeighborhood();
 	}
 	
 	protected void testNeighborhood() //Not private to avoid "not used" warning

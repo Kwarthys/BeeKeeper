@@ -1,5 +1,6 @@
 package com.beekeeper.controller;
 
+import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,14 +54,16 @@ public class MainController
 	{
 		this.agentFactory = new AgentFactory();	
 		
-		Point2D.Double center = new Point2D.Double(5,5);
+		Dimension combSize = new Dimension(20,20);
+		
+		Point2D.Double center = new Point2D.Double(combSize.width/2,combSize.height/2);
 		
 		this.hive = new BeeHive();
 		
 		for(int i = 0; i < 1; ++i)
 		{
 			//ArrayList<Agent> bees = new ArrayList<>();
-			Comb c = new Comb();
+			Comb c = new Comb(combSize);
 			
 			StimuliManager sm = new StimuliManager(c);
 			
@@ -75,7 +78,7 @@ public class MainController
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, c,MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			agentFactory.spawnTestAgents(3, c,MyUtils.getCirclePointRule(center, 4), sm.getServices(), this.controlServices);
+			agentFactory.spawnTestAgents(1, c,MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			c.setID(i);
 			this.combs.add(c);			
