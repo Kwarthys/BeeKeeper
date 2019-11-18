@@ -9,7 +9,6 @@ public abstract class Task
 	protected Activity rootActivity = new Activity();
 	
 	public double threshold = 0.5;
-	public double energyCost;
 	public String taskName = "default";
 	//public int midDuration = 20;
 	public boolean printLearning = false;
@@ -30,7 +29,8 @@ public abstract class Task
 	
 	public Action execute()
 	{
-		agentServices.addToEnergy(-energyCost);
-		return rootActivity.execute();		
+		Action a = rootActivity.execute();
+		a.upkeep();
+		return a;
 	}
 }

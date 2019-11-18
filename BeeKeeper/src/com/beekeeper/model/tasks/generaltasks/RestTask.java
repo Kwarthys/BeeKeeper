@@ -10,11 +10,9 @@ public class RestTask extends Task
 	public RestTask(WorkingAgentServices agentServices)
 	{
 		super(agentServices);
-		
-		this.energyCost = -0.05;
 		this.taskName = "Rest";
 		
-		rootActivity.addTaskNode(new Action(3) {			
+		rootActivity.addTaskNode(new Action(3,-0.05,agentServices) {			
 			@Override
 			public Action execute() {
 				//System.out.println("Resting");
@@ -32,6 +30,6 @@ public class RestTask extends Task
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return 0.2;
+		return 1-this.agentServices.getEnergy();
 	}
 }

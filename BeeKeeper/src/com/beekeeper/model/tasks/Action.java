@@ -1,14 +1,20 @@
 package com.beekeeper.model.tasks;
 
+import com.beekeeper.model.agent.WorkingAgentServices;
+
 public abstract class Action implements TaskNode {
 	
 	public double totalTimeSteps = 1;
-	
+	public double energyCost;	
 	public int timeSteps = 0;
 	
-	public Action(double durationSec)
+	protected WorkingAgentServices agentServices;
+	
+	public Action(double durationSec, double energyCost, WorkingAgentServices s)
 	{
-		totalTimeSteps = durationSec;
+		this.totalTimeSteps = durationSec;
+		this.energyCost = energyCost;
+		this.agentServices = s;
 	}
 
 	@Override
@@ -16,10 +22,31 @@ public abstract class Action implements TaskNode {
 
 	@Override
 	public abstract boolean check();
+
 	
-	/** Returns False if action is not finished, true otherwise
+	/**
+	 * Returns True if the action is done, False otherwise
 	*/
-	public boolean advanceTimeStep()
+	public boolean run()
+	{
+		this.execute();
+		return upkeep();
+	}
+
+	/**
+	 * Returns True if the action is done, False otherwise
+	*/
+	protected boolean upkeep()
+	{
+
+		agentServices.addToEnergy(-energyCost);
+		return advanceTimeStep();
+	}
+	
+	/**
+	 * Returns True if the action is done, False otherwise
+	*/
+	protected boolean advanceTimeStep()
 	{
 		timeSteps++;
 		if(timeSteps >= totalTimeSteps)

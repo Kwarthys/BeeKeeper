@@ -17,9 +17,6 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
-import com.beekeeper.model.stimuli.StimuliMap;
-import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.parameters.ModelParameters;
 
 @SuppressWarnings("serial")
 public class TaskGrapher extends JPanel{
@@ -127,7 +124,6 @@ public class TaskGrapher extends JPanel{
 
 		ArrayList<WorkingAgent> wlist = new ArrayList<WorkingAgent>();
 
-
 		for(int i = 0; i < bees.size(); ++i)
 		{
 			if(bees.get(i).getBeeType() == AgentType.ADULT_BEE || bees.get(i).getBeeType() == AgentType.TEST_AGENT)
@@ -139,26 +135,22 @@ public class TaskGrapher extends JPanel{
 		for(int i = 0; i < wlist.size(); ++i)
 		{
 			WorkingAgent b = wlist.get(i);
-			HashMap<String, Double> allTs = b.getAllPrintableThresholds();
 
 			g.setColor(GraphicParams.hungryLarvaePhColor);
-
-			int amount = 0;
-			StimuliMap map = b.getPercievedStimuli();
-			if(map != null)
-			{
-				amount = (int) map.getAmount(Stimulus.StimulusA);
-				//amount += (int) map.getAmount(Stimulus.StimulusB);
-				//amount += (int) map.getAmount(Stimulus.StimulusC);
-			}
-
-			g.fillRect((int) (graphStartX + i * graphWidth / 2.0 / wlist.size()), baseLineY, 1, amount);
-
-			for(Entry<String, Double> set : allTs.entrySet())
-			{
-				g.setColor(getColorFor(set.getKey()));
-				g.fillOval((int) (graphStartX + i * graphWidth / 2.0 / wlist.size()), (int) (baseLineY - set.getValue() * graphHeight / 2.0 / ModelParameters.MAX_TASK_THRESHOLD), 5, 5);				
-			}
+			
+			int step = (int)(graphWidth / 2.0 / (wlist.size()+1));
+			
+			int x = (int) (graphStartX + (i+1) * step);
+			int y = (int) (baseLineY - b.getMotivation() * graphHeight/2 *0.9);
+			
+			int yE = (int) (baseLineY - b.getEnergy() * graphHeight/2 *0.9);
+			
+			g.setColor(Color.red);
+			g.fillRect(x, yE, 3, baseLineY - yE);
+			
+			g.setColor(getColorFor(b.getCurrentTask().taskName));
+			g.fillOval(x-3, y-3, 6, 6);				
+			
 
 		}
 	}

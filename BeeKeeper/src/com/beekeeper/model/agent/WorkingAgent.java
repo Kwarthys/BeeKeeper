@@ -33,6 +33,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	public void interruptTask() {currentTask = null;}
 	
 	protected double motivation = 1;
+	public double getMotivation() {return motivation;}
 	
 	protected WorkingAgentServices ownServices = new WorkingAgentServices() {		
 		@Override
@@ -57,7 +58,7 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		@Override
 		public void dropMotivation() {
-			WorkingAgent.this.motivation -= ModelParameters.MOTIVATION_STEP;
+			WorkingAgent.this.motivation = Math.max(0, WorkingAgent.this.motivation - ModelParameters.MOTIVATION_STEP);
 		}
 	};
 	
@@ -93,14 +94,11 @@ public abstract class WorkingAgent extends EmitterAgent
 			currentAction = chooseNewTask(s).execute();		
 			//System.out.println("Executing new Action");
 		}
-		else
-		{
-			currentAction.execute();
-			//System.out.println("Executing old Action");
-		}
+		
+			;
 		
 		//If action is over, remove it
-		if(currentAction.advanceTimeStep())
+		if(currentAction.run())
 		{
 			currentAction = null;
 		}
@@ -108,10 +106,10 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public Task findATask(StimuliMap load)
 	{		
-		Task todo = taskList.get(0);
-		double taskScore = todo.compute(load);
+		Task todo = null;
+		double taskScore = -1;
 		
-		for(int ti = 1; ti < taskList.size(); ++ti)
+		for(int ti = 0; ti < taskList.size(); ++ti)
 		{
 			Task current = taskList.get(ti);
 			double currentScore = 0;
@@ -173,19 +171,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		for(Task t : taskList)
 		{
 			ts.put(t.taskName, t.threshold);
-		}
-		
-		return ts;
-	}
-	
-	public HashMap<String, Double> getAllPrintableThresholds()
-	{
-		HashMap<String, Double> ts = new HashMap<String, Double>();
-		
-		for(Task t : taskList)
-		{
-			if(t.printLearning)
-				ts.put(t.taskName, t.threshold);
 		}
 		
 		return ts;

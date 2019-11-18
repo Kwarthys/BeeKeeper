@@ -9,14 +9,13 @@ import com.beekeeper.model.tasks.Task;
 public class RandomMoveTask extends Task
 {
 	
-	public RandomMoveTask(WorkingAgentServices agentServices)
+	public RandomMoveTask(WorkingAgentServices s)
 	{
-		super(agentServices);
+		super(s);
 		
 		taskName = "Random Walk";
-		energyCost = 0.01;
 		
-		rootActivity.addTaskNode(new Action(2) {
+		rootActivity.addTaskNode(new Action(2, 0.01, s) {
 			
 			@Override
 			public Action execute() {
