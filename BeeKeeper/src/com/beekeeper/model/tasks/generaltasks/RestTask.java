@@ -12,7 +12,7 @@ public class RestTask extends Task
 		super(agentServices);
 		this.taskName = "Rest";
 		
-		rootActivity.addTaskNode(new Action(3,-0.05,agentServices) {			
+		rootActivity.addTaskNode(new Action(1,-0.05,agentServices) {			
 			@Override
 			public Action execute() {
 				//System.out.println("Resting");

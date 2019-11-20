@@ -95,11 +95,12 @@ public abstract class WorkingAgent extends EmitterAgent
 			//System.out.println("Executing new Action");
 		}
 		
-			;
+		currentAction.run();
 		
 		//If action is over, remove it
-		if(currentAction.run())
+		if(currentAction.isOver())
 		{
+			System.out.println("Action done");
 			currentAction = null;
 		}
 	}

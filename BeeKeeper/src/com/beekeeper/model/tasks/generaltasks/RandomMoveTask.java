@@ -15,7 +15,7 @@ public class RandomMoveTask extends Task
 		
 		taskName = "Random Walk";
 		
-		rootActivity.addTaskNode(new Action(2, 0.01, s) {
+		rootActivity.addTaskNode(new Action(0.5, 0.01, s) {
 			
 			@Override
 			public Action execute() {
