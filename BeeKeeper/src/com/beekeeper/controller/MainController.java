@@ -130,7 +130,7 @@ public class MainController
 			
 			this.hive.computeInternalTemperature(Math.cos(simuStep++ * 1.0 / 300) * 10 + 15);
 
-			SwingUtilities.invokeLater(new Runnable() {				
+			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					MainController.this.window.repaint();					

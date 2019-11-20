@@ -60,6 +60,16 @@ public abstract class WorkingAgent extends EmitterAgent
 		public void dropMotivation() {
 			WorkingAgent.this.motivation = Math.max(0, WorkingAgent.this.motivation - ModelParameters.MOTIVATION_STEP);
 		}
+
+		@Override
+		public int getID() {
+			return WorkingAgent.this.getID();
+		}
+
+		@Override
+		public StimuliMap getLastPerception() {
+			return lastPercievedMap;
+		}
 	};
 	
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
@@ -67,6 +77,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		super(stimuliManagerServices);
 		this.controllerServices = controllerServices;
 		setEnergy(Math.random()*0.8+0.2);
+		fillTaskList();
 	}
 	
 	public void live()
@@ -94,13 +105,16 @@ public abstract class WorkingAgent extends EmitterAgent
 			currentAction = chooseNewTask(s).execute();		
 			//System.out.println("Executing new Action");
 		}
+		else
+		{
+			currentAction.run();			
+		}
 		
-		currentAction.run();
 		
 		//If action is over, remove it
 		if(currentAction.isOver())
 		{
-			System.out.println("Action done");
+			//System.out.println("Action done");
 			currentAction = null;
 		}
 	}

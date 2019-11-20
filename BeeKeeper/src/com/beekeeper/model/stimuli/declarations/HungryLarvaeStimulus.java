@@ -11,7 +11,6 @@ public class HungryLarvaeStimulus extends AStimulus
 		super(d);
 		this.timeDecay = ModelParameters.TIME_DECAY_HungryLarvae;
 		this.transmissibility = ModelParameters.TRANSMISSIBILITY_HungryLarvae;
-		this.smellRange = ModelParameters.SMELL_RANGE_HungryLarvae; 
 		this.type = Stimulus.HungryLarvae;
 	}
 }

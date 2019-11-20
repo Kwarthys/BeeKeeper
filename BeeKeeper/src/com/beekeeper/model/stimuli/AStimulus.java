@@ -4,12 +4,9 @@ public abstract class AStimulus
 {
 	protected double timeDecay = 0.95;
 	protected double transmissibility = 0.5;
-	protected double smellRange = 0.95;
 	protected Stimulus type;
 	
 	protected double amount;
-	
-	public double getSmellRange() {return smellRange;}
 	
 	public Stimulus getStimulusType() {return type;}
 	
@@ -33,11 +30,6 @@ public abstract class AStimulus
 	{
 		//System.out.println("thisamount " + this.amount + " + " + amount);
 		this.amount += amount;
-	}
-	
-	public double getAmountOverDistance(double distance)
-	{
-		return amount * Math.pow(getSmellRange(), distance);
 	}
 	
 	public double getAmount() {return this.amount;}

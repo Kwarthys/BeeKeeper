@@ -2,6 +2,7 @@ package com.beekeeper.model.tasks.generaltasks;
 
 import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 
@@ -12,12 +13,13 @@ public class RestTask extends Task
 		super(agentServices);
 		this.taskName = "Rest";
 		
-		rootActivity.addTaskNode(new Action(1,-0.05,agentServices) {			
+		rootActivity.addTaskNode(new Action(1,-0.01,agentServices) {			
 			@Override
 			public Action execute() {
 				//System.out.println("Resting");
+				agentServices.emit(Stimulus.AskFood, 10);
 				agentServices.dropMotivation();
-				
+
 				return this;
 			}
 			

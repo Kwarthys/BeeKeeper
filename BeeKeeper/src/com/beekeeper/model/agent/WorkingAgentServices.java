@@ -1,5 +1,6 @@
 package com.beekeeper.model.agent;
 
+import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 
 public interface WorkingAgentServices {
@@ -10,4 +11,8 @@ public interface WorkingAgentServices {
 	public void dropMotivation();
 	
 	public void randomMove();
+	
+	public int getID();
+	
+	public StimuliMap getLastPerception();
 }

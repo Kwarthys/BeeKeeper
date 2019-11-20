@@ -2,6 +2,7 @@ package com.beekeeper.model.stimuli;
 
 import java.util.HashMap;
 
+import com.beekeeper.model.stimuli.declarations.AskFoodStimulus;
 import com.beekeeper.model.stimuli.declarations.FoodSmellStimulus;
 import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.declarations.TestStimulus;
@@ -59,8 +60,11 @@ public class StimulusFactory
 			t.setType(Stimulus.StimulusC);
 			s = t;
 			break;
+		case AskFood:
+			s = new AskFoodStimulus(amount);
+			break;
 		default:
-			System.err.println("Stimulus Factory - default shouldn't happen");
+			System.err.println("Stimulus Factory - default instead of " + key + ". Shouldn't happen.");
 			break;
 		
 		}

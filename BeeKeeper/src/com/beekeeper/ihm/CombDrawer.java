@@ -25,8 +25,8 @@ public class CombDrawer extends JPanel{
 	
 	private int CELL_SIZE = 6;
 
-	private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
-	private Color foodPhColor = GraphicParams.foodPhColor;
+	//private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
+	//private Color foodPhColor = GraphicParams.foodPhColor;
 	
 	//private CombServices hostServices;
 	
@@ -63,21 +63,21 @@ public class CombDrawer extends JPanel{
 
 	protected void paintPheromones(Graphics g)
 	{
-		//double max = 0;
 		for(StimuliTile st : stimuliManagerServices.getTiles())
 		{
 			double sA = st.stimuliMap.getAmount(Stimulus.StimulusA);
+			double sFood = st.stimuliMap.getAmount(Stimulus.AskFood);
 			
 			Point p = fromLinearToHex(st.position);
 			
 			int cap = 4;
-			sA = sA > cap ? cap : sA;
-			int s = (int)(sA * 255 / cap);
+			int s = capColor(sA, cap);
+			int f = capColor(sFood, cap);
 
 			p.x -= CELL_SIZE/2;
 			p.y -= CELL_SIZE/2; 
 			
-			g.setColor(new Color(s,s,s));
+			g.setColor(new Color(s,(s+f)/2,f));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
 			
@@ -85,10 +85,15 @@ public class CombDrawer extends JPanel{
 			p.y += 300;
 			p.x *= 3;
 			
-			g.drawString(String.valueOf((int)(10*sA)), p.x, p.y);
+			g.setColor(Color.WHITE);
+			g.drawString(String.valueOf((int)(10*sFood)), p.x, p.y);
 		}
-		
-		//if(max!=0)System.out.println("MAX: " + max);
+	}
+	
+	private int capColor(double value, int cap)
+	{
+		value = value > cap ? cap : value;
+		return (int)(value * 255 / cap);
 	}
 	
 	protected void paintCells(Graphics g)

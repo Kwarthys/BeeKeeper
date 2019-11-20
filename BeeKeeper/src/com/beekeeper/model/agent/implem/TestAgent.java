@@ -17,8 +17,6 @@ public class TestAgent extends WorkingAgent {
 		{
 			this.addToEnergy(0.5);
 		}
-		
-		fillTaskList();
 	}
 
 	@Override

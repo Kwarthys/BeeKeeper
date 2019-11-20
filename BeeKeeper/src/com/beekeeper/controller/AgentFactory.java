@@ -25,7 +25,7 @@ public class AgentFactory
 		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double point = MyUtils.getPointInRule(rule);
+			//Point2D.Double point = MyUtils.getPointInRule(rule);
 			FoodSource c = null;//new FoodSource(point.getX(), point.getY(), services); 
 			// TODO NULL HERE 
 		    cells.add(c);
@@ -42,7 +42,7 @@ public class AgentFactory
 		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double point = MyUtils.getPointInRule(rule);
+			//Point2D.Double point = MyUtils.getPointInRule(rule);
 			TestEmitterAgent c = null;//new TestEmitterAgent(services, point.getX(), point.getY()); 
 			// TODO NULL HERE 
 			agents.add(c);
@@ -81,7 +81,7 @@ public class AgentFactory
 		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double point = MyUtils.getPointInRule(rule);
+			//Point2D.Double point = MyUtils.getPointInRule(rule);
 			WorkingAgent bee = null;//new BroodBee(services, controllerServices, point.getX(), point.getY());
 			// TODO NULL HERE 
 			bees.add(bee);
@@ -97,7 +97,7 @@ public class AgentFactory
 		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double point = MyUtils.getPointInRule(rule);
+			//Point2D.Double point = MyUtils.getPointInRule(rule);
 			WorkingAgent bee = null;//new AdultBee(services, controllerServices, point.getX(), point.getY());
 			// TODO NULL HERE 
 			bees.add(bee);

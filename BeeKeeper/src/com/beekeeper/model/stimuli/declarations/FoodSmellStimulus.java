@@ -11,8 +11,6 @@ public class FoodSmellStimulus extends AStimulus {
 		super(d);
 		this.timeDecay = ModelParameters.TIME_DECAY_FoodSmell;
 		this.transmissibility = ModelParameters.TRANSMISSIBILITY_FoodSmell;
-		this.smellRange = ModelParameters.SMELL_RANGE_FoodSmell; 
 		this.type = Stimulus.FoodSmell;
 	}
-
 }

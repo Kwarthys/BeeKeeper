@@ -90,9 +90,8 @@ public class StimuliManager
 			}
 			
 			//double granTotalAmount = 0;
-			for(int i = 0; i < size; ++i)
+			for(StimuliTile st : stimuliTiles)
 			{
-				StimuliTile st = stimuliTiles.get(i);
 				if(st.tmpAmount != 0)
 				{
 					st.stimuliMap.setAmount(smell, st.tmpAmount);

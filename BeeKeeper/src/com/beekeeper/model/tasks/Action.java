@@ -26,19 +26,13 @@ public abstract class Action implements TaskNode {
 	@Override
 	public abstract boolean check();
 
-	
-	/**
-	 * Returns True if the action is done, False otherwise
-	*/
+
 	public void run()
 	{
-		this.execute();
+		execute();
 		upkeep();
 	}
 
-	/**
-	 * Returns True if the action is done, False otherwise
-	*/
 	protected void upkeep()
 	{
 		agentServices.addToEnergy(-energyCost);

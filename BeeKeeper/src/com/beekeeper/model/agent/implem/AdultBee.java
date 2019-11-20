@@ -12,7 +12,6 @@ public class AdultBee extends WorkingAgent
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		super(stimuliManagerServices, controllerServices);
-		fillTaskList();
 		this.type = AgentType.ADULT_BEE;		
 	}
 

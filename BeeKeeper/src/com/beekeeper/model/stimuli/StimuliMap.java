@@ -6,7 +6,7 @@ import com.beekeeper.parameters.ModelParameters;
 
 public class StimuliMap
 {
-	private int counter = (int)(Math.random()*1000);
+	//private int counter = (int)(Math.random()*1000);
 	
 	private HashMap<Stimulus, Double> amounts = new HashMap<>();
 	
