@@ -54,7 +54,7 @@ public class MainController
 	{
 		this.agentFactory = new AgentFactory();	
 		
-		Dimension combSize = new Dimension(20,20);
+		Dimension combSize = new Dimension(10,10);
 		
 		Point2D.Double center = new Point2D.Double(combSize.width/2,combSize.height/2);
 		
@@ -71,14 +71,14 @@ public class MainController
 			
 			//bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices(), this.controlServices));
 			//bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
-			//bees.addAll(agentFactory.spawnWorkers(20, MyUtils.getCirclePointRule(center, 70), sm.getServices(), this.controlServices));
+			agentFactory.spawnWorkers(20, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 	
 
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, c,MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			agentFactory.spawnTestAgents(3, c,MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
+			//agentFactory.spawnTestAgents(3, c,MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			c.setID(i);
 			this.combs.add(c);			

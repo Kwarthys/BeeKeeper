@@ -19,7 +19,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	protected abstract void fillTaskList();
 	
 	protected MainControllerServices controllerServices;
-	protected double stomach;
+	protected double hunger = 0;
 	
 	protected StimuliMap lastPercievedMap;
 	
@@ -70,6 +70,16 @@ public abstract class WorkingAgent extends EmitterAgent
 		public StimuliMap getLastPerception() {
 			return lastPercievedMap;
 		}
+
+		@Override
+		public double getHunger() {
+			return WorkingAgent.this.hunger;
+		}
+
+		@Override
+		public void giveFoodToClosestHungry() {
+			System.out.println("TryingToGiveFood");
+		}
 	};
 	
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
@@ -92,6 +102,8 @@ public abstract class WorkingAgent extends EmitterAgent
 			alive = false;
 			return;
 		}
+		
+		hunger += 0.01;
 		
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
 		//System.out.println(s.getDisplayString());
@@ -117,6 +129,12 @@ public abstract class WorkingAgent extends EmitterAgent
 			//System.out.println("Action done");
 			currentAction = null;
 		}
+	}
+	
+	public void recieveFood()
+	{
+		hunger-= 0.1;
+		hunger = Math.max(0, hunger);
 	}
 
 	public Task findATask(StimuliMap load)

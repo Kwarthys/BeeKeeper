@@ -1,4 +1,4 @@
-package com.beekeeper.model.tasks.generaltasks;
+package com.beekeeper.model.tasks.beetasks;
 
 import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
@@ -6,19 +6,19 @@ import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 
-public class RestTask extends Task
-{	
-	public RestTask(WorkingAgentServices agentServices)
-	{
+public class AskFoodTask extends Task {
+
+	public AskFoodTask(WorkingAgentServices agentServices) {
 		super(agentServices);
-		this.taskName = "Rest";
+		this.taskName = "Asking Food";
 		
-		rootActivity.addTaskNode(new Action(1,-0.01,agentServices) {			
+		this.rootActivity.addTaskNode(new Action(0.5, 0, agentServices) {
+			
 			@Override
 			public Action execute() {
-				//System.out.println("Resting");
-				agentServices.dropMotivation();
-
+				if(Math.random() > 0.8)
+					agentServices.randomMove();
+				agentServices.emit(Stimulus.AskFood, 10);
 				return this;
 			}
 			
@@ -31,6 +31,8 @@ public class RestTask extends Task
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return 1-this.agentServices.getEnergy();
+		// TODO Auto-generated method stub
+		return agentServices.getHunger();
 	}
+
 }

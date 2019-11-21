@@ -143,7 +143,7 @@ public class TaskGrapher extends JPanel{
 			int x = (int) (graphStartX + (i+1) * step);
 			int y = (int) (baseLineY - b.getMotivation() * graphHeight/2 *0.9);
 			
-			int yE = (int) (baseLineY - b.getEnergy() * graphHeight/2 *0.9);
+			int yE = (int) (baseLineY - b.getEnergy() * graphHeight/2);
 			
 			g.setColor(Color.red);
 			g.fillRect(x, yE, 3, baseLineY - yE);

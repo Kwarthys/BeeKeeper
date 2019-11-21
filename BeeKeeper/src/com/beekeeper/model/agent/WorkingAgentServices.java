@@ -15,4 +15,8 @@ public interface WorkingAgentServices {
 	public int getID();
 	
 	public StimuliMap getLastPerception();
+	
+	public double getHunger();
+	
+	public void giveFoodToClosestHungry();
 }
