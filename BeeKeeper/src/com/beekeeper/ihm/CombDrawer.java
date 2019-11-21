@@ -77,7 +77,7 @@ public class CombDrawer extends JPanel{
 			p.x -= CELL_SIZE/2;
 			p.y -= CELL_SIZE/2; 
 			
-			g.setColor(new Color(s,(s+f)/2,f));
+			g.setColor(new Color(s,0,f));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
 			

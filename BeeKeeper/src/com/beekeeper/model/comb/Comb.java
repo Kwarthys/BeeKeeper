@@ -49,6 +49,22 @@ public class Comb
 				newCell.visiting = who;
 			}
 		}
+
+		@Override
+		public ArrayList<WorkingAgent> getNeighborBees(int x, int y) {
+			ArrayList<Integer> c = getNeighbors(x, y);
+			ArrayList<WorkingAgent> agents = new ArrayList<>();
+			for(Integer i : c)
+			{
+				WorkingAgent a = (WorkingAgent)cells.get(i).visiting;
+				if(a!=null)
+				{
+					agents.add(a);
+				}
+			}			
+			
+			return agents;			
+		}
 	};
 	
 	public Comb(Dimension combSize)

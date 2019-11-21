@@ -3,6 +3,7 @@ package com.beekeeper.model.agent;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
@@ -19,12 +20,15 @@ public abstract class WorkingAgent extends EmitterAgent
 	protected abstract void fillTaskList();
 	
 	protected MainControllerServices controllerServices;
-	protected double hunger = 0;
+	protected double hunger = Math.random() * 0.5;
+	private boolean receivingFood = false;
 	
 	protected StimuliMap lastPercievedMap;
 	
 	protected Task currentTask = null;
 	protected Action currentAction = null;
+	
+	protected WorkingAgent cooperativeInteractor = null;
 	
 	public Point2D.Double target = null;
 	
@@ -78,7 +82,41 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		@Override
 		public void giveFoodToClosestHungry() {
-			System.out.println("TryingToGiveFood");
+			if(cooperativeInteractor == null)
+			{
+				ArrayList<WorkingAgent> neighs = hostCell.getNeighborBees();
+				Collections.shuffle(neighs);
+				
+				if(neighs.size()==0)
+				{
+					randomMove();
+					System.out.println("Not a single bee around");
+					return;
+				}
+				//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
+				if(neighs.get(0).isHungry())
+				{
+					cooperativeInteractor = neighs.get(0);
+					System.out.println("found a hungryman");
+				}
+			}
+			
+			if(cooperativeInteractor != null)
+			{
+				if(cooperativeInteractor.isHungry())
+				{
+					cooperativeInteractor.recieveFood();					
+				}
+				else
+				{
+					cooperativeInteractor = null;
+				}
+			}
+		}
+
+		@Override
+		public boolean isReceivingFood() {
+			return WorkingAgent.this.receivingFood;
 		}
 	};
 	
@@ -103,7 +141,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			return;
 		}
 		
-		hunger += 0.01;
+		hunger += 0.001;
 		
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
 		//System.out.println(s.getDisplayString());
@@ -131,10 +169,17 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 	}
 	
+	
+	public boolean isHungry() {return hunger > 0.5 && currentTask.taskName == "Asking Food";}
+	
 	public void recieveFood()
 	{
-		hunger-= 0.1;
+		hunger-= 0.4;
 		hunger = Math.max(0, hunger);
+		
+		receivingFood = true;
+		
+		System.out.println(ID + " receiving food, hunger: " + hunger);
 	}
 
 	public Task findATask(StimuliMap load)
@@ -180,17 +225,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		return currentTask;
 	}
-	
-	public void receiveFood(double amount)
-	{
-		this.addToEnergy(amount);
-		//System.out.println(ID + " receiving food to " + energy);
-	}
-	
-	public boolean isHungry()
-	{
-		return getEnergy() < 0.8;
-	}
 
 	public void setCombID(int id)
 	{
@@ -207,6 +241,16 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		
 		return ts;
+	}
+	
+	public ArrayList<Double> getAllTaskScores()
+	{
+		ArrayList<Double> d = new ArrayList<>();
+		for(Task t : taskList)
+		{
+			d.add(t.compute(lastPercievedMap));
+		}
+		return d;
 	}
 
 	public StimuliMap getPercievedStimuli() {

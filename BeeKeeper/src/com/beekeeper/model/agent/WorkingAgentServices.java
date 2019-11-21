@@ -19,4 +19,6 @@ public interface WorkingAgentServices {
 	public double getHunger();
 	
 	public void giveFoodToClosestHungry();
+	
+	public boolean isReceivingFood();
 }

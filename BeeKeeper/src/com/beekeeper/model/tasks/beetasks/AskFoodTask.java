@@ -16,9 +16,10 @@ public class AskFoodTask extends Task {
 			
 			@Override
 			public Action execute() {
-				if(Math.random() > 0.8)
+				if(Math.random() > 0.8 && !agentServices.isReceivingFood())
 					agentServices.randomMove();
 				agentServices.emit(Stimulus.AskFood, 10);
+				//System.out.println(agentServices.getID() + " asking food");
 				return this;
 			}
 			
@@ -32,7 +33,7 @@ public class AskFoodTask extends Task {
 	@Override
 	public double compute(StimuliMap smap) {
 		// TODO Auto-generated method stub
-		return agentServices.getHunger();
+		return (agentServices.getHunger()) / 2;
 	}
 
 }

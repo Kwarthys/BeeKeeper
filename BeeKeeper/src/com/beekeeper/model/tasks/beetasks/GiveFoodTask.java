@@ -12,11 +12,11 @@ public class GiveFoodTask extends Task {
 		super(agentServices);
 		this.taskName = "Give Food";
 		
-		this.rootActivity.addTaskNode(new Action(2,0.01, agentServices) {
+		this.rootActivity.addTaskNode(new Action(2,0, agentServices) {
 			
 			@Override
 			public Action execute() {
-				System.out.println("Giving food");
+				agentServices.giveFoodToClosestHungry();
 				return this;
 			}
 			
