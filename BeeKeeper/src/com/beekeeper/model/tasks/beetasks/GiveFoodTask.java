@@ -9,8 +9,9 @@ import com.beekeeper.model.tasks.Task;
 public class GiveFoodTask extends Task {
 
 	public GiveFoodTask(WorkingAgentServices agentServices) {
-		super(agentServices);
-		this.taskName = "Give Food";
+		super(agentServices, "Give Food");
+		
+		this.motivated = false;
 		
 		this.rootActivity.addTaskNode(new Action(2,0, agentServices) {
 			

@@ -10,6 +10,13 @@ public class StimuliMap
 	
 	private HashMap<Stimulus, Double> amounts = new HashMap<>();
 	
+	public StimuliMap(StimuliMap toCopy)
+	{
+		addAllAmounts(toCopy);
+	}
+	
+	public StimuliMap(){} //Just to let java know it's allowed
+	
 	public void addAmount(Stimulus type, double amount)
 	{
 		if(amounts.containsKey(type))

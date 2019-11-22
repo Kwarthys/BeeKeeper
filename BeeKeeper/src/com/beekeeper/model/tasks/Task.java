@@ -9,15 +9,19 @@ public abstract class Task
 	protected Activity rootActivity = new Activity();
 	
 	public double threshold = 0.5;
-	public String taskName = "default";
+	public String taskName;
 	//public int midDuration = 20;
 	public boolean printLearning = false;
 	
+	protected boolean motivated = true;
+	public boolean isMotivated() {return motivated;}
+	
 	protected WorkingAgentServices agentServices;
 	
-	public Task(WorkingAgentServices agentServices)
+	public Task(WorkingAgentServices agentServices, String taskName)
 	{
 		this.agentServices = agentServices;
+		this.taskName = taskName;
 	}
 	
 	protected double thresholdSigmoid(double s)

@@ -2,7 +2,6 @@ package com.beekeeper.model.tasks.generaltasks;
 
 import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
-import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 
@@ -10,8 +9,7 @@ public class RestTask extends Task
 {	
 	public RestTask(WorkingAgentServices agentServices)
 	{
-		super(agentServices);
-		this.taskName = "Rest";
+		super(agentServices, "Rest");
 		
 		rootActivity.addTaskNode(new Action(1,-0.01,agentServices) {			
 			@Override

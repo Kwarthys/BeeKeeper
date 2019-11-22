@@ -58,7 +58,7 @@ public class StimuliManager
 	{
 		if(getTileAt(position) != null)
 		{
-			return getTileAt(position).stimuliMap;
+			return new StimuliMap(getTileAt(position).stimuliMap);
 		}
 
 		return new StimuliMap();

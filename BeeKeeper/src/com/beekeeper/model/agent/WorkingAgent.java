@@ -20,7 +20,9 @@ public abstract class WorkingAgent extends EmitterAgent
 	protected abstract void fillTaskList();
 	
 	protected MainControllerServices controllerServices;
+	
 	protected double hunger = Math.random() * 0.5;
+	public double getHunger() {return hunger;}	
 	private boolean receivingFood = false;
 	
 	protected StimuliMap lastPercievedMap;
@@ -77,7 +79,7 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		@Override
 		public double getHunger() {
-			return WorkingAgent.this.hunger;
+			return WorkingAgent.this.getHunger();
 		}
 
 		@Override
@@ -90,14 +92,14 @@ public abstract class WorkingAgent extends EmitterAgent
 				if(neighs.size()==0)
 				{
 					randomMove();
-					System.out.println("Not a single bee around");
+					//System.out.println("Not a single bee around");
 					return;
 				}
 				//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
 				if(neighs.get(0).isHungry())
 				{
 					cooperativeInteractor = neighs.get(0);
-					System.out.println("found a hungryman");
+					//System.out.println("found a hungryman");
 				}
 			}
 			
@@ -141,10 +143,11 @@ public abstract class WorkingAgent extends EmitterAgent
 			return;
 		}
 		
-		hunger += 0.001;
+		hunger += 0.01;
+		hunger = Math.min(1, hunger);
 		
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
-		//System.out.println(s.getDisplayString());
+		s = addInternalPerceptions(s);
 		lastPercievedMap = s;
 		
 		
@@ -167,14 +170,23 @@ public abstract class WorkingAgent extends EmitterAgent
 			//System.out.println("Action done");
 			currentAction = null;
 		}
+		
+		receivingFood = false;
 	}
 	
 	
+	private StimuliMap addInternalPerceptions(StimuliMap s)
+	{
+		s.addAmount(Stimulus.HungerBee, this.getHunger());
+		s.addAmount(Stimulus.Energy, this.getEnergy());
+		return s;
+	}
+
 	public boolean isHungry() {return hunger > 0.5 && currentTask.taskName == "Asking Food";}
 	
 	public void recieveFood()
 	{
-		hunger-= 0.4;
+		hunger-= 0.35;
 		hunger = Math.max(0, hunger);
 		
 		receivingFood = true;
@@ -192,7 +204,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			Task current = taskList.get(ti);
 			double currentScore = 0;
 			
-			if(current == currentTask)
+			if(current == currentTask && current.isMotivated())
 			{
 				currentScore = motivation;
 			}
@@ -209,7 +221,6 @@ public abstract class WorkingAgent extends EmitterAgent
 				taskScore = currentScore;
 			}
 		}
-		
 		return todo;
 	}
 	

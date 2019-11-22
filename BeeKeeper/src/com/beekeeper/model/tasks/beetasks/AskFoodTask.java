@@ -9,8 +9,9 @@ import com.beekeeper.model.tasks.Task;
 public class AskFoodTask extends Task {
 
 	public AskFoodTask(WorkingAgentServices agentServices) {
-		super(agentServices);
-		this.taskName = "Asking Food";
+		super(agentServices, "Asking Food");
+		
+		this.motivated = false;
 		
 		this.rootActivity.addTaskNode(new Action(0.5, 0, agentServices) {
 			
@@ -32,8 +33,7 @@ public class AskFoodTask extends Task {
 
 	@Override
 	public double compute(StimuliMap smap) {
-		// TODO Auto-generated method stub
-		return (agentServices.getHunger()) / 2;
+		return smap.getAmount(Stimulus.HungerBee);
 	}
 
 }
