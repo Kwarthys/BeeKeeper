@@ -78,7 +78,7 @@ public class CombDrawer extends JPanel{
 			p.x -= CELL_SIZE/2;
 			p.y -= CELL_SIZE/2; 
 			
-			g.setColor(new Color(s,0,0));
+			g.setColor(new Color(s,s,s));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
 			
@@ -121,7 +121,9 @@ public class CombDrawer extends JPanel{
 			}
 			else if(c.content == CellContent.brood)
 			{
-				g.setColor(Color.WHITE);
+				int e = (int)(c.inside.getEnergy()*255);
+				g.setColor(new Color(255-e,255-e,255));
+				
 			}
 			
 			if(c.content != CellContent.empty)
@@ -138,14 +140,13 @@ public class CombDrawer extends JPanel{
 		{			
 			Point p = fromLinearToHex(a.getPosition());
 
-			int x = p.x - CELL_SIZE/3;
-			int y = p.y - CELL_SIZE/3;
+			int x = p.x;
+			int y = p.y;
 			
 			int e = (int)(a.getEnergy() * 255);
 			g.setColor(new Color(255,255-e,255-e));
-			
-			g.fillOval((int)(x*zoom),(int)(y*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
-			//System.out.println(a.hostCell.x + " " + a.hostCell.y);
+			g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
+
 		}
 	}
 	

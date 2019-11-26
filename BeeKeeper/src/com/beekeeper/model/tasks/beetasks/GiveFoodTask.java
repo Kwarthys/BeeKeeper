@@ -21,7 +21,7 @@ public class GiveFoodTask extends Task {
 		this.rootActivity.addTaskNode(new Action(2,0, agentServices) {
 
 			@Override
-			public Action execute() {
+			public void execute() {
 				WorkingAgent cooperativeInteractor = agentServices.getCoopInteractor();
 				CombCell hostCell = agentServices.getHostCell();
 				if(cooperativeInteractor == null)
@@ -33,7 +33,7 @@ public class GiveFoodTask extends Task {
 					{
 						agentServices.randomMove();
 						//System.out.println("Not a single bee around");
-						return this;
+						return;
 					}
 					//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
 					if(neighs.get(0).isHungry())
@@ -54,8 +54,6 @@ public class GiveFoodTask extends Task {
 						cooperativeInteractor = null;
 					}
 				}
-
-				return this;
 			}
 
 			@Override

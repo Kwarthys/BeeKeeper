@@ -13,18 +13,19 @@ public class BroodBee extends WorkingAgent
 		this.type = AgentType.BROOD_BEE;
 		if(this.getEnergy() < 0.5)
 		{
-			this.addToEnergy(0.5);
+			//this.addToEnergy(0.5);
 		}
 	}
 	
 	@Override
 	public boolean isHungry() {
-		return this.getEnergy() < 0.4;
+		return this.getEnergy() < 0.2;
 	}
 	
 	@Override
 	public void recieveFood() {
 		this.addToEnergy(0.3);
+		System.out.println("BroodBee got fed : " + getEnergy());
 	}
 
 	@Override

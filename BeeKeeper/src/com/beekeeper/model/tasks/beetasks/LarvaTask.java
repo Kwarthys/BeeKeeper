@@ -12,12 +12,11 @@ public class LarvaTask extends Task {
 	{
 		super(agentServices, "larvaTask");
 
-		this.rootActivity.addTaskNode(new Action(1, 0.001, agentServices) {
+		this.rootActivity.addTaskNode(new Action(0.1, 0.001, agentServices) {
 			
 			@Override
-			public Action execute() {
+			public void execute() {
 				agentServices.emit(Stimulus.Ocimene, 10);
-				return this;
 			}
 			
 			@Override

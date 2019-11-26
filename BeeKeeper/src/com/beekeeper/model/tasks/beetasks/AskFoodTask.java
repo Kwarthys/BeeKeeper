@@ -16,12 +16,11 @@ public class AskFoodTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.5, 0, agentServices) {
 			
 			@Override
-			public Action execute() {
+			public void execute() {
 				if(Math.random() > 0.8 && !agentServices.isReceivingFood())
 					agentServices.randomMove();
 				agentServices.emit(Stimulus.AskFood, 10);
 				//System.out.println(agentServices.getID() + " asking food");
-				return this;
 			}
 			
 			@Override

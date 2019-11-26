@@ -13,10 +13,9 @@ public class RandomMoveAction extends Action {
 	}
 
 	@Override
-	public Action execute() {
+	public void execute() {
 		this.agentServices.randomMove();
 		this.agentServices.dropMotivation();
-		return this;
 	}
 
 	@Override

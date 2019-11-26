@@ -141,13 +141,12 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		if(currentAction == null)
 		{
-			currentAction = chooseNewTask(s).execute();		
+			currentAction = chooseNewTask(s).search();
 			//System.out.println("Executing new Action");
 		}
-		else
-		{
-			currentAction.run();			
-		}
+
+		currentAction.run();			
+		
 		
 		
 		//If action is over, remove it

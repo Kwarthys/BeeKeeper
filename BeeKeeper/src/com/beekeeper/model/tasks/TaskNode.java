@@ -1,8 +1,7 @@
 package com.beekeeper.model.tasks;
 
-public interface TaskNode {
-
-	public Action execute();
+public interface TaskNode {	
+	public Action search();
 	
 	public boolean check();
 }

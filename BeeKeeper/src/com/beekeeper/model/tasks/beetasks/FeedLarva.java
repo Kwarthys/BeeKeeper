@@ -20,27 +20,34 @@ public class FeedLarva extends Task {
 		Activity larvaNear = new Activity() {			
 			@Override
 			public boolean check() {
-				return moved || feeding;
+				return moved || agentServices.getCoopInteractor() != null;
 			}
 		};
 		
 		//FeedLarva
-		larvaNear.addTaskNode(new Action(1,0,agentServices) {
+		larvaNear.addTaskNode(new Action(2,0,agentServices) {
 			
 			@Override
-			public Action execute() {
+			public void execute() {
 				WorkingAgent larva = agentServices.getCoopInteractor();
+				
+				if(!feeding)
+				{
+					return;
+				}
 				
 				if(larva.isHungry())
 				{
 					larva.recieveFood();
 					System.out.println("FeedLarva - Larva fed");
 				}
-				else
+				
+				//CheckIfNotHungryAnymore
+				if(!larva.isHungry())
 				{
 					feeding = false;
+					agentServices.resetCoopInteractor();
 				}
-				return this;
 			}
 			
 			@Override
@@ -50,14 +57,15 @@ public class FeedLarva extends Task {
 		});
 		
 		//CheckLarva
-		larvaNear.addTaskNode(new Action(0.1,0,agentServices) {			
+		larvaNear.addTaskNode(new Action(0.5,0,agentServices) {			
 			@Override
-			public Action execute() {
+			public void execute() {
 				WorkingAgent larva = agentServices.getCoopInteractor();
 				
 				if(larva.isHungry())
 				{
 					feeding = true;
+					System.out.println("FeedLarva - Starting food distribution");
 				}
 				else
 				{
@@ -65,7 +73,6 @@ public class FeedLarva extends Task {
 					feeding = false;
 					System.out.println("FeedLarva - LarvaNotHungry");
 				}
-				return this;
 			}
 			
 			@Override
@@ -78,14 +85,13 @@ public class FeedLarva extends Task {
 		larvaNear.addTaskNode(new Action(0.1,0,agentServices) {
 			
 			@Override
-			public Action execute() {
+			public void execute() {
 				if(agentServices.getHostCell().content == CellContent.brood)
 				{
 					agentServices.setInteractorTo(agentServices.getHostCell().getAgentInside());
 				}
 				moved = false;
 				System.out.println("FeedLarva - CheckingCell");
-				return this;
 			}
 			
 			@Override
@@ -98,12 +104,11 @@ public class FeedLarva extends Task {
 		//Random Move
 		this.rootActivity.addTaskNode(new Action(0.1,0.001,agentServices) {			
 			@Override
-			public Action execute() {
+			public void execute() {
 				moved = true;
 				agentServices.randomMove();
 				agentServices.dropMotivation();
 				System.out.println("FeedLarva - RandomMove");
-				return this;
 			}			
 			@Override
 			public boolean check() {

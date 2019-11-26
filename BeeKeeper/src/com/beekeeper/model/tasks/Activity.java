@@ -7,12 +7,12 @@ public abstract class Activity implements TaskNode {
 	private ArrayList<TaskNode> nodes = new ArrayList<>();
 
 	@Override
-	public Action execute() {
+	public Action search() {
 		for(TaskNode t : nodes)
 		{
 			if(t.check())
 			{
-				return t.execute();
+				return t.search();
 			}
 		}
 		

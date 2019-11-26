@@ -38,10 +38,9 @@ public abstract class Task
 	
 	public abstract double compute(StimuliMap smap);
 	
-	public Action execute()
+	public Action search()
 	{
-		Action a = rootActivity.execute();
-		a.upkeep();
+		Action a = rootActivity.search();
 		return a;
 	}
 }

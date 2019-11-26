@@ -20,17 +20,24 @@ public abstract class Action implements TaskNode {
 		this.agentServices = s;
 	}
 
-	@Override
-	public abstract Action execute();
+	public abstract void execute();
 
 	@Override
 	public abstract boolean check();
+	
+	public Action search()
+	{
+		return this;
+	}
 
 
 	public void run()
 	{
-		execute();
 		upkeep();
+		if(actionOver)
+		{
+			execute();
+		}
 	}
 
 	protected void upkeep()
