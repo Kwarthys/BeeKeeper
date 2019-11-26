@@ -2,7 +2,7 @@ package com.beekeeper.model.tasks;
 
 import java.util.ArrayList;
 
-public class Activity implements TaskNode {
+public abstract class Activity implements TaskNode {
 	
 	private ArrayList<TaskNode> nodes = new ArrayList<>();
 
@@ -21,9 +21,7 @@ public class Activity implements TaskNode {
 	}
 
 	@Override
-	public boolean check() {
-		return true;
-	}
+	public abstract boolean check();
 	
 	public void addTaskNode(TaskNode t)
 	{

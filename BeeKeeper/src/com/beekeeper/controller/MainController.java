@@ -69,11 +69,8 @@ public class MainController
 			
 			sManagers.add(sm);
 			
-			//bees.addAll(agentFactory.spawnBroodCells(200, MyUtils.getCirclePointRule(center, 50), sm.getNewServices(), this.controlServices));
-			//bees.addAll(agentFactory.spawnFoodAgent(30, MyUtils.getDonutPointRule(center, 50, 60), sm.getNewServices()));		
-			agentFactory.spawnWorkers(20, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
-	
-
+			agentFactory.spawnBroodCells(10, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);		
+			agentFactory.spawnWorkers(1, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
@@ -98,9 +95,9 @@ public class MainController
 	private void programLoop()
 	{
 		int turnIndex = 0;
-		while(turnIndex < 1000)
+		while(turnIndex < 1)
 		{
-			turnIndex++;
+			turnIndex--;
 			//Collections.shuffle(agentFactory.allAgents);
 			
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);

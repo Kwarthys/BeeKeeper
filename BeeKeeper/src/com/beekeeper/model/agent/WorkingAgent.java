@@ -3,10 +3,10 @@ package com.beekeeper.model.agent;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
@@ -83,42 +83,28 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		@Override
-		public void giveFoodToClosestHungry() {
-			if(cooperativeInteractor == null)
-			{
-				ArrayList<WorkingAgent> neighs = hostCell.getNeighborBees();
-				Collections.shuffle(neighs);
-				
-				if(neighs.size()==0)
-				{
-					randomMove();
-					//System.out.println("Not a single bee around");
-					return;
-				}
-				//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
-				if(neighs.get(0).isHungry())
-				{
-					cooperativeInteractor = neighs.get(0);
-					//System.out.println("found a hungryman");
-				}
-			}
-			
-			if(cooperativeInteractor != null)
-			{
-				if(cooperativeInteractor.isHungry())
-				{
-					cooperativeInteractor.recieveFood();					
-				}
-				else
-				{
-					cooperativeInteractor = null;
-				}
-			}
+		public boolean isReceivingFood() {
+			return WorkingAgent.this.receivingFood;
 		}
 
 		@Override
-		public boolean isReceivingFood() {
-			return WorkingAgent.this.receivingFood;
+		public WorkingAgent getCoopInteractor() {
+			return cooperativeInteractor;
+		}
+
+		@Override
+		public CombCell getHostCell() {
+			return hostCell;
+		}
+
+		@Override
+		public void resetCoopInteractor() {
+			cooperativeInteractor = null;			
+		}
+
+		@Override
+		public void setInteractorTo(WorkingAgent a) {
+			cooperativeInteractor = a;			
 		}
 	};
 	

@@ -7,6 +7,7 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.implem.AdultBee;
+import com.beekeeper.model.agent.implem.BroodBee;
 import com.beekeeper.model.agent.implem.FoodSource;
 import com.beekeeper.model.agent.implem.TestAgent;
 import com.beekeeper.model.agent.implem.TestEmitterAgent;
@@ -82,10 +83,21 @@ public class AgentFactory
 		
 		for(int i = 0; i < number; i++)
 		{
-			//Point2D.Double point = MyUtils.getPointInRule(rule);
-			WorkingAgent bee = null;//new BroodBee(services, controllerServices, point.getX(), point.getY());
-			// TODO NULL HERE 
-			bees.add(bee);
+			Point2D.Double point = MyUtils.getPointInRule(rule);
+			int x;
+			int y;			
+			
+			do
+			{
+				point = MyUtils.getPointInRule(rule);
+				x = (int)point.x;
+				y = (int)point.y;
+			}while(!host.isCellContentEmpty(x, y));
+			
+			WorkingAgent bee = new BroodBee(services, controllerServices);
+			
+			host.setCellAgentContent(x, y, bee);
+			
 			allAgents.add(bee);
 		}
 		

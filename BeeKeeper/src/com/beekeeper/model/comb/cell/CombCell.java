@@ -9,12 +9,13 @@ import com.beekeeper.model.comb.CombServices;
 public class CombCell
 {	
 	protected int combID = -1;
-	public boolean filled = false;
 	
 	public int x,y;
 	
 	public Agent visiting = null;
-	public Agent inside = null;
+	public WorkingAgent inside = null;
+	
+	public CellContent content = CellContent.empty;
 	
 	protected ArrayList<CombCell> neighbors;
 	
@@ -39,5 +40,9 @@ public class CombCell
 	public ArrayList<WorkingAgent> getNeighborBees() {
 		return cs.getNeighborBees(x,y);
 		
+	}
+
+	public WorkingAgent getAgentInside() {
+		return inside;
 	}
 }

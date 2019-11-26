@@ -6,7 +6,7 @@ import com.beekeeper.utils.MyUtils;
 
 public abstract class Task
 {
-	protected Activity rootActivity = new Activity();
+	protected Activity rootActivity;
 	
 	public double threshold = 0.5;
 	public String taskName;
@@ -22,6 +22,13 @@ public abstract class Task
 	{
 		this.agentServices = agentServices;
 		this.taskName = taskName;
+		
+		rootActivity = new Activity() {			
+			@Override
+			public boolean check() {
+				return true;
+			}
+		};
 	}
 	
 	protected double thresholdSigmoid(double s)

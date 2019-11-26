@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.comb.CombServices;
+import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManager.StimuliTile;
@@ -24,6 +25,8 @@ public class CombDrawer extends JPanel{
 	private double zoom = 2;
 	
 	private int CELL_SIZE = 6;
+	
+	public Stimulus drawnStimulus = Stimulus.Ocimene;
 
 	//private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
 	//private Color foodPhColor = GraphicParams.foodPhColor;
@@ -65,19 +68,17 @@ public class CombDrawer extends JPanel{
 	{
 		for(StimuliTile st : stimuliManagerServices.getTiles())
 		{
-			double sA = st.stimuliMap.getAmount(Stimulus.StimulusA);
-			double sFood = st.stimuliMap.getAmount(Stimulus.AskFood);
+			double sA = st.stimuliMap.getAmount(drawnStimulus);
 			
 			Point p = fromLinearToHex(st.position);
 			
 			int cap = 4;
 			int s = capColor(sA, cap);
-			int f = capColor(sFood, cap);
 
 			p.x -= CELL_SIZE/2;
 			p.y -= CELL_SIZE/2; 
 			
-			g.setColor(new Color(s,0,f));
+			g.setColor(new Color(s,0,0));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
 			
@@ -86,7 +87,7 @@ public class CombDrawer extends JPanel{
 			p.x *= 3;
 			
 			g.setColor(Color.WHITE);
-			g.drawString(String.valueOf((int)(10*sFood)), p.x, p.y);
+			g.drawString(String.valueOf((int)(10*s)), p.x, p.y);
 		}
 	}
 	
@@ -97,9 +98,7 @@ public class CombDrawer extends JPanel{
 	}
 	
 	protected void paintCells(Graphics g)
-	{
-		g.setColor(Color.WHITE);
-		
+	{		
 		boolean isOffset = true;
 		double offset;
 		
@@ -110,16 +109,23 @@ public class CombDrawer extends JPanel{
 			
 			//System.out.println(c.x + " " + c.y + " " + c.filled);
 			
+			g.setColor(Color.WHITE);
+			
 			offset = isOffset ? CELL_SIZE/2 : 0;
 			g.drawOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/2+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/2)*zoom), (int)(CELL_SIZE*zoom), (int)(CELL_SIZE*zoom));
 			
-			if(c.filled)
+			if(c.content == CellContent.food)
 			{
 				g.setColor(GraphicParams.hungryLarvaePhColor);
-				g.fillOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/3+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 
+			}
+			else if(c.content == CellContent.brood)
+			{
 				g.setColor(Color.WHITE);
 			}
+			
+			if(c.content != CellContent.empty)
+				g.fillOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/3+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 		}
 		
 		

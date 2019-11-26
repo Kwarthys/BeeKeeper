@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 
 public class Comb
@@ -77,12 +78,12 @@ public class Comb
 	{
 		int azerrefgd = 1;
 		
-		cells.get(azerrefgd).filled = true;
+		cells.get(azerrefgd).content = CellContent.food;
 		
 		for(Integer i : CombUtility.getCellNeighbors(cells.get(azerrefgd).x, cells.get(azerrefgd).y, size))
 		{
 			System.out.print(i + " ");
-			cells.get(i).filled = true;
+			cells.get(i).content = CellContent.food;
 		}
 	}
 
@@ -111,6 +112,11 @@ public class Comb
 			}
 		});
 	}
+	
+	public boolean isCellContentEmpty(int x, int y)
+	{
+		return this.cells.get(x + y * size.width).content == CellContent.empty;
+	}
 
 	public boolean isCellVisitEmpty(int x, int y) {
 		return this.cells.get(x + y * size.width).visiting == null;
@@ -125,6 +131,14 @@ public class Comb
 		cell.visiting = bee;
 		bee.hostCell = cell;
 		this.agents.add(bee);
+	}
+	
+	public void setCellAgentContent(int x, int y, WorkingAgent brood)
+	{
+		CombCell cell = this.cells.get(x + y * size.width); 
+		cell.inside = brood;
+		cell.content = CellContent.brood;
+		brood.hostCell = cell;
 	}
 
 	public Dimension getDimension() {
