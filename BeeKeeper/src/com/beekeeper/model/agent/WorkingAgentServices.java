@@ -8,6 +8,7 @@ public interface WorkingAgentServices {
 	public void emit(Stimulus smell, double amount);
 	public void addToEnergy(double amount);
 	public double getEnergy();
+	public double getHJTiter();
 	
 	public void dropMotivation();
 	

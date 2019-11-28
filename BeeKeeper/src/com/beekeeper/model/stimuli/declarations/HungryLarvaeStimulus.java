@@ -6,9 +6,8 @@ import com.beekeeper.parameters.ModelParameters;
 
 public class HungryLarvaeStimulus extends AStimulus
 {	
-	public HungryLarvaeStimulus(double d)
+	public HungryLarvaeStimulus()
 	{
-		super(d);
 		this.timeDecay = ModelParameters.TIME_DECAY_HungryLarvae;
 		this.transmissibility = ModelParameters.TRANSMISSIBILITY_HungryLarvae;
 		this.type = Stimulus.HungryLarvae;

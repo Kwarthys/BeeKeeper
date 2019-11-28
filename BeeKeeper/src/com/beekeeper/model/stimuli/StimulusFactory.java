@@ -18,13 +18,13 @@ public class StimulusFactory
 		
 		for(Stimulus smell : Stimulus.values())
 		{
-			database.put(smell, get(smell, 0));
+			database.put(smell, get(smell));
 		}
 		
 		return database;
 	}
 	
-	public static AStimulus get(Stimulus key, double amount)
+	public static AStimulus get(Stimulus key)
 	{
 		AStimulus s = null;
 		TestStimulus t = null;
@@ -38,34 +38,34 @@ public class StimulusFactory
 			System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
 		case FoodSmell:
-			s = new FoodSmellStimulus(amount);
+			s = new FoodSmellStimulus();
 			break;
 		case HungerBee:
 			System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
 		case HungryLarvae:
-			s = new HungryLarvaeStimulus(amount);
+			s = new HungryLarvaeStimulus();
 			break;
 		case StimulusA:
-			t = new TestStimulus(amount);
+			t = new TestStimulus();
 			t.setType(Stimulus.StimulusA);
 			s = t;
 			break;
 		case StimulusB:
-			t = new TestStimulus(amount);
+			t = new TestStimulus();
 			t.setType(Stimulus.StimulusB);
 			s = t;
 			break;
 		case StimulusC:
-			t = new TestStimulus(amount);
+			t = new TestStimulus();
 			t.setType(Stimulus.StimulusC);
 			s = t;
 			break;
 		case AskFood:
-			s = new AskFoodStimulus(amount);
+			s = new AskFoodStimulus();
 			break;
 		case Ocimene:
-			s = new Ocimene(amount);
+			s = new Ocimene();
 			break;
 		default:
 			System.err.println("Stimulus Factory - default instead of " + key + ". Shouldn't happen.");
@@ -92,7 +92,7 @@ public class StimulusFactory
 	{
 		if(checkDataBaseWith(smell))
 		{
-			return database.get(smell).transmissibility;			
+			return database.get(smell).getTransmissibility();			
 		}
 		else
 		{

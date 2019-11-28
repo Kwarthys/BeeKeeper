@@ -49,7 +49,7 @@ public class StimuliMap
 			if(amount != 0)
 			{
 				//System.out.print(smell + " " + amount);
-				amount *= StimulusFactory.get(smell, 0).timeDecay;
+				amount *= StimulusFactory.getEvapRate(smell);
 				if(amount < ModelParameters.SMELL_THRESHOLD)
 				{
 					amount = 0.0;

@@ -6,6 +6,7 @@ import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.beetasks.AskFoodTask;
 import com.beekeeper.model.tasks.beetasks.FeedLarva;
+import com.beekeeper.model.tasks.beetasks.ForagerTask;
 import com.beekeeper.model.tasks.beetasks.GiveFoodTask;
 import com.beekeeper.model.tasks.generaltasks.RandomMoveTask;
 import com.beekeeper.model.tasks.generaltasks.RestTask;
@@ -24,6 +25,7 @@ public class AdultBee extends WorkingAgent
 		taskList.add(new RestTask(this.ownServices));
 		taskList.add(new AskFoodTask(this.ownServices));
 		taskList.add(new GiveFoodTask(this.ownServices));
+		taskList.add(new ForagerTask(this.ownServices));
 		taskList.add(new FeedLarva(this.ownServices));
 		taskList.add(new RandomMoveTask(this.ownServices));
 	}

@@ -36,6 +36,8 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	public Task getCurrentTask() {return currentTask;}
 	
+	private double hjTiter = 0;
+	
 	public void interruptTask() {currentTask = null;}
 	
 	protected double motivation = 1;
@@ -106,6 +108,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		public void setInteractorTo(WorkingAgent a) {
 			cooperativeInteractor = a;			
 		}
+
+		@Override
+		public double getHJTiter() {
+			return WorkingAgent.this.hjTiter;
+		}
 	};
 	
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
@@ -114,6 +121,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		this.controllerServices = controllerServices;
 		setEnergy(Math.random()*0.8+0.2);
 		fillTaskList();
+		
+		hjTiter = Math.random() * 0.7;
 	}
 	
 	public void live()
@@ -128,9 +137,6 @@ public abstract class WorkingAgent extends EmitterAgent
 			alive = false;
 			return;
 		}
-		
-		hunger += 0.001;
-		hunger = Math.min(1, hunger);
 		
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
 		s = addInternalPerceptions(s);
@@ -156,7 +162,16 @@ public abstract class WorkingAgent extends EmitterAgent
 			currentAction = null;
 		}
 		
+		advanceMetabolism();
+	}
+	
+	private void advanceMetabolism()
+	{
+		//hjTiter = Math.min(1, hjTiter + 0.01);
+		hunger = Math.min(1, hunger + 0.001);
 		receivingFood = false;
+		
+		emit(Stimulus.Ocimene, hjTiter*0.5);
 	}
 	
 	
@@ -176,7 +191,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		receivingFood = true;
 		
-		System.out.println(ID + " receiving food, hunger: " + hunger);
+		//System.out.println(ID + " receiving food, hunger: " + hunger);
 	}
 
 	public Task findATask(StimuliMap load)

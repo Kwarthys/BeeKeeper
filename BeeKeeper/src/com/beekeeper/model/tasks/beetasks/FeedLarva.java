@@ -121,7 +121,8 @@ public class FeedLarva extends Task {
 	public double compute(StimuliMap smap)
 	{
 		// TODO YOUNG PHYSIOLOGICAL STATE
-		return 0.5;
+		this.threshold = agentServices.getHJTiter();
+		return this.thresholdSigmoid(0.5);
 	}
 
 }
