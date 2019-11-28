@@ -39,7 +39,7 @@ public class FeedLarva extends Task {
 				if(larva.isHungry())
 				{
 					larva.recieveFood();
-					System.out.println("FeedLarva - Larva fed");
+					//System.out.println("FeedLarva - Larva fed");
 				}
 				
 				//CheckIfNotHungryAnymore
@@ -65,13 +65,13 @@ public class FeedLarva extends Task {
 				if(larva.isHungry())
 				{
 					feeding = true;
-					System.out.println("FeedLarva - Starting food distribution");
+					//System.out.println("FeedLarva - Starting food distribution");
 				}
 				else
 				{
 					agentServices.resetCoopInteractor();
 					feeding = false;
-					System.out.println("FeedLarva - LarvaNotHungry");
+					//System.out.println("FeedLarva - LarvaNotHungry");
 				}
 			}
 			
@@ -91,7 +91,7 @@ public class FeedLarva extends Task {
 					agentServices.setInteractorTo(agentServices.getHostCell().getAgentInside());
 				}
 				moved = false;
-				System.out.println("FeedLarva - CheckingCell");
+				//System.out.println("FeedLarva - CheckedCell");
 			}
 			
 			@Override
@@ -108,7 +108,7 @@ public class FeedLarva extends Task {
 				moved = true;
 				agentServices.randomMove();
 				agentServices.dropMotivation();
-				System.out.println("FeedLarva - RandomMove");
+				//System.out.println("FeedLarva - RandomMoved");
 			}			
 			@Override
 			public boolean check() {
@@ -121,7 +121,7 @@ public class FeedLarva extends Task {
 	public double compute(StimuliMap smap)
 	{
 		// TODO YOUNG PHYSIOLOGICAL STATE
-		return 0.9;
+		return 0.5;
 	}
 
 }

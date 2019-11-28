@@ -16,6 +16,6 @@ public class RandomMoveTask extends Task
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return agentServices.getEnergy();
+		return Math.min(0.3,agentServices.getEnergy());
 	}
 }

@@ -78,8 +78,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		@Override
-		public double getHunger() {
-			return WorkingAgent.this.getHunger();
+		public boolean isHungry() {
+			return WorkingAgent.this.isHungry();
 		}
 
 		@Override
@@ -129,7 +129,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			return;
 		}
 		
-		hunger += 0.01;
+		hunger += 0.001;
 		hunger = Math.min(1, hunger);
 		
 		StimuliMap s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
@@ -171,7 +171,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	public void recieveFood()
 	{
-		hunger-= 0.35;
+		hunger-= 0.8;
 		hunger = Math.max(0, hunger);
 		
 		receivingFood = true;
@@ -239,12 +239,12 @@ public abstract class WorkingAgent extends EmitterAgent
 		return ts;
 	}
 	
-	public ArrayList<Double> getAllTaskScores()
+	public HashMap<String, Double> getAllTaskScores()
 	{
-		ArrayList<Double> d = new ArrayList<>();
+		HashMap<String, Double> d = new HashMap<>();
 		for(Task t : taskList)
 		{
-			d.add(t.compute(lastPercievedMap));
+			d.put(t.taskName, t.compute(lastPercievedMap));
 		}
 		return d;
 	}

@@ -15,7 +15,7 @@ public class CombUtility
 		{
 			for(int i = 0; i < size.width; i++)	
 			{
-				CombCell cb = new CombCell(i,j,combID, services);
+				CombCell cb = new CombCell(i,j,j*size.width+i,combID, services);
 				cells.add(cb);
 			}
 		}		

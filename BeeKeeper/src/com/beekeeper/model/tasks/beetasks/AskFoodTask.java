@@ -13,13 +13,23 @@ public class AskFoodTask extends Task {
 		
 		this.motivated = false;
 		
-		this.rootActivity.addTaskNode(new Action(0.5, 0, agentServices) {
+		this.rootActivity.addTaskNode(new Action(0.5,0.001,agentServices) {			
+			@Override
+			public void execute() {
+				agentServices.randomMove();				
+			}
+			
+			@Override
+			public boolean check() {
+				return Math.random() > 0.9 && !agentServices.isReceivingFood();
+			}
+		});
+		
+		this.rootActivity.addTaskNode(new Action(0.1, 0, agentServices) {
 			
 			@Override
 			public void execute() {
-				if(Math.random() > 0.8 && !agentServices.isReceivingFood())
-					agentServices.randomMove();
-				agentServices.emit(Stimulus.AskFood, 10);
+				agentServices.emit(Stimulus.AskFood, 15);
 				//System.out.println(agentServices.getID() + " asking food");
 			}
 			

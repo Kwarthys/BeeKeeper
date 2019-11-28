@@ -25,7 +25,7 @@ public class BroodBee extends WorkingAgent
 	@Override
 	public void recieveFood() {
 		this.addToEnergy(0.3);
-		System.out.println("BroodBee got fed : " + getEnergy());
+		//System.out.println("BroodBee got fed : " + getEnergy());
 	}
 
 	@Override

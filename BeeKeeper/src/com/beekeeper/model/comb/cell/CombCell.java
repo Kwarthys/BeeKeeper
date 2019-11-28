@@ -11,6 +11,7 @@ public class CombCell
 	protected int combID = -1;
 	
 	public int x,y;
+	public int number;
 	
 	public Agent visiting = null;
 	public WorkingAgent inside = null;
@@ -21,12 +22,13 @@ public class CombCell
 	
 	private CombServices cs;
 	
-	public CombCell(int x, int y, int combID, CombServices cs)
+	public CombCell(int x, int y, int number, int combID, CombServices cs)
 	{
 		this.combID = combID;
 		this.x = x;
 		this.y = y;
 		this.cs = cs;
+		this.number = number;
 	}
 
 	public ArrayList<Integer> getNeighbors() {

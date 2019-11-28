@@ -15,7 +15,7 @@ public interface WorkingAgentServices {
 	
 	public boolean isReceivingFood();
 	public StimuliMap getLastPerception();
-	public double getHunger();
+	public boolean isHungry();
 	public int getID();
 	public CombCell getHostCell();
 	public WorkingAgent getCoopInteractor();

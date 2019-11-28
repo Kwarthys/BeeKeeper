@@ -25,6 +25,7 @@ public abstract class Agent
 	
 	public CombCell hostCell;
 	
+	protected int lastVisitedCellNumber = -1;
 	
 	public Agent()
 	{
@@ -58,19 +59,23 @@ public abstract class Agent
 		move(vector.x, vector.y);
 	}
 */
+	
+	
 	public void randomMove()
 	{
 		ArrayList<Integer> cells = hostCell.getNeighbors();
 		int r = (int) (Math.random() * cells.size());
-		
+		//Bee can't randomly go back where it was
+		if(lastVisitedCellNumber != -1)
+		{
+			while(cells.get(r) == lastVisitedCellNumber)
+			{
+				r = (int) (Math.random() * cells.size()); 
+			}
+		}
+		lastVisitedCellNumber = hostCell.number;
 		hostCell.askMoveToCell(this, cells.get(r));
 	}
-/*
-	protected void move(double dx, double dy) {
-		this.position.setLocation(this.position.getX() + dx, this.position.getY() + dy);
-		this.rotation = MyUtils.getRotFromDir(dx, dy);
-	}
-*/
 	
 	public double getEnergy() {return this.energy;}
 	

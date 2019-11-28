@@ -65,7 +65,7 @@ public class GiveFoodTask extends Task {
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return this.thresholdSigmoid(smap.getAmount(Stimulus.AskFood));
+		return this.agentServices.isHungry() ? 0 : this.thresholdSigmoid(smap.getAmount(Stimulus.AskFood));
 	}
 
 }

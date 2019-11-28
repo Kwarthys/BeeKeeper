@@ -35,7 +35,7 @@ public class TaskGrapher extends JPanel{
 
 	private int borderMargin = 50;
 	private int graphHeight = 300;
-	private int graphWidth = 500;
+	private int graphWidth = 800;
 
 	private int step = 2;
 
@@ -113,7 +113,7 @@ public class TaskGrapher extends JPanel{
 
 	private void drawTaskSpeGraph(Graphics2D g)
 	{
-		int graphStartX = borderMargin + graphWidth / 2;
+		int graphStartX = 2*borderMargin + graphWidth / 5;
 		int graphStartY = 2*borderMargin + graphHeight;
 
 		int baseLineY = graphStartY + graphHeight/2;
@@ -158,6 +158,15 @@ public class TaskGrapher extends JPanel{
 			g.setColor(getColorFor(b.getCurrentTask().taskName));
 			g.fillOval(x-3, y-3, 6, 6);				
 			
+			int stepY = 15;
+			int offstepY = stepY;
+			
+			for(Entry<String, Double> score : b.getAllTaskScores().entrySet())
+			{
+				g.setColor(getColorFor(score.getKey()));
+				g.drawString(String.format("%.1f", score.getValue()), x-8, baseLineY + offstepY);
+				offstepY += stepY;
+			}
 
 		}
 	}

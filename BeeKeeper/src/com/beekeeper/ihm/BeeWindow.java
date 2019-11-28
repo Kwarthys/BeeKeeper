@@ -40,11 +40,18 @@ public class BeeWindow extends JFrame
 		});
 		
 		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 0;		
+		container.add(box,c);
+		
+		
+		
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 1;
+		c.weightx = 0.5;
+		c.weighty = 0.5;
 		
-		container.add(box);
 		container.add(grapher, c);
 		
 		for(CombDrawer drawer : drawers)
@@ -53,9 +60,9 @@ public class BeeWindow extends JFrame
 			container.add(drawer, c);
 		}
 		
-		setSize(1800,800);
-
 		this.setContentPane(container);
+		
+		setSize(1800,800);
 		
 		container.setBackground(GraphicParams.BACKGROUND);
 		

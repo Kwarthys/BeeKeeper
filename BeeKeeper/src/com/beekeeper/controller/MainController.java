@@ -70,7 +70,7 @@ public class MainController
 			sManagers.add(sm);
 			
 			agentFactory.spawnBroodCells(20, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);		
-			agentFactory.spawnWorkers(1, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
+			agentFactory.spawnWorkers(15, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
@@ -98,7 +98,6 @@ public class MainController
 		while(turnIndex < 10)
 		{
 			turnIndex--;
-			//Collections.shuffle(agentFactory.allAgents);
 			
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
 			Collections.shuffle(copy);
@@ -134,7 +133,7 @@ public class MainController
 				}
 			});
 			
-			System.out.println(turnIndex);
+			//System.out.println(turnIndex);
 
 			try {
 				Thread.sleep(200);//30

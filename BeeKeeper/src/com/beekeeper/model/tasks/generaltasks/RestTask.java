@@ -11,12 +11,11 @@ public class RestTask extends Task
 	{
 		super(agentServices, "Rest");
 		
+		this.motivated = false;
+		
 		rootActivity.addTaskNode(new Action(1,-0.1,agentServices) {			
 			@Override
-			public void execute() {
-				//System.out.println("Resting");
-				agentServices.dropMotivation();
-			}
+			public void execute() {}
 			
 			@Override
 			public boolean check() {
