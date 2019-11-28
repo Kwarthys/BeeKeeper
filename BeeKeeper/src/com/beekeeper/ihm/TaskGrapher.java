@@ -43,7 +43,7 @@ public class TaskGrapher extends JPanel{
 	{
 		//this.bees = new ArrayList<EmptyBee>(bees);
 		this.bees = allAgents;
-		Dimension size = new Dimension((int)(borderMargin * 2 + graphWidth * 1.2), (int)(borderMargin*2 + graphHeight*1.6));
+		Dimension size = new Dimension((int)(borderMargin * 2 + graphWidth), (int)(borderMargin*2 + graphHeight*1.2));
 		this.setPreferredSize(size);
 		this.setMinimumSize(size);
 	}
@@ -51,6 +51,7 @@ public class TaskGrapher extends JPanel{
 	@Override
 	protected void paintComponent(Graphics g)
 	{
+		
 		Graphics2D g2d = (Graphics2D) g;
 
 		Stroke defaultStroke = g2d.getStroke();

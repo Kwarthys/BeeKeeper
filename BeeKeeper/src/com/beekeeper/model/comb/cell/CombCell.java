@@ -40,11 +40,24 @@ public class CombCell
 	}
 
 	public ArrayList<WorkingAgent> getNeighborBees() {
-		return cs.getNeighborBees(x,y);
-		
+		return cs.getNeighborBees(x,y);		
+	}
+
+	public ArrayList<Integer> getDownCells() {
+		return cs.getDownNeighbors(x,y);		
 	}
 
 	public WorkingAgent getAgentInside() {
 		return inside;
+	}
+
+	public void leaveCell() {
+		cs.notifyTakeOff(visiting);
+		visiting = null;
+	}
+
+	public void notifyLanding(Agent a) {
+		cs.notifyLanding(a);
+		visiting = a;		
 	}
 }

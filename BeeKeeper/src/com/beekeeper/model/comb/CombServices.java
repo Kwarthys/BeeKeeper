@@ -10,10 +10,13 @@ public interface CombServices
 {
 	public ArrayList<Agent> getBees();
 	public ArrayList<CombCell> getCells();
-	
+
 	public ArrayList<Integer> getNeighbors(int x, int y);
+	public ArrayList<Integer> getDownNeighbors(int x, int y);
 	public void askMoveToCell(Agent who, Integer where);
 	
 	public int getID();
-	public ArrayList<WorkingAgent> getNeighborBees(int x, int y);	
+	public ArrayList<WorkingAgent> getNeighborBees(int x, int y);
+	public void notifyTakeOff(Agent a);
+	public void notifyLanding(Agent a);	
 }

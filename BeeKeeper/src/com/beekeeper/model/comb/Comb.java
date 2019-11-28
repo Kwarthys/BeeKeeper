@@ -66,6 +66,21 @@ public class Comb
 			
 			return agents;			
 		}
+
+		@Override
+		public ArrayList<Integer> getDownNeighbors(int x, int y) {
+			return CombUtility.getCellNeighborsDown(x, y, getDimension());
+		}
+
+		@Override
+		public void notifyTakeOff(Agent a) {
+			agents.remove(a);
+		}
+
+		@Override
+		public void notifyLanding(Agent a) {
+			agents.add(a);
+		}
 	};
 	
 	public Comb(Dimension combSize)
@@ -143,5 +158,14 @@ public class Comb
 
 	public Dimension getDimension() {
 		return size;
+	}
+
+	public ArrayList<CombCell> getLandingZone() {
+		ArrayList<CombCell> lastRow = new ArrayList<>();
+		for(int x = 0; x < size.width; x++)
+		{
+			lastRow.add(cells.get((size.height-1) * size.width + x));
+		}
+		return lastRow;
 	}
 }

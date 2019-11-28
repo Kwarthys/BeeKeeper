@@ -13,7 +13,8 @@ public interface WorkingAgentServices {
 	public void dropMotivation();
 	
 	public void randomMove();
-	
+
+	public boolean isInside();
 	public boolean isReceivingFood();
 	public StimuliMap getLastPerception();
 	public boolean isHungry();
@@ -22,4 +23,6 @@ public interface WorkingAgentServices {
 	public WorkingAgent getCoopInteractor();
 	public void resetCoopInteractor();
 	public void setInteractorTo(WorkingAgent agentInside);
+	public void enterHive();
+	public void tryMoveDown();
 }

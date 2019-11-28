@@ -60,7 +60,6 @@ public abstract class Agent
 	}
 */
 	
-	
 	public void randomMove()
 	{
 		ArrayList<Integer> cells = hostCell.getNeighbors();

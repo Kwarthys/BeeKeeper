@@ -14,6 +14,7 @@ import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.comb.Comb;
+import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.hive.BeeHive;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.tasks.Task;
@@ -48,13 +49,31 @@ public class MainController
 		public double getHiveTemperature(){
 			return hive.getTemperature();
 		}
+
+		@Override
+		public CombCell askLandingZone() {			
+			while(true)
+			{
+				int r = (int) (Math.random() * combs.size());
+				
+				ArrayList<CombCell> landingCells = combs.get(r).getLandingZone();
+				Collections.shuffle(landingCells);
+				for(CombCell c : landingCells)
+				{
+					if(c.visiting == null)
+					{
+						return c;
+					}
+				}
+			}
+		}
 	};
 
 	public MainController()
 	{
 		this.agentFactory = new AgentFactory();	
 		
-		Dimension combSize = new Dimension(10,10);
+		Dimension combSize = new Dimension(20,20);
 		
 		Point2D.Double center = new Point2D.Double(combSize.width/2,combSize.height/2);
 		
@@ -69,8 +88,8 @@ public class MainController
 			
 			sManagers.add(sm);
 			
-			agentFactory.spawnBroodCells(20, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);		
-			agentFactory.spawnWorkers(15, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
+			agentFactory.spawnBroodCells(50, c, MyUtils.getCirclePointRule(center, combSize.width/4), sm.getServices(), this.controlServices);		
+			agentFactory.spawnWorkers(30, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	

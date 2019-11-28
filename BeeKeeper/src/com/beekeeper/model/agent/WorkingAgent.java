@@ -42,6 +42,8 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected double motivation = 1;
 	public double getMotivation() {return motivation;}
+
+	public boolean isInside() {return hostCell!=null;}
 	
 	protected WorkingAgentServices ownServices = new WorkingAgentServices() {		
 		@Override
@@ -76,7 +78,7 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		@Override
 		public StimuliMap getLastPerception() {
-			return lastPercievedMap;
+			return WorkingAgent.this.lastPercievedMap;
 		}
 
 		@Override
@@ -91,27 +93,42 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		@Override
 		public WorkingAgent getCoopInteractor() {
-			return cooperativeInteractor;
+			return WorkingAgent.this.cooperativeInteractor;
 		}
 
 		@Override
 		public CombCell getHostCell() {
-			return hostCell;
+			return WorkingAgent.this.hostCell;
 		}
 
 		@Override
 		public void resetCoopInteractor() {
-			cooperativeInteractor = null;			
+			WorkingAgent.this.cooperativeInteractor = null;			
 		}
 
 		@Override
 		public void setInteractorTo(WorkingAgent a) {
-			cooperativeInteractor = a;			
+			WorkingAgent.this.cooperativeInteractor = a;			
 		}
 
 		@Override
 		public double getHJTiter() {
 			return WorkingAgent.this.hjTiter;
+		}
+
+		@Override
+		public boolean isInside() {
+			return  WorkingAgent.this.isInside();
+		}
+
+		@Override
+		public void enterHive() {
+			WorkingAgent.this.enterHive();
+		}
+
+		@Override
+		public void tryMoveDown() {
+			WorkingAgent.this.tryMoveDown();
 		}
 	};
 	
@@ -138,7 +155,18 @@ public abstract class WorkingAgent extends EmitterAgent
 			return;
 		}
 		
-		StimuliMap s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
+		
+		StimuliMap s;
+		
+		if(isInside())
+		{
+			s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));			
+		}
+		else
+		{
+			s = new StimuliMap();
+		}
+		
 		s = addInternalPerceptions(s);
 		lastPercievedMap = s;
 		
@@ -171,7 +199,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		hunger = Math.min(1, hunger + 0.001);
 		receivingFood = false;
 		
-		emit(Stimulus.Ocimene, hjTiter*0.5);
+		if(isInside())
+			emit(Stimulus.Ocimene, hjTiter*0.5);
 	}
 	
 	
@@ -235,6 +264,34 @@ public abstract class WorkingAgent extends EmitterAgent
 		controllerServices.logMyTaskSwitch(currentTask, this.ID);
 		
 		return currentTask;
+	}
+	
+	protected void enterHive()
+	{
+		if(isInside())
+		{
+			System.err.println("Already inside, can't reenter");
+			return;
+		}
+		
+		hostCell = controllerServices.askLandingZone();
+		hostCell.notifyLanding(this);
+	}
+	
+	protected void tryMoveDown()
+	{
+		ArrayList<Integer> cells = hostCell.getDownCells();
+		if(cells.size() == 0)
+		{
+			//We are at the bottom !
+			hostCell.leaveCell();
+			this.hostCell = null;
+		}
+		else
+		{
+			int r = (int) (Math.random() * cells.size());
+			hostCell.askMoveToCell(this, cells.get(r));
+		}
 	}
 
 	public void setCombID(int id)
