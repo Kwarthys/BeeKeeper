@@ -45,4 +45,10 @@ public class TestAgent extends WorkingAgent {
 		*/
 	}
 
+	@Override
+	protected void advanceMetabolism() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

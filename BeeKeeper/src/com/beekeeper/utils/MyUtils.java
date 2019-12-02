@@ -67,9 +67,26 @@ public class MyUtils
 	}
 	
 	
+	/**
+	 * 
+	 * @param v
+	 * @param down
+	 * @param up
+	 * @return Value v clamped between up and down
+	 */
 	public static double clamp(double v, double down, double up)
 	{
 		return v < down ? down : v > up ? up : v;
+	}
+	
+	/**
+	 * 
+	 * @param v
+	 * @return Value v clamped between 0 and 1
+	 */
+	public static double clamp(double v)
+	{
+		return clamp(v,0,1);
 	}
 	
 	public static double getRotFromDir(double x2, double y2)

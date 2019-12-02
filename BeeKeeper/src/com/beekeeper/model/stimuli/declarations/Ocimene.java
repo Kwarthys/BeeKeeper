@@ -7,7 +7,7 @@ public class Ocimene extends AStimulus {
 
 	public Ocimene()
 	{
-		this.timeDecay = 0.99;
+		this.timeDecay = 0.9;
 		this.transmissibility = 0.5;
 		this.type = Stimulus.Ocimene;
 	}

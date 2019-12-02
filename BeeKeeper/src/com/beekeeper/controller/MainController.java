@@ -89,7 +89,7 @@ public class MainController
 			sManagers.add(sm);
 			
 			agentFactory.spawnBroodCells(50, c, MyUtils.getCirclePointRule(center, combSize.width/4), sm.getServices(), this.controlServices);		
-			agentFactory.spawnWorkers(30, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
+			agentFactory.spawnWorkers(50, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	

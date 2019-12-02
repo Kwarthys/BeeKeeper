@@ -50,7 +50,7 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
 			public void execute() {
-				System.out.println(agentServices.getID() + " Moved Down");
+				//System.out.println(agentServices.getID() + " Moved Down");
 				back = false;
 				agentServices.tryMoveDown();
 			}

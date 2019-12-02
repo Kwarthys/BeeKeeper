@@ -23,7 +23,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected double hunger = Math.random() * 0.5;
 	public double getHunger() {return hunger;}	
-	private boolean receivingFood = false;
+	protected boolean receivingFood = false;
 	
 	protected StimuliMap lastPercievedMap;
 	
@@ -36,7 +36,8 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	public Task getCurrentTask() {return currentTask;}
 	
-	private double hjTiter = 0;
+	protected double hjTiter = 0;
+	public double getHJ() {return hjTiter;}	
 	
 	public void interruptTask() {currentTask = null;}
 	
@@ -143,7 +144,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	}
 	
 	public void live()
-	{
+	{		
 		if(alive == false)
 		{
 			return;
@@ -191,23 +192,17 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		
 		advanceMetabolism();
+		this.bodySmell.evaporate();
 	}
 	
-	private void advanceMetabolism()
-	{
-		//hjTiter = Math.min(1, hjTiter + 0.01);
-		hunger = Math.min(1, hunger + 0.001);
-		receivingFood = false;
-		
-		if(isInside())
-			emit(Stimulus.Ocimene, hjTiter*0.5);
-	}
+	protected abstract void advanceMetabolism();
 	
 	
 	private StimuliMap addInternalPerceptions(StimuliMap s)
 	{
 		s.addAmount(Stimulus.HungerBee, this.getHunger());
 		s.addAmount(Stimulus.Energy, this.getEnergy());
+		s.addAllAmounts(this.bodySmell);
 		return s;
 	}
 
@@ -251,6 +246,11 @@ public abstract class WorkingAgent extends EmitterAgent
 			}
 		}
 		return todo;
+	}
+	
+	protected void spreadByContact(WorkingAgent other)
+	{
+		
 	}
 	
 	protected Task chooseNewTask(StimuliMap load)

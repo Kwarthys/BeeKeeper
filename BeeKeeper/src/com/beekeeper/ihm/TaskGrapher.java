@@ -17,6 +17,7 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.stimuli.Stimulus;
 
 @SuppressWarnings("serial")
 public class TaskGrapher extends JPanel{
@@ -146,12 +147,16 @@ public class TaskGrapher extends JPanel{
 			
 			int yE = (int) (baseLineY - b.getEnergy() * graphHeight/2*0.9);
 			int yH = (int) (baseLineY - b.getHunger() * graphHeight/2*0.9);
+			int yO = (int) (baseLineY - b.getHJ() * graphHeight/2*0.9);
 			
 			g.setColor(Color.red);
-			g.fillRect(x-1, yE, 2, baseLineY - yE);
+			g.fillRect(x-2, yE, 2, baseLineY - yE);
 			
 			g.setColor(Color.CYAN);
-			g.fillRect(x+1, yH, 2, baseLineY - yH);
+			g.fillRect(x, yH, 2, baseLineY - yH);
+			
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(x+2, yO, 2, baseLineY - yO);
 			
 			//int offset = i%2 == 0 ? 20 :0;
 			//g.drawString("0." + (int)(b.getHunger()*10), x+1, baseLineY + 10 + offset);
