@@ -17,7 +17,7 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
 			public void execute() {
-				System.out.println(agentServices.getID() + " Wandering");
+				//System.out.println(agentServices.getID() + " Wandering");
 				agentServices.dropMotivation();
 				agentServices.randomMove();
 				c++;
@@ -33,7 +33,7 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(20,0,agentServices) {
 			@Override
 			public void execute() {
-				System.out.println(agentServices.getID() + " BackFromForaging");
+				//System.out.println(agentServices.getID() + " BackFromForaging");
 				agentServices.dropMotivation();
 				agentServices.enterHive(); //find a comb and setInside to true
 				back = true;

@@ -51,4 +51,9 @@ public class TestAgent extends WorkingAgent {
 		
 	}
 
+	@Override
+	public String getStringName() {
+		return "TestAgent "+ID;
+	}
+
 }

@@ -81,6 +81,11 @@ public class Comb
 		public void notifyLanding(Agent a) {
 			agents.add(a);
 		}
+
+		@Override
+		public CombCell getCellAt(int x, int y) {
+			return cells.get(y*size.width + x);
+		}
 	};
 	
 	public Comb(Dimension combSize)

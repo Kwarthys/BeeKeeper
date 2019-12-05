@@ -38,6 +38,11 @@ public class BroodBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{
-		this.bodySmell.addAmount(Stimulus.Ocimene, 0.2);
+		this.bodySmell.addAmount(Stimulus.Ocimene, 1);
+	}
+
+	@Override
+	public String getStringName() {
+		return "BroodBee " + ID;
 	}
 }

@@ -9,6 +9,8 @@ import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 public abstract class EmitterAgent extends Agent
 {
 	protected StimuliMap bodySmell;
+	public StimuliMap getBodySmells() {return new StimuliMap(bodySmell);}
+	
 	protected StimuliManagerServices stimuliManagerServices;
 
 	public EmitterAgent(StimuliManagerServices stimuliManagerServices)
@@ -23,6 +25,4 @@ public abstract class EmitterAgent extends Agent
 		stimuliManagerServices.emit(s, amount, new Point(hostCell.x, hostCell.y));
 		//TODO replace NULL by something meaningful
 	}
-
-	public StimuliMap getBodySmells() {return this.bodySmell;}
 }

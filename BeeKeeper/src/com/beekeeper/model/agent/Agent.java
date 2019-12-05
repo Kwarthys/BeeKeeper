@@ -41,6 +41,8 @@ public abstract class Agent
 	{
 		return new Point(hostCell.x, hostCell.y);
 	}
+	
+	public abstract String getStringName();
 
 /*
 	public void moveTowards(Point2D.Double position)

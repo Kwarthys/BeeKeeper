@@ -34,4 +34,9 @@ public class TestEmitterAgent extends EmitterAgent
 		}
 	}
 
+	@Override
+	public String getStringName() {
+		return "TestEmitter "+ID;
+	}
+
 }

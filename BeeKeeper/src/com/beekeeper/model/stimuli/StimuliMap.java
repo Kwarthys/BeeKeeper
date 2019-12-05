@@ -1,6 +1,8 @@
 package com.beekeeper.model.stimuli;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import com.beekeeper.parameters.ModelParameters;
 
@@ -61,6 +63,11 @@ public class StimuliMap
 		});
 	}
 	
+	public Set<Stimulus> keySet()
+	{
+		return amounts.keySet();
+	}
+	
 	public double getAmount(Stimulus type)
 	{
 		if(amounts.containsKey(type))
@@ -104,5 +111,27 @@ public class StimuliMap
 		sm.amounts.forEach((smell, amount)->{
 			StimuliMap.this.addAmount(smell, amount);
 		});
+	}
+
+	public static void contactBetween(StimuliMap map1, StimuliMap map2)
+	{
+		ArrayList<Stimulus> smells = new ArrayList<>();
+		smells.addAll(map1.keySet());
+		for(Stimulus s : map2.keySet())
+		{
+			if(!smells.contains(s))
+			{
+				smells.add(s);
+			}
+		}
+		
+		for(Stimulus s : smells)
+		{
+			double ownCoef = 0.9;
+			double otherCoef = 1-ownCoef;
+			
+			map1.setAmount(s, ownCoef * map1.getAmount(s) + otherCoef * map2.getAmount(s));
+			map2.setAmount(s, ownCoef * map2.getAmount(s) + otherCoef * map1.getAmount(s));
+		}		
 	}
 }

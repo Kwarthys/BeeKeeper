@@ -15,6 +15,8 @@ public interface CombServices
 	public ArrayList<Integer> getDownNeighbors(int x, int y);
 	public void askMoveToCell(Agent who, Integer where);
 	
+	public CombCell getCellAt(int x, int y);
+	
 	public int getID();
 	public ArrayList<WorkingAgent> getNeighborBees(int x, int y);
 	public void notifyTakeOff(Agent a);

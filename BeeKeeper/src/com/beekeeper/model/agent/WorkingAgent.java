@@ -191,6 +191,12 @@ public abstract class WorkingAgent extends EmitterAgent
 			currentAction = null;
 		}
 		
+		
+		if(cooperativeInteractor != null)
+		{
+			spreadByContact(cooperativeInteractor);
+		}
+		
 		advanceMetabolism();
 		this.bodySmell.evaporate();
 	}
@@ -250,7 +256,8 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected void spreadByContact(WorkingAgent other)
 	{
-		
+		System.out.println("ContactSpread between " + this.getStringName() + " and " + other.getStringName());
+		StimuliMap.contactBetween(other.bodySmell, this.bodySmell);
 	}
 	
 	protected Task chooseNewTask(StimuliMap load)

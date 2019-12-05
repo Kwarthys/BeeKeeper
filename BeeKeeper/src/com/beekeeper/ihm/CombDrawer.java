@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
@@ -69,6 +70,25 @@ public class CombDrawer extends JPanel{
 		for(StimuliTile st : stimuliManagerServices.getTiles())
 		{
 			double sA = st.stimuliMap.getAmount(drawnStimulus);
+			
+			if(drawnStimulus == Stimulus.Ocimene)
+			{
+				CombCell cell = cs.getCellAt(st.position.x, st.position.y);
+				
+				if(cell.visiting != null)
+				{
+					WorkingAgent b = (WorkingAgent)cell.visiting;
+					sA += b.getBodySmells().getAmount(Stimulus.Ocimene);
+				}
+				
+				if(cell.inside != null)
+				{
+					WorkingAgent b = (WorkingAgent)cell.inside;
+					sA += b.getBodySmells().getAmount(Stimulus.Ocimene);
+				}
+			}
+			
+			
 			
 			Point p = fromLinearToHex(st.position);
 			

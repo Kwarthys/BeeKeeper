@@ -8,7 +8,6 @@ import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.implem.AdultBee;
 import com.beekeeper.model.agent.implem.BroodBee;
-import com.beekeeper.model.agent.implem.FoodSource;
 import com.beekeeper.model.agent.implem.TestAgent;
 import com.beekeeper.model.agent.implem.TestEmitterAgent;
 import com.beekeeper.model.comb.Comb;
@@ -18,25 +17,7 @@ import com.beekeeper.utils.MyUtils;
 
 public class AgentFactory
 {
-	public ArrayList<Agent> allAgents = new ArrayList<>();
-
-
-	public ArrayList<Agent> spawnFoodAgent(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services)
-	{
-		ArrayList<Agent> cells = new ArrayList<>();
-		
-		for(int i = 0; i < number; i++)
-		{
-			//Point2D.Double point = MyUtils.getPointInRule(rule);
-			FoodSource c = null;//new FoodSource(point.getX(), point.getY(), services); 
-			// TODO NULL HERE 
-		    cells.add(c);
-			allAgents.add(c);
-		}
-		
-		return cells;
-	}
-	
+	public ArrayList<Agent> allAgents = new ArrayList<>();	
 	
 	public ArrayList<EmitterAgent> spawnTestEmitterAgent(int number, CustomRule<Point2D.Double> rule, StimuliManagerServices services)
 	{

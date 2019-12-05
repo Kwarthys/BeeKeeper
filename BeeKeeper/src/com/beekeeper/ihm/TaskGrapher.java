@@ -17,7 +17,6 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
-import com.beekeeper.model.stimuli.Stimulus;
 
 @SuppressWarnings("serial")
 public class TaskGrapher extends JPanel{

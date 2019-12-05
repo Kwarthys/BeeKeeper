@@ -33,6 +33,7 @@ public abstract class Action implements TaskNode {
 
 	public void run()
 	{
+		//TODO Move execute to first step of the action, and use a manager to lock items/agents that are used during that action,
 		upkeep();
 		if(actionOver)
 		{

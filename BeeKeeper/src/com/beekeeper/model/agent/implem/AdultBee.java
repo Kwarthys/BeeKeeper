@@ -35,9 +35,9 @@ public class AdultBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{
-		hjTiter += 0.01;
+		hjTiter += 0.005;
 		double neg = MyUtils.sigmoid(this.bodySmell.getAmount(Stimulus.Ocimene), 40);
-		System.out.println("Ocimene at " + this.bodySmell.getAmount(Stimulus.Ocimene) + ", HJ down by " + neg + " from " + hjTiter + " to " + (hjTiter-neg));
+		//System.out.println("Ocimene at " + this.bodySmell.getAmount(Stimulus.Ocimene) + ", HJ down by " + neg + " from " + hjTiter + " to " + (hjTiter-neg));
 		hjTiter -= neg;
 		hunger = Math.min(1, hunger + 0.001);
 		receivingFood = false;
@@ -46,5 +46,10 @@ public class AdultBee extends WorkingAgent
 		this.bodySmell.addAmount(Stimulus.Ocimene, hjTiter*0.5);
 		
 		hjTiter = MyUtils.clamp(hjTiter);
+	}
+
+	@Override
+	public String getStringName() {
+		return "AdultBee " + ID;
 	}
 }
