@@ -43,8 +43,6 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected double motivation = 1;
 	public double getMotivation() {return motivation;}
-
-	public boolean isInside() {return hostCell!=null;}
 	
 	protected WorkingAgentServices ownServices = new WorkingAgentServices() {		
 		@Override
@@ -123,13 +121,24 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		@Override
-		public void enterHive() {
-			WorkingAgent.this.enterHive();
+		public boolean enterHive() {
+			return WorkingAgent.this.enterHive();
 		}
 
 		@Override
 		public void tryMoveDown() {
 			WorkingAgent.this.tryMoveDown();
+		}
+
+		@Override
+		public boolean agentNearby() {
+			if(hostCell == null)System.err.println("CEPANORMAL ICI " + getStringName() + " " + currentTask.taskName);
+			return hostCell.getNeighborBees().size() > 0;
+		}
+
+		@Override
+		public void killMotivation() {
+			WorkingAgent.this.motivation = 0;
 		}
 	};
 	
@@ -221,7 +230,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		receivingFood = true;
 		
-		//System.out.println(ID + " receiving food, hunger: " + hunger);
+		//System.out.println(getStringName() + " receiving food, hunger: " + hunger);
 	}
 
 	public Task findATask(StimuliMap load)
@@ -256,7 +265,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected void spreadByContact(WorkingAgent other)
 	{
-		System.out.println("ContactSpread between " + this.getStringName() + " and " + other.getStringName());
+		//System.out.println("ContactSpread between " + this.getStringName() + " and " + other.getStringName());
 		StimuliMap.contactBetween(other.bodySmell, this.bodySmell);
 	}
 	
@@ -273,16 +282,24 @@ public abstract class WorkingAgent extends EmitterAgent
 		return currentTask;
 	}
 	
-	protected void enterHive()
+	protected boolean enterHive()
 	{
 		if(isInside())
 		{
 			System.err.println("Already inside, can't reenter");
-			return;
+			return true;
 		}
 		
 		hostCell = controllerServices.askLandingZone();
-		hostCell.notifyLanding(this);
+		if(hostCell != null)
+		{
+			hostCell.notifyLanding(this);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	protected void tryMoveDown()

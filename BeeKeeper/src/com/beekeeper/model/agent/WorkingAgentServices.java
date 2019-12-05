@@ -11,6 +11,7 @@ public interface WorkingAgentServices {
 	public double getHJTiter();
 	
 	public void dropMotivation();
+	public void killMotivation();
 	
 	public void randomMove();
 
@@ -23,6 +24,7 @@ public interface WorkingAgentServices {
 	public WorkingAgent getCoopInteractor();
 	public void resetCoopInteractor();
 	public void setInteractorTo(WorkingAgent agentInside);
-	public void enterHive();
+	public boolean enterHive();
 	public void tryMoveDown();
+	public boolean agentNearby();
 }

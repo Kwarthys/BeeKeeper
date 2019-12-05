@@ -24,6 +24,7 @@ public abstract class Agent
 	public boolean alive = true;
 	
 	public CombCell hostCell;
+	public boolean isInside() {return hostCell!=null;}
 	
 	protected int lastVisitedCellNumber = -1;
 	
@@ -39,7 +40,14 @@ public abstract class Agent
 	
 	public Point getPosition()
 	{
-		return new Point(hostCell.x, hostCell.y);
+		if(isInside())
+		{
+			return new Point(hostCell.x, hostCell.y);			
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	public abstract String getStringName();

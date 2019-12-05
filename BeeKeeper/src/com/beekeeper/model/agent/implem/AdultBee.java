@@ -3,6 +3,7 @@ package com.beekeeper.model.agent.implem;
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.beetasks.AskFoodTask;
@@ -35,6 +36,15 @@ public class AdultBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{
+		if(isInside())
+		{
+			if(hostCell.content == CellContent.brood)
+			{
+				//System.out.println("Contact by proximity with larvae");
+				spreadByContact(hostCell.inside);
+			}
+		}		
+		
 		hjTiter += 0.005;
 		double neg = MyUtils.sigmoid(this.bodySmell.getAmount(Stimulus.Ocimene), 40);
 		//System.out.println("Ocimene at " + this.bodySmell.getAmount(Stimulus.Ocimene) + ", HJ down by " + neg + " from " + hjTiter + " to " + (hjTiter-neg));

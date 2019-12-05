@@ -17,43 +17,50 @@ public class GiveFoodTask extends Task {
 		super(agentServices, "Give Food");
 
 		this.motivated = false;
-
-		this.rootActivity.addTaskNode(new Action(2,0, agentServices) {
-
+		
+		
+		this.rootActivity.addTaskNode(new Action(2,0,agentServices) {
+			
 			@Override
 			public void execute() {
 				WorkingAgent cooperativeInteractor = agentServices.getCoopInteractor();
+				if(cooperativeInteractor.isHungry())
+				{
+					cooperativeInteractor.recieveFood();					
+				}
+				else
+				{
+					cooperativeInteractor = null;
+				}
+			}
+			
+			@Override
+			public boolean check() {
+				return agentServices.getCoopInteractor() != null;
+			}
+		});
+
+		this.rootActivity.addTaskNode(new Action(0.2,0, agentServices) {
+
+			@Override
+			public void execute() {
 				CombCell hostCell = agentServices.getHostCell();
-				if(cooperativeInteractor == null)
-				{
-					ArrayList<WorkingAgent> neighs = hostCell.getNeighborBees();
-					Collections.shuffle(neighs);
+				ArrayList<WorkingAgent> neighs = hostCell.getNeighborBees();
+				Collections.shuffle(neighs);
 
-					if(neighs.size()==0)
-					{
-						agentServices.randomMove();
-						//System.out.println("Not a single bee around");
-						return;
-					}
-					//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
-					if(neighs.get(0).isHungry())
-					{
-						cooperativeInteractor = neighs.get(0);
-						//System.out.println("found a hungryman");
-					}
-				}
-
-				if(cooperativeInteractor != null)
+				if(neighs.size()==0)
 				{
-					if(cooperativeInteractor.isHungry())
-					{
-						cooperativeInteractor.recieveFood();					
-					}
-					else
-					{
-						cooperativeInteractor = null;
-					}
+					agentServices.randomMove();
+					//System.out.println("Not a single bee around");
+					return;
 				}
+				//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
+				if(neighs.get(0).isHungry())
+				{
+					agentServices.setInteractorTo(neighs.get(0));
+					//System.out.println("found a hungryman");
+				}
+				
 			}
 
 			@Override

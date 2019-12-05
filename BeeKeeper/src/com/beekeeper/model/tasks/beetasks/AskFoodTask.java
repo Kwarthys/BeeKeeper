@@ -13,6 +13,7 @@ public class AskFoodTask extends Task {
 		
 		this.motivated = false;
 		
+		//RandomMove
 		this.rootActivity.addTaskNode(new Action(0.5,0.001,agentServices) {			
 			@Override
 			public void execute() {
@@ -21,10 +22,11 @@ public class AskFoodTask extends Task {
 			
 			@Override
 			public boolean check() {
-				return Math.random() > 0.9 && !agentServices.isReceivingFood();
+				return (Math.random() > 0.9 || !agentServices.agentNearby()) && !agentServices.isReceivingFood();
 			}
 		});
 		
+		//Asking
 		this.rootActivity.addTaskNode(new Action(0.1, 0, agentServices) {
 			
 			@Override
@@ -42,7 +44,7 @@ public class AskFoodTask extends Task {
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return smap.getAmount(Stimulus.HungerBee);
+		return smap.getAmount(Stimulus.HungerBee)*0.9;
 	}
 
 }

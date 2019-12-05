@@ -127,7 +127,7 @@ public class StimuliMap
 		
 		for(Stimulus s : smells)
 		{
-			double ownCoef = 0.9;
+			double ownCoef = 0.6;
 			double otherCoef = 1-ownCoef;
 			
 			map1.setAmount(s, ownCoef * map1.getAmount(s) + otherCoef * map2.getAmount(s));

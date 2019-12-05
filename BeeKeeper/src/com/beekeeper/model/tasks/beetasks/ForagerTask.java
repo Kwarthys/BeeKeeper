@@ -18,9 +18,13 @@ public class ForagerTask extends Task {
 			@Override
 			public void execute() {
 				//System.out.println(agentServices.getID() + " Wandering");
-				agentServices.dropMotivation();
 				agentServices.randomMove();
 				c++;
+				
+				if(c==9)
+				{
+					agentServices.killMotivation();
+				}
 			}
 			
 			@Override
@@ -34,10 +38,15 @@ public class ForagerTask extends Task {
 			@Override
 			public void execute() {
 				//System.out.println(agentServices.getID() + " BackFromForaging");
-				agentServices.dropMotivation();
-				agentServices.enterHive(); //find a comb and setInside to true
-				back = true;
-				c=0;
+				if(agentServices.enterHive()) //find a comb and setInside to true
+				{
+					back = true;
+					c=0;	
+				}
+				else
+				{
+					System.out.println(agentServices.getID() + " Waiting landing zone");
+				}
 			}
 			
 			@Override

@@ -24,27 +24,27 @@ public class CombDrawer extends JPanel{
 	private ArrayList<CombCell> cells;
 
 	private double zoom = 2;
-	
+
 	private int CELL_SIZE = 6;
-	
+
 	public Stimulus drawnStimulus = Stimulus.Ocimene;
 
 	//private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
 	//private Color foodPhColor = GraphicParams.foodPhColor;
-	
+
 	//private CombServices hostServices;
-	
+
 	private StimuliManagerServices stimuliManagerServices;
-	
+
 	private CombServices cs;
-	
+
 	public CombDrawer(CombServices c, StimuliManagerServices stimuliManagerServices)
 	{
 		this.setPreferredSize(new Dimension(400,400));
 		this.setMinimumSize(new Dimension(350,350));
-		
+
 		this.cs = c;
-		
+
 		this.stimuliManagerServices = stimuliManagerServices;
 	}
 
@@ -55,8 +55,8 @@ public class CombDrawer extends JPanel{
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-		this.agents = cs.getBees();
-		this.cells = cs.getCells();
+		this.agents = new ArrayList<>(cs.getBees());
+		this.cells = new ArrayList<>(cs.getCells());
 
 		paintPheromones(g);
 		paintCells(g);
@@ -70,70 +70,70 @@ public class CombDrawer extends JPanel{
 		for(StimuliTile st : stimuliManagerServices.getTiles())
 		{
 			double sA = st.stimuliMap.getAmount(drawnStimulus);
-			
+
 			if(drawnStimulus == Stimulus.Ocimene)
 			{
 				CombCell cell = cs.getCellAt(st.position.x, st.position.y);
-				
+
 				if(cell.visiting != null)
 				{
 					WorkingAgent b = (WorkingAgent)cell.visiting;
 					sA += b.getBodySmells().getAmount(Stimulus.Ocimene);
 				}
-				
+
 				if(cell.inside != null)
 				{
 					WorkingAgent b = (WorkingAgent)cell.inside;
 					sA += b.getBodySmells().getAmount(Stimulus.Ocimene);
 				}
 			}
-			
-			
-			
+
+
+
 			Point p = fromLinearToHex(st.position);
-			
+
 			int cap = 4;
 			int s = capColor(sA, cap);
 
 			p.x -= CELL_SIZE/2;
 			p.y -= CELL_SIZE/2; 
-			
+
 			g.setColor(new Color(s,s,s));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
-			
+
 			p.y *= 3;
 			p.y += 300;
 			p.x *= 3;
-			
+
 			g.setColor(Color.WHITE);
 			g.drawString(String.valueOf((int)(10*s)), p.x, p.y);
 		}
 	}
-	
+
 	private int capColor(double value, int cap)
 	{
 		value = value > cap ? cap : value;
 		return (int)(value * 255 / cap);
 	}
-	
+
 	protected void paintCells(Graphics g)
 	{		
 		boolean isOffset = true;
 		double offset;
-		
+
 		for(CombCell c : cells)
 		{
 			if(c.x == 0)
 				isOffset = !isOffset;
-			
+
 			//System.out.println(c.x + " " + c.y + " " + c.filled);
-			
+
 			g.setColor(Color.WHITE);
-			
+
 			offset = isOffset ? CELL_SIZE/2 : 0;
 			g.drawOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/2+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/2)*zoom), (int)(CELL_SIZE*zoom), (int)(CELL_SIZE*zoom));
-			
+
 			if(c.content == CellContent.food)
 			{
 				g.setColor(GraphicParams.hungryLarvaePhColor);
@@ -143,34 +143,38 @@ public class CombDrawer extends JPanel{
 			{
 				int e = (int)(c.inside.getEnergy()*255);
 				g.setColor(new Color(255-e,255-e,255));
-				
+
 			}
-			
+
 			if(c.content != CellContent.empty)
 				g.fillOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/3+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 		}
-		
-		
+
+
 	}
 
 	protected void paintActors(Graphics g)
 	{
 		g.setColor(Color.RED);
 		for(Agent a : agents)
-		{			
-			Point p = fromLinearToHex(a.getPosition());
+		{
+			Point p = a.getPosition();
+			if(p!=null)
+			{
 
-			int x = p.x;
-			int y = p.y;
-			
-			int e = (int)(a.getEnergy() * 255);
-			g.setColor(new Color(255,255-e,255-e));
-			g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
+				p = fromLinearToHex(p);
 
+				int x = p.x;
+				int y = p.y;
+
+				int e = (int)(a.getEnergy() * 255);
+				g.setColor(new Color(255,255-e,255-e));
+				g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
+			}
 		}
 	}
-	
-	
+
+
 	protected Point fromLinearToHex(Point p)
 	{
 		int offset = p.y % 2 == 0 ? 0 : CELL_SIZE/2;

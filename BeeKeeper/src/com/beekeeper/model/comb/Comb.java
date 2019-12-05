@@ -8,6 +8,7 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.stimuli.StimuliMap;
 
 public class Comb
 {
@@ -48,6 +49,14 @@ public class Comb
 				who.hostCell.visiting = null;
 				who.hostCell = newCell;
 				newCell.visiting = who;
+			}
+			else
+			{
+				//Contact
+				WorkingAgent a = (WorkingAgent) who;
+				WorkingAgent b = (WorkingAgent) newCell.visiting;
+				//System.out.println("Contact by movement " + a.getID() + " " + b.getID());
+				StimuliMap.contactBetween(a.getBodySmells(), b.getBodySmells());
 			}
 		}
 
@@ -131,6 +140,18 @@ public class Comb
 				return !t.alive;
 			}
 		});
+		
+		for(CombCell c : cells)
+		{
+			if(c.inside != null)
+			{
+				if(!c.inside.alive)
+				{
+					c.inside = null;
+					c.content = CellContent.empty;
+				}
+			}
+		}
 	}
 	
 	public boolean isCellContentEmpty(int x, int y)

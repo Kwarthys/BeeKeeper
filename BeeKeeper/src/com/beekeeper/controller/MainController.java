@@ -51,12 +51,12 @@ public class MainController
 		}
 
 		@Override
-		public CombCell askLandingZone() {			
-			while(true)
-			{
-				int r = (int) (Math.random() * combs.size());
-				
-				ArrayList<CombCell> landingCells = combs.get(r).getLandingZone();
+		public CombCell askLandingZone() {
+			ArrayList<Comb> theCombs = new ArrayList<>(combs);
+			Collections.shuffle(theCombs);
+			for(Comb cb : theCombs)
+			{				
+				ArrayList<CombCell> landingCells = new ArrayList<>(cb.getLandingZone());
 				Collections.shuffle(landingCells);
 				for(CombCell c : landingCells)
 				{
@@ -66,6 +66,8 @@ public class MainController
 					}
 				}
 			}
+			
+			return null;
 		}
 	};
 
@@ -73,7 +75,7 @@ public class MainController
 	{
 		this.agentFactory = new AgentFactory();	
 		
-		Dimension combSize = new Dimension(20,20);
+		Dimension combSize = new Dimension(30,30);
 		
 		Point2D.Double center = new Point2D.Double(combSize.width/2,combSize.height/2);
 		
@@ -88,8 +90,8 @@ public class MainController
 			
 			sManagers.add(sm);
 			
-			agentFactory.spawnBroodCells(20, c, MyUtils.getCirclePointRule(center, combSize.width/4), sm.getServices(), this.controlServices);		
-			agentFactory.spawnWorkers(10, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
+			agentFactory.spawnBroodCells(50, c, MyUtils.getCirclePointRule(center, combSize.width/3), sm.getServices(), this.controlServices);		
+			agentFactory.spawnWorkers(199, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
@@ -152,10 +154,10 @@ public class MainController
 				}
 			});
 			
-			//System.out.println(turnIndex);
+			System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(200);//30
+				Thread.sleep(10);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
