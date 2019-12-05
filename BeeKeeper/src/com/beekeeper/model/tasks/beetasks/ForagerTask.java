@@ -64,7 +64,7 @@ public class ForagerTask extends Task {
 
 	@Override
 	public double compute(StimuliMap smap) {
-		this.threshold = 1-agentServices.getHJTiter();
+		this.threshold = 1-(agentServices.getHJTiter()*0.7);
 		return this.thresholdSigmoid(0.5);
 	}
 
