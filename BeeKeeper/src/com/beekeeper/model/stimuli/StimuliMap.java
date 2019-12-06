@@ -127,11 +127,21 @@ public class StimuliMap
 		
 		for(Stimulus s : smells)
 		{
-			double ownCoef = 0.6;
-			double otherCoef = 1-ownCoef;
+			double otherCoef = StimulusFactory.getPropag(s);
+			double ownCoef = 1-otherCoef;
+
+			double newAmount1 = ownCoef * map1.getAmount(s) + otherCoef * map2.getAmount(s);
+			double newAmount2 = ownCoef * map2.getAmount(s) + otherCoef * map1.getAmount(s);
 			
-			map1.setAmount(s, ownCoef * map1.getAmount(s) + otherCoef * map2.getAmount(s));
-			map2.setAmount(s, ownCoef * map2.getAmount(s) + otherCoef * map1.getAmount(s));
+			/*
+			//DEBUG
+			System.out.println("\nContact");
+			System.out.println("From " + map1.getAmount(s) + " to " + newAmount1);
+			System.out.println("From " + map2.getAmount(s) + " to " + newAmount2);
+			*/
+			
+			map1.setAmount(s, newAmount1);
+			map2.setAmount(s, newAmount2);
 		}		
 	}
 }

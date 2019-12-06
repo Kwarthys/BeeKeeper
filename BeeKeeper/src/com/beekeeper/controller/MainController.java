@@ -90,7 +90,7 @@ public class MainController
 			
 			sManagers.add(sm);
 			
-			agentFactory.spawnBroodCells(50, c, MyUtils.getCirclePointRule(center, combSize.width/3), sm.getServices(), this.controlServices);		
+			agentFactory.spawnBroodCells(100, c, MyUtils.getCirclePointRule(center, combSize.width/4), sm.getServices(), this.controlServices);		
 			agentFactory.spawnWorkers(199, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
@@ -130,7 +130,7 @@ public class MainController
 			
 			for(Comb c : combs)
 			{
-				c.removeTheDead();
+				c.update();
 			}
 			
 			agentFactory.allAgents.removeIf(new Predicate<Agent>() {
@@ -154,10 +154,10 @@ public class MainController
 				}
 			});
 			
-			System.out.println(turnIndex);
+			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(10);//30
+				Thread.sleep(50);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

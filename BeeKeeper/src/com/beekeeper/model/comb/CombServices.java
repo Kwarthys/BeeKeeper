@@ -20,5 +20,6 @@ public interface CombServices
 	public int getID();
 	public ArrayList<WorkingAgent> getNeighborBees(int x, int y);
 	public void notifyTakeOff(Agent a);
-	public void notifyLanding(Agent a);	
+	public void notifyLanding(Agent a);
+	public void swap(int cellIndexSwap1, int cellIndexSwap2);
 }

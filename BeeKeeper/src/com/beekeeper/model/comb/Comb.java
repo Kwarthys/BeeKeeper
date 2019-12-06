@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
+import com.beekeeper.controller.TrafficJamManager;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.cell.CellContent;
@@ -17,6 +18,8 @@ public class Comb
 	private ArrayList<CombCell> cells = new ArrayList<>();
 	
 	public int ID;
+	
+	private TrafficJamManager jamManager;
 	
 	private Dimension size;
 	
@@ -57,6 +60,9 @@ public class Comb
 				WorkingAgent b = (WorkingAgent) newCell.visiting;
 				//System.out.println("Contact by movement " + a.getID() + " " + b.getID());
 				StimuliMap.contactBetween(a.getBodySmells(), b.getBodySmells());
+				
+				jamManager.registerSwapDemand(a.hostCell.number, b.hostCell.number);
+				//System.out.println(a.getStringName() + " wants swap with " + b.getStringName());
 			}
 		}
 
@@ -95,12 +101,29 @@ public class Comb
 		public CombCell getCellAt(int x, int y) {
 			return cells.get(y*size.width + x);
 		}
+
+		@Override
+		public void swap(int cellIndexSwap1, int cellIndexSwap2) {
+			CombCell cell1 = cells.get(cellIndexSwap1);
+			CombCell cell2 = cells.get(cellIndexSwap2);
+			
+			Agent tmp = cell1.visiting;
+			cell1.visiting = cell2.visiting;
+			cell2.visiting = tmp;
+			
+			cell1.visiting.hostCell = cell1;
+			cell2.visiting.hostCell = cell2;
+			
+			//System.out.println("SWAP");
+		}
 	};
 	
 	public Comb(Dimension combSize)
 	{
 		this.size = new Dimension(combSize);
 		cells = CombUtility.fillCells(size,ID, services);
+		
+		jamManager = new TrafficJamManager(services);
 	}
 	
 	protected void testNeighborhood() //Not private to avoid "not used" warning
@@ -132,8 +155,9 @@ public class Comb
 		return services;
 	}
 
-	public void removeTheDead()
+	public void update()
 	{	
+		/** REMOVE THE DEAD **/
 		agents.removeIf(new Predicate<Agent>() {
 			@Override
 			public boolean test(Agent t) {
@@ -152,6 +176,9 @@ public class Comb
 				}
 			}
 		}
+		
+		/** UPDATE MANAGER **/
+		jamManager.resetAll();
 	}
 	
 	public boolean isCellContentEmpty(int x, int y)

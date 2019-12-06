@@ -1,5 +1,7 @@
 package com.beekeeper.parameters;
 
+import com.beekeeper.utils.MyUtils;
+
 public class ModelParameters
 {
 	public static final double TASK_LEARN_RATE = 0.001;
@@ -10,11 +12,25 @@ public class ModelParameters
 
 	public static final double TIME_DECAY_HungryLarvae = 0.1;
 	public static final double TRANSMISSIBILITY_HungryLarvae = 0.5;
-	public static final double SMELL_RANGE_HungryLarvae = 0.90;
 
 	public static final double TIME_DECAY_FoodSmell = 0.1;
 	public static final double TRANSMISSIBILITY_FoodSmell = 0.1;
-	public static final double SMELL_RANGE_FoodSmell = 0.95;
+	
+	public static final double getOcimeneEmitedByHJ(double hjTiter)
+	{
+		return hjTiter * hjTiter * hjTiter;
+	}
+	
+	public static final double getHJModifiedByOcimene(double ocimeneAmount)
+	{
+		double reduction = MyUtils.sigmoid(ocimeneAmount, 40);
+		//System.out.println("Ocimene at " + ocimeneAmount + ", HJ down by " + reduction);
+		return reduction;
+	}
+	
+	public static final double HJ_INCREMENT = 0.0001;
+	public static final double OCIMENE_EVAPRATE = 0.8;
+	public static final double OCIMENE_TRANSMISSIBILITY = 0.3;
 	
 	
 	public static final double SMELL_THRESHOLD = 0.02;

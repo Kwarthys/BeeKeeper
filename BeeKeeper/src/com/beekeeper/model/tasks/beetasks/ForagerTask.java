@@ -45,7 +45,7 @@ public class ForagerTask extends Task {
 				}
 				else
 				{
-					System.out.println(agentServices.getID() + " Waiting landing zone");
+					//System.out.println(agentServices.getID() + " Waiting landing zone");
 				}
 			}
 			

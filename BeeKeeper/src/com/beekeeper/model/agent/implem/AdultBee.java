@@ -12,6 +12,7 @@ import com.beekeeper.model.tasks.beetasks.ForagerTask;
 import com.beekeeper.model.tasks.beetasks.GiveFoodTask;
 import com.beekeeper.model.tasks.generaltasks.RandomMoveTask;
 import com.beekeeper.model.tasks.generaltasks.RestTask;
+import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
 public class AdultBee extends WorkingAgent
@@ -45,17 +46,16 @@ public class AdultBee extends WorkingAgent
 			}
 		}		
 		
-		hjTiter += 0.005;
-		double neg = MyUtils.sigmoid(this.bodySmell.getAmount(Stimulus.Ocimene), 40);
-		//System.out.println("Ocimene at " + this.bodySmell.getAmount(Stimulus.Ocimene) + ", HJ down by " + neg + " from " + hjTiter + " to " + (hjTiter-neg));
-		hjTiter -= neg;
+		hjTiter += 0.0005;
+		hjTiter -= ModelParameters.getHJModifiedByOcimene(this.bodySmell.getAmount(Stimulus.Ocimene));
+		hjTiter = MyUtils.clamp(hjTiter);
+		
 		hunger = Math.min(1, hunger + 0.001);
+		
 		receivingFood = false;
 		
+		this.bodySmell.addAmount(Stimulus.Ocimene, ModelParameters.getOcimeneEmitedByHJ(hjTiter));
 		
-		this.bodySmell.addAmount(Stimulus.Ocimene, hjTiter*0.5);
-		
-		hjTiter = MyUtils.clamp(hjTiter);
 	}
 
 	@Override
