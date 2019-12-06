@@ -45,13 +45,14 @@ public class Comb
 		}
 
 		@Override
-		public void askMoveToCell(Agent who, Integer where) {
+		public boolean askMoveToCell(Agent who, Integer where) {
 			CombCell newCell = cells.get(where);
 			if(newCell.visiting == null)
 			{				
 				who.hostCell.visiting = null;
 				who.hostCell = newCell;
 				newCell.visiting = who;
+				return true;
 			}
 			else
 			{
@@ -63,6 +64,8 @@ public class Comb
 				
 				jamManager.registerSwapDemand(a.hostCell.number, b.hostCell.number);
 				//System.out.println(a.getStringName() + " wants swap with " + b.getStringName());
+				
+				return false;
 			}
 		}
 

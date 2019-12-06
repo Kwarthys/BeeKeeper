@@ -35,8 +35,8 @@ public class CombCell
 		return cs.getNeighbors(x, y);
 	}
 
-	public void askMoveToCell(Agent who, Integer where) {
-		cs.askMoveToCell(who, where);	
+	public boolean askMoveToCell(Agent who, Integer where) {
+		return cs.askMoveToCell(who, where);	
 	}
 
 	public ArrayList<WorkingAgent> getNeighborBees() {

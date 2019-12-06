@@ -157,7 +157,7 @@ public class MainController
 			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(50);//30
+				Thread.sleep(10);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

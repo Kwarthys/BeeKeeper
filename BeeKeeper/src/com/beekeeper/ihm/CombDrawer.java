@@ -101,13 +101,15 @@ public class CombDrawer extends JPanel{
 			g.setColor(new Color(s,s,s));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
-
+			
+			/*
 			p.y *= 3;
 			p.y += 300;
 			p.x *= 3;
 
 			g.setColor(Color.WHITE);
 			g.drawString(String.valueOf((int)(10*s)), p.x, p.y);
+			*/
 		}
 	}
 
@@ -167,8 +169,8 @@ public class CombDrawer extends JPanel{
 				int x = p.x;
 				int y = p.y;
 
-				int e = (int)(a.getEnergy() * 255);
-				g.setColor(new Color(255,255-e,255-e));
+				int e = 255 - (int)(a.getHunger() * 255);
+				g.setColor(new Color(255,255-e,0));
 				g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 			}
 		}

@@ -21,10 +21,6 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected MainControllerServices controllerServices;
 	
-	protected double hunger = Math.random() * 0.5;
-	public double getHunger() {return hunger;}	
-	protected boolean receivingFood = false;
-	
 	protected StimuliMap lastPercievedMap;
 	
 	protected Task currentTask = null;
@@ -68,6 +64,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		@Override
 		public void dropMotivation() {
 			WorkingAgent.this.motivation = Math.max(0, WorkingAgent.this.motivation - ModelParameters.MOTIVATION_STEP);
+		}
+
+		@Override
+		public void resetMotivation() {
+			WorkingAgent.this.motivation = 1;
 		}
 
 		@Override
@@ -126,8 +127,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		@Override
-		public void tryMoveDown() {
-			WorkingAgent.this.tryMoveDown();
+		public boolean tryMoveDown() {
+			return WorkingAgent.this.tryMoveDown();
 		}
 
 		@Override
@@ -302,7 +303,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 	}
 	
-	protected void tryMoveDown()
+	protected boolean tryMoveDown()
 	{
 		ArrayList<Integer> cells = hostCell.getDownCells();
 		if(cells.size() == 0)
@@ -310,11 +311,12 @@ public abstract class WorkingAgent extends EmitterAgent
 			//We are at the bottom !
 			hostCell.leaveCell();
 			this.hostCell = null;
+			return true;
 		}
 		else
 		{
 			int r = (int) (Math.random() * cells.size());
-			hostCell.askMoveToCell(this, cells.get(r));
+			return hostCell.askMoveToCell(this, cells.get(r));
 		}
 	}
 

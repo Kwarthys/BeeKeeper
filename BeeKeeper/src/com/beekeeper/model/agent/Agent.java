@@ -12,6 +12,10 @@ public abstract class Agent
 	
 	protected int ID;
 	
+	protected double hunger = Math.random() * 0.5;
+	public double getHunger() {return hunger;}	
+	protected boolean receivingFood = false;
+	
 	protected int combID = -1;
 	
 	protected AgentType type;	

@@ -61,7 +61,15 @@ public class ForagerTask extends Task {
 			public void execute() {
 				//System.out.println(agentServices.getID() + " Moved Down");
 				back = false;
-				agentServices.tryMoveDown();
+				if(!agentServices.tryMoveDown())
+				{
+					agentServices.dropMotivation();
+				}
+				
+				if(!agentServices.isInside())
+				{
+					agentServices.resetMotivation();
+				}
 			}
 			
 			@Override
