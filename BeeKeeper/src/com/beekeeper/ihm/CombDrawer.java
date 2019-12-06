@@ -129,7 +129,7 @@ public class CombDrawer extends JPanel{
 
 			//System.out.println(c.x + " " + c.y + " " + c.filled);
 
-			g.setColor(Color.WHITE);
+			g.setColor(Color.GRAY);
 
 			offset = isOffset ? CELL_SIZE/2 : 0;
 			g.drawOval((int)((10+c.x*CELL_SIZE-CELL_SIZE/2+offset)*zoom), (int)((10+c.y*CELL_SIZE-CELL_SIZE/2)*zoom), (int)(CELL_SIZE*zoom), (int)(CELL_SIZE*zoom));

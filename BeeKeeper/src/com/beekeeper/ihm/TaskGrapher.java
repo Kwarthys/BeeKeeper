@@ -144,8 +144,8 @@ public class TaskGrapher extends JPanel{
 			int x = (int) (graphStartX + (i+1) * step);
 			int y = (int) (baseLineY - b.getMotivation() * graphHeight/2 *0.9);
 			
-			int yE = (int) (baseLineY - b.getEnergy() * graphHeight/2*0.9);
-			int yH = (int) (baseLineY - b.getHunger() * graphHeight/2*0.9);
+			//int yE = (int) (baseLineY - b.getEnergy() * graphHeight/2*0.9);
+			//int yH = (int) (baseLineY - b.getHunger() * graphHeight/2*0.9);
 			int yO = (int) (baseLineY - b.getHJ() * graphHeight/2*0.9);
 			/*
 			g.setColor(Color.red);
@@ -174,7 +174,8 @@ public class TaskGrapher extends JPanel{
 			for(Entry<String, Double> score : b.getAllTaskScores().entrySet())
 			{
 				g.setColor(getColorFor(score.getKey()));
-				g.drawString(String.format("%.1f", score.getValue()), x-8, baseLineY + offstepY);
+				//g.drawString(String.format("%.1f", score.getValue()), x-8, baseLineY + offstepY);
+				g.fillRect(x-1, baseLineY + offstepY, 2, (int)(stepY*score.getValue()));
 				offstepY += stepY;
 			}
 
