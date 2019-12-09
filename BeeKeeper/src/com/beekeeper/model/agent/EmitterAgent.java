@@ -23,6 +23,5 @@ public abstract class EmitterAgent extends Agent
 	protected void emit(Stimulus s, double amount)
 	{
 		stimuliManagerServices.emit(s, amount, new Point(hostCell.x, hostCell.y));
-		//TODO replace NULL by something meaningful
 	}
 }

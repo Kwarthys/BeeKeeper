@@ -17,7 +17,6 @@ public class MyLogger
 			fw = new FileWriter("tasks.txt", false);
 			this.taskWriter = new BufferedWriter(fw);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -20,7 +20,6 @@ public class WritterThread extends Thread {
 				w.writer.write(w.logString);
 				//System.out.print(w.logString);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

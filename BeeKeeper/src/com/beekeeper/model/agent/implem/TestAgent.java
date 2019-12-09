@@ -46,10 +46,7 @@ public class TestAgent extends WorkingAgent {
 	}
 
 	@Override
-	protected void advanceMetabolism() {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void advanceMetabolism() {}
 
 	@Override
 	public String getStringName() {

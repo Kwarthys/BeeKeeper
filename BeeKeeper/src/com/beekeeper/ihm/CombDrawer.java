@@ -170,6 +170,7 @@ public class CombDrawer extends JPanel{
 				int y = p.y;
 
 				int e = 255 - (int)(a.getHunger() * 255);
+				if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:255]");
 				g.setColor(new Color(255,255-e,0));
 				g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
 			}

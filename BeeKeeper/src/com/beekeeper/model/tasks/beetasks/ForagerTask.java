@@ -29,7 +29,21 @@ public class ForagerTask extends Task {
 			
 			@Override
 			public boolean check() {
-				return back && c < 10;
+				return agentServices.isInside() && c < 10;
+			}
+		});
+		
+		//Entering Hive
+		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
+			@Override
+			public void execute() {
+				agentServices.enterHive();
+				c=0;
+			}
+			
+			@Override
+			public boolean check() {
+				return !agentServices.isInside() && back;
 			}
 		});
 		
@@ -37,21 +51,12 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(20,0,agentServices) {
 			@Override
 			public void execute() {
-				//System.out.println(agentServices.getID() + " BackFromForaging");
-				if(agentServices.enterHive()) //find a comb and setInside to true
-				{
-					back = true;
-					c=0;	
-				}
-				else
-				{
-					//System.out.println(agentServices.getID() + " Waiting landing zone");
-				}
+				back = true;
 			}
 			
 			@Override
 			public boolean check() {
-				return !agentServices.isInside();
+				return !agentServices.isInside() && !back;
 			}
 		});
 		
@@ -59,7 +64,6 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
 			public void execute() {
-				//System.out.println(agentServices.getID() + " Moved Down");
 				back = false;
 				if(!agentServices.tryMoveDown())
 				{

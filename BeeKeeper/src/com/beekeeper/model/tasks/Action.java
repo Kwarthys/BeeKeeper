@@ -29,15 +29,30 @@ public abstract class Action implements TaskNode {
 	{
 		return this;
 	}
+	
+	public void randomizeLenght(int var)
+	{
+		totalTimeSteps += (Math.random() * var)-(var/2);
+	}
+	
+	/**
+	 * Used to unlock things that are locked by the execution
+	 */
+	public void notifyOver() {}
 
 
 	public void run()
-	{
-		//TODO Move execute to first step of the action, and use a manager to lock items/agents that are used during that action,
+	{		
+		if(timeSteps == 0)
+		{
+			execute();			
+		}
+		
 		upkeep();
+		
 		if(actionOver)
 		{
-			execute();
+			notifyOver();
 		}
 	}
 
