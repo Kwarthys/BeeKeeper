@@ -37,6 +37,9 @@ public class TaskGrapher extends JPanel{
 	private int graphHeight = 300;
 	private int graphWidth = 800;
 
+	private int sweep = 5;
+	private int sweepIndex = 0;
+
 	private int step = 2;
 
 	public TaskGrapher(ArrayList<Agent> allAgents)
@@ -51,7 +54,7 @@ public class TaskGrapher extends JPanel{
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		
+
 		Graphics2D g2d = (Graphics2D) g;
 
 		Stroke defaultStroke = g2d.getStroke();
@@ -60,8 +63,13 @@ public class TaskGrapher extends JPanel{
 		g2d.setColor(GraphicParams.BACKGROUND);
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-		jobData.add(EmployementData.getDataFromList(bees));		
-		hungerHistory.add(getTotalBroodHunger(bees));
+		updateJobData();
+		updateHungerHistory();
+		sweepIndex++;
+		if(sweepIndex > sweep-1)
+		{
+			sweepIndex = 0;
+		}
 
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.drawLine(borderMargin, borderMargin, borderMargin, borderMargin+graphHeight); // LEFT BAR
@@ -112,6 +120,47 @@ public class TaskGrapher extends JPanel{
 		g2d.setStroke(defaultStroke);
 	}
 
+	private void updateHungerHistory()
+	{
+
+		double hunger = getTotalBroodHunger(bees);
+
+		if(hungerHistory.size() == 0)
+		{
+			hungerHistory.add(hunger);
+			return;
+		}
+		//else
+
+		if(sweepIndex < sweep-1)
+		{
+			hunger = (hunger + sweepIndex * hungerHistory.remove(hungerHistory.size()-1))/(sweepIndex+1);
+		}
+		
+		hungerHistory.add(hunger);
+	}
+
+	private void updateJobData()
+	{
+		EmployementData ed = EmployementData.getDataFromList(bees);
+
+		if(jobData.size() == 0)
+		{
+			jobData.add(ed);
+			return;
+		}
+		//else
+
+		if(sweepIndex < sweep-1)
+		{
+			ed = EmployementData.mean(ed, jobData.remove(jobData.size()-1),1,sweepIndex);
+		}
+
+		jobData.add(ed);	
+
+		System.out.println(jobData.size());
+	}
+
 	private void drawTaskSpeGraph(Graphics2D g)
 	{
 		int graphStartX = 2*borderMargin + graphWidth / 5;
@@ -138,39 +187,39 @@ public class TaskGrapher extends JPanel{
 			WorkingAgent b = wlist.get(i);
 
 			g.setColor(GraphicParams.hungryLarvaePhColor);
-			
+
 			int step = (int)(graphWidth / 2.0 / (wlist.size()+1));
-			
+
 			int x = (int) (graphStartX + (i+1) * step);
 			int y = (int) (baseLineY - b.getMotivation() * graphHeight/2 *0.9);
-			
+
 			//int yE = (int) (baseLineY - b.getEnergy() * graphHeight/2*0.9);
 			//int yH = (int) (baseLineY - b.getHunger() * graphHeight/2*0.9);
 			int yO = (int) (baseLineY - b.getHJ() * graphHeight/2*0.9);
 			/*
 			g.setColor(Color.red);
 			g.fillRect(x-2, yE, 2, baseLineY - yE);
-			
+
 			g.setColor(Color.CYAN);
 			g.fillRect(x, yH, 2, baseLineY - yH);
-			
+
 			g.setColor(Color.LIGHT_GRAY);
 			g.fillRect(x+2, yO, 2, baseLineY - yO);
-			*/
+			 */
 
 			g.setColor(Color.red);
 			g.fillRect(x-1, yO, 2, baseLineY - yO);
-			
-			
+
+
 			//int offset = i%2 == 0 ? 20 :0;
 			//g.drawString("0." + (int)(b.getHunger()*10), x+1, baseLineY + 10 + offset);
-			
+
 			g.setColor(getColorFor(b.getCurrentTask().taskName));
 			g.fillOval(x-3, y-3, 6, 6);				
-			
+
 			int stepY = 15;
 			int offstepY = stepY;
-			
+
 			for(Entry<String, Double> score : b.getAllTaskScores().entrySet())
 			{
 				g.setColor(getColorFor(score.getKey()));

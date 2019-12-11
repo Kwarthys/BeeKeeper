@@ -2,6 +2,7 @@ package com.beekeeper.ihm.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
@@ -38,6 +39,42 @@ public class EmployementData
 		}		
 		
 		return d;
+	}
+	
+	private void put(String task, Integer workers)
+	{
+		this.data.put(task, workers);
+	}
+	
+	private Set<String> getKeys()
+	{
+		return this.data.keySet();
+	}
+	
+	public static EmployementData mean(EmployementData a, EmployementData b, double coefA, double coefB)
+	{
+		ArrayList<String> keys = new ArrayList<String>(a.getKeys());
+		for(String s : b.getKeys())
+		{
+			if(!keys.contains(s))
+			{
+				keys.add(s);
+			}
+		}
+		
+		EmployementData ed = new EmployementData();
+		
+		for(String key : keys)
+		{
+			ed.put(key, (int) ((a.get(key) * coefA + b.get(key) * coefB) /(coefA + coefB)));
+		}
+				
+		return ed;
+	}
+	
+	public static EmployementData mean(EmployementData a, EmployementData b)
+	{				
+		return mean(a,b,1,1);
 	}
 
 	public static EmployementData getDataToPrintFromList(ArrayList<Agent> bees)

@@ -43,6 +43,10 @@ public class CombCell
 		return cs.getNeighborBees(x,y);		
 	}
 
+	public ArrayList<Integer> getUpCells() {
+		return cs.getUpNeighbors(x,y);
+	}
+
 	public ArrayList<Integer> getDownCells() {
 		return cs.getDownNeighbors(x,y);		
 	}

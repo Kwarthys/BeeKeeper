@@ -52,10 +52,7 @@ public class AdultBee extends WorkingAgent
 		
 		hunger = Math.min(1, hunger + 0.001);
 		
-		if(!isInside())
-		{
-			hunger = 0;
-		}
+		
 		
 		receivingFood = false;
 		

@@ -18,18 +18,16 @@ public class ForagerTask extends Task {
 			@Override
 			public void execute() {
 				//System.out.println(agentServices.getID() + " Wandering");
-				agentServices.randomMove();
-				c++;
-				
-				if(c==9)
+				if(!agentServices.tryMoveUp())
 				{
-					agentServices.killMotivation();
+					agentServices.dropMotivation();
 				}
+				c++;
 			}
 			
 			@Override
 			public boolean check() {
-				return agentServices.isInside() && c < 10;
+				return back && agentServices.isInside() && c < 30;
 			}
 		});
 		

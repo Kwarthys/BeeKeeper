@@ -91,6 +91,11 @@ public class Comb
 		}
 
 		@Override
+		public ArrayList<Integer> getUpNeighbors(int x, int y) {
+			return CombUtility.getCellNeighborsUp(x, y, getDimension());
+		}
+
+		@Override
 		public void notifyTakeOff(Agent a) {
 			agents.remove(a);
 		}

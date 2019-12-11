@@ -26,6 +26,8 @@ public interface WorkingAgentServices {
 	public void resetCoopInteractor();
 	public void setInteractorTo(WorkingAgent agentInside);
 	public boolean enterHive();
-	public boolean tryMoveDown();
 	public boolean agentNearby();
+
+	public boolean tryMoveDown();
+	public boolean tryMoveUp();
 }

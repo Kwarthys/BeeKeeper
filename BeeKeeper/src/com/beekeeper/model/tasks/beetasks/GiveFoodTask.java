@@ -61,6 +61,11 @@ public class GiveFoodTask extends Task {
 					//System.out.println("found a hungryman");
 				}
 				
+				if(agentServices.getCoopInteractor() == null)
+				{
+					agentServices.dropMotivation();
+				}
+				
 			}
 
 			@Override

@@ -18,39 +18,39 @@ public abstract class WorkingAgent extends EmitterAgent
 {
 	protected ArrayList<Task> taskList = new ArrayList<>();
 	protected abstract void fillTaskList();
-	
+
 	protected MainControllerServices controllerServices;
-	
+
 	protected StimuliMap lastPercievedMap;
-	
+
 	protected Task currentTask = null;
 	protected Action currentAction = null;
-	
+
 	protected WorkingAgent cooperativeInteractor = null;
-	
+
 	public Point2D.Double target = null;
-	
+
 	public Task getCurrentTask() {return currentTask;}
-	
+
 	protected double hjTiter = 0;
 	public double getHJ() {return hjTiter;}	
-	
+
 	public void interruptTask() {currentTask = null;}
-	
+
 	protected double motivation = 1;
 	public double getMotivation() {return motivation;}
-	
+
 	protected WorkingAgentServices ownServices = new WorkingAgentServices() {		
 		@Override
 		public double getEnergy() {
 			return WorkingAgent.this.getEnergy();
 		}
-		
+
 		@Override
 		public void emit(Stimulus smell, double amount) {
 			WorkingAgent.this.emit(smell, amount);
 		}
-		
+
 		@Override
 		public void addToEnergy(double amount) {
 			WorkingAgent.this.addToEnergy(amount);
@@ -141,34 +141,39 @@ public abstract class WorkingAgent extends EmitterAgent
 		public void killMotivation() {
 			WorkingAgent.this.motivation = 0;
 		}
+
+		@Override
+		public boolean tryMoveUp() {
+			return WorkingAgent.this.tryMoveUp();
+		}
 	};
-	
+
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		super(stimuliManagerServices);
 		this.controllerServices = controllerServices;
 		setEnergy(Math.random()*0.8+0.2);
 		fillTaskList();
-		
-		hjTiter = Math.random() * 0.7;
+
+		hjTiter = 0;//Math.random() * 0.7;
 	}
-	
+
 	public void live()
 	{		
 		if(alive == false)
 		{
 			return;
 		}
-		
+
 		if(getEnergy() == 0)
 		{
 			alive = false;
 			return;
 		}
-		
-		
+
+
 		StimuliMap s;
-		
+
 		if(isInside())
 		{
 			s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));			
@@ -177,11 +182,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		{
 			s = new StimuliMap();
 		}
-		
+
 		s = addInternalPerceptions(s);
 		lastPercievedMap = s;
-		
-		
+
+
 		//System.out.println(ID + " living ! " + s.getAmount(Stimulus.HungryLarvae));
 
 		if(currentAction == null)
@@ -191,29 +196,29 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		currentAction.run();			
-		
-		
-		
+
+
+
 		//If action is over, remove it
 		if(currentAction.isOver())
 		{
 			//System.out.println("Action done");
 			currentAction = null;
 		}
-		
-		
+
+
 		if(cooperativeInteractor != null)
 		{
 			spreadByContact(cooperativeInteractor);
 		}
-		
+
 		advanceMetabolism();
 		this.bodySmell.evaporate();
 	}
-	
+
 	protected abstract void advanceMetabolism();
-	
-	
+
+
 	private StimuliMap addInternalPerceptions(StimuliMap s)
 	{
 		s.addAmount(Stimulus.HungerBee, this.getHunger());
@@ -223,14 +228,14 @@ public abstract class WorkingAgent extends EmitterAgent
 	}
 
 	public boolean isHungry() {return hunger > 0.5 && currentTask.taskName == "Asking Food";}
-	
+
 	public void recieveFood()
 	{
 		hunger-= 0.8;
 		hunger = Math.max(0, hunger);
-		
+
 		receivingFood = true;
-		
+
 		//System.out.println(getStringName() + " receiving food, hunger: " + hunger);
 	}
 
@@ -238,12 +243,12 @@ public abstract class WorkingAgent extends EmitterAgent
 	{		
 		Task todo = null;
 		double taskScore = -1;
-		
+
 		for(int ti = 0; ti < taskList.size(); ++ti)
 		{
 			Task current = taskList.get(ti);
 			double currentScore = 0;
-			
+
 			if(current == currentTask && current.isMotivated())
 			{
 				currentScore = motivation;
@@ -252,9 +257,9 @@ public abstract class WorkingAgent extends EmitterAgent
 			{				
 				currentScore = current.compute(load);
 			}
-			
+
 			//if(currentScore != 0)
-				//System.out.println(current.taskName + " " + currentScore + " t:" + current.threshold + "\n" + load.getDisplayString());
+			//System.out.println(current.taskName + " " + currentScore + " t:" + current.threshold + "\n" + load.getDisplayString());
 			if(currentScore > taskScore)
 			{
 				todo = current;
@@ -263,13 +268,13 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		return todo;
 	}
-	
+
 	protected void spreadByContact(WorkingAgent other)
 	{
 		//System.out.println("ContactSpread between " + this.getStringName() + " and " + other.getStringName());
 		StimuliMap.contactBetween(other.bodySmell, this.bodySmell);
 	}
-	
+
 	protected Task chooseNewTask(StimuliMap load)
 	{
 		Task newTask = findATask(load);
@@ -279,10 +284,10 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		currentTask = newTask;
 		controllerServices.logMyTaskSwitch(currentTask, this.ID);
-		
+
 		return currentTask;
 	}
-	
+
 	protected boolean enterHive()
 	{
 		if(isInside())
@@ -290,7 +295,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			System.err.println("Already inside, can't reenter");
 			return true;
 		}
-		
+
 		hostCell = controllerServices.askLandingZone();
 		if(hostCell != null)
 		{
@@ -300,6 +305,27 @@ public abstract class WorkingAgent extends EmitterAgent
 		else
 		{
 			return false;
+		}
+	}
+
+	protected boolean tryMoveTo(ArrayList<Integer> cells)
+	{
+		int r = (int) (Math.random() * cells.size());
+		return hostCell.askMoveToCell(this, cells.get(r));		
+	}
+
+	protected boolean tryMoveUp()
+	{
+		ArrayList<Integer> cells = hostCell.getUpCells();
+
+		if(cells.size() == 0)
+		{
+			//We are at the Top !
+			return false;
+		}
+		else
+		{
+			return tryMoveTo(cells);
 		}
 	}
 	
@@ -315,8 +341,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 		else
 		{
-			int r = (int) (Math.random() * cells.size());
-			return hostCell.askMoveToCell(this, cells.get(r));
+			return tryMoveTo(cells);
 		}
 	}
 
@@ -324,19 +349,19 @@ public abstract class WorkingAgent extends EmitterAgent
 	{
 		this.combID = id;
 	}
-	
+
 	public HashMap<String, Double> getAllThresholds()
 	{
 		HashMap<String, Double> ts = new HashMap<String, Double>();
-		
+
 		for(Task t : taskList)
 		{
 			ts.put(t.taskName, t.threshold);
 		}
-		
+
 		return ts;
 	}
-	
+
 	public HashMap<String, Double> getAllTaskScores()
 	{
 		HashMap<String, Double> d = new HashMap<>();

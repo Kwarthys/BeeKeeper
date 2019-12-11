@@ -29,6 +29,34 @@ public class CombUtility
 		int y = (index - x) / size.width;
 		return getCellNeighbors(x, y, size);
 	}
+
+	public static ArrayList<Integer> getCellNeighborsUp(int cellX, int cellY, Dimension size)
+	{
+		ArrayList<Integer> cells = new ArrayList<>();
+		int sizeX = size.width;
+		int sizeY = size.height; 
+		
+		int cellIndex = cellY * sizeX + cellX;
+		 
+		int maxIndex = sizeX * sizeY;
+		
+		int offset = cellY%2 == 0 ? 0:1;
+
+		if(cellX + offset != 0)
+		{
+			int index = cellIndex - sizeX -1 + offset;
+			if(index >= 0 && index < maxIndex)
+				cells.add(index);
+		}
+		if(cellX + offset != sizeX)
+		{
+			int index = cellIndex - sizeX + offset;
+			if(index >= 0 && index < maxIndex)
+				cells.add(index);
+		}
+		
+		return cells;
+	}
 	
 	public static ArrayList<Integer> getCellNeighborsDown(int cellX, int cellY, Dimension size)
 	{
@@ -62,32 +90,14 @@ public class CombUtility
 	{
 		ArrayList<Integer> cells = new ArrayList<>();
 		int sizeX = size.width;
-		int sizeY = size.height; 
-		 
-		int maxIndex = sizeX * sizeY;
 
 		int cellIndex = cellY * sizeX + cellX;
 		if(cellX != 0)
 			cells.add(cellIndex -1);
 		if(cellX + 1 != sizeX)
 			cells.add(cellIndex +1);
-		
-		int offset = cellY%2 == 0 ? 0:1;
-		
-		if(cellX + offset != 0)
-		{
-			int index = cellIndex - sizeX -1 + offset;
-			if(index >= 0 && index < maxIndex)
-				cells.add(index);
-		}
-		if(cellX + offset != sizeX)
-		{
-			int index = cellIndex - sizeX + offset;
-			if(index >= 0 && index < maxIndex)
-				cells.add(index);
-		}
 
-
+		cells.addAll(getCellNeighborsUp(cellX, cellY, size));
 		cells.addAll(getCellNeighborsDown(cellX, cellY, size));
 		
 		return cells;
