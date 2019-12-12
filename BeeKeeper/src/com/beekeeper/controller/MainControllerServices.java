@@ -10,4 +10,6 @@ public interface MainControllerServices
 	public double getHiveTemperature();
 
 	public CombCell askLandingZone();
+
+	public void notifyWindowClosed();
 }

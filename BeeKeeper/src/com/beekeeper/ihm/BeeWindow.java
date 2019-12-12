@@ -4,22 +4,52 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.Stimulus;
 
 @SuppressWarnings("serial")
 public class BeeWindow extends JFrame
 {
 	
-	public BeeWindow(TaskGrapher grapher, ArrayList<CombDrawer> drawers)
+	public BeeWindow(TaskGrapher grapher, ArrayList<CombDrawer> drawers, MainControllerServices services)
 	{	
 		setTitle("BeeKeeper");
 		
+		
+		this.addWindowListener(new WindowListener() {			
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.out.println("Closing");
+				services.notifyWindowClosed();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e){}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {}
+		});
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel container = new JPanel();

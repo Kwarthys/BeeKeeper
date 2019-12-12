@@ -283,7 +283,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			motivation = 1.0;
 		}
 		currentTask = newTask;
-		controllerServices.logMyTaskSwitch(currentTask, this.ID);
+		//controllerServices.logMyTaskSwitch(currentTask, this.ID);
 
 		return currentTask;
 	}
@@ -374,5 +374,13 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public StimuliMap getPercievedStimuli() {
 		return lastPercievedMap;
+	}
+
+	public String getTaskName() {
+		return currentTask.taskName;
+	}
+
+	public double getPhysio() {
+		return hjTiter;
 	}
 }

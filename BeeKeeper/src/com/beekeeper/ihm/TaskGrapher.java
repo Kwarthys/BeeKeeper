@@ -156,9 +156,7 @@ public class TaskGrapher extends JPanel{
 			ed = EmployementData.mean(ed, jobData.remove(jobData.size()-1),1,sweepIndex);
 		}
 
-		jobData.add(ed);	
-
-		System.out.println(jobData.size());
+		jobData.add(ed);
 	}
 
 	private void drawTaskSpeGraph(Graphics2D g)

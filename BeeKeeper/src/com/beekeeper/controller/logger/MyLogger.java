@@ -10,9 +10,10 @@ public class MyLogger
 	
 	private WritterThread writter = new WritterThread();
 	
+	FileWriter fw;
+	
 	public MyLogger()
 	{
-		FileWriter fw;
 		try {
 			fw = new FileWriter("tasks.txt", false);
 			this.taskWriter = new BufferedWriter(fw);
@@ -25,6 +26,21 @@ public class MyLogger
 	
 	public void logTask(int beeID, String taskName)
 	{
-		writter.submit(new LogWork(taskWriter, beeID + " started " + taskName + "\n"));
+		writter.submit(new LogEntry(taskWriter, beeID + " started " + taskName + "\n"));
+	}
+
+	public void log(int turnIndex, int beeID, String beeTaskName, double beePhysio)
+	{
+		writter.submit(new LogEntry(taskWriter, turnIndex, beeID, beeTaskName, beePhysio));
+	}
+
+	public void closing()
+	{
+		if(fw != null)
+		{
+			writter.running = false;
+			System.out.println("Asking thread to stop");
+		}
 	}
 }
+

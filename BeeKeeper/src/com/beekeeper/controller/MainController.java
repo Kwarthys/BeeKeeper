@@ -13,6 +13,8 @@ import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.hive.BeeHive;
@@ -69,6 +71,11 @@ public class MainController
 			
 			return null;
 		}
+
+		@Override
+		public void notifyWindowClosed() {
+			MainController.this.logger.closing();
+		}
 	};
 
 	public MainController()
@@ -108,17 +115,22 @@ public class MainController
 		
 		TaskGrapher g = new TaskGrapher(agentFactory.allAgents);
 
-		this.window = new BeeWindow(g,drawers);
+		this.window = new BeeWindow(g,drawers, this.controlServices);
 
 		programLoop();
+	}
+	
+	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
+	{
+		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
 
 	private void programLoop()
 	{
 		int turnIndex = 0;
-		while(turnIndex < 10)
+		while(turnIndex > -1)
 		{
-			turnIndex--;
+			turnIndex++;
 			
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
 			Collections.shuffle(copy);
@@ -126,6 +138,11 @@ public class MainController
 			for(Agent b : copy)
 			{
 				b.live();
+				if(b.getBeeType() == AgentType.ADULT_BEE)
+				{
+					WorkingAgent w = (WorkingAgent) b;
+					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
+				}
 			}
 			
 			for(Comb c : combs)
