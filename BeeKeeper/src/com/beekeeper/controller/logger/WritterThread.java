@@ -21,7 +21,7 @@ public class WritterThread extends Thread {
 				LogEntry w = work.take();
 				w.writer.write(w.logString);
 				//System.out.print(w.logString);
-				System.out.println(work.size());					
+				//System.out.println(work.size());					
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -30,7 +30,7 @@ public class WritterThread extends Thread {
 		
 		try {
 			work.take().writer.close();
-			System.out.println("ClosedNicely");
+			//System.out.println("ClosedNicely");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

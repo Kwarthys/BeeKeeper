@@ -39,7 +39,7 @@ public class BeeWindow extends JFrame
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				System.out.println("Closing");
+				//System.out.println("Closing");
 				services.notifyWindowClosed();
 			}
 			

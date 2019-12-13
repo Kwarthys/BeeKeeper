@@ -34,12 +34,17 @@ public class MyLogger
 		writter.submit(new LogEntry(taskWriter, turnIndex, beeID, beeTaskName, beePhysio));
 	}
 
+	public void log(String log)
+	{
+		writter.submit(new LogEntry(taskWriter, log));
+	}
+
 	public void closing()
 	{
 		if(fw != null)
 		{
 			writter.running = false;
-			System.out.println("Asking thread to stop");
+			//System.out.println("Asking thread to stop");
 		}
 	}
 }

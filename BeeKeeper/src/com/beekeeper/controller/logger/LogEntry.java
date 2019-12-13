@@ -9,7 +9,7 @@ public class LogEntry
 	
 	public LogEntry(BufferedWriter taskWriter, String logString)
 	{
-		this.logString = logString;
+		this.logString = logString + "\n";
 		this.writer = taskWriter;
 	}
 
@@ -23,7 +23,7 @@ public class LogEntry
 		sb.append(beeTaskName);
 		sb.append(",");
 		sb.append(beePhysio);
-		sb.append(";\n");
+		sb.append("\n");
 		
 		this.logString = sb.toString();
 		this.writer = taskWriter;

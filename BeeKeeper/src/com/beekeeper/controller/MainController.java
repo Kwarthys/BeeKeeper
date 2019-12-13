@@ -124,10 +124,26 @@ public class MainController
 	{
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
+	
+	private void logTurn(String... ss)
+	{
+		StringBuffer sb = new StringBuffer();
+		for(int i = 0; i < ss.length; ++i)
+		{
+			if(i!=0)
+			{
+				sb.append(",");
+			}
+			sb.append(ss[i]);
+		}
+		
+		logger.log(sb.toString());
+	}
 
 	private void programLoop()
 	{
 		int turnIndex = 0;
+		logTurn("turnIndex", "beeID", "TaskName", "Physio");
 		while(turnIndex > -1)
 		{
 			turnIndex++;
