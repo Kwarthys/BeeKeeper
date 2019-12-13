@@ -18,6 +18,7 @@ public interface WorkingAgentServices {
 
 	public boolean isInside();
 	public boolean isReceivingFood();
+	public void receiveFood();
 	public StimuliMap getLastPerception();
 	public boolean isHungry();
 	public int getID();
@@ -30,4 +31,5 @@ public interface WorkingAgentServices {
 
 	public boolean tryMoveDown();
 	public boolean tryMoveUp();
+	
 }

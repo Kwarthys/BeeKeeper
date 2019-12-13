@@ -20,7 +20,9 @@ public class AdultBee extends WorkingAgent
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		super(stimuliManagerServices, controllerServices);
-		this.type = AgentType.ADULT_BEE;		
+		this.type = AgentType.ADULT_BEE;
+		
+		this.currentTask = taskList.get(0);
 	}
 
 	@Override
@@ -44,13 +46,17 @@ public class AdultBee extends WorkingAgent
 				//System.out.println("Contact by proximity with larvae");
 				spreadByContact(hostCell.inside);
 			}
-		}		
+		}
+		else
+		{
+			hunger -= Math.random()*0.001;
+		}
 		
 		hjTiter += 0.0005;
 		hjTiter -= ModelParameters.getHJModifiedByOcimene(this.bodySmell.getAmount(Stimulus.Ocimene));
 		hjTiter = MyUtils.clamp(hjTiter);
 		
-		hunger = Math.min(1, hunger + 0.001);
+		hunger = MyUtils.clamp(hunger + 0.001);
 		
 		
 		

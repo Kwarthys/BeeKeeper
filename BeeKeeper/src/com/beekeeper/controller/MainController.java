@@ -106,7 +106,9 @@ public class MainController
 			//agentFactory.spawnTestAgents(3, c,MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			c.setID(i);
-			this.combs.add(c);			
+			this.combs.add(c);	
+			
+			c.addFood();
 			
 			CombDrawer drawer = new CombDrawer(c.getServices(), sm.getServices());
 			
@@ -118,6 +120,8 @@ public class MainController
 		this.window = new BeeWindow(g,drawers, this.controlServices);
 
 		programLoop();
+		
+		System.out.println("Job's done");
 	}
 	
 	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
@@ -144,7 +148,7 @@ public class MainController
 	{
 		int turnIndex = 0;
 		logTurn("turnIndex", "beeID", "TaskName", "Physio");
-		while(turnIndex > -1)
+		while(turnIndex < 4000)
 		{
 			turnIndex++;
 			
@@ -190,7 +194,7 @@ public class MainController
 			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(30);//30
+				Thread.sleep(1);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

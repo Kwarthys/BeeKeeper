@@ -13,6 +13,7 @@ public class ForagerTask extends Task {
 	public ForagerTask(WorkingAgentServices agentServices) {
 		super(agentServices, "Foraging");
 		
+		
 		//Wandering inHive
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
@@ -27,7 +28,7 @@ public class ForagerTask extends Task {
 			
 			@Override
 			public boolean check() {
-				return back && agentServices.isInside() && c < 30;
+				return back && agentServices.isInside() && c < 20;
 			}
 		});
 		
@@ -62,6 +63,7 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
 			public void execute() {
+				ForagerTask.this.motivated = false;
 				back = false;
 				if(!agentServices.tryMoveDown())
 				{
@@ -71,6 +73,7 @@ public class ForagerTask extends Task {
 				if(!agentServices.isInside())
 				{
 					agentServices.resetMotivation();
+					ForagerTask.this.motivated = true;
 				}
 			}
 			

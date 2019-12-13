@@ -16,6 +16,8 @@ public class GiveFoodTask extends Task {
 	public GiveFoodTask(WorkingAgentServices agentServices) {
 		super(agentServices, "Give Food");
 
+		this.threshold = 3;
+		
 		this.motivated = false;
 		
 		
@@ -55,10 +57,16 @@ public class GiveFoodTask extends Task {
 					return;
 				}
 				//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
-				if(neighs.get(0).isHungry())
+				boolean found = false;
+				for(int i = 0; i<neighs.size() && !found; ++i)
 				{
-					agentServices.setInteractorTo(neighs.get(0));
-					//System.out.println("found a hungryman");
+					WorkingAgent a = neighs.get(i);
+					if(a.isHungry())
+					{
+						agentServices.setInteractorTo(a);
+						found = true;
+						//System.out.println("found a hungryman");
+					}					
 				}
 				
 				if(agentServices.getCoopInteractor() == null)

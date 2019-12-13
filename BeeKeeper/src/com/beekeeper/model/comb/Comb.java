@@ -229,4 +229,24 @@ public class Comb
 		}
 		return lastRow;
 	}
+
+	public void addFood()
+	{
+		for(int i = 0; i<cells.size();++i)
+		{
+			CombCell c = cells.get(i);
+			if(c.content == CellContent.brood)
+			{
+				for(Integer cIndex : CombUtility.getCellNeighbors(i, size))
+				{
+					CombCell otherCell = cells.get(cIndex);
+					if(otherCell.content == CellContent.empty)
+					{
+						otherCell.content = CellContent.food;
+					}
+				}
+			}
+		}
+		
+	}
 }

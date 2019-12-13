@@ -146,6 +146,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		public boolean tryMoveUp() {
 			return WorkingAgent.this.tryMoveUp();
 		}
+
+		@Override
+		public void receiveFood() {
+			WorkingAgent.this.recieveFood();
+		}
 	};
 
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
@@ -155,7 +160,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		setEnergy(Math.random()*0.8+0.2);
 		fillTaskList();
 
-		hjTiter = 0;//Math.random() * 0.7;
+		hunger = Math.random() * 0.7;
+		hjTiter = 0.5;//Math.random() * Math.random() * Math.random();
 	}
 
 	public void live()
