@@ -1,51 +1,58 @@
 package com.beekeeper.controller.logger;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
 public class MyLogger
 {
-	private BufferedWriter taskWriter;	
+	boolean started = false;
 	
-	private WritterThread writter = new WritterThread();
-	
-	FileWriter fw;
-	
-	public MyLogger()
-	{
-		try {
-			fw = new FileWriter("tasks.txt", false);
-			this.taskWriter = new BufferedWriter(fw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		writter.start();
-	}
+	private WriterThread writer = new WriterThread();
 	
 	public void logTask(int beeID, String taskName)
 	{
-		writter.submit(new LogEntry(taskWriter, beeID + " started " + taskName + "\n"));
+		submit(new LogEntry(beeID + " started " + taskName + "\n"));
 	}
 
 	public void log(int turnIndex, int beeID, String beeTaskName, double beePhysio)
 	{
-		writter.submit(new LogEntry(taskWriter, turnIndex, beeID, beeTaskName, beePhysio));
+		submit(new LogEntry(turnIndex, beeID, beeTaskName, beePhysio));
 	}
 
 	public void log(String log)
 	{
-		writter.submit(new LogEntry(taskWriter, log));
+		submit(new LogEntry(log));
+	}
+	
+	private void submit(LogEntry entry)
+	{
+		if(!started)
+		{
+			writer.start();
+			started = true;
+		}
+		writer.submit(entry);
 	}
 
 	public void closing()
 	{
-		if(fw != null)
+		if(writer.running)
 		{
-			writter.running = false;
-			//System.out.println("Asking thread to stop");
+			writer.running = false;
+			System.out.println("Asking thread to stop");
 		}
+		else
+		{
+			System.out.println("Already closed");
+		}
+	}
+	
+	public Thread getThread()
+	{
+		return writer;
+	}
+	
+	public boolean threadFinished()
+	{
+		System.out.println("writer.done " + writer.done);
+		return writer.done;
 	}
 }
 

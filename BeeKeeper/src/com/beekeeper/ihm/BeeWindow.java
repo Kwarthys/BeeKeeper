@@ -50,7 +50,7 @@ public class BeeWindow extends JFrame
 			public void windowActivated(WindowEvent e) {}
 		});
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel container = new JPanel();
 		container.setLayout(new GridBagLayout());

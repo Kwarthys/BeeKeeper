@@ -39,6 +39,8 @@ public class MainController
 	private BeeHive hive;
 	
 	private int simuStep = 0;
+
+	private boolean closed;
 	
 	private MainControllerServices controlServices = new MainControllerServices() {
 
@@ -74,7 +76,7 @@ public class MainController
 
 		@Override
 		public void notifyWindowClosed() {
-			MainController.this.logger.closing();
+			MainController.this.closed = true;
 		}
 	};
 
@@ -118,9 +120,33 @@ public class MainController
 		TaskGrapher g = new TaskGrapher(agentFactory.allAgents);
 
 		this.window = new BeeWindow(g,drawers, this.controlServices);
+		closed = false;
 
 		programLoop();
 		
+		this.window.dispose();
+		
+		this.logger.closing();
+		
+		try {
+			System.out.println("Waiting");
+			this.logger.getThread().join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*
+		while(!logger.threadFinished())
+		{
+			System.out.println("Waiting");
+			try {
+				Thread.sleep(500);//30
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		*/
 		System.out.println("Job's done");
 	}
 	
@@ -148,7 +174,7 @@ public class MainController
 	{
 		int turnIndex = 0;
 		logTurn("turnIndex", "beeID", "TaskName", "Physio");
-		while(turnIndex < 4000)
+		while(turnIndex < 5000 && !closed)
 		{
 			turnIndex++;
 			

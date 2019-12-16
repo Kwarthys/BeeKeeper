@@ -161,7 +161,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		fillTaskList();
 
 		hunger = Math.random() * 0.7;
-		hjTiter = 0.5;//Math.random() * Math.random() * Math.random();
+		hjTiter = ModelParameters.getStartingBeeHJTiter();//Math.random() * Math.random() * Math.random();
 	}
 
 	public void live()

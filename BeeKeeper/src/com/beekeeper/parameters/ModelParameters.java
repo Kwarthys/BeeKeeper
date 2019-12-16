@@ -50,4 +50,8 @@ public class ModelParameters
 	public static final double secondToTimeStepCoef = 10;
 	
 	public static final double MOTIVATION_STEP = 0.01;
+
+	public static double getStartingBeeHJTiter() {
+		return 0;
+	}
 }
