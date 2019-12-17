@@ -9,7 +9,7 @@ public class LarvaTask extends Task {
 
 	public LarvaTask(WorkingAgentServices agentServices)
 	{
-		super(agentServices, "larvaTask");
+		super(agentServices, "LarvaTask");
 
 		this.rootActivity.addTaskNode(new Action(0.1, 0.001, agentServices) {
 			

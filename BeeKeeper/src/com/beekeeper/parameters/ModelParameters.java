@@ -50,8 +50,13 @@ public class ModelParameters
 	public static final double secondToTimeStepCoef = 10;
 	
 	public static final double MOTIVATION_STEP = 0.01;
+	
+	
+	public static final int NUMBER_BEES = 199;
+	public static final int NUMBER_LARVAE = 150;
+	public static final int SIMU_LENGTH = 8000;
 
 	public static double getStartingBeeHJTiter() {
-		return 0;
+		return Math.random();
 	}
 }

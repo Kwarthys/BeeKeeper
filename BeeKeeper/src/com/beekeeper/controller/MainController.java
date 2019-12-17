@@ -20,6 +20,7 @@ import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.hive.BeeHive;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
 public class MainController
@@ -99,8 +100,8 @@ public class MainController
 			
 			sManagers.add(sm);
 			
-			agentFactory.spawnBroodCells(150, c, MyUtils.getCirclePointRule(center, combSize.width/4), sm.getServices(), this.controlServices);		
-			agentFactory.spawnWorkers(199, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
+			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/4), sm.getServices(), this.controlServices);		
+			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
 			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
@@ -174,7 +175,7 @@ public class MainController
 	{
 		int turnIndex = 0;
 		logTurn("turnIndex", "beeID", "TaskName", "Physio");
-		while(turnIndex < 5000 && !closed)
+		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed)
 		{
 			turnIndex++;
 			
