@@ -57,6 +57,6 @@ public class ModelParameters
 	public static final int SIMU_LENGTH = 8000;
 
 	public static double getStartingBeeHJTiter() {
-		return Math.random();
+		return 1;
 	}
 }

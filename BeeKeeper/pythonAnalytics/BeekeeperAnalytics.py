@@ -62,7 +62,7 @@ with open('../tasks.txt') as csv_file:
 					jobDataPerBee[beeID] = getDict();
 					
 				if(row[2] in jobDataPerBee[beeID]):
-					jobDataPerBee[beeID][row[2]] += 1/80;
+					jobDataPerBee[beeID][row[2]] += 1/80; #8000 timesteps, into %of timesteps
 				else:
 					jobDataPerBee[beeID]['Other'] += 1/80;
 			
@@ -89,18 +89,20 @@ plt.legend()
 plt.xlabel("timesteps")
 plt.ylabel("% of bees")
 
+sampleSize = 6
 randomKeys = []
 beeIDs = list(jobDataPerBee.keys())
-for i in np.random.randint(low = 0, high = len(jobDataPerBee), size = 6):
-	randomKeys.append(beeIDs[i])
-	print(randomKeys)
 
-for i in range(6):
-	print(i)
+while(len(randomKeys) != sampleSize):
+	candidate = beeIDs[np.random.randint(low = 0, high = len(jobDataPerBee))];
+	while(candidate in randomKeys):
+		candidate = beeIDs[np.random.randint(low = 0, high = len(jobDataPerBee))];
+	randomKeys.append(candidate);
+
+for i in range(sampleSize):
 	plt.subplot(4,3,i+7, title='bee' + str(randomKeys[i]))
 	if(i == 0):
 		plt.ylabel("% of time spent");
-		print("a")
 	plt.bar(keys, jobDataPerBee[randomKeys[i]].values())
 
 
