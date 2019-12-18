@@ -102,7 +102,7 @@ public class FeedLarva extends Task {
 		
 		this.rootActivity.addTaskNode(larvaNear);
 		//Random Move
-		this.rootActivity.addTaskNode(new Action(0.1,0.001,agentServices) {			
+		this.rootActivity.addTaskNode(new Action(0.2,0.001,agentServices) {			
 			@Override
 			public void execute() {
 				moved = true;

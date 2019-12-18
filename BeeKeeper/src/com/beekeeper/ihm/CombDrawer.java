@@ -102,13 +102,14 @@ public class CombDrawer extends JPanel{
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
 			
-			
+			/*
 			p.y *= 3;
 			p.y += 300;
 			p.x *= 3;
 
 			g.setColor(Color.WHITE);
 			g.drawString(String.valueOf((int)(10*s)), p.x, p.y);
+			*/
 			
 		}
 	}
