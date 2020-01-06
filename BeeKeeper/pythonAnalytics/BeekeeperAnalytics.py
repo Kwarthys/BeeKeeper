@@ -14,21 +14,24 @@ import csv
 
 data = [];
 jobDataPerBee = {};
+hjData = [];
+hjDataPerBee = {};
 
-prevIndex = 0
-foragerCount = 0
-nurseCount = 0
-otherJobCount = 0
+prevIndex = 0;
+foragerCount = 0;
+nurseCount = 0;
+otherJobCount = 0;
+hjAmount = 0;
 
 displaySize = 30;
 
-size = 0
+size = 0;
 
 print("|", end="")
 for i in range(displaySize-1):
-	print("-", end="")
-print("|")
-print("|", end="")
+	print("-", end="");
+print("|");
+print("|", end="");
 
 
 with open('../tasks.txt') as csv_file:
@@ -50,12 +53,21 @@ with open('../tasks.txt') as csv_file:
 				total = (foragerCount + nurseCount + otherJobCount)/100;
 				if total == 0: total = 1;
 				data.append([otherJobCount/total, nurseCount/total, foragerCount/total]);
+				hjData.append(hjAmount/total);
 				foragerCount = 0;
 				nurseCount = 0;
 				otherJobCount = 0;
+				hjAmount = 0;
 				prevIndex = index;
 				
 			beeID = int(row[1]);
+			
+			hjAmount += float(row[3]);
+			
+			if(not beeID in hjDataPerBee):
+				hjDataPerBee[beeID] = [];
+				
+			hjDataPerBee[beeID].append(int(float(row[3])*100));
 			
 			if(row[2] != "LarvaTask"):
 				if(not beeID in jobDataPerBee):
@@ -79,9 +91,19 @@ with open('../tasks.txt') as csv_file:
 	print()
 	print(f'Processed {line_count} lines.')
 
+
+initState = "Random";
+initBees = "200";
+initLarvae = "50";
+simuLength = str(len(data));
+smallTitle = initState + "_" + initBees + "_" + initLarvae + "_" + simuLength;
+hugeTitle = initState + " init repartition, " + initBees + " bees for " + initLarvae + " larvae during " + simuLength + " timesteps";
+
+plt.figure(figsize=(9,7));
 #subplot(nrows, ncols, index)
 plt.subplots_adjust(hspace=0.5)
-plt.subplot(2,1,1);
+plt.subplot(2,1,1, title='Colony work repartition');
+plt.suptitle(hugeTitle);
 #plt.plot(range(len(data)), column(data,0), label='otherCount')
 plt.plot(range(len(data)), column(data,1), label='nurseCount')
 plt.plot(range(len(data)), column(data,2), label='foragerCount')
@@ -102,8 +124,35 @@ while(len(randomKeys) != sampleSize):
 for i in range(sampleSize):
 	plt.subplot(4,3,i+7, title='bee' + str(randomKeys[i]))
 	if(i == 0):
-		plt.ylabel("% of time spent");
-	plt.bar(keys, jobDataPerBee[randomKeys[i]].values())
+		plt.ylabel("Time spent%\nHJTiter%"); 
+		
+	# Create bars
+	plt.bar([8000/4, 8000/2, 3*8000/4], jobDataPerBee[randomKeys[i]].values(), width = 8000/6)
+	 
+	# Create names on the x-axis
+	plt.xticks([8000/4, 8000/2, 3*8000/4], keys)
+	
+	#a = plt.twinx()
+	#plt.plot(range(len(hjData)), hjDataPerBee[randomKeys[i]], c='orange')
 
 
-plt.show()
+#plt.show();
+plt.savefig(smallTitle + "Tasks.png");
+
+plt.figure(figsize=(9,7));
+plt.suptitle(hugeTitle);
+plt.subplots_adjust(hspace=0.5)
+plt.subplot(2,1,1, title='Colony HJTiter');
+plt.plot(range(len(hjData)), hjData);
+plt.xlabel("timesteps")
+plt.ylabel("mean HJ Titer %")
+
+for i in range(sampleSize):
+	plt.subplot(4,3,i+7, title='bee' + str(randomKeys[i]))
+	if(i == 0):
+		plt.ylabel("HJTiter %");
+	plt.plot(range(len(hjData)), hjDataPerBee[randomKeys[i]])
+
+
+plt.savefig(smallTitle + "HJ.png");
+#plt.show();

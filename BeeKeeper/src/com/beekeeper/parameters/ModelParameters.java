@@ -53,7 +53,7 @@ public class ModelParameters
 	
 	
 	public static final int NUMBER_BEES = 199;
-	public static final int NUMBER_LARVAE = 150;
+	public static final int NUMBER_LARVAE = 50;
 	public static final int SIMU_LENGTH = 8000;
 
 	public static double getStartingBeeHJTiter() {
