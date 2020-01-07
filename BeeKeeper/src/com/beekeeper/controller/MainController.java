@@ -185,7 +185,7 @@ public class MainController
 			for(Agent b : copy)
 			{
 				b.live();
-				if(b.getBeeType() == AgentType.ADULT_BEE)
+				if(b.getBeeType() == AgentType.ADULT_BEE || b.getBeeType() == AgentType.BROOD_BEE)
 				{
 					WorkingAgent w = (WorkingAgent) b;
 					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
