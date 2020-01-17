@@ -276,3 +276,4 @@ for f in files:
 
 		plt.savefig(smallTitle + "HJ.png");
 		#plt.show();
+#test
