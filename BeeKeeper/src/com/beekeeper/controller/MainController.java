@@ -98,9 +98,18 @@ public class MainController
 			
 			StimuliManager sm = new StimuliManager(c);
 			
+			int combWidthDivisor = 10;
+			
+			while(combSize.width/combWidthDivisor * combSize.width/combWidthDivisor * Math.PI < ModelParameters.NUMBER_LARVAE)
+			{
+				--combWidthDivisor;
+			}
+			
+			System.out.println("combWidthDivisor : " + combWidthDivisor);
+			
 			sManagers.add(sm);
 			
-			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/4), sm.getServices(), this.controlServices);		
+			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), this.controlServices);		
 			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 			
 			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
@@ -148,7 +157,7 @@ public class MainController
 			}
 		}
 		*/
-		System.out.println("Job's done");
+		System.out.println("expe done");
 	}
 	
 	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
@@ -221,7 +230,7 @@ public class MainController
 			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(1);//30
+				Thread.sleep(0);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -1,10 +1,17 @@
 package com.beekeeper.controller.logger;
 
+import com.beekeeper.parameters.ModelParameters;
+
 public class MyLogger
 {
 	boolean started = false;
 	
-	private WriterThread writer = new WriterThread();
+	private WriterThread writer;
+	
+	public MyLogger()
+	{
+		writer = new WriterThread(getParam());
+	}
 	
 	public void logTask(int beeID, String taskName)
 	{
@@ -53,6 +60,20 @@ public class MyLogger
 	{
 		System.out.println("writer.done " + writer.done);
 		return writer.done;
+	}
+
+	public String getParam()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(ModelParameters.startMode);
+		sb.append("_");
+		sb.append(ModelParameters.NUMBER_BEES);
+		sb.append("_");
+		sb.append(ModelParameters.NUMBER_LARVAE);
+		sb.append("_");
+		sb.append(ModelParameters.SIMU_LENGTH);
+		
+		return sb.toString();
 	}
 }
 

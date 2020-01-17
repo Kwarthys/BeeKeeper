@@ -51,12 +51,38 @@ public class ModelParameters
 	
 	public static final double MOTIVATION_STEP = 0.01;
 	
+	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static final int NUMBER_BEES = 199;
-	public static final int NUMBER_LARVAE = 150;
-	public static final int SIMU_LENGTH = 8000;
+	public static int NUMBER_BEES = 150;
+	public static int NUMBER_LARVAE = 150;
+	public static int SIMU_LENGTH = 8000;
+	public static StartMode startMode = StartMode.Random;
+	
 
 	public static double getStartingBeeHJTiter() {
-		return 0.0;
+		switch(startMode)
+		{
+		case NewBorn:
+			return 0.0;
+		case Old:
+			return 1.0;
+		case Random:
+		default:
+			return Math.random();
+		}
+		
 	}
+	
+	
+	/********* EXPE PARAM MODIFICATION ***********/
+	
+	public static void paramExpe(int numberOfBees, int numberOfLarvae, int simuLength, StartMode startMode)
+	{
+		ModelParameters.NUMBER_BEES = numberOfBees;
+		ModelParameters.NUMBER_LARVAE = numberOfLarvae;
+		ModelParameters.SIMU_LENGTH = simuLength;
+		ModelParameters.startMode = startMode;
+	}
+	
+	/********* EXPE PARAM MODIFICATION ***********/
 }

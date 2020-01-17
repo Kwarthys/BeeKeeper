@@ -18,11 +18,12 @@ public class WriterThread extends Thread {
 		work.add(w);
 	}
 	
-	public WriterThread()
+	public WriterThread(String param)
 	{
 		FileWriter fw;
 		try {
-			fw = new FileWriter("tasks.txt", false);
+			fw = new FileWriter("expe/"+param+".csv", false);
+			System.out.println("Started writing for : expe/"+param+".csv");
 			this.writer = new BufferedWriter(fw);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -34,14 +35,17 @@ public class WriterThread extends Thread {
 	public void run() {
 		while(this.isAlive() && running)
 		{
-			try {
-				LogEntry w = work.poll();
-				if(w != null)
-				{
-					writer.write(w.logString);
+			while(!work.isEmpty())
+			{
+				try {
+					LogEntry w = work.poll();
+					if(w != null)
+					{
+						writer.write(w.logString);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 		
