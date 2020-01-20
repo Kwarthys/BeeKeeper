@@ -10,7 +10,7 @@ public class BeeKeeperLauncher {
 	{	
 		System.setProperty("sun.java2d.opengl", "true");
 		
-		int simuLength = 8000;
+		int simuLength = 5000;
 		
 		ModelParameters.paramExpe(150, 150, simuLength, StartMode.Random);
 		new MainController();

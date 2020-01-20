@@ -34,7 +34,7 @@ def getDict():
 	return {key: 0 for key in keys}
 
 
-
+sumUpJobData = {}
 
 
 path = '../expe/'
@@ -172,10 +172,12 @@ for f in files:
 	initBees = str(len(jobDataPerBee));
 	initLarvae = str(initLarvae);
 	simuLength = str(len(data));
-	smallTitle = initState + "_" + initBees + "_" + initLarvae + "_" + simuLength;
+	smallTitle = initState + "_" + initBees + "_" + initLarvae;
 	#smallTitle = "test";
 	hugeTitle = initState + " init repartition, " + initBees + " bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(int(larvaCounts[-1]*10)/10) + "% larvae survived";
 
+	sumUpJobData[smallTitle] = data;
+	
 	ylims = [0,110];
 
 	plt.figure(figsize=(9,7));
@@ -276,4 +278,34 @@ for f in files:
 
 		plt.savefig(smallTitle + "HJ.png");
 		#plt.show();
+	
+for key in sumUpJobData.keys():
+		sumUpJobData[key] = column(sumUpJobData[key],1)
+		for i in range(len(sumUpJobData[key])):
+			v = 0;
+			n = 0;
+			for k in range(i-50,i+50):
+				if k < len(sumUpJobData[key]) and k > 0:
+					v += sumUpJobData[key][k];
+					n += 1;
+			sumUpJobData[key][i] = v/n;
+		
+
+
+styles = ['-', '--', '-.', ':','custom']
+index = 0;
+print(sumUpJobData.keys());
+plt.figure(figsize=(9,7));
+plt.suptitle("Nurse Count for all experiments");
+plt.xlabel("time-steps");
+plt.ylabel("Number of larva feeding bee (%)");
+for key in sumUpJobData.keys():
+	if(styles[index] == 'custom'):
+		plt.plot(range(len(sumUpJobData[key])),sumUpJobData[key] , label=key, linestyle='--', dashes=(1,5));
+	else:
+		plt.plot(range(len(sumUpJobData[key])), sumUpJobData[key], label=key,linestyle=styles[index]);
+	index += 1;
+plt.legend();
+plt.savefig("summup.png");
+#plt.show();
 #test
