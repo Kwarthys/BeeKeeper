@@ -21,7 +21,7 @@ public class BeeKeeperLauncher {
 		ModelParameters.paramExpe(150, 150, simuLength, StartMode.NewBorn);
 		new MainController();
 		
-		ModelParameters.paramExpe(300, 150, simuLength, StartMode.Random);
+		ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random);
 		new MainController();
 		
 		ModelParameters.paramExpe(150, 300, simuLength, StartMode.Random);
