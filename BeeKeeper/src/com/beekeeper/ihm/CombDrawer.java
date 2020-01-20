@@ -101,7 +101,7 @@ public class CombDrawer extends JPanel{
 			g.setColor(new Color(s,s,s));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
 			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
-			
+
 			/*
 			p.y *= 3;
 			p.y += 300;
@@ -109,8 +109,8 @@ public class CombDrawer extends JPanel{
 
 			g.setColor(Color.WHITE);
 			g.drawString(String.valueOf((int)(10*s)), p.x, p.y);
-			*/
-			
+			 */
+
 		}
 	}
 
@@ -161,19 +161,22 @@ public class CombDrawer extends JPanel{
 		g.setColor(Color.RED);
 		for(Agent a : agents)
 		{
-			Point p = a.getPosition();
-			if(p!=null)
+			if(a!=null)
 			{
+				Point p = a.getPosition();
+				if(p!=null && a.getHunger() > 0)
+				{
 
-				p = fromLinearToHex(p);
+					p = fromLinearToHex(p);
 
-				int x = p.x;
-				int y = p.y;
+					int x = p.x;
+					int y = p.y;
 
-				int e = 255 - (int)(a.getHunger() * 255);
-				if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:255]");
-				g.setColor(new Color(255,255-e,0));
-				g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
+					int e = 255 - (int)(a.getHunger() * 255);
+					if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:255]");
+					g.setColor(new Color(255,255-e,0));
+					g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
+				}
 			}
 		}
 	}

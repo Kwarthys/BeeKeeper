@@ -1,5 +1,6 @@
 package com.beekeeper.parameters;
 
+import com.beekeeper.utils.IDManager;
 import com.beekeeper.utils.MyUtils;
 
 public class ModelParameters
@@ -82,6 +83,7 @@ public class ModelParameters
 		ModelParameters.NUMBER_LARVAE = numberOfLarvae;
 		ModelParameters.SIMU_LENGTH = simuLength;
 		ModelParameters.startMode = startMode;
+		IDManager.resetIDCounter();
 	}
 	
 	/********* EXPE PARAM MODIFICATION ***********/

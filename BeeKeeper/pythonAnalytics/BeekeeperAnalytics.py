@@ -180,21 +180,22 @@ for f in files:
 	
 	ylims = [0,110];
 
-	plt.figure(figsize=(9,7));
-	#subplot(nrows, ncols, index)
-	plt.subplots_adjust(hspace=0.5)
-	plt.subplot(2,1,1, title='Colony work repartition');
-	plt.suptitle(hugeTitle);
-	#plt.plot(range(len(data)), column(data,0), label='otherCount')
-	plt.plot(range(len(data)), column(data,1), label='nurseCount')
-	plt.plot(range(len(data)), column(data,2), label='foragerCount')
-	plt.legend()
-	plt.ylabel("% of bees")
-	plt.ylim(ylims);
-
 	generationOK = False;
-
+	
 	while(not generationOK):
+
+		plt.figure(figsize=(9,7));
+		#subplot(nrows, ncols, index)
+		plt.subplots_adjust(hspace=0.5)
+		plt.subplot(2,1,1, title='Colony work repartition');
+		plt.suptitle(hugeTitle);
+		#plt.plot(range(len(data)), column(data,0), label='otherCount')
+		plt.plot(range(len(data)), column(data,1), label='nurseCount')
+		plt.plot(range(len(data)), column(data,2), label='foragerCount')
+		plt.legend()
+		plt.ylabel("% of bees")
+		plt.ylim(ylims);
+
 
 		print("generating graphs");
 

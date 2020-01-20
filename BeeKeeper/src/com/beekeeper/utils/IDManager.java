@@ -8,4 +8,9 @@ public class IDManager
 	{
 		return id++;
 	}
+
+	public static void resetIDCounter()
+	{
+		id = 0;
+	}
 }
