@@ -183,9 +183,25 @@ public class MainController
 	private void programLoop()
 	{
 		int turnIndex = 0;
+		int displayBar = 20;
+		
+		System.out.print("|");
+		for(int i = 1; i < displayBar-1; ++i)
+		{			
+			System.out.print("-");
+		}
+		System.out.println("|");
+		
 		logTurn("turnIndex", "beeID", "TaskName", "Physio");
 		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed)
 		{
+			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
+			{
+				System.out.print("|");
+			}
+	
+			
+			
 			turnIndex++;
 			
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
@@ -235,5 +251,6 @@ public class MainController
 				e.printStackTrace();
 			}
 		}
+		System.out.println();
 	}
 }
