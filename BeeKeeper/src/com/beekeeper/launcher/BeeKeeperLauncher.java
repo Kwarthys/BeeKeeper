@@ -11,22 +11,38 @@ public class BeeKeeperLauncher {
 		System.setProperty("sun.java2d.opengl", "true");
 		
 		int simuLength = 5000;
+		int reps = 5;
 		
-		ModelParameters.paramExpe(150, 150, simuLength, StartMode.Random);
+		for(int i = 0; i<reps;++i)
+		{			
+			ModelParameters.paramExpe(150, 150, simuLength, StartMode.Random,i);
+			new MainController();
+		}
+
+		
+		for(int i = 0; i<reps;++i)
+		{	
+		ModelParameters.paramExpe(150, 150, simuLength, StartMode.Old,i);
 		new MainController();
+		}
 		
-		ModelParameters.paramExpe(150, 150, simuLength, StartMode.Old);
+		for(int i = 0; i<reps;++i)
+		{	
+		ModelParameters.paramExpe(150, 150, simuLength, StartMode.NewBorn,i);
 		new MainController();
+		}
 		
-		ModelParameters.paramExpe(150, 150, simuLength, StartMode.NewBorn);
+		for(int i = 0; i<reps;++i)
+		{	
+		ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random,i);
 		new MainController();
+		}
 		
-		ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random);
+		for(int i = 0; i<reps;++i)
+		{	
+		ModelParameters.paramExpe(150, 300, simuLength, StartMode.Random,i);
 		new MainController();
-		
-		ModelParameters.paramExpe(150, 300, simuLength, StartMode.Random);
-		new MainController();
-		
+		}
 		System.out.println("All Expes Done");
 	}
 

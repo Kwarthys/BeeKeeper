@@ -27,7 +27,42 @@ def getFill(value, number):
 	for i in range(number):
 		lalist.append(value);
 	return lalist;
+
+#--------------- MATHS ----#
+
+def tabMean(listOfTables):
+	size = len(listOfTables);
+	tabSize = len(listOfTables[0]);
+
+	mean = [0] * tabSize;
+
+	for tab in listOfTables:
+		for i in range(tabSize):
+			mean[i] += tab[i] / size;
+
+	return mean;
+		
+
+def moyenne(tableau):
+	return sum(tableau, 0.0) / len(tableau);
+
+def variance(tableau):
+	m=moyenne(tableau);
+	return moyenne([(x-m)**2 for x in tableau]);
+
+def ecartype(tableau):
+	return variance(tableau)**0.5;
+
+def tabErrorBar(listOfTables):
+	ebars = [];
+	for i in range(len(listOfTables[0])):
+		tmpTab = []
+		for tab in listOfTables:
+			tmpTab.append(tab[i]);
+		ebars.append(ecartype(tmpTab));
+	return ebars;
 	
+#--------------------------#
 	
 keys = ["FeedLarvae","Foraging", "Other"];
 def getDict():
@@ -45,10 +80,10 @@ for r, d, f in os.walk(path):
 	for file in f:
 		if '.csv' in file:
 			files.append(os.path.join(r, file))
-
+fileIndex = 1
 for f in files:
-	print(f)
-
+	print(f + " " + str(fileIndex) + "/" + str(len(files)));
+	fileIndex += 1
 	fileName = f;
 
 	mode = f.split("/")[-1];
@@ -69,7 +104,7 @@ for f in files:
 	hjAmount = 0;
 	jobDurationPB = {};
 
-	displaySize = 30;
+	displaySize = len(files);
 
 	size = 0;
 
@@ -78,6 +113,9 @@ for f in files:
 	for i in range(displaySize-1):
 		print("-", end="");
 	print("|");
+	for i in range(fileIndex-1):
+		print("|", end="");
+	print("");
 	print("|", end="");
 
 
@@ -167,12 +205,14 @@ for f in files:
 		for task in jobDataPerBee[beeID].keys():
 			jobDataPerBee[beeID][task] /= len(data)/100;
 
+	
 
+	expeNumber =  f.split(".csv")[0].split("_")[-1]
 	initState = mode;
 	initBees = str(len(jobDataPerBee));
 	initLarvae = str(initLarvae);
 	simuLength = str(len(data));
-	smallTitle = initState + "_" + initBees + "_" + initLarvae;
+	smallTitle = initState + "_" + initBees + "_" + initLarvae + "_" + expeNumber;
 	#smallTitle = "test";
 	hugeTitle = initState + " init repartition, " + initBees + " bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(int(larvaCounts[-1]*10)/10) + "% larvae survived";
 
@@ -183,6 +223,8 @@ for f in files:
 	generationOK = False;
 	
 	while(not generationOK):
+
+		plt.close('all');
 
 		plt.figure(figsize=(9,7));
 		#subplot(nrows, ncols, index)
@@ -279,7 +321,13 @@ for f in files:
 
 		plt.savefig(smallTitle + "HJ.png");
 		#plt.show();
+		plt.close('all')
 	
+sumUpErrorBars = {}
+
+keyManager = {}
+
+
 for key in sumUpJobData.keys():
 		sumUpJobData[key] = column(sumUpJobData[key],1)
 		for i in range(len(sumUpJobData[key])):
@@ -290,6 +338,22 @@ for key in sumUpJobData.keys():
 					v += sumUpJobData[key][k];
 					n += 1;
 			sumUpJobData[key][i] = v/n;
+
+for key in sumUpJobData.keys():
+		rootKey = key[:-2]
+		expeIndex = key.split("_")[-1]
+		print("root:" + str(rootKey) + " expe:" + str(expeIndex)); 
+	
+		if rootKey not in keyManager:
+			keyManager[rootKey] = [];
+
+		keyManager[rootKey].append(sumUpJobData[key]);
+
+sumUpJobData = {}
+
+for key in keyManager:
+	sumUpJobData[key] = tabMean(keyManager[key])
+	keyManager[key] = tabErrorBar(keyManager[key])
 		
 
 
@@ -300,13 +364,17 @@ plt.figure(figsize=(9,7));
 plt.suptitle("Nurse Count for all experiments");
 plt.xlabel("time-steps");
 plt.ylabel("Number of larva feeding bee (%)");
+plt.ylim([-10,110])
 for key in sumUpJobData.keys():
 	if(styles[index] == 'custom'):
-		plt.plot(range(len(sumUpJobData[key])),sumUpJobData[key] , label=key, linestyle='--', dashes=(1,5));
+		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key, capthick=10, linestyle='--', dashes=(1,5));
 	else:
-		plt.plot(range(len(sumUpJobData[key])), sumUpJobData[key], label=key,linestyle=styles[index]);
+		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key, capthick=10, linestyle=styles[index]);
+
+
 	index += 1;
 plt.legend();
 plt.savefig("summup.png");
-#plt.show();
+plt.show();
 #test
+plt.close('all')

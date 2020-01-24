@@ -59,6 +59,8 @@ public class ModelParameters
 	public static int SIMU_LENGTH = 8000;
 	public static StartMode startMode = StartMode.Random;
 	
+	public static int expeIndex = 0;
+	
 
 	public static double getStartingBeeHJTiter() {
 		switch(startMode)
@@ -77,12 +79,13 @@ public class ModelParameters
 	
 	/********* EXPE PARAM MODIFICATION ***********/
 	
-	public static void paramExpe(int numberOfBees, int numberOfLarvae, int simuLength, StartMode startMode)
+	public static void paramExpe(int numberOfBees, int numberOfLarvae, int simuLength, StartMode startMode, int expeIndex)
 	{
 		ModelParameters.NUMBER_BEES = numberOfBees;
 		ModelParameters.NUMBER_LARVAE = numberOfLarvae;
 		ModelParameters.SIMU_LENGTH = simuLength;
 		ModelParameters.startMode = startMode;
+		ModelParameters.expeIndex = expeIndex;
 		IDManager.resetIDCounter();
 	}
 	

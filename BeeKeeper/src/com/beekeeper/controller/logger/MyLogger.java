@@ -72,6 +72,8 @@ public class MyLogger
 		sb.append(ModelParameters.NUMBER_LARVAE);
 		sb.append("_");
 		sb.append(ModelParameters.SIMU_LENGTH);
+		sb.append("_");
+		sb.append(ModelParameters.expeIndex);
 		
 		return sb.toString();
 	}
