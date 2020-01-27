@@ -5,10 +5,14 @@ import com.beekeeper.utils.MyUtils;
 
 public class ModelParameters
 {
+	public static boolean BYPASS_MOTIVATION = false;
+	
+	public static boolean UI_ENABLED = false; //TODO UI TOGGLE
+	
 	public static final double TASK_LEARN_RATE = 0.001;
 	public static final double TASK_FORGET_RATE = 0.0001;
 	
-	public final static double COMBCELL_SIZE = 6.0;
+	public static final double COMBCELL_SIZE = 6.0;
 
 
 	public static final double TIME_DECAY_HungryLarvae = 0.1;

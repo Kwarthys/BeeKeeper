@@ -197,10 +197,19 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		if(currentAction == null)
 		{
-			currentAction = chooseNewTask(s).search();
-			//System.out.println("Executing new Action");
+			if(isInside())
+			{
+				//System.out.println("Executing new Action");
+				currentAction = chooseNewTask(s).search();				
+			}
+			else
+			{
+				currentAction = currentTask.search();
+			}
 		}
 
+		
+		//if(!isInside())System.out.println(this.ID + " " + currentTask.taskName);
 		currentAction.run();			
 
 
@@ -255,7 +264,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			Task current = taskList.get(ti);
 			double currentScore = 0;
 
-			if(current == currentTask && current.isMotivated())
+			if(current == currentTask && current.isMotivated() && !ModelParameters.BYPASS_MOTIVATION)
 			{
 				currentScore = motivation;
 			}

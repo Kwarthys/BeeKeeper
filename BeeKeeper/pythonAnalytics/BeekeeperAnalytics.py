@@ -68,7 +68,7 @@ keys = ["FeedLarvae","Foraging", "Other"];
 def getDict():
 	return {key: 0 for key in keys}
 
-
+larvaeSurvivalSumUP = {}
 sumUpJobData = {}
 
 
@@ -212,11 +212,13 @@ for f in files:
 	initBees = str(len(jobDataPerBee));
 	initLarvae = str(initLarvae);
 	simuLength = str(len(data));
+	larvaeSurvival = int(larvaCounts[-1]*10)/10;
 	smallTitle = initState + "_" + initBees + "_" + initLarvae + "_" + expeNumber;
 	#smallTitle = "test";
-	hugeTitle = initState + " init repartition, " + initBees + " bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(int(larvaCounts[-1]*10)/10) + "% larvae survived";
+	hugeTitle = initState + " init repartition, " + initBees + " bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(larvaeSurvival) + "% larvae survived";
 
 	sumUpJobData[smallTitle] = data;
+	larvaeSurvivalSumUP[smallTitle] = larvaeSurvival;
 	
 	ylims = [0,110];
 
@@ -339,17 +341,27 @@ for key in sumUpJobData.keys():
 					n += 1;
 			sumUpJobData[key][i] = v/n;
 
+meanLarvaeSurvivalSummup = {}
+
 for key in sumUpJobData.keys():
+		larvaeSurvival = larvaeSurvivalSumUP[key]
 		rootKey = key[:-2]
 		expeIndex = key.split("_")[-1]
 		print("root:" + str(rootKey) + " expe:" + str(expeIndex)); 
 	
 		if rootKey not in keyManager:
 			keyManager[rootKey] = [];
+	
+		if rootKey not in meanLarvaeSurvivalSummup:
+			meanLarvaeSurvivalSummup[rootKey] = [];
 
 		keyManager[rootKey].append(sumUpJobData[key]);
+		meanLarvaeSurvivalSummup[rootKey].append(larvaeSurvival)
 
 sumUpJobData = {}
+
+for key in meanLarvaeSurvivalSummup:
+	meanLarvaeSurvivalSummup[key] = int(moyenne(meanLarvaeSurvivalSummup[key])*10)/10
 
 for key in keyManager:
 	sumUpJobData[key] = tabMean(keyManager[key])
@@ -359,7 +371,6 @@ for key in keyManager:
 
 styles = ['-', '--', '-.', ':','custom']
 index = 0;
-print(sumUpJobData.keys());
 plt.figure(figsize=(9,7));
 plt.suptitle("Nurse Count for all experiments");
 plt.xlabel("time-steps");
@@ -367,9 +378,9 @@ plt.ylabel("Number of larva feeding bee (%)");
 plt.ylim([-10,110])
 for key in sumUpJobData.keys():
 	if(styles[index] == 'custom'):
-		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key, capthick=10, linestyle='--', dashes=(1,5));
+		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key+' '+str(meanLarvaeSurvivalSummup[key]), capthick=10, linestyle='--', dashes=(1,5));
 	else:
-		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key, capthick=10, linestyle=styles[index]);
+		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key+' '+str(meanLarvaeSurvivalSummup[key]), capthick=10, linestyle=styles[index]);
 
 
 	index += 1;

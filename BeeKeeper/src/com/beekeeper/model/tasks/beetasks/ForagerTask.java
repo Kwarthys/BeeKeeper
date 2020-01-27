@@ -10,9 +10,9 @@ public class ForagerTask extends Task {
 	private boolean back = false;
 	private int c = 0;
 
-	public ForagerTask(WorkingAgentServices agentServices) {
-		super(agentServices, "Foraging");
-		
+	public ForagerTask(WorkingAgentServices agentServices)
+	{
+		super(agentServices, "Foraging");		
 		
 		//Wandering inHive
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
