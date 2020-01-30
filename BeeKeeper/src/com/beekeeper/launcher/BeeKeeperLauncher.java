@@ -13,7 +13,7 @@ public class BeeKeeperLauncher {
 		System.setProperty("sun.java2d.opengl", "true");
 		
 		int simuLength = 5000;
-		int reps = 3;
+		int reps = 5;
 		
 		for(int i = 0; i<reps;++i)
 		{			

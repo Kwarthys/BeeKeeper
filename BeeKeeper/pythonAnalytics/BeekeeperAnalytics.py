@@ -21,6 +21,34 @@ def getJobHatch(job):
 		return '\\\\\\\\\\\\\\';
 	elif job == "Other":
 		return '';
+		
+def getDictWithsortedExpe(dict):
+	sortedDict = {};
+	for key in dict:
+		rootKey = key[:-2]
+		expeIndex = key.split("_")[-1]
+	
+		if rootKey not in sortedDict:
+			sortedDict[rootKey] = [];
+		sortedDict[rootKey].append(dict[key]);
+		
+	return sortedDict;
+		
+def getDictListsWithsortedExpeMean(dict):
+	sortedDict = getDictWithsortedExpe(dict)
+	
+	for key in sortedDict:
+		sortedDict[key] = tabMean(sortedDict[key]);
+		
+	return sortedDict;
+		
+def getDictValuesWithsortedExpeMean(dict):
+	sortedDict = getDictWithsortedExpe(dict)
+	print("sortedDict: " + str(sortedDict))
+	for key in sortedDict:
+		sortedDict[key] = moyenne(sortedDict[key]);
+		
+	return sortedDict;
 
 def getFill(value, number):
 	lalist = [];
@@ -70,6 +98,8 @@ def getDict():
 
 larvaeSurvivalSumUP = {}
 sumUpJobData = {}
+jobDatePerBeeTotal = {}
+globalInteruptions = {}
 
 
 path = '../expe/'
@@ -200,6 +230,10 @@ for f in files:
 	data.append([otherJobCount/total, nurseCount/total, foragerCount/total]);
 	hjData.append(hjAmount/total);
 	larvaCounts.append(larvae*100/initLarvae);
+	
+	#-------------------------------------------------------------------------#
+	#-----------------------------READINGS ARE DONE---------------------------#
+	#-------------------------------------------------------------------------#
 
 	for beeID in jobDataPerBee.keys():
 		for task in jobDataPerBee[beeID].keys():
@@ -219,12 +253,24 @@ for f in files:
 
 	sumUpJobData[smallTitle] = data;
 	larvaeSurvivalSumUP[smallTitle] = larvaeSurvival;
+	jobDatePerBeeTotal[smallTitle] = {"FeedLarvae" : moyenne(column(data,1)), "Foraging" : moyenne(column(data,2)), "Other" : moyenne(column(data,0))};
+	
+	interupts = 0;
+	for beeID in jobDurationPB:
+		interupts += len(jobDurationPB[beeID]);
+	
+	globalInteruptions[smallTitle] = interupts/len(jobDurationPB);
+	
 	
 	ylims = [0,110];
 
 	generationOK = False;
 	
-	while(not generationOK):
+	tries = 0;
+	
+	while(not generationOK and tries < 4):
+	
+		tries += 1;
 
 		plt.close('all');
 
@@ -277,7 +323,7 @@ for f in files:
 		plt.subplots_adjust(hspace=0.4)
 		plt.subplots_adjust(wspace=0.1)
 		plt.subplot(2,1,1, title='Colony');
-		plt.plot(range(len(hjData)), hjData, label='bees mean HJTiters');
+		plt.plot(range(len(hjData)), hjData, label='bees mean JHTiters');
 		plt.plot(range(len(larvaCounts)), larvaCounts, label='Larvae Count (% of init)');
 		plt.legend()
 		plt.ylabel("%")
@@ -316,7 +362,7 @@ for f in files:
 
 			if i != 0 and i != sampleSize/2:
 				ax.get_yaxis().set_visible(False);
-			else : plt.ylabel("HJTiter %");
+			else : plt.ylabel("JHTiter %");
 			if(i<sampleSize/2):
 				ax.get_xaxis().set_visible(False);
 
@@ -324,11 +370,50 @@ for f in files:
 		plt.savefig(smallTitle + "HJ.png");
 		#plt.show();
 		plt.close('all')
+
+
+
+		
+		
+		
+		
+#------------------------WORKS DIVISION----------------------#
+jobDatePerBeeTotal = getDictWithsortedExpe(jobDatePerBeeTotal)
+tmp = {};
+for key in jobDatePerBeeTotal:
+	laliste = {}
+	tmp[key] = {"values" : {}, "errorBars" : {}}
+	for taskDict in jobDatePerBeeTotal[key]:
+		for taskKey in taskDict:
+			if taskKey not in laliste: laliste[taskKey] = [];
+			laliste[taskKey].append(taskDict[taskKey]);
+	
+	for taskKey in laliste:
+		tmp[key]['values'][taskKey] = moyenne(laliste[taskKey])
+		tmp[key]['errorBars'][taskKey] = ecartype(laliste[taskKey]);
+
+jobDatePerBeeTotal = tmp
+
+globalInteruptions = getDictValuesWithsortedExpeMean(globalInteruptions)
+
+plt.figure(figsize=(11,7))
+i = 1
+for expeKey in jobDatePerBeeTotal:
+
+	ax = plt.subplot(2,3,i, title=expeKey+" "+ str(int(globalInteruptions[expeKey]*10)/10) + " switches.")
+	plt.ylim([-10,110])
+	plt.bar(range(len(jobDatePerBeeTotal[expeKey]["values"])), list(jobDatePerBeeTotal[expeKey]["values"].values()), yerr=list(jobDatePerBeeTotal[expeKey]["errorBars"].values()))
+	plt.xticks(range(len(jobDatePerBeeTotal[expeKey]["values"])), list(jobDatePerBeeTotal[expeKey]["values"].keys()))
+	i=i+1
+plt.savefig("LaborDivisionSummup.png");
+#plt.show()
+		
+		
+#------------------------SUMMUP GRAPH------------------------#
 	
 sumUpErrorBars = {}
 
 keyManager = {}
-
 
 for key in sumUpJobData.keys():
 		sumUpJobData[key] = column(sumUpJobData[key],1)
@@ -347,7 +432,7 @@ for key in sumUpJobData.keys():
 		larvaeSurvival = larvaeSurvivalSumUP[key]
 		rootKey = key[:-2]
 		expeIndex = key.split("_")[-1]
-		print("root:" + str(rootKey) + " expe:" + str(expeIndex)); 
+		#print("root:" + str(rootKey) + " expe:" + str(expeIndex)); 
 	
 		if rootKey not in keyManager:
 			keyManager[rootKey] = [];
@@ -377,15 +462,16 @@ plt.xlabel("time-steps");
 plt.ylabel("Number of larva feeding bee (%)");
 plt.ylim([-10,110])
 for key in sumUpJobData.keys():
+	leLabel = str(meanLarvaeSurvivalSummup[key])+'% ' + key;
 	if(styles[index] == 'custom'):
-		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key+' '+str(meanLarvaeSurvivalSummup[key]), capthick=10, linestyle='--', dashes=(1,5));
+		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=leLabel, capthick=10, linestyle='--', dashes=(1,5));
 	else:
-		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=key+' '+str(meanLarvaeSurvivalSummup[key]), capthick=10, linestyle=styles[index]);
+		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=leLabel, capthick=10, linestyle=styles[index]);
 
 
 	index += 1;
 plt.legend();
 plt.savefig("summup.png");
-plt.show();
-#test
+#plt.show();
 plt.close('all')
+print('\a')
