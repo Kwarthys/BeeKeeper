@@ -5,7 +5,7 @@ import com.beekeeper.utils.MyUtils;
 
 public class ModelParameters
 {
-	public static boolean BYPASS_MOTIVATION = false;
+	public static boolean BYPASS_MOTIVATION = true;
 	
 	public static boolean UI_ENABLED = false; //TODO UI TOGGLE
 	

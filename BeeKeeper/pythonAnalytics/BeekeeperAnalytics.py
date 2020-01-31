@@ -249,7 +249,7 @@ for f in files:
 	larvaeSurvival = int(larvaCounts[-1]*10)/10;
 	smallTitle = initState + "_" + initBees + "_" + initLarvae + "_" + expeNumber;
 	#smallTitle = "test";
-	hugeTitle = initState + " init repartition, " + initBees + " bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(larvaeSurvival) + "% larvae survived";
+	hugeTitle = initState + " initial distribution, " + initBees + " adult bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(larvaeSurvival) + "% larvae survived";
 
 	sumUpJobData[smallTitle] = data;
 	larvaeSurvivalSumUP[smallTitle] = larvaeSurvival;
@@ -274,7 +274,7 @@ for f in files:
 
 		plt.close('all');
 
-		plt.figure(figsize=(9,7));
+		plt.figure(0, figsize=(9,7));
 		#subplot(nrows, ncols, index)
 		plt.subplots_adjust(hspace=0.5)
 		plt.subplot(2,1,1, title='Colony work repartition');
@@ -318,12 +318,12 @@ for f in files:
 
 		plt.savefig(smallTitle + "Tasks.png");
 
-		plt.figure(figsize=(9,7));
+		plt.figure(1, figsize=(9,7));
 		plt.suptitle(hugeTitle);
 		plt.subplots_adjust(hspace=0.4)
 		plt.subplots_adjust(wspace=0.1)
 		plt.subplot(2,1,1, title='Colony');
-		plt.plot(range(len(hjData)), hjData, label='bees mean JHTiters');
+		plt.plot(range(len(hjData)), hjData, label='Adult bees mean JHTiters');
 		plt.plot(range(len(larvaCounts)), larvaCounts, label='Larvae Count (% of init)');
 		plt.legend()
 		plt.ylabel("%")
@@ -353,7 +353,7 @@ for f in files:
 				plt.legend(handles=newHandles, labels=newLabels);
 
 				generationOK = len(newLabels) == 3;
-				plt.xlabel("timesteps");
+				plt.xlabel("times-teps");
 				box = ax.get_position();
 				ax.set_position([box.x0, box.y0,box.width, box.height]);
 				plt.legend(handles=newHandles, labels=newLabels,loc='upper center', bbox_to_anchor=(0.5, -0.4), ncol=3);
@@ -396,7 +396,7 @@ jobDatePerBeeTotal = tmp
 
 globalInteruptions = getDictValuesWithsortedExpeMean(globalInteruptions)
 
-plt.figure(figsize=(11,7))
+plt.figure(0,figsize=(11,7))
 i = 1
 for expeKey in jobDatePerBeeTotal:
 
@@ -407,9 +407,11 @@ for expeKey in jobDatePerBeeTotal:
 	i=i+1
 plt.savefig("LaborDivisionSummup.png");
 #plt.show()
-		
-		
-#------------------------SUMMUP GRAPH------------------------#
+
+
+
+
+
 	
 sumUpErrorBars = {}
 
@@ -445,24 +447,50 @@ for key in sumUpJobData.keys():
 
 sumUpJobData = {}
 
+tmp = {}
+
 for key in meanLarvaeSurvivalSummup:
-	meanLarvaeSurvivalSummup[key] = int(moyenne(meanLarvaeSurvivalSummup[key])*10)/10
+	tmp[key] = {"value":0, "error":0}
+	tmp[key]["value"] = int(moyenne(meanLarvaeSurvivalSummup[key])*10)/10
+	tmp[key]["error"] = int(ecartype(meanLarvaeSurvivalSummup[key])*10)/10
+
+meanLarvaeSurvivalSummup =  tmp
 
 for key in keyManager:
 	sumUpJobData[key] = tabMean(keyManager[key])
 	keyManager[key] = tabErrorBar(keyManager[key])
+
+
+#------------------------Larvae DEATH------------------------#
+
+plt.close('all')
+plt.figure(0,figsize=(5,5));
+plt.suptitle("Larvae deaths for all experiments\n(without our interruption mechanism)");
+plt.ylabel("Larvae deaths (%)");
+bi = 0
+print(meanLarvaeSurvivalSummup)
+for expeKey in meanLarvaeSurvivalSummup:
+	plt.bar(bi, 100-meanLarvaeSurvivalSummup[expeKey]['value'], yerr=meanLarvaeSurvivalSummup[expeKey]['error'], color='red');
+	bi += 1;
+plt.xticks(range(len(meanLarvaeSurvivalSummup)), list(jobDatePerBeeTotal.keys()), rotation=15)
+#plt.show()
+plt.savefig("larvaeDeaths.png");
+
+		
+		
+#------------------------SUMMUP GRAPH------------------------#
 		
 
 
 styles = ['-', '--', '-.', ':','custom']
 index = 0;
-plt.figure(figsize=(9,7));
-plt.suptitle("Nurse Count for all experiments");
+plt.figure(2,figsize=(5,5));
+plt.suptitle("Nurse Counts for all experiments\n(without our interruption mechanism)");
 plt.xlabel("time-steps");
 plt.ylabel("Number of larva feeding bee (%)");
 plt.ylim([-10,110])
 for key in sumUpJobData.keys():
-	leLabel = str(meanLarvaeSurvivalSummup[key])+'% ' + key;
+	leLabel = key;
 	if(styles[index] == 'custom'):
 		plt.errorbar(range(len(sumUpJobData[key])),sumUpJobData[key], yerr=keyManager[key], errorevery=100, label=leLabel, capthick=10, linestyle='--', dashes=(1,5));
 	else:
