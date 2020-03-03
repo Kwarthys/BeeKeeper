@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombUtility;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
@@ -35,11 +34,11 @@ public class StimuliManager
 		}
 	};
 
-	public StimuliManager(Comb c)
+	public StimuliManager(Dimension combSize)
 	{
 		stimuliTiles = new ArrayList<>();
 		
-		gridSize = new Dimension(c.getDimension());
+		gridSize = new Dimension(combSize);
 		for(int j = 0; j < gridSize.height; j++)
 		{
 			for(int i = 0; i < gridSize.width; i++)

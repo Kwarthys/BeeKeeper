@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public interface CombServices
 {
@@ -23,4 +24,6 @@ public interface CombServices
 	public void notifyTakeOff(Agent a);
 	public void notifyLanding(Agent a);
 	public void swap(int cellIndexSwap1, int cellIndexSwap2);
+	
+	public StimuliManagerServices getCurrentSManagerServices();
 }

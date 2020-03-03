@@ -1,7 +1,5 @@
 package com.beekeeper.controller;
 
-import java.awt.Dimension;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
@@ -16,30 +14,25 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
+import com.beekeeper.model.comb.CombManager;
+import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
-import com.beekeeper.model.hive.BeeHive;
-import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
-import com.beekeeper.utils.MyUtils;
 
 public class MainController
-{
-	//Testing new branch
-	
+{	
 	ArrayList<CombDrawer> drawers = new ArrayList<CombDrawer>();
 
 	private ArrayList<Comb> combs = new ArrayList<Comb>();
 
-	private ArrayList<StimuliManager> sManagers = new ArrayList<>();
-
 	private MyLogger logger = new MyLogger();
+	
+	private CombManager combManager;
 
 	private BeeWindow window;
 
 	private AgentFactory agentFactory;
-
-	private BeeHive hive;
 
 	private int simuStep = 0;
 
@@ -50,11 +43,6 @@ public class MainController
 		@Override
 		public void logMyTaskSwitch(Task newTask, int beeID) {
 			MainController.this.logger.logTask(beeID, newTask.taskName);				
-		}
-
-		@Override
-		public double getHiveTemperature(){
-			return hive.getTemperature();
 		}
 
 		@Override
@@ -85,15 +73,13 @@ public class MainController
 
 	public MainController()
 	{
-		this.agentFactory = new AgentFactory();	
+		this.agentFactory = new AgentFactory();
+		
+		this.combManager = new CombManager();
+		this.combManager.initiateCombs(1, agentFactory, this.controlServices);
 
-		Dimension combSize = new Dimension(30,30);
-
-		Point2D.Double center = new Point2D.Double(combSize.width/2,combSize.height/2);
-
-		this.hive = new BeeHive();
-
-		for(int i = 0; i < 1; ++i)
+		/*
+		for(int i = 0; i < 2; ++i)
 		{
 			//ArrayList<Agent> bees = new ArrayList<>();
 			Comb c = new Comb(combSize);
@@ -114,11 +100,6 @@ public class MainController
 			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), this.controlServices);		
 			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
 
-			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
-			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, c,MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			//agentFactory.spawnTestAgents(3, c,MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
-
 			c.setID(i);
 			this.combs.add(c);	
 
@@ -128,7 +109,13 @@ public class MainController
 
 			this.drawers.add(drawer);
 		}
+		 */
 
+		for(CombServices c : combManager.getCombsServices())
+		{
+			this.drawers.add(new CombDrawer(c));
+		}
+		
 		TaskGrapher g = new TaskGrapher(agentFactory.allAgents);
 
 		if(ModelParameters.UI_ENABLED == true)
@@ -220,7 +207,7 @@ public class MainController
 				if(b.getBeeType() == AgentType.ADULT_BEE || b.getBeeType() == AgentType.BROOD_BEE)
 				{
 					WorkingAgent w = (WorkingAgent) b;
-					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
+					//logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
 				}
 			}
 
@@ -235,13 +222,8 @@ public class MainController
 					return !t.alive;
 				}
 			});
-
-			for(StimuliManager s : sManagers)
-			{
-				s.updateStimuli();
-			}
-
-			this.hive.computeInternalTemperature(Math.cos(simuStep++ * 1.0 / 300) * 10 + 15);
+			
+			this.combManager.updateStimuli();
 
 			if(this.window != null)
 			{
@@ -256,7 +238,7 @@ public class MainController
 			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(0);//30
+				Thread.sleep(50);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -10,12 +10,15 @@ import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public class Comb
 {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	
 	private ArrayList<CombCell> cells = new ArrayList<>();
+	
+	private StimuliManagerServices smServices;
 	
 	public int ID;
 	
@@ -119,19 +122,36 @@ public class Comb
 			cell1.visiting = cell2.visiting;
 			cell2.visiting = tmp;
 			
+			if(cell2.visiting == null || cell1.visiting == null)
+			{
+				System.out.println("SwapError on " + cellIndexSwap1 + " and " + cellIndexSwap2 + " on comb " + ID);
+			}
+			
 			cell1.visiting.hostCell = cell1;
 			cell2.visiting.hostCell = cell2;
 			
 			//System.out.println("SWAP");
 		}
+
+		@Override
+		public StimuliManagerServices getCurrentSManagerServices() {
+			return smServices;
+		}
 	};
 	
-	public Comb(Dimension combSize)
+	public void registerNewSManager(StimuliManagerServices smServices)
+	{
+		this.smServices = smServices;
+	}
+	
+	public Comb(Dimension combSize, StimuliManagerServices smServices)
 	{
 		this.size = new Dimension(combSize);
 		cells = CombUtility.fillCells(size,ID, services);
 		
 		jamManager = new TrafficJamManager(services);
+		
+		registerNewSManager(smServices);
 	}
 	
 	protected void testNeighborhood() //Not private to avoid "not used" warning

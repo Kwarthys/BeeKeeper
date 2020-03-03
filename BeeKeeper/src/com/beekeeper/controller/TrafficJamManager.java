@@ -13,6 +13,7 @@ public class TrafficJamManager {
 	public void resetAll()
 	{
 		jamRecord.clear();
+		System.out.println("reset all");
 	}
 	
 	public TrafficJamManager(CombServices combServices) {
@@ -24,13 +25,18 @@ public class TrafficJamManager {
 	{
 		if(jamRecord.containsKey(cellIndexAsking))
 		{
-			combServices.swap(jamRecord.get(cellIndexAsking), cellIndexAsking);
+			if(jamRecord.get(cellIndexAsking) == cellIndexJammer)
+			{
+				//System.out.println(cellIndexAsking + " swapping with " + cellIndexJammer + " on comb " + combServices.getID());
+				combServices.swap(jamRecord.get(cellIndexAsking), cellIndexAsking);
+				jamRecord.remove(cellIndexAsking);
+				//Conflict has been resolved
+				return;
+			}
 		}
-		else
-		{
-			jamRecord.put(cellIndexJammer, cellIndexAsking);			
-		}
-	}
-	
-	
+
+		//System.out.println(cellIndexAsking + " blocked by " + cellIndexJammer + " on comb " + combServices.getID());
+		jamRecord.put(cellIndexJammer, cellIndexAsking);			
+		
+	}	
 }

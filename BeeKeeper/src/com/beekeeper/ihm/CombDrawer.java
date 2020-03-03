@@ -38,19 +38,19 @@ public class CombDrawer extends JPanel{
 
 	private CombServices cs;
 
-	public CombDrawer(CombServices c, StimuliManagerServices stimuliManagerServices)
+	public CombDrawer(CombServices c)
 	{
 		this.setPreferredSize(new Dimension(400,400));
 		this.setMinimumSize(new Dimension(350,350));
 
 		this.cs = c;
-
-		this.stimuliManagerServices = stimuliManagerServices;
 	}
 
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		
+		this.stimuliManagerServices = cs.getCurrentSManagerServices();
 
 		g.setColor(GraphicParams.BACKGROUND);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());

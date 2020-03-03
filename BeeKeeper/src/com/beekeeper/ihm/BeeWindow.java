@@ -82,7 +82,7 @@ public class BeeWindow extends JFrame
 		c.weightx = 0.5;
 		c.weighty = 0.5;
 		
-		container.add(grapher, c);
+		//container.add(grapher, c);
 		
 		for(CombDrawer drawer : drawers)
 		{			

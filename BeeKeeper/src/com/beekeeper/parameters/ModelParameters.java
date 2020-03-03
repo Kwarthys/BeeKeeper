@@ -5,9 +5,9 @@ import com.beekeeper.utils.MyUtils;
 
 public class ModelParameters
 {
-	public static boolean BYPASS_MOTIVATION = true;
+	public static boolean BYPASS_MOTIVATION = false;
 	
-	public static boolean UI_ENABLED = false; //TODO UI TOGGLE
+	public static boolean UI_ENABLED = true; //TODO UI TOGGLE
 	
 	public static final double TASK_LEARN_RATE = 0.001;
 	public static final double TASK_FORGET_RATE = 0.0001;

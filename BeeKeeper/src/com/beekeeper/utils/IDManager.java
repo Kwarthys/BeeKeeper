@@ -6,6 +6,7 @@ public class IDManager
 	
 	public static int getNextID()
 	{
+		System.out.println("Giving id " + id);
 		return id++;
 	}
 
