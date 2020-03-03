@@ -7,6 +7,7 @@ import com.beekeeper.model.stimuli.declarations.FoodSmellStimulus;
 import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.declarations.Ocimene;
 import com.beekeeper.model.stimuli.declarations.TestStimulus;
+import com.beekeeper.parameters.ModelParameters;
 
 public class StimulusFactory
 {
@@ -76,11 +77,16 @@ public class StimulusFactory
 		return s;
 	}
 	
+	/**
+	 * lambda = e^(-ln(2) / halflife * Param)
+	 * @param smell to evaporate
+	 * @return the coefficient to apply to the substance to match the half life evaporation time.
+	 */
 	public static double getEvapRate(Stimulus smell)
 	{
 		if(checkDataBaseWith(smell))
 		{
-			return database.get(smell).getDecay();			
+			return Math.exp(-Math.log(2)/database.get(smell).getHalfLife() * ModelParameters.secondToTimeStepCoef);	
 		}
 		else
 		{
@@ -92,7 +98,7 @@ public class StimulusFactory
 	{
 		if(checkDataBaseWith(smell))
 		{
-			return database.get(smell).getTransmissibility();			
+			return  Math.exp(-Math.log(2)/database.get(smell).getTransmissibility() * ModelParameters.secondToTimeStepCoef);				
 		}
 		else
 		{

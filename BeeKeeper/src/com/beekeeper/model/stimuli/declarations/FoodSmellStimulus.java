@@ -8,8 +8,8 @@ public class FoodSmellStimulus extends AStimulus {
 
 	public FoodSmellStimulus()
 	{
-		this.timeDecay = ModelParameters.TIME_DECAY_FoodSmell;
-		this.transmissibility = ModelParameters.TRANSMISSIBILITY_FoodSmell;
+		this.halfLife = ModelParameters.FoodSmell_HALFLIFE;
+		this.transmissibility_halflifelike = ModelParameters.TRANSMISSIBILITY_FoodSmell;
 		this.type = Stimulus.FoodSmell;
 	}
 }

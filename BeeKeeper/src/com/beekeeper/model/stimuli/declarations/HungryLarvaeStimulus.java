@@ -8,8 +8,8 @@ public class HungryLarvaeStimulus extends AStimulus
 {	
 	public HungryLarvaeStimulus()
 	{
-		this.timeDecay = ModelParameters.TIME_DECAY_HungryLarvae;
-		this.transmissibility = ModelParameters.TRANSMISSIBILITY_HungryLarvae;
+		this.halfLife = ModelParameters.HungryLarvae_HALFLIFE;
+		this.transmissibility_halflifelike = ModelParameters.TRANSMISSIBILITY_HungryLarvae;
 		this.type = Stimulus.HungryLarvae;
 	}
 }

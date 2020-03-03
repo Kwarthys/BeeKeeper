@@ -2,13 +2,20 @@ package com.beekeeper.model.stimuli;
 
 public abstract class AStimulus
 {
-	protected double timeDecay = 0.95;
-	protected double transmissibility = 0.5;
+	/**
+	 * halflife in seconds of this stimulus
+	 */
+	protected double halfLife = 1.35;
+	
+	/**
+	 * Act as a kind of halflife, but as its an exhange, it represents the time in second where 80% of the exchange will be completed.
+	 */
+	protected double transmissibility_halflifelike = 0.1;
 	protected Stimulus type;
 	
 	public Stimulus getStimulusType() {return type;}
 	
-	public double getDecay() {return timeDecay;}
+	public double getHalfLife() {return halfLife;}
 	
-	public double getTransmissibility() {return transmissibility;}
+	public double getTransmissibility() {return transmissibility_halflifelike;}
 }

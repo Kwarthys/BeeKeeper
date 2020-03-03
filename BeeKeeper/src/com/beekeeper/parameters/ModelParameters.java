@@ -15,11 +15,11 @@ public class ModelParameters
 	public static final double COMBCELL_SIZE = 6.0;
 
 
-	public static final double TIME_DECAY_HungryLarvae = 0.1;
-	public static final double TRANSMISSIBILITY_HungryLarvae = 0.5;
+	public static final double HungryLarvae_HALFLIFE = 0.03;
+	public static final double TRANSMISSIBILITY_HungryLarvae = 0.1;
 
-	public static final double TIME_DECAY_FoodSmell = 0.1;
-	public static final double TRANSMISSIBILITY_FoodSmell = 0.1;
+	public static final double FoodSmell_HALFLIFE = 0.03;
+	public static final double TRANSMISSIBILITY_FoodSmell = 0.03;
 	
 	public static final double getOcimeneEmitedByHJ(double hjTiter)
 	{
@@ -34,8 +34,8 @@ public class ModelParameters
 	}
 	
 	public static final double HJ_INCREMENT = 0.0001;
-	public static final double OCIMENE_EVAPRATE = 0.8;
-	public static final double OCIMENE_TRANSMISSIBILITY = 0.3;
+	public static final double OCIMENE_HALFLIFE = 0.3;
+	public static final double OCIMENE_TRANSMISSIBILITY = 0.057;
 	
 	
 	public static final double SMELL_THRESHOLD = 0.02;

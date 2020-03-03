@@ -8,8 +8,8 @@ public class Ocimene extends AStimulus {
 
 	public Ocimene()
 	{
-		this.timeDecay = ModelParameters.OCIMENE_EVAPRATE;
-		this.transmissibility = ModelParameters.OCIMENE_TRANSMISSIBILITY;
+		this.halfLife = ModelParameters.OCIMENE_HALFLIFE;
+		this.transmissibility_halflifelike = ModelParameters.OCIMENE_TRANSMISSIBILITY;
 		this.type = Stimulus.Ocimene;
 	}
 
