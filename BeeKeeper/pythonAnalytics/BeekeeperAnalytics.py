@@ -101,8 +101,11 @@ sumUpJobData = {}
 jobDatePerBeeTotal = {}
 globalInteruptions = {}
 
+GRAPHWITHMOT = True;
 
 path = '../expe/'
+if GRAPHWITHMOT:
+	path = '../expeMot/'
 
 files = []
 # r=root, d=directories, f = files
@@ -463,10 +466,15 @@ for key in keyManager:
 
 #------------------------Larvae DEATH------------------------#
 
+larvaeDeathTitle = "Larvae deaths for all experiments";
+if not GRAPHWITHMOT:
+	larvaeDeathTitle += "\n(without our interruption mechanism)";
+
 plt.close('all')
 plt.figure(0,figsize=(5,5));
-plt.suptitle("Larvae deaths for all experiments\n(without our interruption mechanism)");
+plt.suptitle(larvaeDeathTitle);
 plt.ylabel("Larvae deaths (%)");
+plt.ylim([0,50])
 bi = 0
 print(meanLarvaeSurvivalSummup)
 for expeKey in meanLarvaeSurvivalSummup:
@@ -480,15 +488,17 @@ plt.savefig("larvaeDeaths.png");
 		
 #------------------------SUMMUP GRAPH------------------------#
 		
-
+summupGraphTitle = "Nurse Counts for all experiments";
+if not GRAPHWITHMOT:
+	summupGraphTitle += "\n(without our interruption mechanism)";
 
 styles = ['-', '--', '-.', ':','custom']
 index = 0;
 plt.figure(2,figsize=(5,5));
-plt.suptitle("Nurse Counts for all experiments\n(without our interruption mechanism)");
+plt.suptitle(summupGraphTitle);
 plt.xlabel("time-steps");
 plt.ylabel("Number of larva feeding bee (%)");
-plt.ylim([-10,110])
+plt.ylim([-10,110]);
 for key in sumUpJobData.keys():
 	leLabel = key;
 	if(styles[index] == 'custom'):
