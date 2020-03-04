@@ -26,7 +26,7 @@ public class MainController
 	private ArrayList<Comb> combs = new ArrayList<Comb>();
 
 	private MyLogger logger = new MyLogger();
-	
+
 	private CombManager combManager;
 
 	private BeeWindow window;
@@ -68,12 +68,22 @@ public class MainController
 		public void notifyWindowClosed() {
 			MainController.this.closed = true;
 		}
+
+		@Override
+		public void switchFrames(int index1, int index2) {
+			MainController.this.switchFrames(index1, index2);
+		}
+
+		@Override
+		public void reverseFrame(int index) {
+			MainController.this.reverseFrame(index);
+		}
 	};
 
 	public MainController()
 	{
 		this.agentFactory = new AgentFactory();
-		
+
 		this.combManager = new CombManager();
 		this.combManager.initiateCombs(3, agentFactory, this.controlServices);
 
@@ -81,7 +91,7 @@ public class MainController
 		{
 			this.drawers.add(new CombDrawer(c));
 		}
-		
+
 		TaskGrapher g = new TaskGrapher(agentFactory.allAgents);
 
 		if(ModelParameters.UI_ENABLED == true)
@@ -90,11 +100,6 @@ public class MainController
 			closed = false;			
 		}
 
-		reverseFrame(0);
-		switchFrames(0, 1);
-		
-		this.window.updateDrawersPos();
-		
 		programLoop();
 
 		if(this.window != null)
@@ -130,21 +135,37 @@ public class MainController
 	{
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
-*/
+	 */
 	private void reverseFrame(int index)
 	{
+		if(index >= combManager.getCombsServices().size()/2 || index < 0)
+		{
+			System.out.println("refused reverse");
+			return;
+		}
+
 		combManager.reverseFrame(index);
 		MyUtils.switchElementsInList(drawers, index*2, index*2+1);
+
+		this.window.updateDrawersPos();
 	}
-	
+
 	private void switchFrames(int index1, int index2)
 	{
+		if(index1 >= combManager.getCombsServices().size()/2 || index2 >= combManager.getCombsServices().size()/2 || index1 < 0 || index2 < 0 || index1 == index2)
+		{
+			System.out.println("refused switch");
+			return;
+		}
+
 		combManager.switchFrames(index1, index2);
 
 		MyUtils.switchElementsInList(drawers, index1*2, index2*2);
 		MyUtils.switchElementsInList(drawers, index1*2+1, index2*2+1);
+
+		this.window.updateDrawersPos();
 	}
-	
+
 	private void logTurn(String... ss)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -196,7 +217,7 @@ public class MainController
 					WorkingAgent w = (WorkingAgent) b;
 					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
 				}
-				*/
+				 */
 			}
 
 			for(Comb c : combs)
@@ -210,7 +231,7 @@ public class MainController
 					return !t.alive;
 				}
 			});
-			
+
 			this.combManager.updateStimuli();
 
 			if(this.window != null)

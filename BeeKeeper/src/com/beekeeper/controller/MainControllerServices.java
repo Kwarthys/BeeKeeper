@@ -10,4 +10,7 @@ public interface MainControllerServices
 	public CombCell askLandingZone();
 
 	public void notifyWindowClosed();
+	
+	public void switchFrames(int index1, int index2);
+	public void reverseFrame(int index);
 }

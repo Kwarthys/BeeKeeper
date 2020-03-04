@@ -22,11 +22,11 @@ public class BeeWindow extends JFrame
 	
 	private JPanel container;
 	private JComboBox<Stimulus> box;
+	private FrameHandlerPanel frameHandler;
 	
 	public BeeWindow(TaskGrapher grapher, ArrayList<CombDrawer> drawers, MainControllerServices services)
 	{	
 		setTitle("BeeKeeper");
-		
 		this.drawers = drawers;
 		
 		this.addWindowListener(new WindowListener() {			
@@ -74,6 +74,18 @@ public class BeeWindow extends JFrame
 			}
 		});
 		
+		frameHandler = new FrameHandlerPanel(new FrameHandlerCallback() {			
+			@Override
+			public void switchFrames(int index1, int index2) {
+				services.switchFrames(index1, index2);
+			}
+			
+			@Override
+			public void reverseFrame(int index) {
+				services.reverseFrame(index);
+			}
+		});
+		
 		updateDrawersPos();
 		
 		this.setContentPane(container);
@@ -108,6 +120,16 @@ public class BeeWindow extends JFrame
 			c.gridx++;
 			container.add(drawer, c);
 		}
+		
+		c = new GridBagConstraints();
+		//c.gridy = 2;
+		//c.gridx = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		
+		container.add(frameHandler);
+		
+		this.repaint();
+		setVisible(true);
 	}
 	
 }
