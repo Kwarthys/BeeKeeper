@@ -24,4 +24,12 @@ public abstract class EmitterAgent extends Agent
 	{
 		stimuliManagerServices.emit(s, amount, new Point(hostCell.x, hostCell.y));
 	}
+	
+	
+	@Override
+	public void registerNewStimuliManagerServices(StimuliManagerServices stimuliManagerServices)
+	{
+		this.stimuliManagerServices = stimuliManagerServices;
+	}
+	
 }

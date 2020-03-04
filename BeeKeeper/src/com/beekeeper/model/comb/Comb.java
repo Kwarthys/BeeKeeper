@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-import com.beekeeper.controller.TrafficJamManager;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.cell.CellContent;
@@ -142,6 +141,14 @@ public class Comb
 	public void registerNewSManager(StimuliManagerServices smServices)
 	{
 		this.smServices = smServices;
+		
+		this.agents.forEach((Agent a) -> a.registerNewStimuliManagerServices(smServices));
+		this.cells.forEach((CombCell cc) -> {
+			if(cc.visiting != null)
+			{
+				cc.visiting.registerNewStimuliManagerServices(smServices);
+			}
+		});
 	}
 	
 	public Comb(Dimension combSize, StimuliManagerServices smServices)

@@ -3,6 +3,7 @@ package com.beekeeper.model.comb.cell;
 import java.util.ArrayList;
 
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.CombServices;
 
@@ -36,7 +37,7 @@ public class CombCell
 	}
 
 	public boolean askMoveToCell(Agent who, Integer where) {
-		return cs.askMoveToCell(who, where);	
+		return cs.askMoveToCell(who, where);
 	}
 
 	public ArrayList<WorkingAgent> getNeighborBees() {
@@ -60,7 +61,7 @@ public class CombCell
 		visiting = null;
 	}
 
-	public void notifyLanding(Agent a) {
+	public void notifyLanding(EmitterAgent a) {
 		cs.notifyLanding(a);
 		visiting = a;		
 	}

@@ -18,11 +18,16 @@ import com.beekeeper.model.stimuli.Stimulus;
 @SuppressWarnings("serial")
 public class BeeWindow extends JFrame
 {
+	private ArrayList<CombDrawer> drawers;
+	
+	private JPanel container;
+	private JComboBox<Stimulus> box;
 	
 	public BeeWindow(TaskGrapher grapher, ArrayList<CombDrawer> drawers, MainControllerServices services)
 	{	
 		setTitle("BeeKeeper");
 		
+		this.drawers = drawers;
 		
 		this.addWindowListener(new WindowListener() {			
 			@Override
@@ -52,12 +57,12 @@ public class BeeWindow extends JFrame
 
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JPanel container = new JPanel();
+		container = new JPanel();
 		container.setLayout(new GridBagLayout());
 		
 	
 		Stimulus[] available = {Stimulus.Ocimene, Stimulus.AskFood};
-		JComboBox<Stimulus> box = new JComboBox<Stimulus>(available);
+		box = new JComboBox<Stimulus>(available);
 		
 		box.addActionListener(new ActionListener() {			
 			@Override
@@ -68,6 +73,22 @@ public class BeeWindow extends JFrame
 				}
 			}
 		});
+		
+		updateDrawersPos();
+		
+		this.setContentPane(container);
+		
+		setSize(1800,800);
+		
+		container.setBackground(GraphicParams.BACKGROUND);
+		
+		setVisible(true);
+		this.setLocationRelativeTo(null);
+	}
+	
+	public void updateDrawersPos()
+	{
+		container.removeAll();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
@@ -82,22 +103,11 @@ public class BeeWindow extends JFrame
 		c.weightx = 0.5;
 		c.weighty = 0.5;
 		
-		//container.add(grapher, c);
-		
 		for(CombDrawer drawer : drawers)
 		{			
 			c.gridx++;
 			container.add(drawer, c);
 		}
-		
-		this.setContentPane(container);
-		
-		setSize(1800,800);
-		
-		container.setBackground(GraphicParams.BACKGROUND);
-		
-		setVisible(true);
-		this.setLocationRelativeTo(null);
 	}
 	
 }

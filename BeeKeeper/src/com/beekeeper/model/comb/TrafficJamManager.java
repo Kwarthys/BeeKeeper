@@ -1,8 +1,6 @@
-package com.beekeeper.controller;
+package com.beekeeper.model.comb;
 
 import java.util.HashMap;
-
-import com.beekeeper.model.comb.CombServices;
 
 public class TrafficJamManager {
 	

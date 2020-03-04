@@ -58,12 +58,13 @@ public class CombManager {
 			}
 
 			stimuliManagers.add(sm);
-
-			if(combNumber!=2)
-			{
-				agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), controlServices);		
-				agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
-			}
+			agentFactory.spawnBroodCells(combNumber, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), controlServices);		
+			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+			
+			//agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), controlServices);		
+			//agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+			
+			
 
 			c.setID(combNumber);
 			this.combs.add(c);	
@@ -91,7 +92,7 @@ public class CombManager {
 	{
 		//showCombsIndexAsList();
 		MyUtils.switchElementsInList(combs, frameIndex*2, frameIndex*2+1);
-		//showCombsIndexAsList();
+		showCombsIndexAsList();
 		
 		reAttributeStimuliManagers();
 	}
@@ -112,7 +113,7 @@ public class CombManager {
 		//showCombsIndexAsList();
 		MyUtils.switchElementsInList(combs, index1, index2);
 		MyUtils.switchElementsInList(combs, index1+1, index2+1);
-		//showCombsIndexAsList();
+		showCombsIndexAsList();
 		
 		reAttributeStimuliManagers();
 		

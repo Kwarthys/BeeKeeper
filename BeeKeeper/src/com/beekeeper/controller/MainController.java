@@ -17,6 +17,7 @@ import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
+import com.beekeeper.utils.MyUtils;
 
 public class MainController
 {	
@@ -89,8 +90,11 @@ public class MainController
 			closed = false;			
 		}
 
-		combManager.reverseFrame(0);
-		combManager.switchFrames(0, 2);
+		reverseFrame(0);
+		switchFrames(0, 1);
+		
+		this.window.updateDrawersPos();
+		
 		programLoop();
 
 		if(this.window != null)
@@ -127,6 +131,19 @@ public class MainController
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
 */
+	private void reverseFrame(int index)
+	{
+		combManager.reverseFrame(index);
+		MyUtils.switchElementsInList(drawers, index*2, index*2+1);
+	}
+	
+	private void switchFrames(int index1, int index2)
+	{
+		combManager.switchFrames(index1, index2);
+
+		MyUtils.switchElementsInList(drawers, index1*2, index2*2);
+		MyUtils.switchElementsInList(drawers, index1*2+1, index2*2+1);
+	}
 	
 	private void logTurn(String... ss)
 	{
@@ -209,7 +226,7 @@ public class MainController
 			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(30);//30
+				Thread.sleep(300);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

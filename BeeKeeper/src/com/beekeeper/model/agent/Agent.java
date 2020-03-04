@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.utils.IDManager;
 
 public abstract class Agent
@@ -31,6 +32,8 @@ public abstract class Agent
 	public boolean isInside() {return hostCell!=null;}
 	
 	protected int lastVisitedCellNumber = -1;
+	
+	public abstract void registerNewStimuliManagerServices(StimuliManagerServices stimuliManagerServices);
 	
 	public Agent()
 	{
