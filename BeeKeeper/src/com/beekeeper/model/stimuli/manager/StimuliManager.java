@@ -72,6 +72,8 @@ public class StimuliManager
 			double propag = StimulusFactory.getPropag(smell);
 			double evapRate = StimulusFactory.getEvapRate(smell);
 			
+			//System.out.println(smell + ": propag:" + propag + " |evap: " + evapRate);
+			
 			for(int i = 0; i < size; ++i)
 			{
 				StimuliTile st = stimuliTiles.get(i);
@@ -95,7 +97,7 @@ public class StimuliManager
 				{
 					st.stimuliMap.setAmount(smell, st.tmpAmount);
 					//granTotalAmount += st.tmpAmount;
-					st.tmpAmount = 0;					
+					st.tmpAmount = 0;		
 				}
 
 			}

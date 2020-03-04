@@ -2,6 +2,7 @@ package com.beekeeper.utils;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class MyUtils
 {
@@ -104,5 +105,28 @@ public class MyUtils
 			System.err.println("null in MyUtils");
 		}
 		return Point2D.Double.distance(p1.x, p1.y, p2.x, p2.y);
+	}
+	
+	public static <T> void showList(ArrayList<T> list)
+	{		
+		for(int i = 0; i < list.size(); ++i)
+		{
+			System.out.print(list.get(i) + " ");
+		}
+		System.out.println();
+	}
+	
+	public static <T> void switchElementsInList(ArrayList<T> list, int index1, int index2)
+	{
+		if(index1 > index2)
+		{
+			int tmp = index1;
+			index1 = index2;
+			index2 = tmp;
+		}
+		
+		T tmp = list.remove(index1);
+		list.add(index1,list.remove(index2-1));
+		list.add(index2, tmp);
 	}
 }

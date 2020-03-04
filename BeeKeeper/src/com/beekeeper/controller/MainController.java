@@ -11,8 +11,6 @@ import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
-import com.beekeeper.model.agent.AgentType;
-import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombManager;
 import com.beekeeper.model.comb.CombServices;
@@ -34,7 +32,7 @@ public class MainController
 
 	private AgentFactory agentFactory;
 
-	private int simuStep = 0;
+	//private int simuStep = 0;
 
 	private boolean closed;
 
@@ -76,40 +74,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 		
 		this.combManager = new CombManager();
-		this.combManager.initiateCombs(1, agentFactory, this.controlServices);
-
-		/*
-		for(int i = 0; i < 2; ++i)
-		{
-			//ArrayList<Agent> bees = new ArrayList<>();
-			Comb c = new Comb(combSize);
-
-			StimuliManager sm = new StimuliManager(c);
-
-			int combWidthDivisor = 10;
-
-			while(combSize.width/combWidthDivisor * combSize.width/combWidthDivisor * Math.PI < ModelParameters.NUMBER_LARVAE)
-			{
-				--combWidthDivisor;
-			}
-
-			System.out.println("combWidthDivisor : " + combWidthDivisor);
-
-			sManagers.add(sm);
-
-			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), this.controlServices);		
-			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
-
-			c.setID(i);
-			this.combs.add(c);	
-
-			c.addFood();
-
-			CombDrawer drawer = new CombDrawer(c.getServices(), sm.getServices());
-
-			this.drawers.add(drawer);
-		}
-		 */
+		this.combManager.initiateCombs(3, agentFactory, this.controlServices);
 
 		for(CombServices c : combManager.getCombsServices())
 		{
@@ -124,6 +89,8 @@ public class MainController
 			closed = false;			
 		}
 
+		combManager.reverseFrame(0);
+		combManager.switchFrames(0, 2);
 		programLoop();
 
 		if(this.window != null)
@@ -154,11 +121,13 @@ public class MainController
 		System.out.println("expe done");
 	}
 
+	/*
 	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
 	{
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
-
+*/
+	
 	private void logTurn(String... ss)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -204,11 +173,13 @@ public class MainController
 			for(Agent b : copy)
 			{
 				b.live();
+				/*
 				if(b.getBeeType() == AgentType.ADULT_BEE || b.getBeeType() == AgentType.BROOD_BEE)
 				{
 					WorkingAgent w = (WorkingAgent) b;
-					//logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
+					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
 				}
+				*/
 			}
 
 			for(Comb c : combs)
@@ -238,7 +209,7 @@ public class MainController
 			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(50);//30
+				Thread.sleep(30);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

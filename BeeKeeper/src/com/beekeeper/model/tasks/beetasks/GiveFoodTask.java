@@ -28,7 +28,7 @@ public class GiveFoodTask extends Task {
 				WorkingAgent cooperativeInteractor = agentServices.getCoopInteractor();
 				if(cooperativeInteractor.isHungry())
 				{
-					cooperativeInteractor.recieveFood();					
+					cooperativeInteractor.recieveFood();
 				}
 				else
 				{
