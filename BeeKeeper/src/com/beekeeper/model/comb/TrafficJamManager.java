@@ -10,8 +10,8 @@ public class TrafficJamManager {
 	
 	public void resetAll()
 	{
+		//System.out.println("reset all");
 		jamRecord.clear();
-		System.out.println("reset all");
 	}
 	
 	public TrafficJamManager(CombServices combServices) {

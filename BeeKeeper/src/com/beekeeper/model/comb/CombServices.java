@@ -16,6 +16,7 @@ public interface CombServices
 	public ArrayList<Integer> getDownNeighbors(int x, int y);
 	public ArrayList<Integer> getUpNeighbors(int x, int y);
 	public boolean askMoveToCell(Agent who, Integer where);
+	public boolean askMoveToFacingCell(Agent who, int cellNumber);
 	
 	public CombCell getCellAt(int x, int y);
 	
@@ -26,4 +27,5 @@ public interface CombServices
 	public void swap(int cellIndexSwap1, int cellIndexSwap2);
 	
 	public StimuliManagerServices getCurrentSManagerServices();
+	public boolean isFacingAnotherComb();
 }

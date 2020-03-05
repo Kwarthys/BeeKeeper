@@ -28,6 +28,10 @@ public class GiveFoodTask extends Task {
 				WorkingAgent cooperativeInteractor = agentServices.getCoopInteractor();
 				if(cooperativeInteractor.isHungry())
 				{
+					if(cooperativeInteractor.getCombId() != agentServices.getCombId())
+					{
+						System.out.println("Food Transfer between comb" + cooperativeInteractor.getCombId() + " and comb" + agentServices.getCombId());
+					}
 					cooperativeInteractor.recieveFood();
 				}
 				else

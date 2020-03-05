@@ -85,7 +85,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 
 		this.combManager = new CombManager();
-		this.combManager.initiateCombs(3, agentFactory, this.controlServices);
+		combs = this.combManager.initiateFrames(2, agentFactory, this.controlServices);
 
 		for(CombServices c : combManager.getCombsServices())
 		{
@@ -206,7 +206,7 @@ public class MainController
 			turnIndex++;
 
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
-			Collections.shuffle(copy);
+			//Collections.shuffle(copy);
 
 			for(Agent b : copy)
 			{
@@ -247,7 +247,7 @@ public class MainController
 			//System.out.println(turnIndex);
 
 			try {
-				Thread.sleep(300);//30
+				Thread.sleep(30);//30
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

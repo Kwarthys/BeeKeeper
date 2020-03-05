@@ -151,6 +151,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		public void receiveFood() {
 			WorkingAgent.this.recieveFood();
 		}
+
+		@Override
+		public int getCombId() {
+			return WorkingAgent.this.getCombId();
+		}
 	};
 
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
@@ -360,10 +365,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 	}
 
-	public void setCombID(int id)
-	{
-		this.combID = id;
-	}
+	public int getCombId() {return hostCell.getCombID();}
 
 	public HashMap<String, Double> getAllThresholds()
 	{

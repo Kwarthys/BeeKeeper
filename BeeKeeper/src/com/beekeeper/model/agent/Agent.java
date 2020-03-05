@@ -17,8 +17,6 @@ public abstract class Agent
 	public double getHunger() {return hunger;}	
 	protected boolean receivingFood = false;
 	
-	protected int combID = -1;
-	
 	protected AgentType type;	
 	public AgentType getBeeType() {return this.type;}
 
@@ -38,11 +36,6 @@ public abstract class Agent
 	public Agent()
 	{
 		this.ID = IDManager.getNextID();
-	}
-	
-	public void setCombID(int id)
-	{
-		this.combID = id;
 	}
 	
 	public Point getPosition()
@@ -79,6 +72,17 @@ public abstract class Agent
 	
 	public void randomMove()
 	{
+		if(Math.random() > 0.9)
+		{
+			//CombSwitch
+			if(hostCell.isFacingAnotherCell())
+			{
+				hostCell.askMoveToFacingCell(this);
+				lastVisitedCellNumber = -1;
+				return;
+			}
+		}
+		
 		ArrayList<Integer> cells = hostCell.getNeighbors();
 		int r = (int) (Math.random() * cells.size());
 		//Bee can't randomly go back where it was

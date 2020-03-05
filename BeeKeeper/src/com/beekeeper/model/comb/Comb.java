@@ -18,6 +18,7 @@ public class Comb
 	private ArrayList<CombCell> cells = new ArrayList<>();
 	
 	private StimuliManagerServices smServices;
+	private CombManagerServices combManagerServices;
 	
 	public int ID;
 	
@@ -82,7 +83,18 @@ public class Comb
 				{
 					agents.add(a);
 				}
-			}			
+			}	
+			
+			//CHECKING BEE ON FACING COMB
+			CombCell facing = combManagerServices.getFacingCombCell(ID, getCellAt(x, y).number);
+			if(facing!=null)
+			{
+				if(facing.visiting != null)
+				{
+					//System.out.println("Found a facing bee on " + ((WorkingAgent)facing.visiting).getCombId() + " from " + ID + " at " + x + "," + y);
+					agents.add((WorkingAgent)facing.visiting);
+				}
+			}
 			
 			return agents;			
 		}
@@ -136,6 +148,31 @@ public class Comb
 		public StimuliManagerServices getCurrentSManagerServices() {
 			return smServices;
 		}
+
+		@Override
+		public boolean isFacingAnotherComb() {
+			return combManagerServices.isFacingAComb(ID);
+		}
+
+		@Override
+		public boolean askMoveToFacingCell(Agent who, int cellNumber) {
+			CombCell facingCell = combManagerServices.getFacingCombCell(ID, cellNumber);
+			if(facingCell != null)
+			{
+				if(facingCell.visiting == null)
+				{
+					cells.get(cellNumber).visiting = null;
+					facingCell.visiting = who;
+					
+					who.hostCell = facingCell;
+					
+					combManagerServices.switchAgentHostComb(ID, who);
+					
+					return true;
+				}
+			}
+			return false;
+		}
 	};
 	
 	public void registerNewSManager(StimuliManagerServices smServices)
@@ -151,12 +188,14 @@ public class Comb
 		});
 	}
 	
-	public Comb(Dimension combSize, StimuliManagerServices smServices)
+	public Comb(int ID, Dimension combSize, StimuliManagerServices smServices, CombManagerServices combManagerServices)
 	{
 		this.size = new Dimension(combSize);
+		this.ID = ID;
 		cells = CombUtility.fillCells(size,ID, services);
 		
 		jamManager = new TrafficJamManager(services);
+		this.combManagerServices = combManagerServices;
 		
 		registerNewSManager(smServices);
 	}
@@ -175,15 +214,6 @@ public class Comb
 	}
 
 	public ArrayList<Agent> getAgents(){return agents;}
-
-	public void setID(int id)
-	{
-		ID = id;
-		for(Agent b : agents)
-		{
-			b.setCombID(id);
-		}
-	}
 	
 	public CombServices getServices()
 	{
@@ -255,6 +285,11 @@ public class Comb
 			lastRow.add(cells.get((size.height-1) * size.width + x));
 		}
 		return lastRow;
+	}
+	
+	public CombCell getCell(int combCellIndex)
+	{
+		return cells.get(combCellIndex);
 	}
 
 	public void addFood()

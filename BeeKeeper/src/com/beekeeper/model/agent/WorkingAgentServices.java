@@ -22,6 +22,7 @@ public interface WorkingAgentServices {
 	public StimuliMap getLastPerception();
 	public boolean isHungry();
 	public int getID();
+	public int getCombId();
 	public CombCell getHostCell();
 	public WorkingAgent getCoopInteractor();
 	public void resetCoopInteractor();

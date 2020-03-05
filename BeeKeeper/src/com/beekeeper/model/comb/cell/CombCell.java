@@ -55,6 +55,8 @@ public class CombCell
 	public WorkingAgent getAgentInside() {
 		return inside;
 	}
+	
+	public int getCombID() {return combID;}
 
 	public void leaveCell() {
 		cs.notifyTakeOff(visiting);
@@ -64,5 +66,13 @@ public class CombCell
 	public void notifyLanding(EmitterAgent a) {
 		cs.notifyLanding(a);
 		visiting = a;		
+	}
+
+	public boolean isFacingAnotherCell() {
+		return cs.isFacingAnotherComb();
+	}
+
+	public boolean askMoveToFacingCell(Agent who) {
+		return cs.askMoveToFacingCell(who, number);		
 	}
 }
