@@ -57,8 +57,8 @@ public class CombManager {
 			{
 				if(i != 0 && i != combs.size()-1)
 				{
-					int otherCombID = combID + (i%2==0 ? -1 : 1);
-					return combs.get(otherCombID);
+					int otherCombIndex = i + (i%2==0 ? -1 : 1);
+					return combs.get(otherCombIndex);
 				}
 			}
 		}
@@ -116,8 +116,9 @@ public class CombManager {
 
 			stimuliManagers.add(sm);
 
+			if(combNumber == 1)
+				agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES*numberOfFrames*2, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), controlServices);		
-			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 
 			this.combs.add(c);	
 

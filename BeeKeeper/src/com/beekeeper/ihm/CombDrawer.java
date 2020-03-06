@@ -57,11 +57,15 @@ public class CombDrawer extends JPanel{
 
 		this.agents = new ArrayList<>(cs.getBees());
 		this.cells = new ArrayList<>(cs.getCells());
+		
 
 		paintPheromones(g);
 		paintCells(g);
 		paintActors(g);
 
+		g.setColor(Color.white);
+		g.drawString(String.valueOf(this.agents.size()) + " Adult bees.", 0, 20);
+		
 		g.dispose();
 	}
 
@@ -145,7 +149,8 @@ public class CombDrawer extends JPanel{
 			else if(c.content == CellContent.brood)
 			{
 				int e = (int)(c.inside.getEnergy()*255);
-				g.setColor(new Color(255-e,255-e,255));
+				if(e <= 255 && e >= 0)
+					g.setColor(new Color(255-e,255-e,255));
 
 			}
 

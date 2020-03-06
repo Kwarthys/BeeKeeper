@@ -58,7 +58,7 @@ public class ModelParameters
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static int NUMBER_BEES = 150;
+	public static int NUMBER_BEES = 180;
 	public static int NUMBER_LARVAE = 150;
 	public static int SIMU_LENGTH = 8000;
 	public static StartMode startMode = StartMode.Random;
