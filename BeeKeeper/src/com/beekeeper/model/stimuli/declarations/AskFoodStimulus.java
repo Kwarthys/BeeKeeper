@@ -8,7 +8,7 @@ public class AskFoodStimulus extends AStimulus {
 	public AskFoodStimulus()
 	{
 		halfLife = 0.1;
-		transmissibility_halflifelike = 0.04;
+		transmissibility_halflifelike = 0.042;
 		type = Stimulus.AskFood;
 	}
 

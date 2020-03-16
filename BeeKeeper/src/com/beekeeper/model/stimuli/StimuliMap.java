@@ -50,7 +50,7 @@ public class StimuliMap
 		amounts.forEach((smell, amount) -> {
 			if(amount != 0)
 			{
-				//System.out.print(smell + " " + amount);
+				//System.out.print(smell + " " + amount + " x " + StimulusFactory.getEvapRate(smell));
 				amount *= StimulusFactory.getEvapRate(smell);
 				if(amount < ModelParameters.SMELL_THRESHOLD)
 				{

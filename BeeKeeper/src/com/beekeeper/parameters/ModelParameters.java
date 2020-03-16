@@ -5,9 +5,11 @@ import com.beekeeper.utils.MyUtils;
 
 public class ModelParameters
 {
-	public static boolean BYPASS_MOTIVATION = true;
+	public static boolean BYPASS_MOTIVATION = false;
+
+	public static final boolean BYPASS_PHYSIOLOGY = true;
 	
-	public static boolean UI_ENABLED = false; //TODO UI TOGGLE
+	public static boolean UI_ENABLED = false;
 	
 	public static final double TASK_LEARN_RATE = 0.001;
 	public static final double TASK_FORGET_RATE = 0.0001;
@@ -23,6 +25,7 @@ public class ModelParameters
 	
 	public static final double getOcimeneEmitedByHJ(double hjTiter)
 	{
+		//System.out.println("Emitting " + hjTiter * hjTiter * hjTiter + " EO at " + hjTiter + "HJ.");
 		return hjTiter * hjTiter * hjTiter;
 	}
 	

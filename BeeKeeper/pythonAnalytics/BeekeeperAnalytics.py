@@ -100,12 +100,26 @@ larvaeSurvivalSumUP = {}
 sumUpJobData = {}
 jobDatePerBeeTotal = {}
 globalInteruptions = {}
+foragingScores = {};
 
-GRAPHWITHMOT = True;
+GRAPHWITHMOT = False;
+GRAPHWITHPHYSIO = True;
 
-path = '../expe/'
-if GRAPHWITHMOT:
-	path = '../expeMot/'
+expeModSubtitle = "default";
+
+if(GRAPHWITHMOT and GRAPHWITHPHYSIO):
+	path = '../expeClassic/';
+	expeModSubtitle = "";
+elif(GRAPHWITHMOT and not GRAPHWITHPHYSIO):
+	path = '../expeNoPhysio/';
+	expeModSubtitle = "\nExperiment without pheromome effects.";
+elif(not GRAPHWITHMOT and GRAPHWITHPHYSIO):
+	path = '../expeNoMot/';
+	expeModSubtitle = "\nExperiment without our interruption.";
+elif(not GRAPHWITHMOT and not GRAPHWITHPHYSIO):
+	path = '../expeNoMotNoPhysio/';
+	expeModSubtitle = "\nExperiment without our interruption nor pheromones.";
+	
 
 files = []
 # r=root, d=directories, f = files
@@ -136,6 +150,8 @@ for f in files:
 	otherJobCount = 0;
 	hjAmount = 0;
 	jobDurationPB = {};
+	
+	foragingScore = 0;
 
 	displaySize = len(files);
 
@@ -206,6 +222,7 @@ for f in files:
 					nurseCount += 1;
 				elif row[2] == "Foraging" :
 					foragerCount += 1;
+					foragingScore += 1;
 				elif row[2] != "LarvaTask":
 					otherJobCount +=1;
 
@@ -254,6 +271,9 @@ for f in files:
 	#smallTitle = "test";
 	hugeTitle = initState + " initial distribution, " + initBees + " adult bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(larvaeSurvival) + "% larvae survived";
 
+	print(smallTitle);
+	print(foragingScore);
+	foragingScores[smallTitle] = foragingScore;
 	sumUpJobData[smallTitle] = data;
 	larvaeSurvivalSumUP[smallTitle] = larvaeSurvival;
 	jobDatePerBeeTotal[smallTitle] = {"FeedLarvae" : moyenne(column(data,1)), "Foraging" : moyenne(column(data,2)), "Other" : moyenne(column(data,0))};
@@ -464,23 +484,31 @@ for key in keyManager:
 	keyManager[key] = tabErrorBar(keyManager[key])
 
 
-#------------------------Larvae DEATH------------------------#
+#------------- Larvae DEATH AND FORAGING SCORES ------------------------#
 
-larvaeDeathTitle = "Larvae deaths for all experiments";
-if not GRAPHWITHMOT:
-	larvaeDeathTitle += "\n(without our interruption mechanism)";
+foragingScores = getDictValuesWithsortedExpeMean(foragingScores);
 
-plt.close('all')
+larvaeDeathTitle = "Larvae deaths for all experiments" + expeModSubtitle;
+
+plt.close('all');
 plt.figure(0,figsize=(5,5));
-plt.suptitle(larvaeDeathTitle);
-plt.ylabel("Larvae deaths (%)");
-plt.ylim([0,50])
+fig, ax1 = plt.subplots();
+fig.suptitle(larvaeDeathTitle);
+ax1.set_ylabel("Larvae deaths (%)");
+ax1.set_ylim([0,105])
+plt.xticks(range(len(meanLarvaeSurvivalSummup)), list(jobDatePerBeeTotal.keys()), rotation=15)
+plt.subplots_adjust(right=0.85);
+
+ax2 = ax1.twinx();
+ax2.set_ylabel("foraging score");
+ax2.set_ylim([0,600000]);
+
 bi = 0
 print(meanLarvaeSurvivalSummup)
 for expeKey in meanLarvaeSurvivalSummup:
-	plt.bar(bi, 100-meanLarvaeSurvivalSummup[expeKey]['value'], yerr=meanLarvaeSurvivalSummup[expeKey]['error'], color='red');
+	ax1.bar(bi, 100-meanLarvaeSurvivalSummup[expeKey]['value'], yerr=meanLarvaeSurvivalSummup[expeKey]['error'], color='orange');
+	ax2.scatter(bi, foragingScores[expeKey], c='cyan', edgecolors='black');
 	bi += 1;
-plt.xticks(range(len(meanLarvaeSurvivalSummup)), list(jobDatePerBeeTotal.keys()), rotation=15)
 #plt.show()
 plt.savefig("larvaeDeaths.png");
 
@@ -488,9 +516,7 @@ plt.savefig("larvaeDeaths.png");
 		
 #------------------------SUMMUP GRAPH------------------------#
 		
-summupGraphTitle = "Nurse Counts for all experiments";
-if not GRAPHWITHMOT:
-	summupGraphTitle += "\n(without our interruption mechanism)";
+summupGraphTitle = "Nurse Counts for all experiments" + expeModSubtitle;
 
 styles = ['-', '--', '-.', ':','custom']
 index = 0;

@@ -52,9 +52,12 @@ public class AdultBee extends WorkingAgent
 			hunger -= Math.random()*0.001;
 		}
 		
-		hjTiter += 0.0005;
-		hjTiter -= ModelParameters.getHJModifiedByOcimene(this.bodySmell.getAmount(Stimulus.Ocimene));
-		hjTiter = MyUtils.clamp(hjTiter);
+		if(!ModelParameters.BYPASS_PHYSIOLOGY)
+		{
+			hjTiter += 0.0005;
+			hjTiter -= ModelParameters.getHJModifiedByOcimene(this.bodySmell.getAmount(Stimulus.Ocimene));
+			hjTiter = MyUtils.clamp(hjTiter);			
+		}
 		
 		hunger = MyUtils.clamp(hunger + 0.001);
 		
