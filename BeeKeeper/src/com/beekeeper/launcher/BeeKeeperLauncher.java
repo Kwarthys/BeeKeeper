@@ -12,39 +12,45 @@ public class BeeKeeperLauncher {
 	{	
 		System.setProperty("sun.java2d.opengl", "true");
 
-		int simuLength = 1000;
-		int reps = 2;
+		int simuLength = 8000;
+		int reps = 50;
 
-		
+		/*
 		for(int i = 0; i<reps;++i)
 		{			
 			ModelParameters.paramExpe(150, 150, simuLength, StartMode.Random,i);
 			new MainController();
 		}
+*/
 
 		for(int i = 0; i<reps;++i)
 		{	
-			ModelParameters.paramExpe(150, 150, simuLength, StartMode.Old,i);
-			new MainController();
-		}
-
-		for(int i = 0; i<reps;++i)
-		{	
-			ModelParameters.paramExpe(150, 150, simuLength, StartMode.NewBorn,i);
-			new MainController();
-		}
-/*
-		for(int i = 0; i<reps;++i)
-		{	
+			ModelParameters.BYPASS_MOTIVATION = false;
+			ModelParameters.BYPASS_PHYSIOLOGY = false;
 			ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random,i);
 			new MainController();
 		}
-
 		for(int i = 0; i<reps;++i)
 		{	
-			ModelParameters.paramExpe(150, 300, simuLength, StartMode.Random,i);
+			ModelParameters.BYPASS_MOTIVATION = false;
+			ModelParameters.BYPASS_PHYSIOLOGY = true;
+			ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random,i);
 			new MainController();
-		}*/
+		}
+		for(int i = 0; i<reps;++i)
+		{	
+			ModelParameters.BYPASS_MOTIVATION = true;
+			ModelParameters.BYPASS_PHYSIOLOGY = false;
+			ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random,i);
+			new MainController();
+		}
+		for(int i = 0; i<reps;++i)
+		{	
+			ModelParameters.BYPASS_MOTIVATION = true;
+			ModelParameters.BYPASS_PHYSIOLOGY = true;
+			ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random,i);
+			new MainController();
+		}
 		Toolkit.getDefaultToolkit().beep();
 		System.out.println("All Expes Done");
 	}

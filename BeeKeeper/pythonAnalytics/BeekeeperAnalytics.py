@@ -102,25 +102,17 @@ jobDatePerBeeTotal = {}
 globalInteruptions = {}
 foragingScores = {};
 
-GRAPHWITHMOT = False;
-GRAPHWITHPHYSIO = True;
+#-----------------------------------------------------------------------#
+#----------------------------- PARAMETERS ------------------------------#
+#-----------------------------------------------------------------------#
 
-expeModSubtitle = "default";
 
-if(GRAPHWITHMOT and GRAPHWITHPHYSIO):
-	path = '../expeClassic/';
-	expeModSubtitle = "";
-elif(GRAPHWITHMOT and not GRAPHWITHPHYSIO):
-	path = '../expeNoPhysio/';
-	expeModSubtitle = "\nExperiment without pheromome effects.";
-elif(not GRAPHWITHMOT and GRAPHWITHPHYSIO):
-	path = '../expeNoMot/';
-	expeModSubtitle = "\nExperiment without our interruption.";
-elif(not GRAPHWITHMOT and not GRAPHWITHPHYSIO):
-	path = '../expeNoMotNoPhysio/';
-	expeModSubtitle = "\nExperiment without our interruption nor pheromones.";
+path = '../expe150_50_Random/';						#-----------------------------------------------------------------------#
+printPerExpeGraph = False;						#-----------------------------------------------------------------------#
 	
-
+	
+CSVHeader = False;
+	
 files = []
 # r=root, d=directories, f = files
 for r, d, f in os.walk(path):
@@ -134,8 +126,29 @@ for f in files:
 	fileName = f;
 
 	mode = f.split("/")[-1];
-	mode = mode.split("_")[0];
-	print("detected mode : " + mode);
+	modelState = mode.split("_")[0];
+	mode = mode.split("_")[1];
+	
+
+	expeModSubtitle = "";
+	GRAPHWITHMOT = True;
+	GRAPHWITHPHYSIO = True;
+	if("NoMot" in modelState):
+		GRAPHWITHMOT=False;
+	if("NoPhysio" in modelState):
+		GRAPHWITHPHYSIO=False;
+	
+	if(GRAPHWITHMOT and GRAPHWITHPHYSIO):
+		expeModSubtitle = "";
+	elif(GRAPHWITHMOT and not GRAPHWITHPHYSIO):
+		expeModSubtitle = "\nExperiment without pheromome effects.";
+	elif(not GRAPHWITHMOT and GRAPHWITHPHYSIO):
+		expeModSubtitle = "\nExperiment without our interruption.";
+	elif(not GRAPHWITHMOT and not GRAPHWITHPHYSIO):
+		expeModSubtitle = "\nExperiment without our interruption nor pheromones.";
+		
+		
+	print("detected mode : " + modelState + " " + mode);
 
 	data = [];
 	jobDataPerBee = {};
@@ -270,6 +283,22 @@ for f in files:
 	smallTitle = initState + "_" + initBees + "_" + initLarvae + "_" + expeNumber;
 	#smallTitle = "test";
 	hugeTitle = initState + " initial distribution, " + initBees + " adult bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(larvaeSurvival) + "% larvae survived";
+	
+	f = open('outputData200Random300Larvae.csv', 'a', newline='');
+	writer = csv.writer(f);
+	if(not CSVHeader):
+		header = ["Interruption","Physiology","initialDistrib","nbBees","nbLarvae","nurseScore","forageScore"];
+		writer.writerow(header);
+		CSVHeader = True;
+	interText = "InterOff";
+	if(GRAPHWITHMOT):
+		interText = "InterOn";
+	physioText = "PhysioOff";
+	if(GRAPHWITHPHYSIO):
+		physioText = "PhysioOn";
+	writer.writerow([interText,physioText,initState,initBees,initLarvae,larvaeSurvival,str(foragingScore)]);
+
+		
 
 	print(smallTitle);
 	print(foragingScore);
@@ -287,113 +316,114 @@ for f in files:
 	
 	ylims = [0,110];
 
-	generationOK = False;
-	
-	tries = 0;
-	
-	while(not generationOK and tries < 4):
-	
-		tries += 1;
+	if printPerExpeGraph:
+		
+		generationOK = False;
+		
+		tries = 0;
+		
+		while(not generationOK and tries < 4):
+		
+			tries += 1;
 
-		plt.close('all');
+			plt.close('all');
 
-		plt.figure(0, figsize=(9,7));
-		#subplot(nrows, ncols, index)
-		plt.subplots_adjust(hspace=0.5)
-		plt.subplot(2,1,1, title='Colony work repartition');
-		plt.suptitle(hugeTitle);
-		#plt.plot(range(len(data)), column(data,0), label='otherCount')
-		plt.plot(range(len(data)), column(data,1), label='nurseCount')
-		plt.plot(range(len(data)), column(data,2), label='foragerCount')
-		plt.legend()
-		plt.ylabel("% of bees")
-		plt.ylim(ylims);
-
-
-		print("generating graphs");
-
-		sampleSize = 6
-		randomKeys = []
-		beeIDs = list(jobDataPerBee.keys())
-
-		while(len(randomKeys) != sampleSize):
-			candidate = beeIDs[np.random.randint(low = 0, high = len(jobDataPerBee))];
-			while(candidate in randomKeys):
-				candidate = beeIDs[np.random.randint(low = 0, high = len(jobDataPerBee))];
-			randomKeys.append(candidate);
-
-		for i in range(sampleSize):
-			ax = plt.subplot(4,3,i+7, title='bee' + str(randomKeys[i]))
-			if(i == 0):
-				plt.ylabel("Time spent%"); 
-				
-			# Create bars
-			plt.bar([8000/4, 8000/2, 3*8000/4], jobDataPerBee[randomKeys[i]].values(), width = 8000/6)
-			 
-			# Create names on the x-axis
-			plt.xticks([8000/4, 8000/2, 3*8000/4], keys)
+			plt.figure(0, figsize=(9,7));
+			#subplot(nrows, ncols, index)
+			plt.subplots_adjust(hspace=0.5)
+			plt.subplot(2,1,1, title='Colony work repartition');
+			plt.suptitle(hugeTitle);
+			#plt.plot(range(len(data)), column(data,0), label='otherCount')
+			plt.plot(range(len(data)), column(data,1), label='nurseCount')
+			plt.plot(range(len(data)), column(data,2), label='foragerCount')
+			plt.legend()
+			plt.ylabel("% of bees")
 			plt.ylim(ylims);
 
-			if(i<sampleSize/2):
-				ax.get_xaxis().set_visible(False);
-			
-			#plt.plot(range(len(hjData)), hjDataPerBee[randomKeys[i]], c='orange')
 
-		plt.savefig(smallTitle + "Tasks.png");
+			print("generating graphs");
 
-		plt.figure(1, figsize=(9,7));
-		plt.suptitle(hugeTitle);
-		plt.subplots_adjust(hspace=0.4)
-		plt.subplots_adjust(wspace=0.1)
-		plt.subplot(2,1,1, title='Colony');
-		plt.plot(range(len(hjData)), hjData, label='Adult bees mean JHTiters');
-		plt.plot(range(len(larvaCounts)), larvaCounts, label='Larvae Count (% of init)');
-		plt.legend()
-		plt.ylabel("%")
-		plt.ylim(ylims);
+			sampleSize = 6
+			randomKeys = []
+			beeIDs = list(jobDataPerBee.keys())
 
-		for i in range(sampleSize):
-			ax = plt.subplot(4,3,i+7, title='bee' + str(randomKeys[i]))
-			plt.ylim([-30,110]);
-			tt = 0;
-			for b in jobDurationPB[randomKeys[i]]:
-				theKey = list(b.keys())[0];
-				theValue = list(b.values())[0];
-				plt.bar(theValue + tt,-25, width=-theValue,align='edge', color='white',hatch = getJobHatch(theKey), label=theKey);
-				tt += theValue;
+			while(len(randomKeys) != sampleSize):
+				candidate = beeIDs[np.random.randint(low = 0, high = len(jobDataPerBee))];
+				while(candidate in randomKeys):
+					candidate = beeIDs[np.random.randint(low = 0, high = len(jobDataPerBee))];
+				randomKeys.append(candidate);
 
-			if(i==sampleSize-2):
-				newHandles = [];
-				newLabels = [];
-				handles, labels = ax.get_legend_handles_labels();
+			for i in range(sampleSize):
+				ax = plt.subplot(4,3,i+7, title='bee' + str(randomKeys[i]))
+				if(i == 0):
+					plt.ylabel("Time spent%"); 
+					
+				# Create bars
+				plt.bar([8000/4, 8000/2, 3*8000/4], jobDataPerBee[randomKeys[i]].values(), width = 8000/6)
+				 
+				# Create names on the x-axis
+				plt.xticks([8000/4, 8000/2, 3*8000/4], keys)
+				plt.ylim(ylims);
 
-				for li in range(len(labels)):
-					l = labels[li];
-					if l not in newLabels:
-						newLabels.append(l);
-						newHandles.append(handles[li]);
+				if(i<sampleSize/2):
+					ax.get_xaxis().set_visible(False);
 				
-				plt.legend(handles=newHandles, labels=newLabels);
+				#plt.plot(range(len(hjData)), hjDataPerBee[randomKeys[i]], c='orange')
 
-				generationOK = len(newLabels) == 3;
-				plt.xlabel("times-teps");
-				box = ax.get_position();
-				ax.set_position([box.x0, box.y0,box.width, box.height]);
-				plt.legend(handles=newHandles, labels=newLabels,loc='upper center', bbox_to_anchor=(0.5, -0.4), ncol=3);
+			plt.savefig(smallTitle + "Tasks.png");
 
-			plt.plot(range(len(hjData)), hjDataPerBee[randomKeys[i]])
+			plt.figure(1, figsize=(9,7));
+			plt.suptitle(hugeTitle);
+			plt.subplots_adjust(hspace=0.4)
+			plt.subplots_adjust(wspace=0.1)
+			plt.subplot(2,1,1, title='Colony');
+			plt.plot(range(len(hjData)), hjData, label='Adult bees mean JHTiters');
+			plt.plot(range(len(larvaCounts)), larvaCounts, label='Larvae Count (% of init)');
+			plt.legend()
+			plt.ylabel("%")
+			plt.ylim(ylims);
 
-			if i != 0 and i != sampleSize/2:
-				ax.get_yaxis().set_visible(False);
-			else : plt.ylabel("JHTiter %");
-			if(i<sampleSize/2):
-				ax.get_xaxis().set_visible(False);
+			for i in range(sampleSize):
+				ax = plt.subplot(4,3,i+7, title='bee' + str(randomKeys[i]))
+				plt.ylim([-30,110]);
+				tt = 0;
+				for b in jobDurationPB[randomKeys[i]]:
+					theKey = list(b.keys())[0];
+					theValue = list(b.values())[0];
+					plt.bar(theValue + tt,-25, width=-theValue,align='edge', color='white',hatch = getJobHatch(theKey), label=theKey);
+					tt += theValue;
+
+				if(i==sampleSize-2):
+					newHandles = [];
+					newLabels = [];
+					handles, labels = ax.get_legend_handles_labels();
+
+					for li in range(len(labels)):
+						l = labels[li];
+						if l not in newLabels:
+							newLabels.append(l);
+							newHandles.append(handles[li]);
+					
+					plt.legend(handles=newHandles, labels=newLabels);
+
+					generationOK = len(newLabels) == 3;
+					plt.xlabel("times-teps");
+					box = ax.get_position();
+					ax.set_position([box.x0, box.y0,box.width, box.height]);
+					plt.legend(handles=newHandles, labels=newLabels,loc='upper center', bbox_to_anchor=(0.5, -0.4), ncol=3);
+
+				plt.plot(range(len(hjData)), hjDataPerBee[randomKeys[i]])
+
+				if i != 0 and i != sampleSize/2:
+					ax.get_yaxis().set_visible(False);
+				else : plt.ylabel("JHTiter %");
+				if(i<sampleSize/2):
+					ax.get_xaxis().set_visible(False);
 
 
-		plt.savefig(smallTitle + "HJ.png");
-		#plt.show();
-		plt.close('all')
-
+			plt.savefig(smallTitle + "HJ.png");
+			#plt.show();
+			plt.close('all')
 
 
 		
@@ -510,10 +540,21 @@ for expeKey in meanLarvaeSurvivalSummup:
 	ax2.scatter(bi, foragingScores[expeKey], c='cyan', edgecolors='black');
 	bi += 1;
 #plt.show()
-plt.savefig("larvaeDeaths.png");
+plt.savefig("larvaeDeaths" + modelState + ".png");
+
+
+#------------------- SAVING FOR ANALYSIS --------------------#
+'''
+f = open('outputData.csv', 'a', newline='');
+writer = csv.writer(f);
+if(GRAPHWITHMOT and GRAPHWITHPHYSIO):
+	header = ["ModelState","initialDistrib","nbBees","nbLarvae","nurseScore","forageScore"];
+	writer.writerow(header);
+for expeKey in meanLarvaeSurvivalSummup:
+	writer.writerow([modelState,str(expeKey.split("_")[0]),expeKey.split("_")[1],expeKey.split("_")[2],str(100-meanLarvaeSurvivalSummup[expeKey]['value']),str(foragingScores[expeKey])]);
 
 		
-		
+'''		
 #------------------------SUMMUP GRAPH------------------------#
 		
 summupGraphTitle = "Nurse Counts for all experiments" + expeModSubtitle;
@@ -535,7 +576,7 @@ for key in sumUpJobData.keys():
 
 	index += 1;
 plt.legend();
-plt.savefig("summup.png");
+plt.savefig("summup" + modelState + ".png");
 #plt.show();
 plt.close('all')
 print('\a')

@@ -65,6 +65,9 @@ public class MyLogger
 	public String getParam()
 	{
 		StringBuffer sb = new StringBuffer();
+		
+		sb.append(ModelParameters.getModelState());
+		sb.append("_");
 		sb.append(ModelParameters.startMode);
 		sb.append("_");
 		sb.append(ModelParameters.NUMBER_BEES);

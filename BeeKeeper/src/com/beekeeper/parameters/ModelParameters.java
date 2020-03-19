@@ -6,8 +6,26 @@ import com.beekeeper.utils.MyUtils;
 public class ModelParameters
 {
 	public static boolean BYPASS_MOTIVATION = false;
-
-	public static final boolean BYPASS_PHYSIOLOGY = true;
+	public static boolean BYPASS_PHYSIOLOGY = false;
+	
+	public static String getModelState()
+	{
+		StringBuffer sb = new StringBuffer();
+		if(BYPASS_MOTIVATION)
+		{
+			sb.append("NoMot");
+		}
+		if(BYPASS_PHYSIOLOGY)
+		{
+			sb.append("NoPhysio");
+		}
+		
+		if(!BYPASS_MOTIVATION && !BYPASS_PHYSIOLOGY)
+		{
+			sb.append("Classic");
+		}
+		return sb.toString();
+	}
 	
 	public static boolean UI_ENABLED = false;
 	
