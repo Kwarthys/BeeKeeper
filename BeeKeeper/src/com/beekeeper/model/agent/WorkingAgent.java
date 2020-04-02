@@ -200,7 +200,22 @@ public abstract class WorkingAgent extends EmitterAgent
 			if(isInside())
 			{
 				//System.out.println("Executing new Action");
-				currentAction = chooseNewTask(s).search();				
+				
+				if(ModelParameters.BYPASS_MOTIVATION)
+				{
+					if(Math.random() < 1 || currentTask == null || getEnergy() < 0.1)
+					{
+						currentAction = chooseNewTask(s).search();
+					}
+					else
+					{
+						currentAction = currentTask.search();
+					}
+				}
+				else
+				{
+					currentAction = chooseNewTask(s).search();
+				}
 			}
 			else
 			{

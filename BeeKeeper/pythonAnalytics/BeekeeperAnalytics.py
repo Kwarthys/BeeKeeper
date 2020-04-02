@@ -107,9 +107,10 @@ foragingScores = {};
 #-----------------------------------------------------------------------#
 
 
-path = '../expe150_50_Random/';						#-----------------------------------------------------------------------#
-printPerExpeGraph = False;						#-----------------------------------------------------------------------#
-	
+
+folderName = "expe";						#-----------------------------------------------------------------------#
+printPerExpeGraph = True;							#-----------------------------------------------------------------------#
+path = '../' + folderName + '/';	
 	
 CSVHeader = False;
 	
@@ -143,9 +144,9 @@ for f in files:
 	elif(GRAPHWITHMOT and not GRAPHWITHPHYSIO):
 		expeModSubtitle = "\nExperiment without pheromome effects.";
 	elif(not GRAPHWITHMOT and GRAPHWITHPHYSIO):
-		expeModSubtitle = "\nExperiment without our interruption.";
+		expeModSubtitle = "\nExperiment without our interruption mechanism.";
 	elif(not GRAPHWITHMOT and not GRAPHWITHPHYSIO):
-		expeModSubtitle = "\nExperiment without our interruption nor pheromones.";
+		expeModSubtitle = "\nExperiment without interruption nor pheromones.";
 		
 		
 	print("detected mode : " + modelState + " " + mode);
@@ -280,11 +281,11 @@ for f in files:
 	initLarvae = str(initLarvae);
 	simuLength = str(len(data));
 	larvaeSurvival = int(larvaCounts[-1]*10)/10;
-	smallTitle = initState + "_" + initBees + "_" + initLarvae + "_" + expeNumber;
+	smallTitle = modelState + "_" + initState + "_" + initBees + "_" + initLarvae + "_" + expeNumber;
 	#smallTitle = "test";
 	hugeTitle = initState + " initial distribution, " + initBees + " adult bees for " + initLarvae + " larvae during " + simuLength + " timesteps. " + str(larvaeSurvival) + "% larvae survived";
 	
-	f = open('outputData200Random300Larvae.csv', 'a', newline='');
+	f = open('output_'+folderName+'.csv', 'a', newline='');
 	writer = csv.writer(f);
 	if(not CSVHeader):
 		header = ["Interruption","Physiology","initialDistrib","nbBees","nbLarvae","nurseScore","forageScore"];
@@ -316,13 +317,13 @@ for f in files:
 	
 	ylims = [0,110];
 
-	if printPerExpeGraph:
+	if expeNumber == "0":
 		
 		generationOK = False;
 		
 		tries = 0;
 		
-		while(not generationOK and tries < 4):
+		while(not generationOK and tries < 10):
 		
 			tries += 1;
 
@@ -559,7 +560,7 @@ for expeKey in meanLarvaeSurvivalSummup:
 		
 summupGraphTitle = "Nurse Counts for all experiments" + expeModSubtitle;
 
-styles = ['-', '--', '-.', ':','custom']
+styles = ['-', '--', '-.', ':','custom','custom','custom','custom','custom','custom','custom','custom','custom','custom','custom','custom','custom','custom','custom']
 index = 0;
 plt.figure(2,figsize=(5,5));
 plt.suptitle(summupGraphTitle);
