@@ -32,6 +32,7 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public Task getCurrentTask() {return currentTask;}
 
+	protected double ovarianDev = 0;
 	protected double hjTiter = 0;
 	public double getHJ() {return hjTiter;}	
 
@@ -160,6 +161,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		@Override
 		public void layEgg(){
 			WorkingAgent.this.layEgg();
+		}
+
+		@Override
+		public double getOvarianDev() {
+			return ovarianDev;
 		}
 	};
 

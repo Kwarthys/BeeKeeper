@@ -15,6 +15,7 @@ public class QueenBee extends WorkingAgent {
 		this.type = AgentType.QUEEN;
 		
 		this.currentTask = taskList.get(0);
+		this.ovarianDev = 1;
 	}
 
 	@Override

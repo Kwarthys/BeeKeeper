@@ -9,6 +9,7 @@ public interface WorkingAgentServices {
 	public void addToEnergy(double amount);
 	public double getEnergy();
 	public double getHJTiter();
+	public double getOvarianDev();
 	
 	public void dropMotivation();
 	public void killMotivation();

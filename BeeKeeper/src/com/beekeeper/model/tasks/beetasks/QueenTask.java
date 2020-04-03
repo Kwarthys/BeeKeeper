@@ -17,7 +17,7 @@ public class QueenTask extends Task {
 		this.motivated = false;
 
 		//LAY EGG
-		this.rootActivity.addTaskNode(new Action(1,0.001, agentServices) {
+		this.rootActivity.addTaskNode(new Action(3,0.001, agentServices) {
 			
 			@Override
 			public void execute() {
@@ -67,7 +67,7 @@ public class QueenTask extends Task {
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return 0.5;
+		return agentServices.getOvarianDev()/1.5;
 	}
 
 }

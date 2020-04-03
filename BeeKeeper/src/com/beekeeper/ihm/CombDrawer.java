@@ -184,7 +184,7 @@ public class CombDrawer extends JPanel{
 					if(a.getBeeType() == AgentType.QUEEN)
 					{
 						g.setColor(Color.WHITE);
-						g.fillRect((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));	
+						g.fillRect((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom*1.5), (int)(CELL_SIZE*2/3*zoom*1.5));	
 					}
 					else
 					{
