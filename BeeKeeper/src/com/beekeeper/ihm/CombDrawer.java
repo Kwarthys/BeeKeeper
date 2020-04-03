@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CellContent;
@@ -179,8 +180,17 @@ public class CombDrawer extends JPanel{
 
 					int e = 255 - (int)(a.getHunger() * 255);
 					if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:255]");
-					g.setColor(new Color(255,255-e,0));
-					g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));
+					
+					if(a.getBeeType() == AgentType.QUEEN)
+					{
+						g.setColor(Color.WHITE);
+						g.fillRect((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));	
+					}
+					else
+					{
+						g.setColor(new Color(255,255-e,0));
+						g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));						
+					}
 				}
 			}
 		}

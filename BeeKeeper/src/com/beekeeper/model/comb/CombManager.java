@@ -117,7 +117,10 @@ public class CombManager {
 			stimuliManagers.add(sm);
 
 			if(combNumber == 1)
+			{
+				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 				agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES*numberOfFrames*2, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+			}
 			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), controlServices);		
 
 			this.combs.add(c);	

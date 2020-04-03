@@ -78,6 +78,11 @@ public class MainController
 		public void reverseFrame(int index) {
 			MainController.this.reverseFrame(index);
 		}
+
+		@Override
+		public void layEgg(CombCell cell) {
+			MainController.this.layEgg(cell);	
+		}
 	};
 
 	public MainController()
@@ -164,6 +169,11 @@ public class MainController
 		MyUtils.switchElementsInList(drawers, index1*2+1, index2*2+1);
 
 		this.window.updateDrawersPos();
+	}
+	
+	private void layEgg(CombCell cell)
+	{
+		this.agentFactory.spawnALarvae(cell, combs.get(cell.getCombID()), combs.get(cell.getCombID()).getServices().getCurrentSManagerServices(), controlServices);
 	}
 
 	private void logTurn(String... ss)

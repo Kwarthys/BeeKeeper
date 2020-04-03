@@ -29,6 +29,8 @@ public interface WorkingAgentServices {
 	public void setInteractorTo(WorkingAgent agentInside);
 	public boolean enterHive();
 	public boolean agentNearby();
+	
+	public void layEgg();
 
 	public boolean tryMoveDown();
 	public boolean tryMoveUp();

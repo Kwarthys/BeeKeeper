@@ -156,6 +156,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		public int getCombId() {
 			return WorkingAgent.this.getCombId();
 		}
+
+		@Override
+		public void layEgg(){
+			WorkingAgent.this.layEgg();
+		}
 	};
 
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
@@ -168,6 +173,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		hunger = Math.random() * 0.7;
 		hjTiter = ModelParameters.getStartingBeeHJTiter();//Math.random() * Math.random() * Math.random();
 	}
+	
+	protected void layEgg() {};
 
 	public void live()
 	{		
