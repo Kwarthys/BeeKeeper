@@ -17,12 +17,11 @@ public class QueenTask extends Task {
 		this.motivated = false;
 
 		//LAY EGG
-		this.rootActivity.addTaskNode(new Action(3,0.001, agentServices) {
+		this.rootActivity.addTaskNode(new Action(2,0.001, agentServices) {
 			
 			@Override
 			public void execute() {
 				agentServices.layEgg();
-				System.out.println("Laid");
 				cellFound = false;
 			}
 			
@@ -39,7 +38,6 @@ public class QueenTask extends Task {
 			public void execute() {
 				cellFound = agentServices.getHostCell().content == CellContent.empty;
 				moved = false;
-				System.out.println("Inspected");
 			}
 			
 			@Override
@@ -55,7 +53,6 @@ public class QueenTask extends Task {
 			public void execute() {
 				agentServices.randomMove();
 				moved = true;
-				System.out.println("RandomMoved");
 			}
 			
 			@Override

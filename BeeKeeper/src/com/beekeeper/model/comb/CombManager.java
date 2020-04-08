@@ -47,6 +47,11 @@ public class CombManager {
 			//System.out.println("Agent" + who.getID() + " switched from comb" + startCombID + " to comb" + getCombFacingID(startCombID).ID + " on cell" + who.hostCell.number);
 
 		}
+
+		@Override
+		public Comb getFacingComb(int combID) {
+			return getCombFacingID(combID);
+		}
 	};
 
 	private Comb getCombFacingID(int combID)
@@ -65,7 +70,7 @@ public class CombManager {
 		return null;
 	}
 
-	private Comb getCombOfID(int combID)
+	public Comb getCombOfID(int combID)
 	{
 		for(int i = 0; i < combs.size(); ++i)
 		{
@@ -96,7 +101,7 @@ public class CombManager {
 
 		for(int i = 0; i < numberOfFrames+1;++i)
 		{
-			stimuliManagers.add(new StimuliManager(combSize));
+			stimuliManagers.add(new StimuliManager(combSize,i));
 		}
 		//System.out.println("Created " + (numberOfCombs+1) + " StimuliManagers");
 
@@ -114,14 +119,17 @@ public class CombManager {
 				--combWidthDivisor;
 			}
 
-			stimuliManagers.add(sm);
-
 			if(combNumber == 1)
 			{
 				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
-				agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES*numberOfFrames*2, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+				//agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES*numberOfFrames*2, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+				//agentFactory.spawnWorkers(100, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 			}
-			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), controlServices);		
+			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE/3, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), controlServices);
+			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 
 			this.combs.add(c);	
 
@@ -134,9 +142,14 @@ public class CombManager {
 
 	public void updateStimuli()
 	{
+		//int i = 0;
 		for(StimuliManager s : stimuliManagers)
 		{
 			s.updateStimuli();
+			
+			//DEBUG
+			//System.out.println("SM" + (++i) + "/" + stimuliManagers.size());
+			//MyUtils.showSexyHashMap(s.getTotalAmounts());
 		}
 	}
 

@@ -11,6 +11,8 @@ import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombManager;
 import com.beekeeper.model.comb.CombServices;
@@ -135,12 +137,12 @@ public class MainController
 		System.out.println("expe done");
 	}
 
-	/*
+	
 	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
 	{
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
-	 */
+	 
 	private void reverseFrame(int index)
 	{
 		if(index >= combManager.getCombsServices().size()/2 || index < 0)
@@ -173,7 +175,8 @@ public class MainController
 	
 	private void layEgg(CombCell cell)
 	{
-		this.agentFactory.spawnALarvae(cell, combs.get(cell.getCombID()), combs.get(cell.getCombID()).getServices().getCurrentSManagerServices(), controlServices);
+		Comb host = combManager.getCombOfID(cell.getCombID());
+		this.agentFactory.spawnALarvae(cell, host, host.getServices().getCurrentSManagerServices(), controlServices);
 	}
 
 	private void logTurn(String... ss)
@@ -221,13 +224,13 @@ public class MainController
 			for(Agent b : copy)
 			{
 				b.live();
-				/*
+				
 				if(b.getBeeType() == AgentType.ADULT_BEE || b.getBeeType() == AgentType.BROOD_BEE)
 				{
 					WorkingAgent w = (WorkingAgent) b;
 					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
 				}
-				 */
+				
 			}
 
 			for(Comb c : combs)
@@ -255,11 +258,14 @@ public class MainController
 			}
 
 			//System.out.println(turnIndex);
-
-			try {
-				Thread.sleep(30);//30
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			
+			if(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP > 0)
+			{
+				try {
+					Thread.sleep(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}				
 			}
 		}
 		System.out.println();

@@ -180,6 +180,9 @@ public abstract class WorkingAgent extends EmitterAgent
 		hjTiter = ModelParameters.getStartingBeeHJTiter();//Math.random() * Math.random() * Math.random();
 	}
 	
+	/**
+	 * For now only the queen implements this and can lay eggs. In the future they might all brood
+	 */
 	protected void layEgg() {};
 
 	public void live()
@@ -200,7 +203,11 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		if(isInside())
 		{
-			s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));			
+			if((getCombId()+1)/2 != stimuliManagerServices.getId())
+			{
+				System.out.println("C" + getCombId() + " for SM" + stimuliManagerServices.getId());
+			}
+			s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
 		}
 		else
 		{
@@ -268,8 +275,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		hunger = Math.max(0, hunger);
 
 		receivingFood = true;
-
-		//System.out.println(getStringName() + " receiving food, hunger: " + hunger);
 	}
 
 	public Task findATask(StimuliMap load)
@@ -313,7 +318,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		Task newTask = findATask(load);
 		if(newTask != currentTask)
 		{
-			motivation = 1.0;
+			motivation = ModelParameters.MAX_MOTIVATION;
 		}
 		currentTask = newTask;
 		//controllerServices.logMyTaskSwitch(currentTask, this.ID);

@@ -3,6 +3,7 @@ package com.beekeeper.utils;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MyUtils
 {
@@ -128,5 +129,19 @@ public class MyUtils
 		T tmp = list.remove(index1);
 		list.add(index1,list.remove(index2-1));
 		list.add(index2, tmp);
+	}
+	
+	public static <k,v> void showSexyHashMap(HashMap<k,v> map)
+	{
+		StringBuffer sb = new StringBuffer();
+
+		map.forEach((key, value) -> {
+			sb.append(key);
+			sb.append(": ");
+			sb.append(value);
+			sb.append(".\n");
+		});
+		
+		System.out.println(sb.toString());
 	}
 }

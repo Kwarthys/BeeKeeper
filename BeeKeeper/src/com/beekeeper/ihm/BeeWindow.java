@@ -22,12 +22,17 @@ public class BeeWindow extends JFrame
 	
 	private JPanel container;
 	private JComboBox<Stimulus> box;
+	private JComboBox<String> taskBox;
 	private FrameHandlerPanel frameHandler;
+	private TaskGrapher grapher;
+	
+	private JPanel boxContainer = new JPanel();
 	
 	public BeeWindow(TaskGrapher grapher, ArrayList<CombDrawer> drawers, MainControllerServices services)
 	{	
 		setTitle("BeeKeeper");
 		this.drawers = drawers;
+		this.grapher = grapher;
 		
 		this.addWindowListener(new WindowListener() {			
 			@Override
@@ -64,12 +69,26 @@ public class BeeWindow extends JFrame
 		Stimulus[] available = {Stimulus.Ocimene, Stimulus.AskFood};
 		box = new JComboBox<Stimulus>(available);
 		
+	
+		String[] availableTask = {"All", "Give Food", "Asking Food", "Foraging", "FeedLarvae"};
+		taskBox = new JComboBox<String>(availableTask);
+		
 		box.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				for(CombDrawer d : drawers)
 				{
 					d.drawnStimulus = (Stimulus)box.getSelectedItem();
+				}
+			}
+		});
+		
+		taskBox.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for(CombDrawer d : drawers)
+				{
+					d.drawnTasks = (String)taskBox.getSelectedItem();
 				}
 			}
 		});
@@ -86,13 +105,17 @@ public class BeeWindow extends JFrame
 			}
 		});
 		
+		boxContainer.setBackground(GraphicParams.BACKGROUND);
+		
 		updateDrawersPos();
 		
 		this.setContentPane(container);
 		
+		
 		setSize(1800,800);
 		
 		container.setBackground(GraphicParams.BACKGROUND);
+
 		
 		setVisible(true);
 		this.setLocationRelativeTo(null);
@@ -104,8 +127,10 @@ public class BeeWindow extends JFrame
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
-		c.gridy = 0;		
-		container.add(box,c);
+		c.gridy = 0;
+		boxContainer.add(box);
+		boxContainer.add(taskBox);
+		container.add(boxContainer,c);
 		
 		
 		
@@ -122,11 +147,21 @@ public class BeeWindow extends JFrame
 		}
 		
 		c = new GridBagConstraints();
-		//c.gridy = 2;
-		//c.gridx = 0;
+		c.gridy = 0;
+		c.gridx = 2;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		container.add(frameHandler);
+		container.add(frameHandler,c);
+		
+
+		
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.gridy = 1;
+		c.weightx=1.0;
+		c.weighty=1.0;
+		container.add(grapher,c);
+
 		
 		this.repaint();
 		setVisible(true);

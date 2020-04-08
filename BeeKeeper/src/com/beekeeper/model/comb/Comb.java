@@ -73,29 +73,13 @@ public class Comb
 		}
 
 		@Override
-		public ArrayList<WorkingAgent> getNeighborBees(int x, int y) {
-			ArrayList<Integer> c = getNeighbors(x, y);
-			ArrayList<WorkingAgent> agents = new ArrayList<>();
-			for(Integer i : c)
+		public ArrayList<WorkingAgent> getNeighborBees(int x, int y) {				
+			ArrayList<WorkingAgent> agents = Comb.this.getNeighborBees(x, y, true);			
+			Comb facing = combManagerServices.getFacingComb(getID());
+			if(facing != null)
 			{
-				WorkingAgent a = (WorkingAgent)cells.get(i).visiting;
-				if(a!=null)
-				{
-					agents.add(a);
-				}
-			}	
-			
-			//CHECKING BEE ON FACING COMB
-			CombCell facing = combManagerServices.getFacingCombCell(ID, getCellAt(x, y).number);
-			if(facing!=null)
-			{
-				if(facing.visiting != null)
-				{
-					//System.out.println("Found a facing bee on " + ((WorkingAgent)facing.visiting).getCombId() + " from " + ID + " at " + x + "," + y);
-					agents.add((WorkingAgent)facing.visiting);
-				}
+				agents.addAll(facing.getNeighborBees(x, y, false));
 			}
-			
 			return agents;			
 		}
 
@@ -117,6 +101,7 @@ public class Comb
 		@Override
 		public void notifyLanding(Agent a) {
 			agents.add(a);
+			a.registerNewStimuliManagerServices(getCurrentSManagerServices());
 		}
 
 		@Override
@@ -174,6 +159,31 @@ public class Comb
 			return false;
 		}
 	};
+	
+	public ArrayList<WorkingAgent> getNeighborBees(int x, int y, boolean isFacingComb)
+	{
+		ArrayList<Integer> c = services.getNeighbors(x, y);
+		ArrayList<WorkingAgent> agents = new ArrayList<>();
+		for(Integer i : c)
+		{
+			WorkingAgent a = (WorkingAgent)cells.get(i).visiting;
+			if(a!=null)
+			{
+				agents.add(a);
+			}
+		}
+		
+		if(isFacingComb)
+		{
+			WorkingAgent a = getCell(x, y).getAgentInside();
+			if(a!=null)
+			{
+				agents.add(a);
+			}
+		}
+
+		return agents;
+	}
 	
 	public void registerNewSManager(StimuliManagerServices smServices)
 	{
@@ -290,6 +300,20 @@ public class Comb
 	public CombCell getCell(int combCellIndex)
 	{
 		return cells.get(combCellIndex);
+	}
+	
+	public CombCell getCell(int x, int y)
+	{
+		return cells.get(y * size.width + x);
+	}
+	
+	public ArrayList<CombCell> getCells(ArrayList<Integer> combCellIndexes)
+	{
+		ArrayList<CombCell> cells = new ArrayList<>();
+		
+		combCellIndexes.forEach((Integer i) -> cells.add(getCell(i)));
+		
+		return cells;
 	}
 
 	public void addFood()

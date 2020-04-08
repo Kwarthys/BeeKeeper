@@ -38,6 +38,7 @@ public class CombDrawer extends JPanel{
 	private StimuliManagerServices stimuliManagerServices;
 
 	private CombServices cs;
+	public String drawnTasks = "All";
 
 	public CombDrawer(CombServices c)
 	{
@@ -50,7 +51,7 @@ public class CombDrawer extends JPanel{
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		
+
 		this.stimuliManagerServices = cs.getCurrentSManagerServices();
 
 		g.setColor(GraphicParams.BACKGROUND);
@@ -58,7 +59,7 @@ public class CombDrawer extends JPanel{
 
 		this.agents = new ArrayList<>(cs.getBees());
 		this.cells = new ArrayList<>(cs.getCells());
-		
+
 
 		paintPheromones(g);
 		paintCells(g);
@@ -66,7 +67,7 @@ public class CombDrawer extends JPanel{
 
 		g.setColor(Color.white);
 		g.drawString(String.valueOf(this.agents.size()) + " Adult bees.", 0, 20);
-		
+
 		g.dispose();
 	}
 
@@ -172,25 +173,39 @@ public class CombDrawer extends JPanel{
 				Point p = a.getPosition();
 				if(p!=null && a.getHunger() > 0)
 				{
-
-					p = fromLinearToHex(p);
-
-					int x = p.x;
-					int y = p.y;
-
-					int e = 255 - (int)(a.getHunger() * 255);
-					if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:255]");
-					
-					if(a.getBeeType() == AgentType.QUEEN)
+					boolean drawing = true;
+					if(drawnTasks.compareTo("All") != 0)
 					{
-						g.setColor(Color.WHITE);
-						g.fillRect((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom*1.5), (int)(CELL_SIZE*2/3*zoom*1.5));	
+						if(a.getBeeType() == AgentType.ADULT_BEE)
+						{
+							drawing = drawnTasks.compareTo(((WorkingAgent)a).getTaskName()) == 0;
+						}
 					}
-					else
+
+					if(drawing)
 					{
-						g.setColor(new Color(255,255-e,0));
-						g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));						
+						p = fromLinearToHex(p);
+
+						int x = p.x;
+						int y = p.y;
+
+						int e = 255 - (int)(a.getHunger() * 255);
+						if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:1]");
+						else
+						{
+							if(a.getBeeType() == AgentType.QUEEN)
+							{
+								g.setColor(Color.WHITE);
+								g.fillRect((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom*1.5), (int)(CELL_SIZE*2/3*zoom*1.5));	
+							}
+							else
+							{
+								g.setColor(new Color(255,255-e,0));
+								g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));						
+							}
+						}
 					}
+
 				}
 			}
 		}

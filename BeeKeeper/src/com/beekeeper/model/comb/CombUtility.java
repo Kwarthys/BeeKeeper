@@ -29,6 +29,25 @@ public class CombUtility
 		int y = (index - x) / size.width;
 		return getCellNeighbors(x, y, size);
 	}
+	
+	/**
+	 * Including potential facing combs
+	 * 
+	 */
+	public static ArrayList<CombCell> getAllNeighborCells(int cellX, int cellY, Comb host, Comb facingComb)
+	{
+		ArrayList<CombCell> cells = new ArrayList<>();
+		
+		cells.addAll(host.getCells(getCellNeighbors(cellX, cellY, host.getDimension())));
+		
+		if(facingComb != null)
+		{
+			//cells.addAll(facingComb.getCells(getCellNeighbors(cellX, cellY, facingComb.getDimension())));
+			cells.add(facingComb.getCell(cellY * facingComb.getDimension().width + cellX));
+		}
+		
+		return cells;
+	}
 
 	public static ArrayList<Integer> getCellNeighborsUp(int cellX, int cellY, Dimension size)
 	{

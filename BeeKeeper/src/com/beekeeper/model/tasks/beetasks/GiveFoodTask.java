@@ -20,8 +20,8 @@ public class GiveFoodTask extends Task {
 		
 		this.motivated = false;
 		
-		
-		this.rootActivity.addTaskNode(new Action(2,0,agentServices) {
+		//Feeding
+		this.rootActivity.addTaskNode(new Action(0.5,0,agentServices) {
 			
 			@Override
 			public void execute() {
@@ -34,11 +34,22 @@ public class GiveFoodTask extends Task {
 						System.out.println("Food Transfer between comb" + cooperativeInteractor.getCombId() + " and comb" + agentServices.getCombId());
 					}
 					*/
+					//System.out.println("FT " + cooperativeInteractor.getID() + " on C" + cooperativeInteractor.getCombId() + " and comb" + agentServices.getID() + " on C" + agentServices.getCombId());
 					cooperativeInteractor.recieveFood();
+					
+					if(agentServices.getID() % 500 == 0)
+					{
+						System.out.println(agentServices.getID() + " fed hungryman ");
+					}
 				}
 				else
-				{
-					cooperativeInteractor = null;
+				{					
+					if(agentServices.getID() % 500 == 0)
+					{
+						System.out.println(agentServices.getID() + " hungryman not hungry ");
+					}
+					
+					agentServices.resetCoopInteractor();
 				}
 			}
 			
@@ -48,21 +59,26 @@ public class GiveFoodTask extends Task {
 			}
 		});
 
+		//Finding someone to feed
 		this.rootActivity.addTaskNode(new Action(0.2,0, agentServices) {
-
 			@Override
 			public void execute() {
 				CombCell hostCell = agentServices.getHostCell();
 				ArrayList<WorkingAgent> neighs = hostCell.getNeighborBees();
-				Collections.shuffle(neighs);
-
+				
+				if(agentServices.getID() % 500 == 0)
+				{
+					System.out.println(agentServices.getID() + " looking for a hungryman ");
+				}
+				
 				if(neighs.size()==0)
 				{
 					agentServices.randomMove();
 					//System.out.println("Not a single bee around");
 					return;
 				}
-				//System.out.println(ID + "-" + neighs.get(0).ID + " " + neighs.get(0).isHungry());
+				Collections.shuffle(neighs);
+				//System.out.println(agentServices.getID() + " on C" + agentServices.getCombId() + ": " + neighs.size());
 				boolean found = false;
 				for(int i = 0; i<neighs.size() && !found; ++i)
 				{
@@ -71,7 +87,13 @@ public class GiveFoodTask extends Task {
 					{
 						agentServices.setInteractorTo(a);
 						found = true;
+						
 						//System.out.println("found a hungryman");
+						
+						if(agentServices.getID() % 500 == 0)
+						{
+							System.out.println(agentServices.getID() + " found a hungryman ");
+						}
 					}					
 				}
 				
