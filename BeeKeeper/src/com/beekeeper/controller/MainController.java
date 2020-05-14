@@ -18,6 +18,7 @@ import com.beekeeper.model.comb.CombManager;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.network.NetworkManager;
 import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
@@ -34,6 +35,8 @@ public class MainController
 	private BeeWindow window;
 
 	private AgentFactory agentFactory;
+	
+	private ArrayList<Integer> foragers = new ArrayList<>(); //for perf issues
 
 	//private int simuStep = 0;
 
@@ -85,6 +88,16 @@ public class MainController
 		public void layEgg(CombCell cell) {
 			MainController.this.layEgg(cell);	
 		}
+
+		@Override
+		public ArrayList<Comb> getCombs() {
+			return MainController.this.combs;
+		}
+
+		@Override
+		public ArrayList<Integer> getForagers() {
+			return MainController.this.foragers;
+		}
 	};
 
 	public MainController()
@@ -106,6 +119,8 @@ public class MainController
 			this.window = new BeeWindow(g,drawers, this.controlServices);
 			closed = false;			
 		}
+		
+		NetworkManager nm = new NetworkManager(controlServices);
 
 		programLoop();
 
@@ -115,6 +130,7 @@ public class MainController
 		}
 
 		this.logger.closing();
+		nm.closing();
 
 		try {
 			System.out.println("Waiting");
@@ -214,13 +230,12 @@ public class MainController
 				System.out.print("|");
 			}
 
-
-
 			turnIndex++;
 
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
 			//Collections.shuffle(copy);
 
+			ArrayList<Integer> newForagers = new ArrayList<>();
 			for(Agent b : copy)
 			{
 				b.live();
@@ -229,9 +244,14 @@ public class MainController
 				{
 					WorkingAgent w = (WorkingAgent) b;
 					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
-				}
-				
+					if(!b.isInside())
+					{
+						newForagers.add(b.getID());
+					}
+				}				
 			}
+			
+			this.foragers = newForagers;
 
 			for(Comb c : combs)
 			{

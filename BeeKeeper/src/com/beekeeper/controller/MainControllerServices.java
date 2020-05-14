@@ -1,5 +1,8 @@
 package com.beekeeper.controller;
 
+import java.util.ArrayList;
+
+import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.tasks.Task;
 
@@ -15,4 +18,7 @@ public interface MainControllerServices
 	public void reverseFrame(int index);
 
 	public void layEgg(CombCell cell);
+
+	public ArrayList<Comb> getCombs();
+	public ArrayList<Integer> getForagers();
 }

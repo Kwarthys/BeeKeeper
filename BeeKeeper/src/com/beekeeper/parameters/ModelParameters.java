@@ -58,7 +58,7 @@ public class ModelParameters
 
 	public static final double MAX_MOTIVATION = 0.8;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 0;//30
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 100;//30
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	

@@ -122,9 +122,6 @@ public class CombManager {
 			if(combNumber == 1)
 			{
 				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
-				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
-				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
-				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 				//agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES*numberOfFrames*2, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 				//agentFactory.spawnWorkers(100, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 			}
