@@ -6,6 +6,7 @@ import com.beekeeper.utils.MyUtils;
 public class ModelParameters
 {
 	public static boolean BYPASS_MOTIVATION = false;
+	public static boolean BYPASS_PHYSIOLOGY = false;
 	
 	public static boolean UI_ENABLED = true; //TODO UI TOGGLE
 	
@@ -20,6 +21,25 @@ public class ModelParameters
 
 	public static final double FoodSmell_HALFLIFE = 0.03;
 	public static final double TRANSMISSIBILITY_FoodSmell = 0.03;
+	
+	public static String getModelState()
+	{
+		StringBuffer sb = new StringBuffer();
+		if(BYPASS_MOTIVATION)
+		{
+			sb.append("NoMot");
+		}
+		if(BYPASS_PHYSIOLOGY)
+		{
+			sb.append("NoPhysio");
+		}
+		
+		if(!BYPASS_MOTIVATION && !BYPASS_PHYSIOLOGY)
+		{
+			sb.append("Classic");
+		}
+		return sb.toString();
+	}
 	
 	public static final double getOcimeneEmitedByHJ(double hjTiter)
 	{
