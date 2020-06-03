@@ -32,6 +32,7 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public Task getCurrentTask() {return currentTask;}
 
+	protected double ovarianDev = 0;
 	protected double hjTiter = 0;
 	public double getHJ() {return hjTiter;}	
 
@@ -151,6 +152,21 @@ public abstract class WorkingAgent extends EmitterAgent
 		public void receiveFood() {
 			WorkingAgent.this.recieveFood();
 		}
+
+		@Override
+		public int getCombId() {
+			return WorkingAgent.this.getCombId();
+		}
+
+		@Override
+		public void layEgg(){
+			WorkingAgent.this.layEgg();
+		}
+
+		@Override
+		public double getOvarianDev() {
+			return ovarianDev;
+		}
 	};
 
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
@@ -163,6 +179,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		hunger = Math.random() * 0.7;
 		hjTiter = ModelParameters.getStartingBeeHJTiter();//Math.random() * Math.random() * Math.random();
 	}
+	
+	/**
+	 * For now only the queen implements this and can lay eggs. In the future they might all brood
+	 */
+	protected void layEgg() {};
 
 	public void live()
 	{		
@@ -182,7 +203,11 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		if(isInside())
 		{
-			s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));			
+			if((getCombId()+1)/2 != stimuliManagerServices.getId())
+			{
+				System.out.println("C" + getCombId() + " for SM" + stimuliManagerServices.getId());
+			}
+			s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
 		}
 		else
 		{
@@ -265,8 +290,6 @@ public abstract class WorkingAgent extends EmitterAgent
 		hunger = Math.max(0, hunger);
 
 		receivingFood = true;
-
-		//System.out.println(getStringName() + " receiving food, hunger: " + hunger);
 	}
 
 	public Task findATask(StimuliMap load)
@@ -310,7 +333,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		Task newTask = findATask(load);
 		if(newTask != currentTask)
 		{
-			motivation = 1.0;
+			motivation = ModelParameters.MAX_MOTIVATION;
 		}
 		currentTask = newTask;
 		//controllerServices.logMyTaskSwitch(currentTask, this.ID);
@@ -375,10 +398,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 	}
 
-	public void setCombID(int id)
-	{
-		this.combID = id;
-	}
+	public int getCombId() {return hostCell.getCombID();}
 
 	public HashMap<String, Double> getAllThresholds()
 	{

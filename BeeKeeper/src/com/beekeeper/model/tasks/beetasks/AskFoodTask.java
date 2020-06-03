@@ -60,7 +60,7 @@ public class AskFoodTask extends Task {
 			
 			@Override
 			public boolean check() {
-				return (Math.random() > 0.9 || !agentServices.agentNearby()) && !agentServices.isReceivingFood();
+				return (Math.random() > 0.95 || !agentServices.agentNearby()) && !agentServices.isReceivingFood();
 			}
 		});
 		

@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.utils.IDManager;
 
 public abstract class Agent
@@ -15,8 +16,6 @@ public abstract class Agent
 	protected double hunger = Math.random() * 0.5;
 	public double getHunger() {return hunger;}	
 	protected boolean receivingFood = false;
-	
-	protected int combID = -1;
 	
 	protected AgentType type;	
 	public AgentType getBeeType() {return this.type;}
@@ -32,14 +31,11 @@ public abstract class Agent
 	
 	protected int lastVisitedCellNumber = -1;
 	
+	public abstract void registerNewStimuliManagerServices(StimuliManagerServices stimuliManagerServices);
+	
 	public Agent()
 	{
 		this.ID = IDManager.getNextID();
-	}
-	
-	public void setCombID(int id)
-	{
-		this.combID = id;
 	}
 	
 	public Point getPosition()
@@ -76,6 +72,17 @@ public abstract class Agent
 	
 	public void randomMove()
 	{
+		if(Math.random() > 0.9)
+		{
+			//CombSwitch
+			if(hostCell.isFacingAnotherCell())
+			{
+				hostCell.askMoveToFacingCell(this);
+				lastVisitedCellNumber = -1;
+				return;
+			}
+		}
+		
 		ArrayList<Integer> cells = hostCell.getNeighbors();
 		int r = (int) (Math.random() * cells.size());
 		//Bee can't randomly go back where it was

@@ -6,28 +6,8 @@ import com.beekeeper.utils.MyUtils;
 public class ModelParameters
 {
 	public static boolean BYPASS_MOTIVATION = false;
-	public static boolean BYPASS_PHYSIOLOGY = false;
 	
-	public static String getModelState()
-	{
-		StringBuffer sb = new StringBuffer();
-		if(BYPASS_MOTIVATION)
-		{
-			sb.append("NoMot");
-		}
-		if(BYPASS_PHYSIOLOGY)
-		{
-			sb.append("NoPhysio");
-		}
-		
-		if(!BYPASS_MOTIVATION && !BYPASS_PHYSIOLOGY)
-		{
-			sb.append("Classic");
-		}
-		return sb.toString();
-	}
-	
-	public static boolean UI_ENABLED = false;
+	public static boolean UI_ENABLED = true; //TODO UI TOGGLE
 	
 	public static final double TASK_LEARN_RATE = 0.001;
 	public static final double TASK_FORGET_RATE = 0.0001;
@@ -43,7 +23,6 @@ public class ModelParameters
 	
 	public static final double getOcimeneEmitedByHJ(double hjTiter)
 	{
-		//System.out.println("Emitting " + hjTiter * hjTiter * hjTiter + " EO at " + hjTiter + "HJ.");
 		return hjTiter * hjTiter * hjTiter;
 	}
 	
@@ -75,11 +54,15 @@ public class ModelParameters
 	
 	public static final double secondToTimeStepCoef = 10;
 	
-	public static final double MOTIVATION_STEP = 0.01;//0.01
+	public static final double MOTIVATION_STEP = 0.01;
+
+	public static final double MAX_MOTIVATION = 0.8;
+
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 100;//30
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static int NUMBER_BEES = 150;
+	public static int NUMBER_BEES = 200;
 	public static int NUMBER_LARVAE = 150;
 	public static int SIMU_LENGTH = 8000;
 	public static StartMode startMode = StartMode.Random;

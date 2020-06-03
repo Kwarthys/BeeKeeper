@@ -4,18 +4,21 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-import com.beekeeper.controller.TrafficJamManager;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 public class Comb
 {
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	
 	private ArrayList<CombCell> cells = new ArrayList<>();
+	
+	private StimuliManagerServices smServices;
+	private CombManagerServices combManagerServices;
 	
 	public int ID;
 	
@@ -70,18 +73,13 @@ public class Comb
 		}
 
 		@Override
-		public ArrayList<WorkingAgent> getNeighborBees(int x, int y) {
-			ArrayList<Integer> c = getNeighbors(x, y);
-			ArrayList<WorkingAgent> agents = new ArrayList<>();
-			for(Integer i : c)
+		public ArrayList<WorkingAgent> getNeighborBees(int x, int y) {				
+			ArrayList<WorkingAgent> agents = Comb.this.getNeighborBees(x, y, true);			
+			Comb facing = combManagerServices.getFacingComb(getID());
+			if(facing != null)
 			{
-				WorkingAgent a = (WorkingAgent)cells.get(i).visiting;
-				if(a!=null)
-				{
-					agents.add(a);
-				}
-			}			
-			
+				agents.addAll(facing.getNeighborBees(x, y, false));
+			}
 			return agents;			
 		}
 
@@ -103,6 +101,7 @@ public class Comb
 		@Override
 		public void notifyLanding(Agent a) {
 			agents.add(a);
+			a.registerNewStimuliManagerServices(getCurrentSManagerServices());
 		}
 
 		@Override
@@ -119,19 +118,96 @@ public class Comb
 			cell1.visiting = cell2.visiting;
 			cell2.visiting = tmp;
 			
+			if(cell2.visiting == null || cell1.visiting == null)
+			{
+				System.out.println("SwapError on " + cellIndexSwap1 + " and " + cellIndexSwap2 + " on comb " + ID);
+			}
+			
 			cell1.visiting.hostCell = cell1;
 			cell2.visiting.hostCell = cell2;
 			
 			//System.out.println("SWAP");
 		}
+
+		@Override
+		public StimuliManagerServices getCurrentSManagerServices() {
+			return smServices;
+		}
+
+		@Override
+		public boolean isFacingAnotherComb() {
+			return combManagerServices.isFacingAComb(ID);
+		}
+
+		@Override
+		public boolean askMoveToFacingCell(Agent who, int cellNumber) {
+			CombCell facingCell = combManagerServices.getFacingCombCell(ID, cellNumber);
+			if(facingCell != null)
+			{
+				if(facingCell.visiting == null)
+				{
+					cells.get(cellNumber).visiting = null;
+					facingCell.visiting = who;
+					
+					who.hostCell = facingCell;
+					
+					combManagerServices.switchAgentHostComb(ID, who);
+					
+					return true;
+				}
+			}
+			return false;
+		}
 	};
 	
-	public Comb(Dimension combSize)
+	public ArrayList<WorkingAgent> getNeighborBees(int x, int y, boolean isFacingComb)
+	{
+		ArrayList<Integer> c = services.getNeighbors(x, y);
+		ArrayList<WorkingAgent> agents = new ArrayList<>();
+		for(Integer i : c)
+		{
+			WorkingAgent a = (WorkingAgent)cells.get(i).visiting;
+			if(a!=null)
+			{
+				agents.add(a);
+			}
+		}
+		
+		if(isFacingComb)
+		{
+			WorkingAgent a = getCell(x, y).getAgentInside();
+			if(a!=null)
+			{
+				agents.add(a);
+			}
+		}
+
+		return agents;
+	}
+	
+	public void registerNewSManager(StimuliManagerServices smServices)
+	{
+		this.smServices = smServices;
+		
+		this.agents.forEach((Agent a) -> a.registerNewStimuliManagerServices(smServices));
+		this.cells.forEach((CombCell cc) -> {
+			if(cc.visiting != null)
+			{
+				cc.visiting.registerNewStimuliManagerServices(smServices);
+			}
+		});
+	}
+	
+	public Comb(int ID, Dimension combSize, StimuliManagerServices smServices, CombManagerServices combManagerServices)
 	{
 		this.size = new Dimension(combSize);
+		this.ID = ID;
 		cells = CombUtility.fillCells(size,ID, services);
 		
 		jamManager = new TrafficJamManager(services);
+		this.combManagerServices = combManagerServices;
+		
+		registerNewSManager(smServices);
 	}
 	
 	protected void testNeighborhood() //Not private to avoid "not used" warning
@@ -148,15 +224,6 @@ public class Comb
 	}
 
 	public ArrayList<Agent> getAgents(){return agents;}
-
-	public void setID(int id)
-	{
-		ID = id;
-		for(Agent b : agents)
-		{
-			b.setCombID(id);
-		}
-	}
 	
 	public CombServices getServices()
 	{
@@ -228,6 +295,25 @@ public class Comb
 			lastRow.add(cells.get((size.height-1) * size.width + x));
 		}
 		return lastRow;
+	}
+	
+	public CombCell getCell(int combCellIndex)
+	{
+		return cells.get(combCellIndex);
+	}
+	
+	public CombCell getCell(int x, int y)
+	{
+		return cells.get(y * size.width + x);
+	}
+	
+	public ArrayList<CombCell> getCells(ArrayList<Integer> combCellIndexes)
+	{
+		ArrayList<CombCell> cells = new ArrayList<>();
+		
+		combCellIndexes.forEach((Integer i) -> cells.add(getCell(i)));
+		
+		return cells;
 	}
 
 	public void addFood()

@@ -9,6 +9,7 @@ public interface WorkingAgentServices {
 	public void addToEnergy(double amount);
 	public double getEnergy();
 	public double getHJTiter();
+	public double getOvarianDev();
 	
 	public void dropMotivation();
 	public void killMotivation();
@@ -22,12 +23,15 @@ public interface WorkingAgentServices {
 	public StimuliMap getLastPerception();
 	public boolean isHungry();
 	public int getID();
+	public int getCombId();
 	public CombCell getHostCell();
 	public WorkingAgent getCoopInteractor();
 	public void resetCoopInteractor();
 	public void setInteractorTo(WorkingAgent agentInside);
 	public boolean enterHive();
 	public boolean agentNearby();
+	
+	public void layEgg();
 
 	public boolean tryMoveDown();
 	public boolean tryMoveUp();

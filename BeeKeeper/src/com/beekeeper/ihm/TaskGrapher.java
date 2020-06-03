@@ -187,6 +187,7 @@ public class TaskGrapher extends JPanel{
 			g.setColor(GraphicParams.hungryLarvaePhColor);
 
 			int step = (int)(graphWidth / 2.0 / (wlist.size()+1));
+			if(step==0)step=1;
 
 			int x = (int) (graphStartX + (i+1) * step);
 			int y = (int) (baseLineY - b.getMotivation() * graphHeight/2 *0.9);

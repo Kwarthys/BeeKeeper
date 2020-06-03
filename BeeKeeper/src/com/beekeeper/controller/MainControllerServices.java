@@ -1,15 +1,24 @@
 package com.beekeeper.controller;
 
+import java.util.ArrayList;
+
+import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.tasks.Task;
 
 public interface MainControllerServices
 {	
 	public void logMyTaskSwitch(Task newTask, int beeID);
-	
-	public double getHiveTemperature();
 
 	public CombCell askLandingZone();
 
 	public void notifyWindowClosed();
+	
+	public void switchFrames(int index1, int index2);
+	public void reverseFrame(int index);
+
+	public void layEgg(CombCell cell);
+
+	public ArrayList<Comb> getCombs();
+	public ArrayList<Integer> getForagers();
 }

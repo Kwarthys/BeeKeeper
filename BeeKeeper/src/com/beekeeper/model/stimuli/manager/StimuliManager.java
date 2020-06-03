@@ -4,8 +4,8 @@ package com.beekeeper.model.stimuli.manager;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombUtility;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
@@ -16,6 +16,9 @@ public class StimuliManager
 	private ArrayList<StimuliTile> stimuliTiles;
 	
 	private Dimension gridSize;
+	
+	private int smID;
+	public int getID() {return smID;}
 	
 	private StimuliManagerServices services = new StimuliManagerServices() {
 
@@ -33,13 +36,18 @@ public class StimuliManager
 		public ArrayList<StimuliTile> getTiles() {
 			return new ArrayList<StimuliTile>(stimuliTiles);
 		}
+
+		@Override
+		public int getId() {
+			return smID;
+		}
 	};
 
-	public StimuliManager(Comb c)
+	public StimuliManager(Dimension combSize, int id)
 	{
 		stimuliTiles = new ArrayList<>();
 		
-		gridSize = new Dimension(c.getDimension());
+		gridSize = new Dimension(combSize);
 		for(int j = 0; j < gridSize.height; j++)
 		{
 			for(int i = 0; i < gridSize.width; i++)
@@ -47,6 +55,27 @@ public class StimuliManager
 				stimuliTiles.add(new StimuliTile(i,j));
 			}			
 		}
+		
+		smID = id;
+	}
+	
+	public HashMap<Stimulus,Double> getTotalAmounts()
+	{
+		HashMap<Stimulus,Double> amounts = new HashMap<>();
+		
+		for(StimuliTile t : stimuliTiles)
+		{
+			for(Stimulus smell : t.stimuliMap.keySet())
+			{
+				if(!amounts.containsKey(smell))
+				{
+					amounts.put(smell, 0.0);
+				}
+				amounts.put(smell, amounts.get(smell) + t.stimuliMap.getAmount(smell));
+			}
+		}
+		
+		return amounts;
 	}
 
 	public void smellEmit(Stimulus s, double amount, Point position)
@@ -73,6 +102,8 @@ public class StimuliManager
 			double propag = StimulusFactory.getPropag(smell);
 			double evapRate = StimulusFactory.getEvapRate(smell);
 			
+			//System.out.println(smell + ": propag:" + propag + " |evap: " + evapRate);
+			
 			for(int i = 0; i < size; ++i)
 			{
 				StimuliTile st = stimuliTiles.get(i);
@@ -96,7 +127,7 @@ public class StimuliManager
 				{
 					st.stimuliMap.setAmount(smell, st.tmpAmount);
 					//granTotalAmount += st.tmpAmount;
-					st.tmpAmount = 0;					
+					st.tmpAmount = 0;		
 				}
 
 			}

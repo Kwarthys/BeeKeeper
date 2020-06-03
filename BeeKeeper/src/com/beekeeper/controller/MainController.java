@@ -1,7 +1,5 @@
 package com.beekeeper.controller;
 
-import java.awt.Dimension;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
@@ -16,30 +14,31 @@ import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
+import com.beekeeper.model.comb.CombManager;
+import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
-import com.beekeeper.model.hive.BeeHive;
-import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.network.NetworkManager;
 import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
 public class MainController
-{
+{	
 	ArrayList<CombDrawer> drawers = new ArrayList<CombDrawer>();
 
 	private ArrayList<Comb> combs = new ArrayList<Comb>();
 
-	private ArrayList<StimuliManager> sManagers = new ArrayList<>();
-
 	private MyLogger logger = new MyLogger();
+
+	private CombManager combManager;
 
 	private BeeWindow window;
 
 	private AgentFactory agentFactory;
+	
+	private ArrayList<Integer> foragers = new ArrayList<>(); //for perf issues
 
-	private BeeHive hive;
-
-	private int simuStep = 0;
+	//private int simuStep = 0;
 
 	private boolean closed;
 
@@ -48,11 +47,6 @@ public class MainController
 		@Override
 		public void logMyTaskSwitch(Task newTask, int beeID) {
 			MainController.this.logger.logTask(beeID, newTask.taskName);				
-		}
-
-		@Override
-		public double getHiveTemperature(){
-			return hive.getTemperature();
 		}
 
 		@Override
@@ -79,52 +73,43 @@ public class MainController
 		public void notifyWindowClosed() {
 			MainController.this.closed = true;
 		}
+
+		@Override
+		public void switchFrames(int index1, int index2) {
+			MainController.this.switchFrames(index1, index2);
+		}
+
+		@Override
+		public void reverseFrame(int index) {
+			MainController.this.reverseFrame(index);
+		}
+
+		@Override
+		public void layEgg(CombCell cell) {
+			MainController.this.layEgg(cell);	
+		}
+
+		@Override
+		public ArrayList<Comb> getCombs() {
+			return MainController.this.combs;
+		}
+
+		@Override
+		public ArrayList<Integer> getForagers() {
+			return MainController.this.foragers;
+		}
 	};
 
 	public MainController()
 	{
-		this.agentFactory = new AgentFactory();	
+		this.agentFactory = new AgentFactory();
 
-		Dimension combSize = new Dimension(30,30);
+		this.combManager = new CombManager();
+		combs = this.combManager.initiateFrames(4, agentFactory, this.controlServices);
 
-		Point2D.Double center = new Point2D.Double(combSize.width/2,combSize.height/2);
-
-		this.hive = new BeeHive();
-
-		for(int i = 0; i < 1; ++i)
+		for(CombServices c : combManager.getCombsServices())
 		{
-			//ArrayList<Agent> bees = new ArrayList<>();
-			Comb c = new Comb(combSize);
-
-			StimuliManager sm = new StimuliManager(c);
-
-			int combWidthDivisor = 10;
-
-			while(combSize.width/combWidthDivisor * combSize.width/combWidthDivisor * Math.PI < ModelParameters.NUMBER_LARVAE)
-			{
-				--combWidthDivisor;
-			}
-
-			System.out.println("combWidthDivisor : " + combWidthDivisor);
-
-			sManagers.add(sm);
-
-			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, combSize.width/combWidthDivisor), sm.getServices(), this.controlServices);		
-			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
-
-			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			//bees.addAll(agentFactory.spawnTestAgents(5, MyUtils.getCirclePointRule(center, 100), sm.getNewServices(), this.controlServices));	
-			//bees.addAll(agentFactory.spawnTestEmitterAgent(30, c,MyUtils.getCirclePointRule(center, 50), sm.getNewServices()));
-			//agentFactory.spawnTestAgents(3, c,MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), this.controlServices);
-
-			c.setID(i);
-			this.combs.add(c);	
-
-			c.addFood();
-
-			CombDrawer drawer = new CombDrawer(c.getServices(), sm.getServices());
-
-			this.drawers.add(drawer);
+			this.drawers.add(new CombDrawer(c));
 		}
 
 		TaskGrapher g = new TaskGrapher(agentFactory.allAgents);
@@ -134,6 +119,8 @@ public class MainController
 			this.window = new BeeWindow(g,drawers, this.controlServices);
 			closed = false;			
 		}
+		
+		NetworkManager nm = new NetworkManager(controlServices);
 
 		programLoop();
 
@@ -143,6 +130,7 @@ public class MainController
 		}
 
 		this.logger.closing();
+		nm.closing();
 
 		try {
 			System.out.println("Waiting");
@@ -165,9 +153,46 @@ public class MainController
 		System.out.println("expe done");
 	}
 
+	
 	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
 	{
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
+	}
+	 
+	private void reverseFrame(int index)
+	{
+		if(index >= combManager.getCombsServices().size()/2 || index < 0)
+		{
+			System.out.println("refused reverse");
+			return;
+		}
+
+		combManager.reverseFrame(index);
+		MyUtils.switchElementsInList(drawers, index*2, index*2+1);
+
+		this.window.updateDrawersPos();
+	}
+
+	private void switchFrames(int index1, int index2)
+	{
+		if(index1 >= combManager.getCombsServices().size()/2 || index2 >= combManager.getCombsServices().size()/2 || index1 < 0 || index2 < 0 || index1 == index2)
+		{
+			System.out.println("refused switch");
+			return;
+		}
+
+		combManager.switchFrames(index1, index2);
+
+		MyUtils.switchElementsInList(drawers, index1*2, index2*2);
+		MyUtils.switchElementsInList(drawers, index1*2+1, index2*2+1);
+
+		this.window.updateDrawersPos();
+	}
+	
+	private void layEgg(CombCell cell)
+	{
+		Comb host = combManager.getCombOfID(cell.getCombID());
+		this.agentFactory.spawnALarvae(cell, host, host.getServices().getCurrentSManagerServices(), controlServices);
 	}
 
 	private void logTurn(String... ss)
@@ -205,22 +230,28 @@ public class MainController
 				System.out.print("|");
 			}
 
-
-
 			turnIndex++;
 
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
 			Collections.shuffle(copy);
 
+			ArrayList<Integer> newForagers = new ArrayList<>();
 			for(Agent b : copy)
 			{
 				b.live();
+				
 				if(b.getBeeType() == AgentType.ADULT_BEE || b.getBeeType() == AgentType.BROOD_BEE)
 				{
 					WorkingAgent w = (WorkingAgent) b;
 					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
-				}
+					if(!b.isInside())
+					{
+						newForagers.add(b.getID());
+					}
+				}				
 			}
+			
+			this.foragers = newForagers;
 
 			for(Comb c : combs)
 			{
@@ -234,12 +265,7 @@ public class MainController
 				}
 			});
 
-			for(StimuliManager s : sManagers)
-			{
-				s.updateStimuli();
-			}
-
-			this.hive.computeInternalTemperature(Math.cos(simuStep++ * 1.0 / 300) * 10 + 15);
+			this.combManager.updateStimuli();
 
 			if(this.window != null)
 			{
@@ -252,11 +278,14 @@ public class MainController
 			}
 
 			//System.out.println(turnIndex);
-
-			try {
-				Thread.sleep(0);//30
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			
+			if(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP > 0)
+			{
+				try {
+					Thread.sleep(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}				
 			}
 		}
 		System.out.println();

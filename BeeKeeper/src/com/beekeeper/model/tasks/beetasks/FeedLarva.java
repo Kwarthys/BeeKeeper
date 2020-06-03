@@ -52,7 +52,7 @@ public class FeedLarva extends Task {
 			
 			@Override
 			public boolean check() {
-				return feeding;
+				return feeding && agentServices.getCoopInteractor()!=null;
 			}
 		});
 		

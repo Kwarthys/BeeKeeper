@@ -18,11 +18,22 @@ import com.beekeeper.model.stimuli.Stimulus;
 @SuppressWarnings("serial")
 public class BeeWindow extends JFrame
 {
+	private ArrayList<CombDrawer> drawers;
+	
+	private JPanel container;
+	private JComboBox<Stimulus> box;
+	private JComboBox<String> taskBox;
+	private FrameHandlerPanel frameHandler;
+	@SuppressWarnings("unused")
+	private TaskGrapher grapher;
+	
+	private JPanel boxContainer = new JPanel();
 	
 	public BeeWindow(TaskGrapher grapher, ArrayList<CombDrawer> drawers, MainControllerServices services)
 	{	
 		setTitle("BeeKeeper");
-		
+		this.drawers = drawers;
+		this.grapher = grapher;
 		
 		this.addWindowListener(new WindowListener() {			
 			@Override
@@ -52,12 +63,16 @@ public class BeeWindow extends JFrame
 
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JPanel container = new JPanel();
+		container = new JPanel();
 		container.setLayout(new GridBagLayout());
 		
 	
 		Stimulus[] available = {Stimulus.Ocimene, Stimulus.AskFood};
-		JComboBox<Stimulus> box = new JComboBox<Stimulus>(available);
+		box = new JComboBox<Stimulus>(available);
+		
+	
+		String[] availableTask = {"All", "Give Food", "Asking Food", "Foraging", "FeedLarvae"};
+		taskBox = new JComboBox<String>(availableTask);
 		
 		box.addActionListener(new ActionListener() {			
 			@Override
@@ -69,10 +84,54 @@ public class BeeWindow extends JFrame
 			}
 		});
 		
+		taskBox.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for(CombDrawer d : drawers)
+				{
+					d.drawnTasks = (String)taskBox.getSelectedItem();
+				}
+			}
+		});
+		
+		frameHandler = new FrameHandlerPanel(new FrameHandlerCallback() {			
+			@Override
+			public void switchFrames(int index1, int index2) {
+				services.switchFrames(index1, index2);
+			}
+			
+			@Override
+			public void reverseFrame(int index) {
+				services.reverseFrame(index);
+			}
+		});
+		
+		boxContainer.setBackground(GraphicParams.BACKGROUND);
+		
+		updateDrawersPos();
+		
+		this.setContentPane(container);
+		
+		
+		setSize(1800,800);
+		
+		container.setBackground(GraphicParams.BACKGROUND);
+
+		
+		setVisible(true);
+		this.setLocationRelativeTo(null);
+	}
+	
+	public void updateDrawersPos()
+	{
+		container.removeAll();
+		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
-		c.gridy = 0;		
-		container.add(box,c);
+		c.gridy = 0;
+		boxContainer.add(box);
+		boxContainer.add(taskBox);
+		container.add(boxContainer,c);
 		
 		
 		
@@ -82,22 +141,31 @@ public class BeeWindow extends JFrame
 		c.weightx = 0.5;
 		c.weighty = 0.5;
 		
-		container.add(grapher, c);
-		
 		for(CombDrawer drawer : drawers)
 		{			
 			c.gridx++;
 			container.add(drawer, c);
 		}
 		
-		this.setContentPane(container);
+		c = new GridBagConstraints();
+		c.gridy = 0;
+		c.gridx = 2;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		setSize(1800,800);
+		container.add(frameHandler,c);
 		
-		container.setBackground(GraphicParams.BACKGROUND);
+
 		
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.gridy = 1;
+		c.weightx=1.0;
+		c.weighty=1.0;
+		//container.add(grapher,c);
+
+		
+		this.repaint();
 		setVisible(true);
-		this.setLocationRelativeTo(null);
 	}
 	
 }

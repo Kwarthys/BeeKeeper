@@ -14,4 +14,6 @@ public interface StimuliManagerServices
 	public void emit(Stimulus s, double amount, Point position);
 	
 	public ArrayList<StimuliTile> getTiles();
+	
+	public int getId();
 }
