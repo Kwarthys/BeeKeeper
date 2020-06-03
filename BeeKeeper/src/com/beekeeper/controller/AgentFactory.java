@@ -57,7 +57,6 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
-				System.out.println("SpawningBroodCell");
 			}while(!host.isCellContentEmpty(x, y));
 			
 			WorkingAgent bee = new BroodBee(services, controllerServices);
@@ -83,7 +82,6 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
-				System.out.println("SpawningWorkerCell");
 			}while(!host.isCellVisitEmpty(x, y));
 	
 			WorkingAgent bee = new AdultBee(services, controllerServices);
@@ -102,8 +100,7 @@ public class AgentFactory
 	}
 
 	public void spawnAQueen(Comb host, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices)
-	{		
-		System.out.println("Spawning a queen");
+	{
 		Point2D.Double point = MyUtils.getPointInRule(rule);
 		int x;
 		int y;			

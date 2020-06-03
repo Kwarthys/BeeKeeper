@@ -42,7 +42,6 @@ public class UDPClientHandler implements Runnable {
 		System.out.println("UDP Spam started to " + inetAddress);
 		while(running)
 		{
-
 			try
 			{
 				/*** FRAMECONTENT ***/

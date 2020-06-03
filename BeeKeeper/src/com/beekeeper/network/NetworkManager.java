@@ -112,7 +112,7 @@ public class NetworkManager {
 
 
 	public void closing() {
-		System.out.println("KILLING");
+		System.out.println("Closing servers");
 		tcpHandlers.forEach((tcpc) -> tcpc.stop());
 		running = false;
 		for(UDPClientHandler udpc : udpConnected.values())

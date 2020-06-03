@@ -34,7 +34,7 @@ public class TCPClientHandler implements Runnable {
 				try {
 					request = read();
 				} catch (Exception e) {
-					//TODO make this better
+					//TODO Time OUT make this better
 					connectionClosed = true;
 					e.printStackTrace();
 					return;

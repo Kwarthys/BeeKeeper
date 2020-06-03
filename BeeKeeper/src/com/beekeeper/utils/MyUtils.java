@@ -56,7 +56,6 @@ public class MyUtils
 		Point2D.Double pointCandidate = new Point2D.Double(offset.x + Math.random()*range.x, offset.y + Math.random()*range.y);
 		while(!rule.isValid(pointCandidate))
 		{
-			System.out.println("EvaluatingRule");
 			pointCandidate = new Point2D.Double(offset.x + Math.random()*range.x, offset.y + Math.random()*range.y);
 		}
 		
