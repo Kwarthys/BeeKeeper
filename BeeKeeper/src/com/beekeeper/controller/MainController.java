@@ -105,7 +105,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 
 		this.combManager = new CombManager();
-		combs = this.combManager.initiateFrames(2, agentFactory, this.controlServices);
+		combs = this.combManager.initiateFrames(4, agentFactory, this.controlServices);
 
 		for(CombServices c : combManager.getCombsServices())
 		{
@@ -233,7 +233,7 @@ public class MainController
 			turnIndex++;
 
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
-			//Collections.shuffle(copy);
+			Collections.shuffle(copy);
 
 			ArrayList<Integer> newForagers = new ArrayList<>();
 			for(Agent b : copy)

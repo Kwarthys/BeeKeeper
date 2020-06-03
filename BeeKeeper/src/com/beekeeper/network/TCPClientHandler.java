@@ -71,8 +71,7 @@ public class TCPClientHandler implements Runnable {
 						//serverManager.createUDPClientHandler(socket.getInetAddress());
 						writer.write("FrHIT");
 						break;
-				}
-				
+				}				
 				
 				System.out.println("Sending " + request);
 				writer.flush();

@@ -17,13 +17,13 @@ public class MyUtils
 			}
 
 			@Override
-			public double getRange() {
-				return 2*outterRadius;
+			public Point2D.Double getRange() {
+				return new Point2D.Double(2*outterRadius, 2*outterRadius);
 			}
 
 			@Override
-			public double getOffset() {
-				return center.x-outterRadius;
+			public Point2D.Double getOffset() {
+				return new Point2D.Double(center.x - outterRadius, center.y - outterRadius);
 			}
 		};
 	}
@@ -37,26 +37,27 @@ public class MyUtils
 			}
 
 			@Override
-			public double getRange() {
-				return 2*radius;
+			public Point2D.Double getRange() {
+				return new Point2D.Double(2*radius, 2*radius);
 			}
 
 			@Override
-			public double getOffset() {
-				return center.x-radius;
+			public Point2D.Double getOffset() {
+				return new Point2D.Double(center.x - radius, center.y - radius);
 			}
 		};
 	}
 	
 	public static Point2D.Double getPointInRule(CustomRule<Point2D.Double> rule)
 	{
-		double offset = rule.getOffset();
-		double range = rule.getRange();
+		Point2D.Double offset = rule.getOffset();
+		Point2D.Double range = rule.getRange();
 		
-		Point2D.Double pointCandidate = new Point2D.Double(offset + Math.random()*range, offset + Math.random()*range);
+		Point2D.Double pointCandidate = new Point2D.Double(offset.x + Math.random()*range.x, offset.y + Math.random()*range.y);
 		while(!rule.isValid(pointCandidate))
 		{
-			pointCandidate = new Point2D.Double(offset + Math.random()*range, offset + Math.random()*range);
+			System.out.println("EvaluatingRule");
+			pointCandidate = new Point2D.Double(offset.x + Math.random()*range.x, offset.y + Math.random()*range.y);
 		}
 		
 		return pointCandidate;

@@ -57,6 +57,7 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
+				System.out.println("SpawningBroodCell");
 			}while(!host.isCellContentEmpty(x, y));
 			
 			WorkingAgent bee = new BroodBee(services, controllerServices);
@@ -82,6 +83,7 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
+				System.out.println("SpawningWorkerCell");
 			}while(!host.isCellVisitEmpty(x, y));
 	
 			WorkingAgent bee = new AdultBee(services, controllerServices);

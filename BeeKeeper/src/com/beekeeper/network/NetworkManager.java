@@ -12,7 +12,7 @@ import com.beekeeper.controller.MainControllerServices;
 
 public class NetworkManager {
 
-	public final int TCPport = 4242;
+	public final int TCPport = 4241;
 	public final int UDPport = 4243;
 
 	private ServerSocket serverTCPSocket;

@@ -28,27 +28,10 @@ public class GiveFoodTask extends Task {
 				WorkingAgent cooperativeInteractor = agentServices.getCoopInteractor();
 				if(cooperativeInteractor.isHungry())
 				{
-					/*
-					if(cooperativeInteractor.getCombId() != agentServices.getCombId())
-					{
-						System.out.println("Food Transfer between comb" + cooperativeInteractor.getCombId() + " and comb" + agentServices.getCombId());
-					}
-					*/
-					//System.out.println("FT " + cooperativeInteractor.getID() + " on C" + cooperativeInteractor.getCombId() + " and comb" + agentServices.getID() + " on C" + agentServices.getCombId());
 					cooperativeInteractor.recieveFood();
-					
-					if(agentServices.getID() % 500 == 0)
-					{
-						System.out.println(agentServices.getID() + " fed hungryman ");
-					}
 				}
 				else
 				{					
-					if(agentServices.getID() % 500 == 0)
-					{
-						System.out.println(agentServices.getID() + " hungryman not hungry ");
-					}
-					
 					agentServices.resetCoopInteractor();
 				}
 			}
@@ -66,11 +49,6 @@ public class GiveFoodTask extends Task {
 				CombCell hostCell = agentServices.getHostCell();
 				ArrayList<WorkingAgent> neighs = hostCell.getNeighborBees();
 				
-				if(agentServices.getID() % 500 == 0)
-				{
-					System.out.println(agentServices.getID() + " looking for a hungryman ");
-				}
-				
 				if(neighs.size()==0)
 				{
 					agentServices.randomMove();
@@ -78,7 +56,6 @@ public class GiveFoodTask extends Task {
 					return;
 				}
 				Collections.shuffle(neighs);
-				//System.out.println(agentServices.getID() + " on C" + agentServices.getCombId() + ": " + neighs.size());
 				boolean found = false;
 				for(int i = 0; i<neighs.size() && !found; ++i)
 				{
@@ -87,13 +64,6 @@ public class GiveFoodTask extends Task {
 					{
 						agentServices.setInteractorTo(a);
 						found = true;
-						
-						//System.out.println("found a hungryman");
-						
-						if(agentServices.getID() % 500 == 0)
-						{
-							System.out.println(agentServices.getID() + " found a hungryman ");
-						}
 					}					
 				}
 				
