@@ -23,7 +23,7 @@ public class AgentFactory
 		{
 			Point2D.Double point = MyUtils.getPointInRule(rule);
 			int x;
-			int y;			
+			int y;		
 			
 			do
 			{
