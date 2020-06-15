@@ -185,6 +185,11 @@ public class Comb
 		return agents;
 	}
 	
+	public StimuliManagerServices getServicesOfClone()
+	{
+		return smServices.createNewEqualAndGetServices();
+	}
+	
 	public void registerNewSManager(StimuliManagerServices smServices)
 	{
 		this.smServices = smServices;

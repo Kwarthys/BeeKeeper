@@ -87,7 +87,7 @@ public class UDPClientHandler implements Runnable {
 			foragerData.append(foragers.get(i));
 		}
 		byte[] data = foragerData.toString().getBytes();
-		System.out.println("Sending data:" + data.length + " || " + foragerData.toString());
+		//System.out.println("Sending data:" + data.length + " || " + foragerData.toString());
 		DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 		udpServer.send(p);
 	}
@@ -100,7 +100,7 @@ public class UDPClientHandler implements Runnable {
 			if(c.getAgents().size() != 0)
 			{
 				int pieces = ((c.getAgents().size()-1) / maxAgentCount) +1;
-				System.out.println("Will have to send " + pieces + " piece(s)");
+				//System.out.println("Will have to send " + pieces + " piece(s)");
 				for(int i = 0; i < pieces; ++i)
 				{
 					/* AGENTS */
@@ -129,7 +129,7 @@ public class UDPClientHandler implements Runnable {
 					}
 
 					byte[] data = combBuffer.toString().getBytes();
-					System.out.println("Sending data:" + i + " " + data.length + " || " + combBuffer.toString());
+					//System.out.println("Sending data:" + i + " " + data.length + " || " + combBuffer.toString());
 					DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 					udpServer.send(p);
 				}
@@ -174,7 +174,7 @@ public class UDPClientHandler implements Runnable {
 			}
 
 			byte[] data = combBuffer.toString().getBytes();
-			System.out.println("Sending data:" + data.length + " || " + combBuffer.toString());
+			//System.out.println("Sending data:" + data.length + " || " + combBuffer.toString());
 			DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 			udpServer.send(p);
 		}

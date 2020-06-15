@@ -41,6 +41,17 @@ public class StimuliManager
 		public int getId() {
 			return smID;
 		}
+
+		@Override
+		public StimuliManagerServices createNewEqualAndGetServices() {
+			StimuliManager s = new StimuliManager(StimuliManager.this.gridSize, -1);
+			//CopyValues
+			for(StimuliTile st : StimuliManager.this.stimuliTiles)
+			{
+				s.stimuliTiles.add(new StimuliTile(st));
+			}
+			return s.getServices();
+		}
 	};
 
 	public StimuliManager(Dimension combSize, int id)
@@ -158,6 +169,27 @@ public class StimuliManager
 		System.out.println("---------");
 	}
 
+	public void mergeWith(StimuliManagerServices stimuliManagerServices)
+	{
+		stimuliManagerServices.getTiles().forEach((StimuliTile st) -> {
+			boolean found = false;
+			for(int i = 0; i < StimuliManager.this.stimuliTiles.size() && !found; ++i)
+			{
+				StimuliTile ownSt = StimuliManager.this.stimuliTiles.get(i);
+				if(ownSt.position.equals(st.position))
+				{
+					found = true;
+					ownSt.stimuliMap.addAllAmounts(st.stimuliMap);
+				}
+			}
+			
+			if(!found)
+			{
+				StimuliManager.this.stimuliTiles.add(new StimuliTile(st));
+			}
+		});
+	}
+
 	public class StimuliTile
 	{
 		public Point position;
@@ -170,6 +202,11 @@ public class StimuliManager
 			position = new Point(x,y);
 		}
 		
+		public StimuliTile(StimuliTile st) {
+			position = new Point(st.position);
+			stimuliMap = st.stimuliMap;
+		}
+
 		@Override
 		public String toString()
 		{

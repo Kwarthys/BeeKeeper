@@ -37,6 +37,7 @@ public class MainController
 	private AgentFactory agentFactory;
 	
 	private ArrayList<Integer> foragers = new ArrayList<>(); //for perf issues
+	private ArrayList<Integer> deadAdults = new ArrayList<>(); //same
 
 	//private int simuStep = 0;
 
@@ -98,6 +99,14 @@ public class MainController
 		public ArrayList<Integer> getForagers() {
 			return MainController.this.foragers;
 		}
+
+		@Override
+		public ArrayList<Integer> getTheDead() {
+			ArrayList<Integer> theDeads = new ArrayList<>();
+			deadAdults.forEach((Integer id) -> theDeads.add(id));
+			deadAdults.clear();
+			return theDeads;
+		}
 	};
 
 	public MainController()
@@ -105,7 +114,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 
 		this.combManager = new CombManager();
-		combs = this.combManager.initiateFrames(4, agentFactory, this.controlServices);
+		combs = this.combManager.initiateFrames(3, agentFactory, this.controlServices);
 
 		for(CombServices c : combManager.getCombsServices())
 		{
@@ -229,7 +238,37 @@ public class MainController
 			{
 				System.out.print("|");
 			}
-
+			
+			/**** FRAME MOVEMENT DEBUG ****/
+			/*will keep it for a lil time
+			if(turnIndex == 10)
+			{
+				System.out.println("LIFTING FRAME 1");
+				combManager.liftFrame(1);
+			}
+			else if(turnIndex == 20)
+			{
+				System.out.println("DROPING FRAME 1");
+				combManager.putFrame(1, 1, false);
+			}
+			else if(turnIndex == 30)
+			{
+				System.out.println("LIFTING FRAME 1");
+				combManager.liftFrame(1);
+			}
+			else if(turnIndex == 40)
+			{
+				System.out.println("LIFTING FRAME 2");
+				combManager.liftFrame(2);
+			}
+			else if(turnIndex == 50)
+			{
+				System.out.println("DROPING FRAME 2");
+				combManager.putFrame(2, 1, false);
+				System.out.println("DROPING FRAME 1");
+				combManager.putFrame(1, 2, true);
+			}
+			*/
 			turnIndex++;
 
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
@@ -257,6 +296,21 @@ public class MainController
 			{
 				c.update();
 			}
+
+			ArrayList<Integer> newAdultDeaths = new ArrayList<>();
+			
+			for(Agent a : agentFactory.allAgents)
+			{
+				if(!a.alive)
+				{
+					if(a.getBeeType() == AgentType.ADULT_BEE || a.getBeeType() == AgentType.QUEEN)
+					{
+						newAdultDeaths.add(a.getID());
+					}
+				}
+			}
+			
+			deadAdults.addAll(newAdultDeaths);
 
 			agentFactory.allAgents.removeIf(new Predicate<Agent>() {
 				@Override

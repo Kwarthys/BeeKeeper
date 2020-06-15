@@ -21,7 +21,7 @@ public class NetworkManager {
 	private Thread tcpClientThread;
 
 	private HashMap<InetAddress, UDPClientHandler> udpConnected = new HashMap<>();
-	private ArrayList<TCPClientHandler> tcpHandlers = new ArrayList<>();
+	private ArrayList<TCPClientReceiverHandler> tcpHandlers = new ArrayList<>();
 
 	private MainControllerServices controlerServices;
 	
@@ -57,6 +57,7 @@ public class NetworkManager {
 			UDPClientHandler c = new UDPClientHandler(inetAddress, serverUDPSocket, controlerServices);
 			Thread t = new Thread(c);
 			udpConnected.put(inetAddress, c);
+			t.setName("UDPSpammerFor" + inetAddress);
 			t.start();
 		}
 		System.out.println("UDP Started");
@@ -86,12 +87,13 @@ public class NetworkManager {
 						{
 							Socket client = serverTCPSocket.accept();
 	
-							Thread clientThread = new Thread(new TCPClientHandler(client, NetworkManager.this));
+							Thread clientThread = new Thread(new TCPClientReceiverHandler(client, NetworkManager.this, controlerServices));
+							client.setSoTimeout(5000);
 							clientThread.start();
 						}
 
 					} catch (SocketTimeoutException e) {
-						//System.out.println("TimeOut");
+						System.out.println("TimeOut");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -105,7 +107,7 @@ public class NetworkManager {
 		System.out.println("TCP created");
 	}
 	
-	public void registerTCPHandler(TCPClientHandler tcpc)
+	public void registerTCPHandler(TCPClientReceiverHandler tcpc)
 	{
 		tcpHandlers.add(tcpc);
 	}

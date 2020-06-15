@@ -16,4 +16,6 @@ public interface StimuliManagerServices
 	public ArrayList<StimuliTile> getTiles();
 	
 	public int getId();
+	
+	public StimuliManagerServices createNewEqualAndGetServices();
 }

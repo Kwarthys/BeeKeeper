@@ -3,12 +3,14 @@ package com.beekeeper.model.comb;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.controller.AgentFactory;
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
+import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
@@ -20,6 +22,8 @@ public class CombManager {
 
 	private ArrayList<Comb> combs = new ArrayList<>();
 	private ArrayList<StimuliManager> stimuliManagers = new ArrayList<>();
+
+	private HashMap<Integer, StimuliManagerServices> combsUpManagers = new HashMap<>();
 
 	private Dimension combSize = new Dimension(78,50);
 
@@ -43,7 +47,7 @@ public class CombManager {
 		public void switchAgentHostComb(int startCombID, Agent who) {
 			getCombOfID(startCombID).getServices().notifyTakeOff(who);
 			getCombFacingID(startCombID).getServices().notifyLanding(who);
-			
+
 			//System.out.println("Agent" + who.getID() + " switched from comb" + startCombID + " to comb" + getCombFacingID(startCombID).ID + " on cell" + who.hostCell.number);
 
 		}
@@ -52,7 +56,67 @@ public class CombManager {
 		public Comb getFacingComb(int combID) {
 			return getCombFacingID(combID);
 		}
+
+		@Override
+		public void liftFrame(int frameIndex) {
+			CombManager.this.liftFrame(frameIndex);
+		}
+
+		@Override
+		public void putFrame(int frameIndex, int pos, boolean reverse) {
+			CombManager.this.putFrame(frameIndex, pos, reverse);
+		}
 	};
+	
+	public void liftFrame(int frameIndex)
+	{
+		//which combs ? frameIndex*2 et frameIndex*2+1
+		Comb cA = getCombOfID(frameIndex*2);
+		Comb cB = getCombOfID(frameIndex*2+1);
+
+		//Lift the combs
+		//Create two new temporary stimuli managers from the existings ones
+		combsUpManagers.put(cA.ID, cA.getServicesOfClone());
+		combsUpManagers.put(cB.ID, cB.getServicesOfClone());
+
+		reAttributeStimuliManagers();
+	}
+
+	public void putFrame(int frameIndex, int pos, boolean reverse)
+	{
+		showCombsIndexAsList();
+		//is pos taken ?
+		if(combsUpManagers.containsKey(combs.get(pos*2).ID))
+		{
+			//target is up
+			//Which combs ?
+			Comb combToDownA = getCombOfID(frameIndex*2);
+			Comb combToDownB = getCombOfID(frameIndex*2+1);
+			//Switch up combs
+			if(pos != combs.indexOf(combToDownA)/2)
+			{
+				switchFrames(pos, combs.indexOf(combToDownA)/2, false);				
+			}
+			else
+			{				
+				//System.out.println("Putting frame back where it was");
+			}
+			//Merge StimuliManagers
+			stimuliManagers.get(pos).mergeWith(combsUpManagers.get(combToDownA.ID));
+			stimuliManagers.get(pos+1).mergeWith(combsUpManagers.get(combToDownB.ID));
+			//Remove combs from Up
+			combsUpManagers.remove(combToDownA.ID);
+			combsUpManagers.remove(combToDownB.ID);
+
+			if(reverse)
+			{
+				reverseFrame(pos);
+			}
+			showCombsIndexAsList();
+			reAttributeStimuliManagers();
+		}
+		//target is already taken
+	}
 
 	private Comb getCombFacingID(int combID)
 	{
@@ -63,6 +127,11 @@ public class CombManager {
 				if(i != 0 && i != combs.size()-1)
 				{
 					int otherCombIndex = i + (i%2==0 ? -1 : 1);
+					if(isCombUp(otherCombIndex))
+					{
+						//System.out.println(combID + " to " + otherCombIndex + ": access denied, its up.");
+						return null;
+					}
 					return combs.get(otherCombIndex);
 				}
 			}
@@ -125,16 +194,16 @@ public class CombManager {
 				//agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES*numberOfFrames*2, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 				//agentFactory.spawnWorkers(100, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
 			}
-			
+
 			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE/3, c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/combWidthDivisor), sm.getServices(), controlServices);
 			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES, c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
 
 			this.combs.add(c);
 
 			c.addFood();
-			
+
 		}
-		
+
 		return combs;
 	}
 
@@ -144,7 +213,7 @@ public class CombManager {
 		for(StimuliManager s : stimuliManagers)
 		{
 			s.updateStimuli();
-			
+
 			//DEBUG
 			//System.out.println("SM" + (++i) + "/" + stimuliManagers.size());
 			//MyUtils.showSexyHashMap(s.getTotalAmounts());
@@ -162,9 +231,12 @@ public class CombManager {
 	{
 		//showCombsIndexAsList();
 		MyUtils.switchElementsInList(combs, frameIndex*2, frameIndex*2+1);
-		showCombsIndexAsList();
+		//showCombsIndexAsList();
+	}
 
-		reAttributeStimuliManagers();
+	private boolean isCombUp(int combID)
+	{
+		return combsUpManagers.containsKey(combID);
 	}
 
 	private void reAttributeStimuliManagers()
@@ -172,20 +244,32 @@ public class CombManager {
 		for(int i = 0; i < combs.size(); ++i)
 		{
 			//System.out.println("Attributing SM" + ((i+1)/2) + " to comb" + combs.get(i).ID);
-			combs.get(i).registerNewSManager(stimuliManagers.get((i+1)/2).getServices());
-		}
+			if(isCombUp(i))
+			{
+				combs.get(i).registerNewSManager(combsUpManagers.get(i));
+			}
+			else
+			{
+				combs.get(i).registerNewSManager(stimuliManagers.get((i+1)/2).getServices());				
+			}
+		}			
+
 	}
 
 	public void switchFrames(int frame1, int frame2)
 	{
+		switchFrames(frame1, frame2, true);
+	}
+
+	private void switchFrames(int frame1, int frame2, boolean reatribute)
+	{
+		System.out.println("Switching " + frame1 + " and " + frame2);
 		int index1 = 2*frame1;
 		int index2 = 2*frame2;
 		//showCombsIndexAsList();
 		MyUtils.switchElementsInList(combs, index1, index2);
 		MyUtils.switchElementsInList(combs, index1+1, index2+1);
-		showCombsIndexAsList();
-
-		reAttributeStimuliManagers();
-
+		if(reatribute)reAttributeStimuliManagers();
+		//showCombsIndexAsList();
 	}
 }

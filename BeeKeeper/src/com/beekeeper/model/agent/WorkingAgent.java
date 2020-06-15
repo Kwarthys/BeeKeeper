@@ -203,10 +203,6 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		if(isInside())
 		{
-			if((getCombId()+1)/2 != stimuliManagerServices.getId())
-			{
-				System.out.println("C" + getCombId() + " for SM" + stimuliManagerServices.getId());
-			}
 			s = stimuliManagerServices.getAllStimuliAround(new Point(hostCell.x, hostCell.y));
 		}
 		else

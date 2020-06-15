@@ -21,4 +21,6 @@ public interface MainControllerServices
 
 	public ArrayList<Comb> getCombs();
 	public ArrayList<Integer> getForagers();
+	
+	public ArrayList<Integer> getTheDead();
 }
