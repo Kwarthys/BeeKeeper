@@ -36,13 +36,13 @@ public class TCPClientReceiverHandler implements Runnable {
 				writer = new PrintWriter(socket.getOutputStream());
 				reader = new BufferedInputStream(socket.getInputStream());
 				
-				String request;
+				ClientRequest request;
 				try {
-					request = read();
+					request = new ClientRequest(read());
 					
 					System.out.println("TREATING");
 					
-					switch(request)
+					switch(request.header)
 					{
 						case "STARTUDP":
 							System.out.println("Creating udp");
@@ -60,12 +60,14 @@ public class TCPClientReceiverHandler implements Runnable {
 							System.out.println("Lifting a frame");
 							//serverManager.createUDPClientHandler(socket.getInetAddress());
 							writer.write("FrUp");
+							services.liftFrame(Integer.valueOf(request.data[0]));
 							break;
 							
 						case "FrDOWN":
 							System.out.println("Droping the frame");
 							//serverManager.createUDPClientHandler(socket.getInetAddress());
 							writer.write("FrDOWN");
+							services.putFrame(Integer.valueOf(request.data[0]), Integer.valueOf(request.data[1]), Boolean.valueOf(request.data[2]));
 							break;
 							
 						case "FrHIT":
@@ -115,15 +117,31 @@ public class TCPClientReceiverHandler implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private String read() throws Exception{      
-	      String response = "";
-	      int stream;
-	      byte[] b = new byte[4096];
-	      stream = reader.read(b);
-	      response = new String(b, 0, stream);
-	      return response;
-	   }
+		String response = "";
+		int stream;
+		byte[] b = new byte[4096];
+		stream = reader.read(b);
+		response = new String(b, 0, stream);
+		return response;
+	}
+	
+	private class ClientRequest
+	{
+		String header = null;
+		String[] data = null;
+		
+		public ClientRequest(String request)
+		{
+			header = request.split(" ")[0];
+			if(header.compareTo(request) == 0)
+			{
+				return;
+			}
+			data = request.split(" ", 2)[1].split(" ");
+		}
+	}
 
 }
 

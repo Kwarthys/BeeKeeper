@@ -107,6 +107,16 @@ public class MainController
 			deadAdults.clear();
 			return theDeads;
 		}
+
+		@Override
+		public void liftFrame(int frameIndex) {
+			combManager.liftFrame(frameIndex);
+		}
+
+		@Override
+		public void putFrame(int frameIndex, int pos, boolean reverse) {
+			combManager.putFrame(frameIndex, pos, reverse);
+		}
 	};
 
 	public MainController()
