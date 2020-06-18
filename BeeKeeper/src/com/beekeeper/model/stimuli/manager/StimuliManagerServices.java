@@ -2,6 +2,7 @@ package com.beekeeper.model.stimuli.manager;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
@@ -18,4 +19,8 @@ public interface StimuliManagerServices
 	public int getId();
 	
 	public StimuliManagerServices createNewEqualAndGetServices();
+	
+	public void updateStimuli();
+
+	public HashMap<Stimulus, Double> getTotalAmounts();
 }

@@ -59,14 +59,14 @@ public class TCPClientReceiverHandler implements Runnable {
 						case "FrUP":
 							System.out.println("Lifting a frame");
 							//serverManager.createUDPClientHandler(socket.getInetAddress());
-							writer.write("FrUp");
+							writer.write(request.data[0] + "UP");
 							services.liftFrame(Integer.valueOf(request.data[0]));
 							break;
 							
 						case "FrDOWN":
 							System.out.println("Droping the frame");
 							//serverManager.createUDPClientHandler(socket.getInetAddress());
-							writer.write("FrDOWN");
+							writer.write(request.data[0] + " DOWN at " + request.data[1]);
 							services.putFrame(Integer.valueOf(request.data[0]), Integer.valueOf(request.data[1]), Boolean.valueOf(request.data[2]));
 							break;
 							
@@ -77,7 +77,7 @@ public class TCPClientReceiverHandler implements Runnable {
 							break;
 					}				
 					
-					System.out.println("Sending " + request);
+					System.out.println("replying to " + request.header);
 					writer.flush();
 					
 				} catch (Exception e) {

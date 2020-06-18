@@ -76,8 +76,10 @@ public class CombManager {
 
 		//Lift the combs
 		//Create two new temporary stimuli managers from the existings ones
-		combsUpManagers.put(cA.ID, cA.getServicesOfClone());
-		combsUpManagers.put(cB.ID, cB.getServicesOfClone());
+		StimuliManagerServices smca = cA.getServicesOfClone();
+		StimuliManagerServices smcb = cB.getServicesOfClone();
+		combsUpManagers.put(cA.ID, smca);
+		combsUpManagers.put(cB.ID, smcb);
 
 		reAttributeStimuliManagers();
 	}
@@ -120,6 +122,12 @@ public class CombManager {
 
 	private Comb getCombFacingID(int combID)
 	{
+		if(isCombUp(combID))
+		{
+			//Comb is up
+			return null;
+		}
+		
 		for(int i = 0; i < combs.size(); ++i)
 		{
 			if(combs.get(i).ID == combID)
@@ -218,6 +226,11 @@ public class CombManager {
 			//System.out.println("SM" + (++i) + "/" + stimuliManagers.size());
 			//MyUtils.showSexyHashMap(s.getTotalAmounts());
 		}
+		
+		combsUpManagers.forEach((Integer combID, StimuliManagerServices sm) -> 
+		{
+			sm.updateStimuli();
+		});
 	}
 
 

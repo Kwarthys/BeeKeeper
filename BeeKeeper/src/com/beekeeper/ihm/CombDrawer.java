@@ -24,7 +24,7 @@ public class CombDrawer extends JPanel{
 	private ArrayList<Agent> agents;
 	private ArrayList<CombCell> cells;
 
-	private double zoom = 2;
+	private double zoom = 1;
 
 	private int CELL_SIZE = 6;
 
@@ -106,17 +106,15 @@ public class CombDrawer extends JPanel{
 
 			g.setColor(new Color(s,s,s));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
-			//g.drawString(String.valueOf(s), (int)(tileX*1.5), (int)(tileY*1.5));
-
+			
 			/*
-			p.y *= 3;
+			p.y *= 1;
+			p.x *= 1;
 			p.y += 300;
-			p.x *= 3;
 
 			g.setColor(Color.WHITE);
 			g.drawString(String.valueOf((int)(10*s)), p.x, p.y);
-			 */
-
+			*/
 		}
 	}
 

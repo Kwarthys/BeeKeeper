@@ -44,13 +44,18 @@ public class StimuliManager
 
 		@Override
 		public StimuliManagerServices createNewEqualAndGetServices() {
-			StimuliManager s = new StimuliManager(StimuliManager.this.gridSize, -1);
-			//CopyValues
-			for(StimuliTile st : StimuliManager.this.stimuliTiles)
-			{
-				s.stimuliTiles.add(new StimuliTile(st));
-			}
+			StimuliManager s = new StimuliManager(StimuliManager.this, -1);
 			return s.getServices();
+		}
+
+		@Override
+		public void updateStimuli() {
+			StimuliManager.this.updateStimuli();
+		}
+
+		@Override
+		public HashMap<Stimulus, Double> getTotalAmounts() {
+			return StimuliManager.this.getTotalAmounts();
 		}
 	};
 
@@ -70,6 +75,22 @@ public class StimuliManager
 		smID = id;
 	}
 	
+	public StimuliManager(StimuliManager stimuliManagerToCopy, int id)
+	{
+		stimuliTiles = new ArrayList<>();
+		
+		gridSize = new Dimension(stimuliManagerToCopy.gridSize);
+		for(int j = 0; j < gridSize.height; j++)
+		{
+			for(int i = 0; i < gridSize.width; i++)
+			{
+				stimuliTiles.add(new StimuliTile(stimuliManagerToCopy.getTileAt(new Point(i,j))));
+			}			
+		}
+		
+		smID = id;
+	}
+
 	public HashMap<Stimulus,Double> getTotalAmounts()
 	{
 		HashMap<Stimulus,Double> amounts = new HashMap<>();
@@ -204,7 +225,7 @@ public class StimuliManager
 		
 		public StimuliTile(StimuliTile st) {
 			position = new Point(st.position);
-			stimuliMap = st.stimuliMap;
+			stimuliMap = new StimuliMap(st.stimuliMap);
 		}
 
 		@Override

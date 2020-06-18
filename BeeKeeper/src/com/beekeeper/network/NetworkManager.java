@@ -93,7 +93,7 @@ public class NetworkManager {
 						}
 
 					} catch (SocketTimeoutException e) {
-						System.out.println("TimeOut");
+						//System.out.println("TimeOut");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
