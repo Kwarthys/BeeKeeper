@@ -49,19 +49,18 @@ public class AdultBee extends WorkingAgent
 		}
 		else
 		{
-			hunger -= Math.random()*0.001;
+			//Outside bees can consume resource they gather
+			hunger -= Math.random()*ModelParameters.HUNGER_INCREMENT;
 		}
+		
+		hunger = MyUtils.clamp(hunger + ModelParameters.HUNGER_INCREMENT);
 		
 		if(!ModelParameters.BYPASS_PHYSIOLOGY)
 		{
-			hjTiter += 0.0005;
+			hjTiter += ModelParameters.HJ_INCREMENT;
 			hjTiter -= ModelParameters.getHJModifiedByOcimene(this.bodySmell.getAmount(Stimulus.Ocimene));
 			hjTiter = MyUtils.clamp(hjTiter);			
 		}
-		
-		hunger = MyUtils.clamp(hunger + 0.001);
-		
-		
 		
 		receivingFood = false;
 		

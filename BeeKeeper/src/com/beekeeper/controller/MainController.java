@@ -267,6 +267,8 @@ public class MainController
 
 	private void programLoop()
 	{
+		boolean DEBUGTIME = false;
+		
 		turnIndex = 0;
 		int displayBar = 20;
 
@@ -280,6 +282,9 @@ public class MainController
 		logTurn("turnIndex", "beeID", "TaskName", "Physio");
 		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed)
 		{
+			long startLoopTime = 0;
+			if(DEBUGTIME) startLoopTime = System.nanoTime();
+			
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{
 				System.out.print("|");
@@ -338,6 +343,8 @@ public class MainController
 				}				
 			}
 			
+			if(DEBUGTIME)System.out.println("AllAgent lived at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
+			
 			this.foragers = newForagers;
 
 			for(Comb c : combs)
@@ -366,8 +373,12 @@ public class MainController
 					return !t.alive;
 				}
 			});
+			
+			if(DEBUGTIME)System.out.println("Deaths cleanup at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 
-			this.combManager.updateStimuli();
+			this.combManager.updateStimuli(); //MOST EXPENSIVE BY FAR 90-95% of time
+			
+			if(DEBUGTIME)System.out.println("updateStimuli at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 
 			if(this.window != null)
 			{
@@ -380,6 +391,8 @@ public class MainController
 			}
 
 			//System.out.println(turnIndex);
+			
+			if(DEBUGTIME)System.out.println("Loop took " + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 			
 			if(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP > 0)
 			{
