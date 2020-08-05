@@ -32,4 +32,9 @@ public abstract class EmitterAgent extends Agent
 		this.stimuliManagerServices = stimuliManagerServices;
 	}
 	
+	public int getStimuliManagerServicesID()
+	{
+		return stimuliManagerServices.getId();
+	}
+	
 }

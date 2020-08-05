@@ -18,4 +18,6 @@ public interface CombManagerServices {
 	public void liftFrame(int frameIndex);
 	
 	public void putFrame(int frameIndex, int pos, boolean reverse);
+	
+	public boolean isCombUp(int combID);
 }

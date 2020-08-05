@@ -64,6 +64,21 @@ public class Comb
 				WorkingAgent b = (WorkingAgent) newCell.visiting;
 				//System.out.println("Contact by movement " + a.getID() + " " + b.getID());
 				StimuliMap.contactBetween(a.getBodySmells(), b.getBodySmells());
+
+				if(a.hostCell == null || b.hostCell == null)
+				{
+					System.out.println("Contact");
+					if(b.hostCell == null)
+					{
+						System.out.println(a.getStringName() + " on " + a.getCombId() + " cell" + a.hostCell.number);
+						System.out.println(b.getStringName() + " on null");						
+					}
+					else
+					{
+						System.out.println(a.getStringName() + " on null");
+						System.out.println(b.getStringName() + " on " + b.getCombId() + " cell" + b.hostCell.number);	
+					}					
+				}
 				
 				jamManager.registerSwapDemand(a.hostCell.number, b.hostCell.number);
 				//System.out.println(a.getStringName() + " wants swap with " + b.getStringName());
@@ -95,13 +110,14 @@ public class Comb
 
 		@Override
 		public void notifyTakeOff(Agent a) {
+			//System.out.println(a.getStringName() + " taking off from C" + ID);
+			//System.out.println(agents.remove(a));
 			agents.remove(a);
 		}
 
 		@Override
 		public void notifyLanding(Agent a) {
-			agents.add(a);
-			a.registerNewStimuliManagerServices(getCurrentSManagerServices());
+			Comb.this.notifyLanding(a);
 		}
 
 		@Override
@@ -160,6 +176,18 @@ public class Comb
 		}
 	};
 	
+	public void removeAgent(Agent a)
+	{
+		agents.remove(a);
+	}
+	
+	public void notifyLanding(Agent a)
+	{
+		//System.out.println(a.getStringName() + " landing on C" + ID);
+		agents.add(a);
+		a.registerNewStimuliManagerServices(services.getCurrentSManagerServices());
+	}
+	
 	public ArrayList<WorkingAgent> getNeighborBees(int x, int y, boolean isFacingComb)
 	{
 		ArrayList<Integer> c = services.getNeighbors(x, y);
@@ -188,6 +216,11 @@ public class Comb
 	public StimuliManagerServices getServicesOfClone()
 	{
 		return smServices.createNewEqualAndGetServices();
+	}
+	
+	public int getStimuliManagerServicesID()
+	{
+		return smServices.getId();
 	}
 	
 	public void registerNewSManager(StimuliManagerServices smServices)
@@ -292,6 +325,22 @@ public class Comb
 	public Dimension getDimension() {
 		return size;
 	}
+	
+	public CombCell getRandomFreeVisitCell()
+	{
+		CombCell c = null;
+		
+		while(c == null)
+		{
+			c = cells.get((int) (Math.random() * cells.size()));
+			if(c.visiting != null)
+			{
+				c = null;
+			}
+		}
+		
+		return c;
+	}
 
 	public ArrayList<CombCell> getLandingZone() {
 		ArrayList<CombCell> lastRow = new ArrayList<>();
@@ -339,5 +388,9 @@ public class Comb
 			}
 		}
 		
+	}
+
+	public boolean isUp() {
+		return this.combManagerServices.isCombUp(ID);
 	}
 }

@@ -2,6 +2,7 @@ package com.beekeeper.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
@@ -11,6 +12,7 @@ import com.beekeeper.ihm.BeeWindow;
 import com.beekeeper.ihm.CombDrawer;
 import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentStateSnapshot;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
@@ -42,6 +44,8 @@ public class MainController
 	//private int simuStep = 0;
 
 	private boolean closed;
+	
+	private volatile int turnIndex = -1;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
 
@@ -53,6 +57,19 @@ public class MainController
 		@Override
 		public CombCell askLandingZone() {
 			ArrayList<Comb> theCombs = new ArrayList<>(combs);
+			
+			Iterator<Comb> it = theCombs.iterator();
+			
+			while(it.hasNext())
+			{
+				Comb c = it.next();
+				if(c.isUp())
+				{
+					it.remove();
+					//System.out.println(c.ID + " is Up, can't land");
+				}
+			}			
+			
 			Collections.shuffle(theCombs);
 			for(Comb cb : theCombs)
 			{				
@@ -116,6 +133,25 @@ public class MainController
 		@Override
 		public void putFrame(int frameIndex, int pos, boolean reverse) {
 			combManager.putFrame(frameIndex, pos, reverse);
+		}
+
+		@Override
+		public ArrayList<AgentStateSnapshot> getAllAdults() {
+			ArrayList<AgentStateSnapshot> toReturn = new ArrayList<>();
+			for(Agent a : agentFactory.allAgents)
+			{
+				if(a.getBeeType() == AgentType.ADULT_BEE || a.getBeeType() == AgentType.QUEEN)
+				{
+					toReturn.add(new AgentStateSnapshot((WorkingAgent)a));
+				}
+			}
+			
+			return toReturn;
+		}
+
+		@Override
+		public int getCurrentTimeStep() {
+			return turnIndex;
 		}
 	};
 
@@ -231,7 +267,7 @@ public class MainController
 
 	private void programLoop()
 	{
-		int turnIndex = 0;
+		turnIndex = 0;
 		int displayBar = 20;
 
 		System.out.print("|");
@@ -250,22 +286,24 @@ public class MainController
 			}
 			
 			/**** FRAME MOVEMENT DEBUG ****/
-			/*will keep it for a lil time
-			if(turnIndex == 10)
+			//will keep it for a lil time
+			/*
+			if(turnIndex == 2)
 			{
 				System.out.println("LIFTING FRAME 1");
 				combManager.liftFrame(1);
 			}
-			else if(turnIndex == 20)
+			else if(turnIndex == 50)
+			{
+				System.out.println("HITTING FRAME 1");
+				combManager.hitFrame(1);
+			}
+			else if(turnIndex == 300)
 			{
 				System.out.println("DROPING FRAME 1");
 				combManager.putFrame(1, 1, false);
 			}
-			else if(turnIndex == 30)
-			{
-				System.out.println("LIFTING FRAME 1");
-				combManager.liftFrame(1);
-			}
+			
 			else if(turnIndex == 40)
 			{
 				System.out.println("LIFTING FRAME 2");

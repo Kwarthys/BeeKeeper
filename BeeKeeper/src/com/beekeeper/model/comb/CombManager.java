@@ -4,10 +4,12 @@ import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.beekeeper.controller.AgentFactory;
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
@@ -66,8 +68,13 @@ public class CombManager {
 		public void putFrame(int frameIndex, int pos, boolean reverse) {
 			CombManager.this.putFrame(frameIndex, pos, reverse);
 		}
+
+		@Override
+		public boolean isCombUp(int combID) {
+			return CombManager.this.isCombUp(combID);
+		}
 	};
-	
+
 	public void liftFrame(int frameIndex)
 	{
 		//which combs ? frameIndex*2 et frameIndex*2+1
@@ -127,7 +134,7 @@ public class CombManager {
 			//Comb is up
 			return null;
 		}
-		
+
 		for(int i = 0; i < combs.size(); ++i)
 		{
 			if(combs.get(i).ID == combID)
@@ -215,6 +222,52 @@ public class CombManager {
 		return combs;
 	}
 
+	public void hitFrame(int frameIndex)
+	{
+		//Get agents of hit combs
+		Comb ca = combs.get(frameIndex*2);
+		Comb cb = combs.get(frameIndex*2+1);
+
+		spreadAgentsAround(ca, frameIndex*2, frameIndex*2+1);
+		spreadAgentsAround(cb, frameIndex*2, frameIndex*2+1);
+	}
+
+	private void spreadAgentsAround(Comb c, int sourceA, int sourceB)
+	{
+		float dropRate = 0.95f;
+		
+		Iterator<Agent> it = c.getAgents().iterator();
+
+		while(it.hasNext())
+		{
+			Agent a = it.next();
+			
+			CombCell oldCell = a.hostCell;
+
+			if(Math.random() < dropRate && a.isInside())
+			{
+				//spread agents randomly inside those landing zones
+				
+				int newCombId;
+				do
+				{
+					newCombId = (int)(Math.random() * combs.size());
+				}while(newCombId == sourceA || newCombId == sourceB);
+
+				it.remove();
+				
+				CombCell newHost = combs.get(newCombId).getRandomFreeVisitCell();
+				newHost.notifyLanding((EmitterAgent) a);
+
+				oldCell.visiting = null;
+				
+				a.hostCell = newHost;				
+				
+				//System.out.println(a.getStringName() + " " + c.ID + " from " + oldCell.number + " to " + newCombId + " on cell " + a.hostCell.number);
+			}
+		}
+	}
+
 	public void updateStimuli()
 	{
 		//int i = 0;
@@ -226,7 +279,7 @@ public class CombManager {
 			//System.out.println("SM" + (++i) + "/" + stimuliManagers.size());
 			//MyUtils.showSexyHashMap(s.getTotalAmounts());
 		}
-		
+
 		combsUpManagers.forEach((Integer combID, StimuliManagerServices sm) -> 
 		{
 			sm.updateStimuli();
@@ -263,7 +316,7 @@ public class CombManager {
 			}
 			else
 			{
-				combs.get(i).registerNewSManager(stimuliManagers.get((i+1)/2).getServices());				
+				combs.get(i).registerNewSManager(stimuliManagers.get((i+1)/2).getServices());			
 			}
 		}			
 

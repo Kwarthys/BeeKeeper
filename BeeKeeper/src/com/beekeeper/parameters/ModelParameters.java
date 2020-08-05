@@ -4,11 +4,11 @@ import com.beekeeper.utils.IDManager;
 import com.beekeeper.utils.MyUtils;
 
 public class ModelParameters
-{
+{	
 	public static boolean BYPASS_MOTIVATION = false;
 	public static boolean BYPASS_PHYSIOLOGY = false;
 	
-	public static boolean UI_ENABLED = true; //TODO UI TOGGLE
+	public static boolean UI_ENABLED = true;
 	
 	public static final double TASK_LEARN_RATE = 0.001;
 	public static final double TASK_FORGET_RATE = 0.0001;
@@ -78,13 +78,13 @@ public class ModelParameters
 
 	public static final double MAX_MOTIVATION = 0.8;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 100;//30
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 30;//30
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
 	public static int NUMBER_BEES = 200;
 	public static int NUMBER_LARVAE = 150;
-	public static int SIMU_LENGTH = 8000;
+	public static int SIMU_LENGTH = 5000;
 	public static StartMode startMode = StartMode.Random;
 	
 	public static int expeIndex = 0;

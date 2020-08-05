@@ -58,7 +58,7 @@ public class CombCell
 	
 	public int getCombID() {return combID;}
 
-	public void leaveCell() {
+	public void freeCell() {
 		cs.notifyTakeOff(visiting);
 		visiting = null;
 	}

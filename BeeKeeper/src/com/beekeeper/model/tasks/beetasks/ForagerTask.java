@@ -65,7 +65,7 @@ public class ForagerTask extends Task {
 			public void execute() {
 				ForagerTask.this.motivated = false;
 				back = false;
-				if(!agentServices.tryMoveDown())
+				if(!agentServices.tryMoveDown(true))
 				{
 					agentServices.dropMotivation();
 				}

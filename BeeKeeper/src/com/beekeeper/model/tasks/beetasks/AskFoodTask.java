@@ -13,7 +13,7 @@ public class AskFoodTask extends Task {
 	private boolean foundFood = false;
 
 	public AskFoodTask(WorkingAgentServices agentServices) {
-		super(agentServices, "Asking Food");
+		super(agentServices, "AskingFood");
 		
 		this.motivated = false;
 		
@@ -53,7 +53,14 @@ public class AskFoodTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.5,0.001,agentServices) {			
 			@Override
 			public void execute() {
-				agentServices.randomMove();	
+				if(Math.random() > 0.5)
+				{
+					agentServices.randomMove();	
+				}
+				else
+				{
+					agentServices.tryMoveDown(false);
+				}
 				foundFood = false;
 				cellChecked = false;
 			}

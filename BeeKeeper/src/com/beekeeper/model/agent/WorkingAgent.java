@@ -128,8 +128,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		@Override
-		public boolean tryMoveDown() {
-			return WorkingAgent.this.tryMoveDown();
+		public boolean tryMoveDown(boolean goOut) {
+			return WorkingAgent.this.tryMoveDown(goOut);
 		}
 
 		@Override
@@ -278,7 +278,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		return s;
 	}
 
-	public boolean isHungry() {return hunger > 0.5 && currentTask.taskName == "Asking Food";}
+	public boolean isHungry() {return hunger > 0.5 && currentTask.taskName == "AskingFood";}
 
 	public void recieveFood()
 	{
@@ -378,15 +378,20 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 	}
 	
-	protected boolean tryMoveDown()
+	protected boolean tryMoveDown(boolean goOut)
 	{
 		ArrayList<Integer> cells = hostCell.getDownCells();
 		if(cells.size() == 0)
 		{
 			//We are at the bottom !
-			hostCell.leaveCell();
-			this.hostCell = null;
-			return true;
+			if(goOut)
+			{
+				hostCell.freeCell();
+				this.hostCell = null;
+				//System.out.println(this.getStringName() + " liftoff !");
+				return true;			
+			}
+			return false;
 		}
 		else
 		{

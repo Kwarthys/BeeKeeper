@@ -33,7 +33,7 @@ public interface WorkingAgentServices {
 	
 	public void layEgg();
 
-	public boolean tryMoveDown();
+	public boolean tryMoveDown(boolean goOut);
 	public boolean tryMoveUp();
 	
 }

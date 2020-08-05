@@ -42,12 +42,18 @@ public abstract class Agent
 	{
 		if(isInside())
 		{
-			return new Point(hostCell.x, hostCell.y);			
+			return new Point(hostCell.x, hostCell.y);
 		}
 		else
 		{
 			return null;
 		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		return getStringName();
 	}
 	
 	public abstract String getStringName();

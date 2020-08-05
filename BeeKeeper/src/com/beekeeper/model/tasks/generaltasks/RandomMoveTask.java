@@ -9,7 +9,7 @@ public class RandomMoveTask extends Task
 	
 	public RandomMoveTask(WorkingAgentServices s)
 	{
-		super(s, "Random Walk");
+		super(s, "RandomWalk");
 		
 		rootActivity.addTaskNode(new RandomMoveAction(s));
 	}
