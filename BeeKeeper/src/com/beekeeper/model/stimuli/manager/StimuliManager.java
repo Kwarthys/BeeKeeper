@@ -141,6 +141,25 @@ public class StimuliManager
 				StimuliTile st = stimuliTiles.get(i);
 				double localAmount = st.stimuliMap.getAmount(smell);
 				
+				/*** NEW COMPUTING ***/
+				if(localAmount > 0)
+				{
+					ArrayList<Integer> voisins = CombUtility.getCellNeighbors(i, gridSize);
+					//System.out.println("LocalAmount : " + localAmount + " pushing " + localAmount * (1-propag) + " to " + voisins.size() + " cells. propag:" + propag);
+					for(Integer stIndex : voisins)
+					{
+						stimuliTiles.get(stIndex).tmpAmount += localAmount * (1-propag);
+						stimuliTiles.get(stIndex).tmpContributors += 1;
+					}
+				}
+				
+				
+				
+				
+				/*********************/
+				
+				
+				/*** OLD COMPUTING WAY ***				
 				ArrayList<Integer> voisins = CombUtility.getCellNeighbors(i, gridSize);
 				
 				double totalAmount = 0;
@@ -150,18 +169,38 @@ public class StimuliManager
 				}
 
 				st.tmpAmount = (localAmount * propag + totalAmount) * evapRate;
+				/*********************/
 			}
 			
 			//double granTotalAmount = 0;
 			for(StimuliTile st : stimuliTiles)
 			{
+				/*** NEW ***/
+				double localAmount = st.stimuliMap.getAmount(smell);
+				
+				double incAmount = 0;
+				if(st.tmpContributors > 0)
+				{
+					incAmount = st.tmpAmount/st.tmpContributors;
+				}				
+				
+				localAmount = (localAmount * propag + incAmount) * evapRate;
+				st.stimuliMap.setAmount(smell, localAmount);
+				//granTotalAmount += st.tmpAmount;
+				st.tmpAmount = 0;
+				st.tmpContributors = 0;
+				
+				/***********/
+				
+				
+				/*** OLD ***
 				if(st.tmpAmount != 0)
 				{
 					st.stimuliMap.setAmount(smell, st.tmpAmount);
 					//granTotalAmount += st.tmpAmount;
 					st.tmpAmount = 0;		
 				}
-
+				***********/
 			}
 			//if(smell == Stimulus.StimulusA)
 				//System.out.println("GranTotalAmount = " + granTotalAmount);
@@ -217,6 +256,7 @@ public class StimuliManager
 		public StimuliMap stimuliMap = new StimuliMap();
 
 		double tmpAmount = 0;
+		int tmpContributors = 0;
 		
 		public StimuliTile(int x, int y)
 		{

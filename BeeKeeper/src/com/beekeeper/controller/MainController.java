@@ -268,6 +268,10 @@ public class MainController
 	private void programLoop()
 	{
 		boolean DEBUGTIME = false;
+		boolean MONITORTIME = true;
+		int minLoopMs = -1;
+		int maxLoopMs = 0;
+		long totalLoopMs = 0;
 		
 		turnIndex = 0;
 		int displayBar = 20;
@@ -282,8 +286,7 @@ public class MainController
 		logTurn("turnIndex", "beeID", "TaskName", "Physio");
 		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed)
 		{
-			long startLoopTime = 0;
-			if(DEBUGTIME) startLoopTime = System.nanoTime();
+			long startLoopTime = System.nanoTime();
 			
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{
@@ -379,6 +382,23 @@ public class MainController
 			this.combManager.updateStimuli(); //MOST EXPENSIVE BY FAR 90-95% of time
 			
 			if(DEBUGTIME)System.out.println("updateStimuli at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
+			
+			/*** MONITOR TIME ***/
+			if(MONITORTIME)
+			{
+				long loopMS = (System.nanoTime() - startLoopTime)/1000000;
+				totalLoopMs += loopMS;
+				minLoopMs = (int) Math.min(loopMS, minLoopMs);
+				maxLoopMs = (int) Math.max(loopMS, maxLoopMs);
+				
+				if(minLoopMs == -1)
+				{
+					minLoopMs = (int) loopMS;
+				}
+				
+				if(turnIndex%100 == 0)System.out.println("Average: " + totalLoopMs/turnIndex + " Min: " + minLoopMs + " Max:" + maxLoopMs);
+			}
+			/********************/
 
 			if(this.window != null)
 			{
