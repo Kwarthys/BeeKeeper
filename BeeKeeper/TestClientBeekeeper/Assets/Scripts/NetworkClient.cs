@@ -40,6 +40,15 @@ public class NetworkClient : MonoBehaviour
         Debug.Log("Starting UDP reader thread");
         Thread t = new Thread(readUDP);
         t.Start();
+
+        Debug.Log("Starting TCP reader thread");
+        Thread ttcp = new Thread(readTCP);
+        ttcp.Start();
+    }
+
+    public void sendTCP(string request)
+    {
+        s.Send(Encoding.Default.GetBytes(request));
     }
 
     private void parseModel(string rawData)
@@ -68,6 +77,17 @@ public class NetworkClient : MonoBehaviour
         s.Send(Encoding.Default.GetBytes("CLOSE"));
         //targets.Dispose();
         //flag.Dispose();
+    }
+
+    private void readTCP()
+    {
+        while(true)
+        {
+            byte[] rawData = new byte[1024];
+            s.Receive(rawData);
+            string data = Encoding.Default.GetString(rawData);
+            Debug.Log("fromTCP : " + data.Length + " : " + data);            
+        }
     }
 
     private void readUDP()

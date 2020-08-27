@@ -416,9 +416,12 @@ public abstract class WorkingAgent extends EmitterAgent
 	public HashMap<String, Double> getAllTaskScores()
 	{
 		HashMap<String, Double> d = new HashMap<>();
-		for(Task t : taskList)
+		if(lastPercievedMap != null)
 		{
-			d.put(t.taskName, t.compute(lastPercievedMap));
+			for(Task t : taskList)
+			{
+				d.put(t.taskName, t.compute(lastPercievedMap));
+			}
 		}
 		return d;
 	}

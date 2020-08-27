@@ -11,13 +11,19 @@ public class HiveModel : MonoBehaviour
 
     public FrameManager frameManager;
 
-    private List<BeeAgent> agents = new List<BeeAgent>();
+    public IDManager idManager;
+
+    //private List<BeeAgent> agents = new List<BeeAgent>();
+
+    private Dictionary<int, BeeAgent> theAgents = new Dictionary<int, BeeAgent>();
 
     private List<UpdateOrder> incOrders = new List<UpdateOrder>();
     private List<UpdateContentOrder> incContentOrders = new List<UpdateContentOrder>();
 
     private bool listLock = false;
     private bool listContentLock = false;
+
+    public TaskGrapher taskGrapher;
 
     void Update()
     {
@@ -42,19 +48,20 @@ public class HiveModel : MonoBehaviour
 
                 for (int i = 0; i < updateOrder.targetsIDs.Count; ++i)
                 {
-                    BeeAgent a = getAgentOfId(updateOrder.targetsIDs[i]);
-                    if (a == null)
+                    BeeAgent a;
+                    if(!theAgents.ContainsKey(updateOrder.targetsIDs[i]))
                     {
                         a = new BeeAgent();
                         a.id = updateOrder.targetsIDs[i];
                         a.pos = updateOrder.newTargets[i];
-                        a.pointID = agents.Count;
-                        agents.Add(a);
+                        a.pointID = idManager.getNextFreeIndex();
+                        theAgents.Add(updateOrder.targetsIDs[i], a);
 
                         newAgents++;
                     }
                     else
                     {
+                        a = theAgents[updateOrder.targetsIDs[i]];
                         a.pos = updateOrder.newTargets[i];
                     }
 
@@ -68,11 +75,11 @@ public class HiveModel : MonoBehaviour
                     }
                     ids.Add(a.pointID);
                 }
-                Debug.Log("AgentLoop" + updateOrder.targetsIDs.Count + "(" + newAgents + ") update took " + (Time.realtimeSinceStartup - loopUpdate) * 1000 + "ms.");
+                //Debug.Log("AgentLoop" + updateOrder.targetsIDs.Count + "(" + newAgents + ") update took " + (Time.realtimeSinceStartup - loopUpdate) * 1000 + "ms.");
                 pointCloud.updatePoints(new UpdateOrder(targets, ids));
             }
             listLock = false;
-            if (initCount != 0) Debug.Log("Agent update took " + (Time.realtimeSinceStartup - updateStartTime) * 1000 + "ms. From " + initCount + " to " + incOrders.Count);
+            //if (initCount != 0) Debug.Log("Agent update took " + (Time.realtimeSinceStartup - updateStartTime) * 1000 + "ms. From " + initCount + " to " + incOrders.Count);
         }
 
         updateStartTime = Time.realtimeSinceStartup;
@@ -105,8 +112,13 @@ public class HiveModel : MonoBehaviour
 
             listContentLock = false;
 
-            if (initCount != 0) Debug.Log("Content update took " + (Time.realtimeSinceStartup - updateStartTime) * 1000 + "ms. From " + initCount + " to " + incContentOrders.Count);
+            //if (initCount != 0) Debug.Log("Content update took " + (Time.realtimeSinceStartup - updateStartTime) * 1000 + "ms. From " + initCount + " to " + incContentOrders.Count);
         }
+    }
+
+    public void registerStatusUpdate(UpdateStatus update)
+    {
+        taskGrapher.postData(update);
     }
 
     public void registerContentUpdate(UpdateContentOrder order)
@@ -126,7 +138,7 @@ public class HiveModel : MonoBehaviour
         incOrders.Add(updateOrder);
         listLock = false;
     }
-
+    /*
     private BeeAgent getAgentOfId(int id)
     {
         foreach(BeeAgent a in agents)
@@ -138,7 +150,7 @@ public class HiveModel : MonoBehaviour
         }
         return null;
     }
-
+    */
     private Color getColorFor(int contentCode, int quantity)
     {
         Color c = Color.black;

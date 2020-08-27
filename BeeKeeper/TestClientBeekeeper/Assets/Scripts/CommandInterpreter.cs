@@ -52,6 +52,21 @@ public class CommandInterpreter : MonoBehaviour
                 }
                 model.registerContentUpdate(new UpdateContentOrder(int.Parse(command.param), ids, quantities, codes));
                 break;
+
+            case "STATES":
+
+                ids = new List<int>();
+                List<float> jhAmounts = new List<float>();
+                List<string> taskNames = new List<string>();
+
+                for (int i = 0; i < data.Length; i+=3)
+                {
+                    ids.Add(int.Parse(data[i]));
+                    jhAmounts.Add(float.Parse(data[i + 1], CultureInfo.InvariantCulture));
+                    taskNames.Add(data[i + 2]);
+                }
+                model.registerStatusUpdate(new UpdateStatus(int.Parse(command.param),  ids, jhAmounts, taskNames));
+                break;
         }
     }
 }

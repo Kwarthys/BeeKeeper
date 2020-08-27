@@ -24,7 +24,7 @@ public class BeeWindow extends JFrame
 	private JComboBox<Stimulus> box;
 	private JComboBox<String> taskBox;
 	private FrameHandlerPanel frameHandler;
-	@SuppressWarnings("unused")
+	//@SuppressWarnings("unused")
 	private TaskGrapher grapher;
 	
 	private JPanel boxContainer = new JPanel();
@@ -134,7 +134,8 @@ public class BeeWindow extends JFrame
 		container.add(boxContainer,c);
 		
 		
-		
+
+		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 1;
@@ -161,7 +162,7 @@ public class BeeWindow extends JFrame
 		c.gridy = 1;
 		c.weightx=1.0;
 		c.weighty=1.0;
-		//container.add(grapher,c);
+		container.add(grapher,c);
 
 		
 		this.repaint();

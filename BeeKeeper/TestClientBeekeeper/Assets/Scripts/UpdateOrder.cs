@@ -31,6 +31,25 @@ public class UpdateContentOrder
     }
 }
 
+public class UpdateStatus
+{
+    public List<int> ids;
+    public List<float> jhAmounts;
+    public List<string> taskNames;
+    //real age?
+
+    public int timeStep;
+
+    public UpdateStatus(int timeStep, List<int> ids, List<float> JHAmounts, List<string> taskName)
+    {
+        this.ids = ids;
+        this.jhAmounts = JHAmounts;
+        this.taskNames = taskName;
+
+        this.timeStep = timeStep;
+    }
+}
+
 public class UpdateContent
 {
     public int combID;

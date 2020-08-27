@@ -1,7 +1,7 @@
 ﻿Shader "Custom/PointToSquareShader"
 {
 	Properties{
-	  _Radius("Sphere Radius", float) = 0.2
+	  _Radius("Sphere Radius", float) = 0.01
 	  _Color("Color", Color) = (0,0,0,1)
 	  _Color2("Color2", Color) = (0,0,0,1)
 	}
@@ -105,5 +105,5 @@
 			ENDCG
 		}
 	}
-		FallBack "Diffuse"
+		//FallBack "Diffuse"
 }

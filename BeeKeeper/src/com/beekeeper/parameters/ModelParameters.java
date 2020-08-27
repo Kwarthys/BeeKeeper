@@ -29,7 +29,7 @@ public class ModelParameters
 	public static boolean BYPASS_MOTIVATION = false;
 	public static boolean BYPASS_PHYSIOLOGY = false;
 	
-	public static boolean UI_ENABLED = false;
+	public static boolean UI_ENABLED = true;
 	
 	public static final double secondToTimeStepCoef = 10;
 

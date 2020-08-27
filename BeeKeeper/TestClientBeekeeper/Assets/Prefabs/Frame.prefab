@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5797423331424708513}
   - component: {fileID: 5268192482874681793}
   - component: {fileID: 5268192482874681792}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CombB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,8 +105,7 @@ GameObject:
   - component: {fileID: 5268192483808071375}
   - component: {fileID: 5268192483808071374}
   - component: {fileID: 5268192483808071361}
-  - component: {fileID: 5268192483808071360}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Depth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,19 +173,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &5268192483808071360
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5268192483808071363}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5268192483990066101
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +185,7 @@ GameObject:
   - component: {fileID: 5797423330526830035}
   - component: {fileID: 5268192483990066096}
   - component: {fileID: 5268192483990066099}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CombA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,7 +277,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5268192484223419879}
   - component: {fileID: 8944511513429411925}
-  m_Layer: 0
+  - component: {fileID: 4402920961070592985}
+  m_Layer: 8
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,7 +294,7 @@ Transform:
   m_GameObject: {fileID: 5268192484223419897}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_Children:
   - {fileID: 5268192483808071375}
   - {fileID: 5268192483990066098}
@@ -334,6 +321,22 @@ MonoBehaviour:
   faceB: {fileID: 5797423331424708513}
   faceAStart: {fileID: 6153618056362216809}
   faceBStart: {fileID: 1688297710921482007}
+  isUp: 0
+  initPos: {x: 0, y: 0, z: 0}
+  initRot: {x: 0, y: 0, z: 0, w: 0}
+--- !u!65 &4402920961070592985
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5268192484223419897}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 78, y: 50, z: 1}
+  m_Center: {x: -3.5, y: 0.9, z: 0.6}
 --- !u!1 &6768859702292899317
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +346,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1688297710921482007}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CombBStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -373,7 +376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6153618056362216809}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CombAStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
