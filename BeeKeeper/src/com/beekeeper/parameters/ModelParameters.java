@@ -33,7 +33,7 @@ public class ModelParameters
 	
 	public static final double secondToTimeStepCoef = 10;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 30;//30
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 100;//30
 	/*****************************/
 
 	public static final double HungryLarvae_HALFLIFE = 0.03; //ACCELERATION ?

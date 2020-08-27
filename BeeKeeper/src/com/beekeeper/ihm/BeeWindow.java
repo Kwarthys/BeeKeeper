@@ -23,7 +23,8 @@ public class BeeWindow extends JFrame
 	private JPanel container;
 	private JComboBox<Stimulus> box;
 	private JComboBox<String> taskBox;
-	private FrameHandlerPanel frameHandler;
+	//private FrameHandlerPanel frameHandler;
+	private TimeClickerInterface timerInterface;
 	//@SuppressWarnings("unused")
 	private TaskGrapher grapher;
 	
@@ -94,17 +95,7 @@ public class BeeWindow extends JFrame
 			}
 		});
 		
-		frameHandler = new FrameHandlerPanel(new FrameHandlerCallback() {			
-			@Override
-			public void switchFrames(int index1, int index2) {
-				services.switchFrames(index1, index2);
-			}
-			
-			@Override
-			public void reverseFrame(int index) {
-				services.reverseFrame(index);
-			}
-		});
+		timerInterface = new TimeClickerInterface(services);
 		
 		boxContainer.setBackground(GraphicParams.BACKGROUND);
 		
@@ -153,7 +144,7 @@ public class BeeWindow extends JFrame
 		c.gridx = 2;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		container.add(frameHandler,c);
+		container.add(timerInterface,c);
 		
 
 		

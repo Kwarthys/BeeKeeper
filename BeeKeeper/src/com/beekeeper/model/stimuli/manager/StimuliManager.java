@@ -20,6 +20,8 @@ public class StimuliManager
 	private int smID;
 	public int getID() {return smID;}
 	
+	//private int updateIndex = 0;
+	
 	private StimuliManagerServices services = new StimuliManagerServices() {
 
 		@Override
@@ -148,7 +150,7 @@ public class StimuliManager
 					//System.out.println("LocalAmount : " + localAmount + " pushing " + localAmount * (1-propag) + " to " + voisins.size() + " cells. propag:" + propag);
 					for(Integer stIndex : voisins)
 					{
-						stimuliTiles.get(stIndex).tmpAmount += localAmount * (1-propag);
+						stimuliTiles.get(stIndex).tmpAmount += localAmount * (1-propag) / voisins.size();
 						stimuliTiles.get(stIndex).tmpContributors += 1;
 					}
 				}
@@ -207,6 +209,8 @@ public class StimuliManager
 		}
 		
 		//printAllTheTiles();
+		
+		//updateIndex = 
 	}
 
 	protected StimuliTile getTileAt(Point pos)

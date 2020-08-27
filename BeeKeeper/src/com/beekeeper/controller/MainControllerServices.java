@@ -30,4 +30,6 @@ public interface MainControllerServices
 	public ArrayList<Integer> getTheDead();
 	
 	public ArrayList<AgentStateSnapshot> getAllAdults();
+	
+	public void setNumberOfSecondsToGoFast(int seconds);
 }

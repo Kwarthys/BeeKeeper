@@ -45,6 +45,8 @@ public class MainController
 
 	private boolean closed;
 	
+	private int timeStepPauseToIgnore = 50;
+	
 	private volatile int turnIndex = -1;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
@@ -153,6 +155,11 @@ public class MainController
 		public int getCurrentTimeStep() {
 			return turnIndex;
 		}
+
+		@Override
+		public void setNumberOfSecondsToGoFast(int seconds) {
+			MainController.this.setNbOfTimeStepToGoFast((int) (seconds * ModelParameters.secondToTimeStepCoef));			
+		}
 	};
 
 	public MainController()
@@ -206,6 +213,11 @@ public class MainController
 		}
 		 */
 		System.out.println("expe done");
+	}
+	
+	private void setNbOfTimeStepToGoFast(int number)
+	{
+		timeStepPauseToIgnore = number;
 	}
 
 	
@@ -416,11 +428,20 @@ public class MainController
 			
 			if(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP > 0)
 			{
-				try {
-					Thread.sleep(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}				
+				if(timeStepPauseToIgnore == 0)
+				{
+					try {
+						Thread.sleep(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP);
+						//System.out.println("Paused");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}									
+				}
+				else
+				{
+					//System.out.println("Ignored. " + timeStepPauseToIgnore);
+					timeStepPauseToIgnore = Math.max(0, timeStepPauseToIgnore-1); //decrementing and making sure it won't go below zero
+				}
 			}
 		}
 		System.out.println();
