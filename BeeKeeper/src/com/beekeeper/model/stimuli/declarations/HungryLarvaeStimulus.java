@@ -10,6 +10,6 @@ public class HungryLarvaeStimulus extends AStimulus
 	{
 		this.halfLife = ModelParameters.HungryLarvae_HALFLIFE;
 		this.transmissibility_halflifelike = ModelParameters.TRANSMISSIBILITY_HungryLarvae;
-		this.type = Stimulus.HungryLarvae;
+		//this.type = Stimulus.HungryLarvae;
 	}
 }

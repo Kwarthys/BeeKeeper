@@ -167,7 +167,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 
 		this.combManager = new CombManager();
-		combs = this.combManager.initiateFrames(3, agentFactory, this.controlServices);
+		combs = this.combManager.initiateFrames(5, agentFactory, this.controlServices);
 
 		for(CombServices c : combManager.getCombsServices())
 		{
@@ -284,6 +284,8 @@ public class MainController
 		int minLoopMs = -1;
 		int maxLoopMs = 0;
 		long totalLoopMs = 0;
+		long totalAgents = 0;
+		int startingAverageIndex = 0;
 		
 		turnIndex = 0;
 		int displayBar = 20;
@@ -359,6 +361,8 @@ public class MainController
 			}
 			
 			if(DEBUGTIME)System.out.println("AllAgent lived at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
+			if(MONITORTIME)
+				totalAgents += (System.nanoTime() - startLoopTime)/1000000;
 			
 			this.foragers = newForagers;
 
@@ -408,7 +412,28 @@ public class MainController
 					minLoopMs = (int) loopMS;
 				}
 				
-				if(turnIndex%100 == 0)System.out.println("Average: " + totalLoopMs/turnIndex + " Min: " + minLoopMs + " Max:" + maxLoopMs);
+				if(turnIndex%100 == 0)
+				{
+					StringBuffer theLog = new StringBuffer();
+					theLog.append("Average: ");
+					theLog.append(totalLoopMs/(turnIndex-startingAverageIndex));
+					theLog.append("(");
+					theLog.append(totalAgents/(turnIndex-startingAverageIndex));
+					theLog.append("+");
+					theLog.append((totalLoopMs - totalAgents)/(turnIndex-startingAverageIndex));
+					theLog.append(") Min: ");
+					theLog.append(minLoopMs);
+					theLog.append(" Max: ");
+					theLog.append(maxLoopMs);
+					
+					System.out.println(theLog.toString());
+
+					minLoopMs = -1;
+					maxLoopMs = 0;
+					totalLoopMs = 0;
+					totalAgents = 0;
+					startingAverageIndex = turnIndex;
+				}
 			}
 			/********************/
 
@@ -424,14 +449,18 @@ public class MainController
 
 			//System.out.println(turnIndex);
 			
-			if(DEBUGTIME)System.out.println("Loop took " + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
+			long loopTime = (System.nanoTime() - startLoopTime)/1000000;
+			
+			if(DEBUGTIME)System.out.println("Loop took " + loopTime + "ms.");
 			
 			if(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP > 0)
 			{
 				if(timeStepPauseToIgnore == 0)
 				{
 					try {
-						Thread.sleep(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP);
+						long pause = Math.max(0, ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP - loopTime);
+						//System.out.println("Loop took " + loopTime + " pausing for " + pause + " to match " + ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP);
+						Thread.sleep(pause);
 						//System.out.println("Paused");
 					} catch (InterruptedException e) {
 						e.printStackTrace();

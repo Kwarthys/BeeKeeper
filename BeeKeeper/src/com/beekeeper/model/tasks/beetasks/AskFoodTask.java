@@ -76,7 +76,7 @@ public class AskFoodTask extends Task {
 			
 			@Override
 			public void execute() {
-				agentServices.emit(Stimulus.AskFood, 30);
+				agentServices.emit(Stimulus.AskFood, 200);
 			}
 			
 			@Override

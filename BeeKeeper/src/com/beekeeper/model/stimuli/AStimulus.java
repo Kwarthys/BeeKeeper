@@ -8,10 +8,14 @@ public abstract class AStimulus
 	protected double halfLife = 1.35;
 	
 	/**
-	 * Act as a kind of halflife, but as its an exhange, it represents the time in second where 80% of the exchange will be completed.
+	 * Act as a kind of halflife, but as its an exchange, it represents the time in second where 80% of the exchange will be completed.
 	 */
 	protected double transmissibility_halflifelike = 0.1;
 	protected Stimulus type;
+	
+	protected boolean isVolatile = false;
+	
+	public boolean isVolatile() {return isVolatile;}
 	
 	public Stimulus getStimulusType() {return type;}
 	

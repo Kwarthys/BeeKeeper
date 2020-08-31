@@ -10,6 +10,6 @@ public class FoodSmellStimulus extends AStimulus {
 	{
 		this.halfLife = ModelParameters.FoodSmell_HALFLIFE;
 		this.transmissibility_halflifelike = ModelParameters.TRANSMISSIBILITY_FoodSmell;
-		this.type = Stimulus.FoodSmell;
+		//this.type = Stimulus.FoodSmell;
 	}
 }

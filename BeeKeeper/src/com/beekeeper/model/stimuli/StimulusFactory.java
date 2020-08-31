@@ -3,10 +3,7 @@ package com.beekeeper.model.stimuli;
 import java.util.HashMap;
 
 import com.beekeeper.model.stimuli.declarations.AskFoodStimulus;
-import com.beekeeper.model.stimuli.declarations.FoodSmellStimulus;
-import com.beekeeper.model.stimuli.declarations.HungryLarvaeStimulus;
 import com.beekeeper.model.stimuli.declarations.Ocimene;
-import com.beekeeper.model.stimuli.declarations.TestStimulus;
 import com.beekeeper.parameters.ModelParameters;
 
 public class StimulusFactory
@@ -28,40 +25,40 @@ public class StimulusFactory
 	public static AStimulus get(Stimulus key)
 	{
 		AStimulus s = null;
-		TestStimulus t = null;
+		//TestStimulus t = null;
 		
 		switch(key)
 		{
-		case Dance:
-			System.err.println("Stimulus Factory - " + key + " Not implemented");
-			break;
+		//case Dance:
+		//	System.err.println("Stimulus Factory - " + key + " Not implemented");
+		//	break;
 		case Energy:
 			System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
-		case FoodSmell:
-			s = new FoodSmellStimulus();
-			break;
+		//case FoodSmell:
+		//	s = new FoodSmellStimulus();
+		//	break;
 		case HungerBee:
 			System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
-		case HungryLarvae:
-			s = new HungryLarvaeStimulus();
-			break;
-		case StimulusA:
-			t = new TestStimulus();
-			t.setType(Stimulus.StimulusA);
-			s = t;
-			break;
-		case StimulusB:
-			t = new TestStimulus();
-			t.setType(Stimulus.StimulusB);
-			s = t;
-			break;
-		case StimulusC:
-			t = new TestStimulus();
-			t.setType(Stimulus.StimulusC);
-			s = t;
-			break;
+		//case HungryLarvae:
+		//	s = new HungryLarvaeStimulus();
+		//	break;
+		//case StimulusA:
+		//	t = new TestStimulus();
+		//	t.setType(Stimulus.StimulusA);
+		//	s = t;
+		//	break;
+		//case StimulusB:
+		//	t = new TestStimulus();
+		//	t.setType(Stimulus.StimulusB);
+		//	s = t;
+		//	break;
+		//case StimulusC:
+		//	t = new TestStimulus();
+		//	t.setType(Stimulus.StimulusC);
+		//	s = t;
+		//	break;
 		case AskFood:
 			s = new AskFoodStimulus();
 			break;
@@ -94,11 +91,23 @@ public class StimulusFactory
 		}
 	}
 	
+	public static boolean isVolatile(Stimulus smell)
+	{
+		if(checkDataBaseWith(smell))
+		{
+			return database.get(smell).isVolatile();
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public static double getPropag(Stimulus smell)
 	{
 		if(checkDataBaseWith(smell))
 		{
-			return  Math.exp(-Math.log(2) / database.get(smell).getTransmissibility() / ModelParameters.secondToTimeStepCoef);				
+			return  Math.exp(-Math.log(2) / database.get(smell).getTransmissibility() / ModelParameters.secondToTimeStepCoef);
 		}
 		else
 		{

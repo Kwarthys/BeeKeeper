@@ -29,10 +29,10 @@ public class TimeClickerInterface extends JPanel
 		JButton bSwitch = new JButton("SpeedUpSeconds");
 		JTextField t1 = new JTextField("",10);
 
-		c.weightx = 0;
+		c.weightx = 0.2;
 		this.add(bSwitch, c);
 		c.gridx++;
-		c.weightx = 0.5;
+		c.weightx = 0.8;
 		this.add(t1, c);
 
 		this.setPreferredSize(new Dimension(200,200));

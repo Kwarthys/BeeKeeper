@@ -14,14 +14,14 @@ import com.beekeeper.model.stimuli.StimulusFactory;
 public class StimuliManager
 {
 	private ArrayList<StimuliTile> stimuliTiles;
-	
+
 	private Dimension gridSize;
-	
+
 	private int smID;
 	public int getID() {return smID;}
-	
+
 	//private int updateIndex = 0;
-	
+
 	private StimuliManagerServices services = new StimuliManagerServices() {
 
 		@Override
@@ -64,7 +64,7 @@ public class StimuliManager
 	public StimuliManager(Dimension combSize, int id)
 	{
 		stimuliTiles = new ArrayList<>();
-		
+
 		gridSize = new Dimension(combSize);
 		for(int j = 0; j < gridSize.height; j++)
 		{
@@ -73,14 +73,14 @@ public class StimuliManager
 				stimuliTiles.add(new StimuliTile(i,j));
 			}			
 		}
-		
+
 		smID = id;
 	}
-	
+
 	public StimuliManager(StimuliManager stimuliManagerToCopy, int id)
 	{
 		stimuliTiles = new ArrayList<>();
-		
+
 		gridSize = new Dimension(stimuliManagerToCopy.gridSize);
 		for(int j = 0; j < gridSize.height; j++)
 		{
@@ -89,14 +89,14 @@ public class StimuliManager
 				stimuliTiles.add(new StimuliTile(stimuliManagerToCopy.getTileAt(new Point(i,j))));
 			}			
 		}
-		
+
 		smID = id;
 	}
 
 	public HashMap<Stimulus,Double> getTotalAmounts()
 	{
 		HashMap<Stimulus,Double> amounts = new HashMap<>();
-		
+
 		for(StimuliTile t : stimuliTiles)
 		{
 			for(Stimulus smell : t.stimuliMap.keySet())
@@ -108,7 +108,7 @@ public class StimuliManager
 				amounts.put(smell, amounts.get(smell) + t.stimuliMap.getAmount(smell));
 			}
 		}
-		
+
 		return amounts;
 	}
 
@@ -133,37 +133,39 @@ public class StimuliManager
 
 		for(Stimulus smell : Stimulus.values())
 		{
-			double propag = StimulusFactory.getPropag(smell);
-			double evapRate = StimulusFactory.getEvapRate(smell);
-			
-			//System.out.println(smell + ": propag:" + propag + " |evap: " + evapRate);
-			
-			for(int i = 0; i < size; ++i)
+			if(StimulusFactory.isVolatile(smell))
 			{
-				StimuliTile st = stimuliTiles.get(i);
-				double localAmount = st.stimuliMap.getAmount(smell);
-				
-				/*** NEW COMPUTING ***/
-				if(localAmount > 0)
+				double propag = StimulusFactory.getPropag(smell);
+				double evapRate = StimulusFactory.getEvapRate(smell);
+
+				//System.out.println(smell + ": propag:" + propag + " |evap: " + evapRate);
+
+				for(int i = 0; i < size; ++i)
 				{
-					ArrayList<Integer> voisins = CombUtility.getCellNeighbors(i, gridSize);
-					//System.out.println("LocalAmount : " + localAmount + " pushing " + localAmount * (1-propag) + " to " + voisins.size() + " cells. propag:" + propag);
-					for(Integer stIndex : voisins)
+					StimuliTile st = stimuliTiles.get(i);
+					double localAmount = st.stimuliMap.getAmount(smell);
+
+					/*** NEW COMPUTING ***/
+					if(localAmount > 0)
 					{
-						stimuliTiles.get(stIndex).tmpAmount += localAmount * (1-propag) / voisins.size();
-						stimuliTiles.get(stIndex).tmpContributors += 1;
+						ArrayList<Integer> voisins = CombUtility.getCellNeighbors(i, gridSize);
+						//System.out.println("LocalAmount : " + localAmount + " pushing " + localAmount * (1-propag) + " to " + voisins.size() + " cells. propag:" + propag);
+						for(Integer stIndex : voisins)
+						{
+							stimuliTiles.get(stIndex).tmpAmount += localAmount * (1-propag) / voisins.size();
+							stimuliTiles.get(stIndex).tmpContributors += 1;
+						}
 					}
-				}
-				
-				
-				
-				
-				/*********************/
-				
-				
-				/*** OLD COMPUTING WAY ***				
+
+
+
+
+					/*********************/
+
+
+					/*** OLD COMPUTING WAY ***				
 				ArrayList<Integer> voisins = CombUtility.getCellNeighbors(i, gridSize);
-				
+
 				double totalAmount = 0;
 				for(Integer stIndex : voisins)
 				{
@@ -172,45 +174,44 @@ public class StimuliManager
 
 				st.tmpAmount = (localAmount * propag + totalAmount) * evapRate;
 				/*********************/
-			}
-			
-			//double granTotalAmount = 0;
-			for(StimuliTile st : stimuliTiles)
-			{
-				/*** NEW ***/
-				double localAmount = st.stimuliMap.getAmount(smell);
+				}
 				
-				double incAmount = 0;
-				if(st.tmpContributors > 0)
+				//double granTotalAmount = 0;
+				for(StimuliTile st : stimuliTiles)
 				{
-					incAmount = st.tmpAmount/st.tmpContributors;
-				}				
-				
-				localAmount = (localAmount * propag + incAmount) * evapRate;
-				st.stimuliMap.setAmount(smell, localAmount);
-				//granTotalAmount += st.tmpAmount;
-				st.tmpAmount = 0;
-				st.tmpContributors = 0;
-				
-				/***********/
-				
-				
-				/*** OLD ***
+					/*** NEW ***/
+					double localAmount = st.stimuliMap.getAmount(smell);
+
+					double incAmount = 0;
+					if(st.tmpContributors > 0)
+					{
+						incAmount = st.tmpAmount/st.tmpContributors;
+					}				
+
+					localAmount = (localAmount * propag + incAmount) * evapRate;
+					st.stimuliMap.setAmount(smell, localAmount);
+					//granTotalAmount += st.tmpAmount;
+					st.tmpAmount = 0;
+					st.tmpContributors = 0;
+
+					/***********/
+
+
+					/*** OLD ***
 				if(st.tmpAmount != 0)
 				{
 					st.stimuliMap.setAmount(smell, st.tmpAmount);
 					//granTotalAmount += st.tmpAmount;
 					st.tmpAmount = 0;		
 				}
-				***********/
-			}
-			//if(smell == Stimulus.StimulusA)
+					 ***********/
+				}
+				//if(smell == Stimulus.StimulusA)
 				//System.out.println("GranTotalAmount = " + granTotalAmount);
+			}
 		}
-		
+
 		//printAllTheTiles();
-		
-		//updateIndex = 
 	}
 
 	protected StimuliTile getTileAt(Point pos)
@@ -246,7 +247,7 @@ public class StimuliManager
 					ownSt.stimuliMap.addAllAmounts(st.stimuliMap);
 				}
 			}
-			
+
 			if(!found)
 			{
 				StimuliManager.this.stimuliTiles.add(new StimuliTile(st));
@@ -261,12 +262,12 @@ public class StimuliManager
 
 		double tmpAmount = 0;
 		int tmpContributors = 0;
-		
+
 		public StimuliTile(int x, int y)
 		{
 			position = new Point(x,y);
 		}
-		
+
 		public StimuliTile(StimuliTile st) {
 			position = new Point(st.position);
 			stimuliMap = new StimuliMap(st.stimuliMap);
@@ -276,16 +277,16 @@ public class StimuliManager
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer();
-			
+
 			sb.append(position.x);
 			sb.append("|");
 			sb.append(position.y);
 			sb.append("\n");
 			sb.append(stimuliMap.getDisplayString());	
-			
+
 			return sb.toString();
 		}
-		
+
 		public boolean isEmpty()
 		{
 			return stimuliMap.isEmpty();

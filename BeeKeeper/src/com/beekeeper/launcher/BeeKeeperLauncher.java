@@ -7,7 +7,9 @@ public class BeeKeeperLauncher {
 	public static void main(String[] args)
 	{	
 		System.setProperty("sun.java2d.opengl", "true");
+		long start = System.nanoTime();
 		new MainController();
+		System.out.println("Prog took " + (System.nanoTime() - start)/1000000000 + "s.");
 		
 		/*
 		int simuLength = 5000;

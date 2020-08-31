@@ -10,6 +10,8 @@ public class AskFoodStimulus extends AStimulus {
 		halfLife = 0.1;
 		transmissibility_halflifelike = 0.042;
 		type = Stimulus.AskFood;
+		
+		isVolatile = true;
 	}
 
 }
