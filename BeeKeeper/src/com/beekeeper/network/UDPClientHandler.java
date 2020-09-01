@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentStateSnapshot;
-import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CellContent;
-import com.beekeeper.utils.MyUtils;
 
 public class UDPClientHandler implements Runnable {
 
@@ -24,7 +22,7 @@ public class UDPClientHandler implements Runnable {
 
 	private int index = -1;
 
-	private static final int maxAgentCount = 15000;
+	private static final int maxAgentCount = 10000;
 	private static final int sendRate = 100;
 
 	private MainControllerServices services;
@@ -171,19 +169,25 @@ public class UDPClientHandler implements Runnable {
 
 	private void sendAdultStates(DatagramSocket udpServer) throws IOException
 	{
+		int maxAgentCount = 3000;
+		
 		ArrayList<AgentStateSnapshot> agents = services.getAllAdults();
 
 		int numberOfChunks = ((agents.size()-1) / maxAgentCount) +1;
 		
 		//System.out.println("will send " + numberOfChunks + " chunk(s) " + agents.size());
+		
+		int lastLoopIndex = 0;
 
 		for(int chunk = 0; chunk < numberOfChunks; chunk++)
 		{
 			StringBuffer combBuffer = new StringBuffer();
 			combBuffer.append("STATES ");
 			combBuffer.append(services.getCurrentTimeStep());
+			
+			int iagent;
 
-			for(int iagent = 0; iagent < maxAgentCount && iagent + maxAgentCount * chunk < agents.size(); ++iagent)
+			for(iagent = lastLoopIndex; iagent - lastLoopIndex < maxAgentCount && iagent < agents.size(); ++iagent)
 			{
 				AgentStateSnapshot snap = agents.get(iagent);
 				combBuffer.append(" ");
@@ -194,8 +198,11 @@ public class UDPClientHandler implements Runnable {
 				combBuffer.append(snap.taskName);
 			}
 			
+			lastLoopIndex = iagent;
+			System.out.println("lastLoopIndex " + lastLoopIndex + " " + agents.size() + " " + maxAgentCount);
+			
 			byte[] data = combBuffer.toString().getBytes();
-			//System.out.println("Sending data:" + chunk + " " + data.length + " || " + combBuffer.toString());
+			System.out.println("Sending data:" + chunk + " " + data.length + " || " + combBuffer.toString().substring(0, 50) + "...");
 			DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 			udpServer.send(p);
 		}
@@ -230,7 +237,7 @@ public class UDPClientHandler implements Runnable {
 					}
 					else
 					{
-						nextData = 150; //As full
+						nextData = 10; //As full
 					}
 					combBuffer.append(" ");
 					combBuffer.append(nextData);

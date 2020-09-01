@@ -21,14 +21,14 @@ public class ForagerTask extends Task {
 				//System.out.println(agentServices.getID() + " Wandering");
 				if(!agentServices.tryMoveUp())
 				{
-					agentServices.dropMotivation();
+					//agentServices.dropMotivation();
 				}
 				c++;
 			}
 			
 			@Override
 			public boolean check() {
-				return back && agentServices.isInside() && c < 20;
+				return back && agentServices.isInside() && c < 35;
 			}
 		});
 		

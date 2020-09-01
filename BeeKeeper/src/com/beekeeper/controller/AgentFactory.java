@@ -46,6 +46,8 @@ public class AgentFactory
 	{
 		ArrayList<WorkingAgent> bees = new ArrayList<WorkingAgent>();
 		
+		int fails = 0;
+		
 		for(int i = 0; i < number; i++)
 		{
 			Point2D.Double point = MyUtils.getPointInRule(rule);
@@ -57,6 +59,11 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
+				if(++fails % 500 == 0)
+				{
+					System.err.println("AgentFactory - spawnBroodCells : WARNING can't find suitable point after " + fails + " attempts.");
+				}
+				
 			}while(!host.isCellContentEmpty(x, y));
 			
 			WorkingAgent bee = new BroodBee(services, controllerServices);
@@ -82,6 +89,35 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
+			}while(!host.isCellVisitEmpty(x, y));
+	
+			WorkingAgent bee = new AdultBee(services, controllerServices);
+			host.setCellVisit(x, y, bee);
+			allAgents.add(bee);
+		}
+	}
+
+	public void spawnWorkers(int number, Comb host, StimuliManagerServices services, MainControllerServices controllerServices)
+	{
+		for(int i = 0; i < number; i++)
+		{
+			Point2D.Double point = new Point2D.Double();
+			int x;
+			int y;	
+			
+			int fails = 0;
+	
+			do
+			{
+				point.x = Math.random() * host.getDimension().width;
+				point.y = Math.random() * host.getDimension().height;
+				x = (int)point.x;
+				y = (int)point.y;
+				if(++fails % 100 == 0)
+				{
+					System.err.println("AgentFactory - spawnWorkers without rule : can't find suitable point.");
+				}
+				
 			}while(!host.isCellVisitEmpty(x, y));
 	
 			WorkingAgent bee = new AdultBee(services, controllerServices);

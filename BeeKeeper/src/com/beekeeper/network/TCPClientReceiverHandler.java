@@ -75,6 +75,13 @@ public class TCPClientReceiverHandler implements Runnable {
 							//serverManager.createUDPClientHandler(socket.getInetAddress());
 							writer.write("FrHIT");
 							break;
+							
+						case "FFWD":
+							System.out.println("Asking a fast forward");
+							//serverManager.createUDPClientHandler(socket.getInetAddress());
+							writer.write("FastForward" + request.data[0]);
+							services.setNumberOfSecondsToGoFast(Integer.valueOf(request.data[0]));
+							break;
 					}				
 					
 					System.out.println("replying to " + request.header);

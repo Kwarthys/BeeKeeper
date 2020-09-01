@@ -53,10 +53,16 @@ public class MyUtils
 		Point2D.Double offset = rule.getOffset();
 		Point2D.Double range = rule.getRange();
 		
+		int fails = 0;
+		
 		Point2D.Double pointCandidate = new Point2D.Double(offset.x + Math.random()*range.x, offset.y + Math.random()*range.y);
 		while(!rule.isValid(pointCandidate))
 		{
 			pointCandidate = new Point2D.Double(offset.x + Math.random()*range.x, offset.y + Math.random()*range.y);
+			if(++fails % 100 == 0)
+			{
+				System.err.println("MyUtils - getPointInRule: can't find a suitable point.");
+			}
 		}
 		
 		return pointCandidate;

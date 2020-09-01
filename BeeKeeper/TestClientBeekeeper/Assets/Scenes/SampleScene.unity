@@ -582,7 +582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dimension: {x: 9.5, y: 3.63, z: 1}
-  maxValues: {x: 200, y: 1100, z: 1}
+  maxValues: {x: 200, y: 10000, z: 1}
   legendText: {fileID: 4371691714256742309, guid: 6c516bb115a6a7842bb71fbc15ad1ccf,
     type: 3}
   textParentItem: {fileID: 1310677352}

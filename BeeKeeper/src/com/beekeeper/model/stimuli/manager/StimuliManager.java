@@ -133,7 +133,7 @@ public class StimuliManager
 
 		for(Stimulus smell : Stimulus.values())
 		{
-			if(StimulusFactory.isVolatile(smell))
+			if(StimulusFactory.isVolatile(smell))// Only volatile stimuli get propagated by this
 			{
 				double propag = StimulusFactory.getPropag(smell);
 				double evapRate = StimulusFactory.getEvapRate(smell);

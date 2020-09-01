@@ -167,7 +167,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 
 		this.combManager = new CombManager();
-		combs = this.combManager.initiateFrames(5, agentFactory, this.controlServices);
+		combs = this.combManager.initiateFrames(8, agentFactory, this.controlServices);
 
 		for(CombServices c : combManager.getCombsServices())
 		{
@@ -220,12 +220,12 @@ public class MainController
 		timeStepPauseToIgnore = number;
 	}
 
-	
+	/*
 	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
 	{
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
-	 
+	 */
 	private void reverseFrame(int index)
 	{
 		if(index >= combManager.getCombsServices().size()/2 || index < 0)
@@ -351,8 +351,8 @@ public class MainController
 				
 				if(b.getBeeType() == AgentType.ADULT_BEE || b.getBeeType() == AgentType.BROOD_BEE)
 				{
-					WorkingAgent w = (WorkingAgent) b;
-					logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
+					//WorkingAgent w = (WorkingAgent) b;
+					//logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
 					if(!b.isInside())
 					{
 						newForagers.add(b.getID());

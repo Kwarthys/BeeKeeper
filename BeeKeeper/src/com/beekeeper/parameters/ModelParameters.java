@@ -20,7 +20,7 @@ public class ModelParameters
 	//}	
 	/******************************/	
 	
-	/** PARAM FOR PARAMS **/
+	/** META-PARAMS **/
 	public static final double SIMU_ACCELERATION = 6000;
 	/**********************/
 	
@@ -33,7 +33,7 @@ public class ModelParameters
 	
 	public static final double secondToTimeStepCoef = 5;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 0;//30
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 200;//30
 	/*****************************/
 
 	public static final double HungryLarvae_HALFLIFE = 0.03; //ACCELERATION ?
@@ -72,8 +72,8 @@ public class ModelParameters
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static int NUMBER_BEES = 200;
-	public static int NUMBER_LARVAE = 150;
+	public static int NUMBER_BEES = 10000;
+	public static int NUMBER_LARVAE = 500;
 	public static int SIMU_LENGTH = 18000;
 	public static StartMode startMode = StartMode.Random;
 	

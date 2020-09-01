@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class TaskGrapher : MonoBehaviour
 {
-    private Dictionary<int, TaskGraphData> data = new Dictionary<int, TaskGraphData>();
-
-    private Dictionary<int, int> dataTStoIndexRemap = new Dictionary<int, int>();
+    private List<TaskGraphData> data = new List<TaskGraphData>();
 
     private int nextIndex = 0;
 
@@ -23,9 +21,9 @@ public class TaskGrapher : MonoBehaviour
 
         int index = 0;
 
-        foreach (TaskGraphData tgd in data.Values)
+        foreach (TaskGraphData tgd in data)
         {
-            if (tgd.newPoint)
+            if (tgd.ready)
             {
                 //string[] taskNames = getTaskNames(tgd);
                 Vector3[] points = buildPointsWithData(index, tgd);
@@ -37,16 +35,7 @@ public class TaskGrapher : MonoBehaviour
 
                 //updateLegend(index, tgd);
 
-                tgd.newPoint = false;
-                tgd.updated = false;
-            }
-            else if(tgd.updated)
-            {
-                foreach (Vector3 point in buildPointsWithData(index, tgd))
-                {
-                    grapher.movePoint(index, point);
-                }
-                tgd.updated = false;
+                tgd.ready = false;
             }
 
             index += tgd.tasks.Values.Count;
@@ -90,15 +79,24 @@ public class TaskGrapher : MonoBehaviour
 
 
         TaskGraphData graphData;
-
-        if(!data.ContainsKey(status.timeStep))
+        if(data.Count == 0)
         {
             graphData = new TaskGraphData(status.timeStep, nextIndex++);
         }
+        else if(data[data.Count-1].timestep == status.timeStep)
+        {
+            graphData = data[data.Count - 1];
+        }
+        else if(data[data.Count - 1].timestep < status.timeStep)
+        {
+            graphData = new TaskGraphData(status.timeStep, nextIndex++);
+            data[data.Count - 1].ready = true;
+            fillTheGaps(data[data.Count - 1]);
+        }
         else
         {
-            graphData = data[status.timeStep];
-            graphData.updated = true;
+            Debug.Log("Ignored TS " + status.timeStep + ". Last is " + data[data.Count - 1].timestep + ".");
+            return;
         }
 
 
@@ -113,9 +111,20 @@ public class TaskGrapher : MonoBehaviour
             graphData.tasks[status.taskNames[i]]++;
         }
 
-        data[status.timeStep] = graphData;
+        data.Add(graphData);
 
         lockToken = false;
+    }
+
+    private void fillTheGaps(TaskGraphData tgd)
+    {
+        foreach(string taskName in allKnownTaskNames)
+        {
+            if(!tgd.tasks.ContainsKey(taskName))
+            {
+                tgd.tasks[taskName] = 0;
+            }
+        }
     }
 }
 
@@ -125,8 +134,8 @@ public class TaskGraphData
     public int timestep;
     public int remappedIndex;
     public Dictionary<string, int> tasks = new Dictionary<string, int>();
-    public bool updated = false;
-    public bool newPoint = true;
+
+    public bool ready = false;
 
     public TaskGraphData(int timestep, int remappedIndex)
     {
