@@ -33,7 +33,7 @@ public class ModelParameters
 	
 	public static final double secondToTimeStepCoef = 5;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 200;//30
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 0;//1/secondToTimeStepCoef//30
 	/*****************************/
 
 	public static final double HungryLarvae_HALFLIFE = 0.03; //ACCELERATION ?
@@ -43,7 +43,7 @@ public class ModelParameters
 	public static final double TRANSMISSIBILITY_FoodSmell = 0.03; //ACCELERATION ?
 	
 	public static final double OCIMENE_HALFLIFE = 0.3; //ACCELERATION ?
-	public static final double OCIMENE_TRANSMISSIBILITY = 0.057; //ACCELERATION ?	
+	public static final double OCIMENE_TRANSMISSIBILITY = 0.057; //ACCELERATION ?
 	
 	public static final double HJ_INCREMENT = 0.0005; //ACCELERATION ?
 	
@@ -72,9 +72,10 @@ public class ModelParameters
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static int NUMBER_BEES = 10000;
+	public static int NUMBER_FRAMES = 10;
+	public static int NUMBER_BEES = 15000;
 	public static int NUMBER_LARVAE = 500;
-	public static int SIMU_LENGTH = 18000;
+	public static int SIMU_LENGTH = 3600;
 	public static StartMode startMode = StartMode.Random;
 	
 	public static double getStartingBeeHJTiter()

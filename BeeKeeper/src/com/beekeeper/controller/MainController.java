@@ -45,7 +45,7 @@ public class MainController
 
 	private boolean closed;
 	
-	private int timeStepPauseToIgnore = 50;
+	private int timeStepPauseToIgnore = 0;
 	
 	private volatile int turnIndex = -1;
 
@@ -167,7 +167,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 
 		this.combManager = new CombManager();
-		combs = this.combManager.initiateFrames(8, agentFactory, this.controlServices);
+		combs = this.combManager.initiateFrames(ModelParameters.NUMBER_FRAMES, agentFactory, this.controlServices);
 
 		for(CombServices c : combManager.getCombsServices())
 		{
@@ -412,10 +412,10 @@ public class MainController
 					minLoopMs = (int) loopMS;
 				}
 				
-				if(turnIndex%100 == 0)
+				if(turnIndex%60*ModelParameters.secondToTimeStepCoef == 0)
 				{
 					StringBuffer theLog = new StringBuffer();
-					theLog.append("Average: ");
+					theLog.append("60s Average: ");
 					theLog.append(totalLoopMs/(turnIndex-startingAverageIndex));
 					theLog.append("(");
 					theLog.append(totalAgents/(turnIndex-startingAverageIndex));

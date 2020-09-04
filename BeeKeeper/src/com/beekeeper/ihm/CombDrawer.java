@@ -15,7 +15,6 @@ import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.model.stimuli.manager.StimuliManager.StimuliTile;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 
 @SuppressWarnings("serial")
@@ -73,13 +72,25 @@ public class CombDrawer extends JPanel{
 
 	protected void paintPheromones(Graphics g)
 	{
-		for(StimuliTile st : stimuliManagerServices.getTiles())
+		//for(StimuliTile st : stimuliManagerServices.getTiles())
+		
+		double amounts[] = stimuliManagerServices.getAmountsFor(drawnStimulus);
+		
+		Dimension size = stimuliManagerServices.getSize();
+		for(int i = 0; i < size.width * size.height; ++i)
 		{
-			double sA = st.stimuliMap.getAmount(drawnStimulus);
+			int x = i % size.width; 
+			int y = i / size.width;
+			//double sA = st.stimuliMap.getAmount(drawnStimulus);
+			double sA = 0;
+			if(amounts!=null)
+			{
+				sA = amounts[i];
+			}
 
 			if(drawnStimulus == Stimulus.Ocimene)
 			{
-				CombCell cell = cs.getCellAt(st.position.x, st.position.y);
+				CombCell cell = cs.getCellAt(x, y);
 
 				if(cell.visiting != null)
 				{
@@ -96,7 +107,7 @@ public class CombDrawer extends JPanel{
 
 
 
-			Point p = fromLinearToHex(st.position);
+			Point p = fromLinearToHex(new Point(x,y));
 
 			int cap = 4;
 			int s = capColor(sA, cap);
