@@ -4,6 +4,7 @@ import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public class LarvaTask extends Task {
 
@@ -11,7 +12,7 @@ public class LarvaTask extends Task {
 	{
 		super(agentServices, "LarvaTask");
 
-		this.rootActivity.addTaskNode(new Action(0.1, 0.001, agentServices) {
+		this.rootActivity.addTaskNode(new Action(0.1, ModelParameters.LARVAE_HUNGER_INCREMENT, agentServices) {
 			
 			@Override
 			public void execute() {

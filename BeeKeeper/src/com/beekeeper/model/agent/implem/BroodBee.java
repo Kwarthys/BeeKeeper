@@ -39,7 +39,7 @@ public class BroodBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{
-		this.bodySmell.addAmount(Stimulus.Ocimene, 1);
+		this.bodySmell.addAmount(Stimulus.EthyleOleate, 1);
 	}
 
 	@Override

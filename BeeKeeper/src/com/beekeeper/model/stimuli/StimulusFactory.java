@@ -3,7 +3,7 @@ package com.beekeeper.model.stimuli;
 import java.util.HashMap;
 
 import com.beekeeper.model.stimuli.declarations.AskFoodStimulus;
-import com.beekeeper.model.stimuli.declarations.Ocimene;
+import com.beekeeper.model.stimuli.declarations.EthyleOleate;
 import com.beekeeper.parameters.ModelParameters;
 
 public class StimulusFactory
@@ -62,8 +62,8 @@ public class StimulusFactory
 		case AskFood:
 			s = new AskFoodStimulus();
 			break;
-		case Ocimene:
-			s = new Ocimene();
+		case EthyleOleate:
+			s = new EthyleOleate();
 			break;
 		default:
 			System.err.println("Stimulus Factory - default instead of " + key + ". Shouldn't happen.");

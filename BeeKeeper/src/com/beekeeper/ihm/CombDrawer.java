@@ -27,7 +27,7 @@ public class CombDrawer extends JPanel{
 
 	private int CELL_SIZE = 6;
 
-	public Stimulus drawnStimulus = Stimulus.Ocimene;
+	public Stimulus drawnStimulus = Stimulus.EthyleOleate;
 
 	//private Color hungryLarvaePhColor = GraphicParams.hungryLarvaePhColor;
 	//private Color foodPhColor = GraphicParams.foodPhColor;
@@ -88,20 +88,20 @@ public class CombDrawer extends JPanel{
 				sA = amounts[i];
 			}
 
-			if(drawnStimulus == Stimulus.Ocimene)
+			if(drawnStimulus == Stimulus.EthyleOleate)
 			{
 				CombCell cell = cs.getCellAt(x, y);
 
 				if(cell.visiting != null)
 				{
 					WorkingAgent b = (WorkingAgent)cell.visiting;
-					sA += b.getBodySmells().getAmount(Stimulus.Ocimene);
+					sA += b.getBodySmells().getAmount(Stimulus.EthyleOleate);
 				}
 
 				if(cell.inside != null)
 				{
 					WorkingAgent b = (WorkingAgent)cell.inside;
-					sA += b.getBodySmells().getAmount(Stimulus.Ocimene);
+					sA += b.getBodySmells().getAmount(Stimulus.EthyleOleate);
 				}
 			}
 

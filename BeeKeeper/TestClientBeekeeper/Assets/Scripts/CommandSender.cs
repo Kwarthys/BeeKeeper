@@ -17,4 +17,10 @@ public class CommandSender : MonoBehaviour
         string request = "FrDOWN " + frameIndex + " " + newPos + " " + isReverse;
         sender.sendTCP(request);
     }
+
+    public void askForContacts()
+    {
+        string request = "Contacts";
+        sender.sendTCP(request);
+    }
 }

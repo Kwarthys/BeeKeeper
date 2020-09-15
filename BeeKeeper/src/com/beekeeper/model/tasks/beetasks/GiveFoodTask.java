@@ -10,6 +10,7 @@ import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public class GiveFoodTask extends Task {
 
@@ -21,7 +22,7 @@ public class GiveFoodTask extends Task {
 		this.motivated = false;
 		
 		//Feeding
-		this.rootActivity.addTaskNode(new Action(0.5,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(ModelParameters.WORKER_FEEDING_MEANDURATION,0,agentServices) {
 			
 			@Override
 			public void execute() {

@@ -6,6 +6,7 @@ using UnityEngine;
 public class CommandInterpreter : MonoBehaviour
 {
     public HiveModel model;
+    public ContactGrapherRetriever contactRetriever;
 
     public void postOrder(NetCommand command)
     {
@@ -66,6 +67,14 @@ public class CommandInterpreter : MonoBehaviour
                     taskNames.Add(data[i + 2]);
                 }
                 model.registerStatusUpdate(new UpdateStatus(int.Parse(command.param),  ids, jhAmounts, taskNames));
+                break;
+
+            case "CONTACTS":
+                Debug.Log(command.command + " " + command.data);
+                break;
+
+            default:
+                Debug.Log("NOT INTERPRETED : " + command.command + " " + command.data);
                 break;
         }
     }

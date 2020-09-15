@@ -18,6 +18,7 @@ public abstract class EmitterAgent extends Agent
 		this.stimuliManagerServices = stimuliManagerServices;
 		
 		this.bodySmell = new StimuliMap();
+		this.bodySmell.agentID = ID;
 	}
 	
 	protected void emit(Stimulus s, double amount)

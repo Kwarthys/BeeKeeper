@@ -173,6 +173,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	{
 		super(stimuliManagerServices);
 		this.controllerServices = controllerServices;
+		this.bodySmell.setControllerServices(controllerServices);
 		setEnergy(Math.random()*0.8+0.2);
 		fillTaskList();
 
@@ -187,6 +188,14 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public void live()
 	{		
+		boolean debugtime = false;//Math.random() > 0.99;
+		
+		long startlive = 0;
+		if(debugtime)
+		{
+			startlive = System.nanoTime();
+		}
+		
 		if(alive == false)
 		{
 			return;
@@ -212,6 +221,11 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		s = addInternalPerceptions(s);
 		lastPercievedMap = s;
+		
+		if(debugtime)
+		{
+			System.out.println("added internal perception at t+" + (System.nanoTime() - startlive)/1000 + "us.");
+		}
 
 
 		//System.out.println(ID + " living ! " + s.getAmount(Stimulus.HungryLarvae));
@@ -219,7 +233,11 @@ public abstract class WorkingAgent extends EmitterAgent
 		if(currentAction == null)
 		{
 			if(isInside())
-			{
+			{				
+				if(debugtime)
+				{
+					System.out.println("start isInside t+" + (System.nanoTime() - startlive)/1000 + "us.");
+				}
 				//System.out.println("Executing new Action");
 				
 				if(ModelParameters.BYPASS_MOTIVATION)
@@ -234,16 +252,29 @@ public abstract class WorkingAgent extends EmitterAgent
 					}
 				}
 				else
-				{
+				{					
+					if(debugtime)
+					{
+						System.out.println("start action lookup t+" + (System.nanoTime() - startlive)/1000 + "us.");
+					}
 					currentAction = chooseNewTask(s).search();
 				}
 			}
 			else
-			{
+			{					
+				if(debugtime)
+				{
+					System.out.println("start foraging action lookup t+" + (System.nanoTime() - startlive)/1000 + "us.");
+				}
 				currentAction = currentTask.search();
 			}
 		}
 
+		
+		if(debugtime)
+		{
+			System.out.println("action choosen at t+" + (System.nanoTime() - startlive)/1000 + "us.");
+		}
 		
 		//if(!isInside())System.out.println(this.ID + " " + currentTask.taskName);
 		currentAction.run();			
@@ -265,6 +296,11 @@ public abstract class WorkingAgent extends EmitterAgent
 
 		advanceMetabolism();
 		this.bodySmell.evaporate();
+		
+		if(debugtime)
+		{
+			System.out.println("fully lived at t+" + (System.nanoTime() - startlive)/1000 + "us.");
+		}
 	}
 
 	protected abstract void advanceMetabolism();
@@ -303,7 +339,7 @@ public abstract class WorkingAgent extends EmitterAgent
 				currentScore = motivation;
 			}
 			else
-			{				
+			{
 				currentScore = current.compute(load);
 			}
 

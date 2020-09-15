@@ -2,6 +2,7 @@ package com.beekeeper.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
@@ -48,6 +49,9 @@ public class MainController
 	private int timeStepPauseToIgnore = 0;
 	
 	private volatile int turnIndex = -1;
+	
+	private HashMap<Integer, Integer> contactsQuantitiesByIndex = new HashMap<>();
+	private boolean contactsLocked = false;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
 
@@ -160,6 +164,26 @@ public class MainController
 		public void setNumberOfSecondsToGoFast(int seconds) {
 			MainController.this.setNbOfTimeStepToGoFast((int) (seconds * ModelParameters.secondToTimeStepCoef));			
 		}
+
+		@Override
+		public void notifyAgentContact(int id1, int id2, double amount) {
+			registerContactFor(id1, (int) amount);
+			registerContactFor(id2, (int) amount);
+			//String s = id1 + " " + id2 + " " + (int)amount;
+			//boolean add = contactBlockingQueue.add(s);
+			//System.out.println(id1 + "-" + id2 + " exchanged " + amount + " : " + add);
+		}
+
+		@Override
+		public HashMap<Integer, Integer> getAgentContacts() {
+			contactsLocked = true;
+			return contactsQuantitiesByIndex;
+		}
+
+		@Override
+		public void freeLockAgentContacts() {
+			contactsLocked = false;
+		}
 	};
 
 	public MainController()
@@ -213,6 +237,27 @@ public class MainController
 		}
 		 */
 		System.out.println("expe done");
+	}
+	
+	private void registerContactFor(int agentIndex, int quantity)
+	{
+		if(contactsLocked)
+		{
+			System.out.println("registerContactFor : Locked");
+			return; //If map is being read by another thread, we're throwing data away : shouldn't be much of an issue given the shear amount of data
+		}
+		
+		if(agentFactory.typesOfIndex.get(agentIndex) == AgentType.ADULT_BEE)
+		{
+			if(!contactsQuantitiesByIndex.containsKey(agentIndex))
+			{
+				contactsQuantitiesByIndex.put(agentIndex, quantity);
+			}
+			else
+			{
+				contactsQuantitiesByIndex.put(agentIndex, contactsQuantitiesByIndex.get(agentIndex) + quantity);
+			}
+		}
 	}
 	
 	private void setNbOfTimeStepToGoFast(int number)
@@ -280,11 +325,12 @@ public class MainController
 	private void programLoop()
 	{
 		boolean DEBUGTIME = false;
-		boolean MONITORTIME = true;
+		boolean MONITORTIME = false;
 		int minLoopMs = -1;
 		int maxLoopMs = 0;
 		long totalLoopMs = 0;
 		long totalAgents = 0;
+		long totalDeaths = 0;
 		int startingAverageIndex = 0;
 		
 		turnIndex = 0;
@@ -340,10 +386,47 @@ public class MainController
 			}
 			*/
 			turnIndex++;
-
 			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
 			Collections.shuffle(copy);
-
+			
+			// MULTITHREADING NOT CONVINCING ENOUGH
+			/*
+			int numberOfThread = 3;
+			int threadsItemCount = copy.size() / numberOfThread;
+			int leftOvers = copy.size() % numberOfThread;
+			
+			Thread threads[] = new Thread[numberOfThread];
+			
+			for(int i = 0; i < numberOfThread; ++i)
+			{
+				int startIndex = i * threadsItemCount;
+				int stopIndex = startIndex + threadsItemCount;
+				
+				if(i == numberOfThread-1)//lastThread
+				{
+					//System.out.println("adding " + leftOvers);
+					stopIndex += leftOvers;
+				}
+				
+				//System.out.println("Thread[" + i + "] : " + startIndex + "->" + stopIndex + " / " + copy.size());
+				
+				threads[i] = new Thread(new MyThreadedExecutor(copy, startIndex, stopIndex));
+				threads[i].start();
+			}
+			
+			
+			for(int i = 0; i < numberOfThread; ++i)
+			{
+				try {
+					//System.out.println("waiting thread" + i);
+					threads[i].join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			 */
 			ArrayList<Integer> newForagers = new ArrayList<>();
 			for(Agent b : copy)
 			{
@@ -393,9 +476,12 @@ public class MainController
 				}
 			});
 			
+			if(MONITORTIME)
+				totalDeaths += (System.nanoTime() - startLoopTime)/1000000;
+			
 			if(DEBUGTIME)System.out.println("Deaths cleanup at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 
-			this.combManager.updateStimuli(); //MOST EXPENSIVE BY FAR 90-95% of time
+			this.combManager.updateStimuli();
 			
 			if(DEBUGTIME)System.out.println("updateStimuli at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 			
@@ -420,7 +506,9 @@ public class MainController
 					theLog.append("(");
 					theLog.append(totalAgents/(turnIndex-startingAverageIndex));
 					theLog.append("+");
-					theLog.append((totalLoopMs - totalAgents)/(turnIndex-startingAverageIndex));
+					theLog.append((totalDeaths-totalAgents)/(turnIndex-startingAverageIndex));
+					theLog.append("+");
+					theLog.append((totalLoopMs - totalDeaths)/(turnIndex-startingAverageIndex));
 					theLog.append(") Min: ");
 					theLog.append(minLoopMs);
 					theLog.append(" Max: ");
@@ -432,6 +520,7 @@ public class MainController
 					maxLoopMs = 0;
 					totalLoopMs = 0;
 					totalAgents = 0;
+					totalDeaths = 0;
 					startingAverageIndex = turnIndex;
 				}
 			}

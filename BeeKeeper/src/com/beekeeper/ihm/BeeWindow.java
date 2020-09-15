@@ -68,7 +68,7 @@ public class BeeWindow extends JFrame
 		container.setLayout(new GridBagLayout());
 		
 	
-		Stimulus[] available = {Stimulus.Ocimene, Stimulus.AskFood};
+		Stimulus[] available = {Stimulus.EthyleOleate, Stimulus.AskFood};
 		box = new JComboBox<Stimulus>(available);
 		
 	

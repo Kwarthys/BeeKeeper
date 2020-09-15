@@ -2,8 +2,10 @@ package com.beekeeper.controller;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.implem.AdultBee;
 import com.beekeeper.model.agent.implem.BroodBee;
@@ -18,6 +20,8 @@ import com.beekeeper.utils.MyUtils;
 public class AgentFactory
 {
 	public ArrayList<Agent> allAgents = new ArrayList<>();
+	
+	public HashMap<Integer, AgentType> typesOfIndex = new HashMap<>();
 
 	public void spawnTestAgents(int number, Comb host, CustomRule<Point2D.Double> rule, StimuliManagerServices services, MainControllerServices controllerServices)
 	{
@@ -68,6 +72,8 @@ public class AgentFactory
 			
 			WorkingAgent bee = new BroodBee(services, controllerServices);
 			
+			typesOfIndex.put(bee.getID(), AgentType.BROOD_BEE);
+			
 			host.setCellAgentContent(x, y, bee);
 			
 			allAgents.add(bee);
@@ -91,7 +97,8 @@ public class AgentFactory
 				y = (int)point.y;
 			}while(!host.isCellVisitEmpty(x, y));
 	
-			WorkingAgent bee = new AdultBee(services, controllerServices);
+			WorkingAgent bee = new AdultBee(services, controllerServices);			
+			typesOfIndex.put(bee.getID(), AgentType.ADULT_BEE);
 			host.setCellVisit(x, y, bee);
 			allAgents.add(bee);
 		}
@@ -120,7 +127,8 @@ public class AgentFactory
 				
 			}while(!host.isCellVisitEmpty(x, y));
 	
-			WorkingAgent bee = new AdultBee(services, controllerServices);
+			WorkingAgent bee = new AdultBee(services, controllerServices);		
+			typesOfIndex.put(bee.getID(), AgentType.ADULT_BEE);
 			host.setCellVisit(x, y, bee);
 			allAgents.add(bee);
 		}
@@ -148,7 +156,8 @@ public class AgentFactory
 			y = (int)point.y;
 		}while(!host.isCellContentEmpty(x, y));
 		
-		WorkingAgent queen = new QueenBee(services, controllerServices);
+		WorkingAgent queen = new QueenBee(services, controllerServices);	
+		typesOfIndex.put(queen.getID(), AgentType.ADULT_BEE);
 		
 		host.setCellVisit(x, y, queen);
 		

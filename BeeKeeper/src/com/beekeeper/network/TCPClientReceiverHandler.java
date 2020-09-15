@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 
@@ -82,27 +83,67 @@ public class TCPClientReceiverHandler implements Runnable {
 							writer.write("FastForward" + request.data[0]);
 							services.setNumberOfSecondsToGoFast(Integer.valueOf(request.data[0]));
 							break;
+							
+						case "Deaths":
+							ArrayList<Integer> deads = services.getTheDead();
+							if(deads.size() > 0)
+							{
+								StringBuffer sb = new StringBuffer();
+								sb.append("DEATHS -1 ");
+								for(Integer id : deads)
+								{
+									sb.append(" ");
+									sb.append(id);
+								}
+								System.out.println("sending " + sb.toString());
+								writer.write(sb.toString());			
+							}
+							break;
+							
+						case "Contacts":
+							StringBuffer sb = new StringBuffer();
+							sb.append("CONTACTS -1");
+							
+							//long nano = System.nanoTime();
+							
+							HashMap<Integer, Integer> contactsQtt = services.getAgentContacts();
+							
+							for(Integer key : contactsQtt.keySet())
+							{
+								String futureString = " " + key + " " + contactsQtt.get(key);
+								
+								if(sb.length() + futureString.length() > 8192)//8192
+								{
+									while(sb.length() < 8192)
+									{
+										sb.append(" ");
+									}
+									//System.out.println("Sending " + sb.toString().substring(0, Math.min(sb.length(), 30)) + "length:" + sb.length());
+									writer.write(sb.toString());
+									sb = new StringBuffer();
+									sb.append("CONTACTS -1");
+								}
+								
+								sb.append(futureString);
+							}
+							
+							//map has beel locked for less than 2ms
+							services.freeLockAgentContacts();
+							
+							//System.out.println("Map got locked for " + (float)((System.nanoTime() - nano)/1000)/1000 + "ms.");
+							
+							writer.write(sb.toString());	
+							//System.out.println("Sending " + sb.toString().substring(0, Math.min(sb.length(), 30)) + "length:" + sb.length());				
+							
+							
+							break;
 					}				
 					
 					System.out.println("replying to " + request.header);
 					writer.flush();
 					
 				} catch (Exception e) {
-					//Sending critical data on TimeOut
-					ArrayList<Integer> deads = services.getTheDead();
-					if(deads.size() > 0)
-					{
-						StringBuffer sb = new StringBuffer();
-						sb.append("DEATHS");
-						for(Integer id : deads)
-						{
-							sb.append(" ");
-							sb.append(id);
-						}
-						System.out.println("sending " + sb.toString());
-						writer.write(sb.toString());
-						writer.flush();						
-					}
+					e.printStackTrace();
 				}
 				
 			} catch (IOException e) {

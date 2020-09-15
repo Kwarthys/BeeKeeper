@@ -199,10 +199,10 @@ public class UDPClientHandler implements Runnable {
 			}
 			
 			lastLoopIndex = iagent;
-			System.out.println("lastLoopIndex " + lastLoopIndex + " " + agents.size() + " " + maxAgentCount);
+			//System.out.println("lastLoopIndex " + lastLoopIndex + " " + agents.size() + " " + maxAgentCount);
 			
 			byte[] data = combBuffer.toString().getBytes();
-			System.out.println("Sending data:" + chunk + " " + data.length + " || " + combBuffer.toString().substring(0, 50) + "...");
+			//System.out.println("Sending data:" + chunk + " " + data.length + " || " + combBuffer.toString().substring(0, Math.min(combBuffer.length(), 50)) + "...");
 			DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 			udpServer.send(p);
 		}

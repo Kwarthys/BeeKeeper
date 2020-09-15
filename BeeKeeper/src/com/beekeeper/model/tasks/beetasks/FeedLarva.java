@@ -7,6 +7,7 @@ import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Activity;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public class FeedLarva extends Task {
 
@@ -25,7 +26,7 @@ public class FeedLarva extends Task {
 		};
 		
 		//FeedLarva
-		larvaNear.addTaskNode(new Action(2,0,agentServices) {
+		larvaNear.addTaskNode(new Action(ModelParameters.LARVA_FEEDING_MEANDURATION,0,agentServices) {
 			
 			@Override
 			public void execute() {

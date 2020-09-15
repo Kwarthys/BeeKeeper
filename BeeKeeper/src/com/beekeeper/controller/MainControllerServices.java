@@ -1,6 +1,7 @@
 package com.beekeeper.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.model.agent.AgentStateSnapshot;
 import com.beekeeper.model.comb.Comb;
@@ -16,6 +17,10 @@ public interface MainControllerServices
 	public CombCell askLandingZone();
 
 	public void notifyWindowClosed();
+
+	public void notifyAgentContact(int id1, int id2, double amount);
+	public HashMap<Integer, Integer> getAgentContacts();
+	public void freeLockAgentContacts();
 	
 	public void switchFrames(int index1, int index2);
 	public void reverseFrame(int index);

@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.parameters.ModelParameters;
 
 public class StimuliMap
 {
 	//private int counter = (int)(Math.random()*1000);
+	
+	private MainControllerServices controllerServices;
+	
+	public int agentID;
+	
+	public void setControllerServices(MainControllerServices controllerServices)
+	{
+		this.controllerServices = controllerServices;
+	}
 	
 	private HashMap<Stimulus, Double> amounts = new HashMap<>();
 	
@@ -123,6 +133,23 @@ public class StimuliMap
 			{
 				smells.add(s);
 			}
+		}
+		
+		MainControllerServices controllerServices = null;
+		
+		if(map1.controllerServices != null)
+		{
+			controllerServices = map1.controllerServices;
+		}
+		else if(map2.controllerServices != null)
+		{
+			controllerServices = map2.controllerServices;
+		}
+		
+		if(controllerServices!=null)
+		{
+			double exchangedAmount = Math.abs(map1.getAmount(Stimulus.EthyleOleate) - map2.getAmount(Stimulus.EthyleOleate))/2;
+			controllerServices.notifyAgentContact(map1.agentID, map2.agentID, exchangedAmount);
 		}
 		
 		for(Stimulus s : smells)

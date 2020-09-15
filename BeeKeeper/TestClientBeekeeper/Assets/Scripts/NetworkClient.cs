@@ -56,6 +56,11 @@ public class NetworkClient : MonoBehaviour
         char[] separator = " ".ToCharArray();
         string[] data = rawData.Split(separator, 3);
 
+        if(data.Length < 3)
+        {
+            return;
+        }
+
         NetCommand c = new NetCommand();
         c.command = data[0];
         c.param = data[1];
@@ -83,10 +88,11 @@ public class NetworkClient : MonoBehaviour
     {
         while(true)
         {
-            byte[] rawData = new byte[1024];
+            byte[] rawData = new byte[8192];
             s.Receive(rawData);
             string data = Encoding.Default.GetString(rawData);
-            Debug.Log("fromTCP : " + data.Length + " : " + data);            
+            parseModel(data);
+            //Debug.Log("fromTCP : " + data.Length + " : " + data);            
         }
     }
 

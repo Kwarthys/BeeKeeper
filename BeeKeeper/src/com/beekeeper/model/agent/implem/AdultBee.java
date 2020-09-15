@@ -58,13 +58,13 @@ public class AdultBee extends WorkingAgent
 		if(!ModelParameters.BYPASS_PHYSIOLOGY)
 		{
 			hjTiter += ModelParameters.HJ_INCREMENT;
-			hjTiter -= ModelParameters.getHJModifiedByOcimene(this.bodySmell.getAmount(Stimulus.Ocimene));
+			hjTiter -= ModelParameters.getHJModifiedByEthyleOleate(this.bodySmell.getAmount(Stimulus.EthyleOleate));
 			hjTiter = MyUtils.clamp(hjTiter);			
 		}
 		
 		receivingFood = false;
 		
-		this.bodySmell.addAmount(Stimulus.Ocimene, ModelParameters.getOcimeneEmitedByHJ(hjTiter));
+		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.getEthyleOleateEmitedByHJ(hjTiter));
 		
 	}
 
