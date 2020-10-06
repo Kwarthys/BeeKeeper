@@ -6,12 +6,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentStateSnapshot;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CellContent;
+import com.beekeeper.parameters.ModelParameters;
 
 public class UDPClientHandler implements Runnable {
 
@@ -45,11 +47,14 @@ public class UDPClientHandler implements Runnable {
 		{
 			try
 			{
+				boolean ff = services.isFastForward();
+				
 				/*** FORAGERS ***/
-				if(index%4 == 0)
+				if(index%4 == 0 && ff)
 				{
 					//System.out.println(index + " sending FORAGERS");
 					sendForagerDatagram(udpServer);
+					sendAgentContacts(udpServer);
 				}
 				
 				/*** STATUS ***/
@@ -60,13 +65,13 @@ public class UDPClientHandler implements Runnable {
 				}
 
 				/*** POS ***/
-				if(index%2 == 1)
+				if(index%2 == 1 && ff)
 				{
 					//System.out.println(index + " sending POS");
 					sendAdultsPositions(udpServer);
 				}
 				
-				/*** FRAMECONTENT ***/
+				/*** FRAMECONTENT AND CONTACTS***/
 				if(++index%20 == 0)
 				{
 					//System.out.println(index + " sending FRAMECONTENT");
@@ -169,7 +174,7 @@ public class UDPClientHandler implements Runnable {
 
 	private void sendAdultStates(DatagramSocket udpServer) throws IOException
 	{
-		int maxAgentCount = 3000;
+		int maxAgentCount = 2000;
 		
 		ArrayList<AgentStateSnapshot> agents = services.getAllAdults();
 
@@ -193,6 +198,8 @@ public class UDPClientHandler implements Runnable {
 				combBuffer.append(" ");
 				combBuffer.append(snap.agentID);
 				combBuffer.append(" ");
+				combBuffer.append((int)(snap.agentAge / ModelParameters.secondToTimeStepCoef));
+				combBuffer.append(" ");
 				combBuffer.append(((int)(snap.jhAmount * 100)) / 100.0);
 				combBuffer.append(" ");
 				combBuffer.append(snap.taskName);
@@ -206,6 +213,45 @@ public class UDPClientHandler implements Runnable {
 			DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 			udpServer.send(p);
 		}
+	}
+
+	private void sendAgentContacts(DatagramSocket udpServer) throws IOException
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("CONTACTS -1");
+		
+		//long nano = System.nanoTime();
+		
+		HashMap<Integer, Integer> contactsQtt = services.getAgentContacts();
+		
+		for(Integer key : contactsQtt.keySet())
+		{
+			String futureString = " " + key + " " + contactsQtt.get(key);
+			
+			if(sb.length() + futureString.length() > 20000)
+			{
+				byte[] data = sb.toString().getBytes();
+				//System.out.println("Sending data:" + data.length + " || " + combBuffer.toString());
+				DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
+				udpServer.send(p);
+				
+				sb = new StringBuffer();
+				sb.append("CONTACTS -1");
+			}
+			
+			sb.append(futureString);
+		}
+		
+		//map has beel locked for less than 2ms
+		services.freeLockAgentContacts();
+		
+		//System.out.println("Map got locked for " + (float)((System.nanoTime() - nano)/1000)/1000 + "ms.");
+
+		byte[] data = sb.toString().getBytes();
+		//System.out.println("Sending data:" + data.length + " || " + combBuffer.toString());
+		DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
+		udpServer.send(p);
+		
 	}
 
 	private void sendFramesContent(DatagramSocket udpServer) throws IOException

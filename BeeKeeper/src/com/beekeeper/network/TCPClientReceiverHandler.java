@@ -99,44 +99,6 @@ public class TCPClientReceiverHandler implements Runnable {
 								writer.write(sb.toString());			
 							}
 							break;
-							
-						case "Contacts":
-							StringBuffer sb = new StringBuffer();
-							sb.append("CONTACTS -1");
-							
-							//long nano = System.nanoTime();
-							
-							HashMap<Integer, Integer> contactsQtt = services.getAgentContacts();
-							
-							for(Integer key : contactsQtt.keySet())
-							{
-								String futureString = " " + key + " " + contactsQtt.get(key);
-								
-								if(sb.length() + futureString.length() > 8192)//8192
-								{
-									while(sb.length() < 8192)
-									{
-										sb.append(" ");
-									}
-									//System.out.println("Sending " + sb.toString().substring(0, Math.min(sb.length(), 30)) + "length:" + sb.length());
-									writer.write(sb.toString());
-									sb = new StringBuffer();
-									sb.append("CONTACTS -1");
-								}
-								
-								sb.append(futureString);
-							}
-							
-							//map has beel locked for less than 2ms
-							services.freeLockAgentContacts();
-							
-							//System.out.println("Map got locked for " + (float)((System.nanoTime() - nano)/1000)/1000 + "ms.");
-							
-							writer.write(sb.toString());	
-							//System.out.println("Sending " + sb.toString().substring(0, Math.min(sb.length(), 30)) + "length:" + sb.length());				
-							
-							
-							break;
 					}				
 					
 					System.out.println("replying to " + request.header);

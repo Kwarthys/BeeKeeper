@@ -58,9 +58,17 @@ public class CombCell
 	
 	public int getCombID() {return combID;}
 
+	/**
+	 * Frees the visiting slot of cell and notifies the Comb to remove the agent
+	 */
 	public void freeCell() {
 		cs.notifyTakeOff(visiting);
 		visiting = null;
+	}
+	
+	public void notifyAgentLeft(Agent a)
+	{
+		cs.notifyTakeOff(a);
 	}
 
 	public void notifyLanding(EmitterAgent a) {

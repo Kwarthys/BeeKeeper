@@ -26,6 +26,16 @@ public class NetworkManager {
 	private MainControllerServices controlerServices;
 	
 	private volatile boolean running = true;
+	
+	public void registerControllerServices(MainControllerServices services)
+	{
+		this.controlerServices = services;
+	}
+	
+	public NetworkManager()
+	{
+		this(null);
+	}
 
 	public NetworkManager(MainControllerServices controlerServices)
 	{
@@ -88,7 +98,7 @@ public class NetworkManager {
 							Socket client = serverTCPSocket.accept();
 	
 							Thread clientThread = new Thread(new TCPClientReceiverHandler(client, NetworkManager.this, controlerServices));
-							client.setSoTimeout(5000);
+							//client.setSoTimeout(5000);
 							clientThread.start();
 						}
 

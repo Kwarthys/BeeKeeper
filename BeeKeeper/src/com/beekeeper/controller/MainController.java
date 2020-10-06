@@ -1,10 +1,10 @@
 package com.beekeeper.controller;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
 
@@ -39,8 +39,8 @@ public class MainController
 
 	private AgentFactory agentFactory;
 	
-	private ArrayList<Integer> foragers = new ArrayList<>(); //for perf issues
-	private ArrayList<Integer> deadAdults = new ArrayList<>(); //same
+	private ArrayList<Agent> foragers = new ArrayList<>();
+	private ArrayList<Integer> deadAdults = new ArrayList<>();
 
 	//private int simuStep = 0;
 
@@ -92,6 +92,16 @@ public class MainController
 
 			return null;
 		}
+		
+		public void notifyDeath(Agent a) {
+			combManager.notifyDead(a);
+			agentFactory.allAgents.remove(a);
+			
+			if(a.getBeeType() != AgentType.BROOD_BEE)
+			{
+				deadAdults.add(a.getID());				
+			}
+		}
 
 		@Override
 		public void notifyWindowClosed() {
@@ -120,7 +130,9 @@ public class MainController
 
 		@Override
 		public ArrayList<Integer> getForagers() {
-			return MainController.this.foragers;
+			ArrayList<Integer> ids = new ArrayList<>();
+			MainController.this.foragers.forEach((Agent a) -> ids.add(a.getID()));
+			return ids;
 		}
 
 		@Override
@@ -167,6 +179,7 @@ public class MainController
 
 		@Override
 		public void notifyAgentContact(int id1, int id2, double amount) {
+			//System.out.println("contact " + id1 + " " + id2 + " -> " + amount);
 			registerContactFor(id1, (int) amount);
 			registerContactFor(id2, (int) amount);
 			//String s = id1 + " " + id2 + " " + (int)amount;
@@ -183,6 +196,26 @@ public class MainController
 		@Override
 		public void freeLockAgentContacts() {
 			contactsLocked = false;
+		}
+
+		@Override
+		public boolean isFastForward() {
+			return MainController.this.timeStepPauseToIgnore != 0 || ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP == 0;
+		}
+
+		@Override
+		public void spawnBeeAt(int combID, Point position) {
+			agentFactory.spawnWorkerAt(combManager.getCombOfID(combID), position, MainController.this.controlServices);
+		}
+
+		@Override
+		public void notifyLiftoff(Agent agent) {
+			foragers.remove(agent);
+		}
+
+		@Override
+		public void notifyLanding(Agent agent) {
+			foragers.add(agent);
 		}
 	};
 
@@ -243,7 +276,7 @@ public class MainController
 	{
 		if(contactsLocked)
 		{
-			System.out.println("registerContactFor : Locked");
+			//System.out.println("registerContactFor : Locked");
 			return; //If map is being read by another thread, we're throwing data away : shouldn't be much of an issue given the shear amount of data
 		}
 		
@@ -325,7 +358,7 @@ public class MainController
 	private void programLoop()
 	{
 		boolean DEBUGTIME = false;
-		boolean MONITORTIME = false;
+		boolean MONITORTIME = true;
 		int minLoopMs = -1;
 		int maxLoopMs = 0;
 		long totalLoopMs = 0;
@@ -348,133 +381,30 @@ public class MainController
 		{
 			long startLoopTime = System.nanoTime();
 			
+			//System.out.println("turn " + turnIndex);
+			
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{
 				System.out.print("|");
 			}
 			
-			/**** FRAME MOVEMENT DEBUG ****/
-			//will keep it for a lil time
-			/*
-			if(turnIndex == 2)
-			{
-				System.out.println("LIFTING FRAME 1");
-				combManager.liftFrame(1);
-			}
-			else if(turnIndex == 50)
-			{
-				System.out.println("HITTING FRAME 1");
-				combManager.hitFrame(1);
-			}
-			else if(turnIndex == 300)
-			{
-				System.out.println("DROPING FRAME 1");
-				combManager.putFrame(1, 1, false);
-			}
-			
-			else if(turnIndex == 40)
-			{
-				System.out.println("LIFTING FRAME 2");
-				combManager.liftFrame(2);
-			}
-			else if(turnIndex == 50)
-			{
-				System.out.println("DROPING FRAME 2");
-				combManager.putFrame(2, 1, false);
-				System.out.println("DROPING FRAME 1");
-				combManager.putFrame(1, 2, true);
-			}
-			*/
 			turnIndex++;
-			ArrayList<Agent> copy = new ArrayList<>(agentFactory.allAgents);
-			Collections.shuffle(copy);
 			
-			// MULTITHREADING NOT CONVINCING ENOUGH
-			/*
-			int numberOfThread = 3;
-			int threadsItemCount = copy.size() / numberOfThread;
-			int leftOvers = copy.size() % numberOfThread;
-			
-			Thread threads[] = new Thread[numberOfThread];
-			
-			for(int i = 0; i < numberOfThread; ++i)
-			{
-				int startIndex = i * threadsItemCount;
-				int stopIndex = startIndex + threadsItemCount;
-				
-				if(i == numberOfThread-1)//lastThread
-				{
-					//System.out.println("adding " + leftOvers);
-					stopIndex += leftOvers;
-				}
-				
-				//System.out.println("Thread[" + i + "] : " + startIndex + "->" + stopIndex + " / " + copy.size());
-				
-				threads[i] = new Thread(new MyThreadedExecutor(copy, startIndex, stopIndex));
-				threads[i].start();
+			try {
+				combManager.liveAgents();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
 			}
 			
-			
-			for(int i = 0; i < numberOfThread; ++i)
+			for(Agent a : foragers)
 			{
-				try {
-					//System.out.println("waiting thread" + i);
-					threads[i].join();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				a.live();
 			}
 			
-			 */
-			ArrayList<Integer> newForagers = new ArrayList<>();
-			for(Agent b : copy)
-			{
-				b.live();
-				
-				if(b.getBeeType() == AgentType.ADULT_BEE || b.getBeeType() == AgentType.BROOD_BEE)
-				{
-					//WorkingAgent w = (WorkingAgent) b;
-					//logTurn(turnIndex, b.getID(), w.getTaskName(), w.getPhysio());
-					if(!b.isInside())
-					{
-						newForagers.add(b.getID());
-					}
-				}				
-			}
 			
 			if(DEBUGTIME)System.out.println("AllAgent lived at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 			if(MONITORTIME)
 				totalAgents += (System.nanoTime() - startLoopTime)/1000000;
-			
-			this.foragers = newForagers;
-
-			for(Comb c : combs)
-			{
-				c.update();
-			}
-
-			ArrayList<Integer> newAdultDeaths = new ArrayList<>();
-			
-			for(Agent a : agentFactory.allAgents)
-			{
-				if(!a.alive)
-				{
-					if(a.getBeeType() == AgentType.ADULT_BEE || a.getBeeType() == AgentType.QUEEN)
-					{
-						newAdultDeaths.add(a.getID());
-					}
-				}
-			}
-			
-			deadAdults.addAll(newAdultDeaths);
-
-			agentFactory.allAgents.removeIf(new Predicate<Agent>() {
-				@Override
-				public boolean test(Agent t) {
-					return !t.alive;
-				}
-			});
 			
 			if(MONITORTIME)
 				totalDeaths += (System.nanoTime() - startLoopTime)/1000000;
@@ -535,8 +465,6 @@ public class MainController
 					}
 				});
 			}
-
-			//System.out.println(turnIndex);
 			
 			long loopTime = (System.nanoTime() - startLoopTime)/1000000;
 			

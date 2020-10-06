@@ -2,7 +2,6 @@ package com.beekeeper.model.comb;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.WorkingAgent;
@@ -89,7 +88,7 @@ public class Comb
 
 		@Override
 		public ArrayList<WorkingAgent> getNeighborBees(int x, int y) {				
-			ArrayList<WorkingAgent> agents = Comb.this.getNeighborBees(x, y, true);			
+			ArrayList<WorkingAgent> agents = Comb.this.getNeighborBees(x, y, false);			
 			Comb facing = combManagerServices.getFacingComb(getID());
 			if(facing != null)
 			{
@@ -203,7 +202,7 @@ public class Comb
 		
 		if(isFacingComb)
 		{
-			WorkingAgent a = getCell(x, y).getAgentInside();
+			WorkingAgent a = (WorkingAgent) getCell(x, y).visiting;
 			if(a!=null)
 			{
 				agents.add(a);
@@ -229,9 +228,9 @@ public class Comb
 		
 		this.agents.forEach((Agent a) -> a.registerNewStimuliManagerServices(smServices));
 		this.cells.forEach((CombCell cc) -> {
-			if(cc.visiting != null)
+			if(cc.inside != null)
 			{
-				cc.visiting.registerNewStimuliManagerServices(smServices);
+				cc.inside.registerNewStimuliManagerServices(smServices);
 			}
 		});
 	}
@@ -269,27 +268,7 @@ public class Comb
 	}
 
 	public void update()
-	{	
-		/** REMOVE THE DEAD **/
-		agents.removeIf(new Predicate<Agent>() {
-			@Override
-			public boolean test(Agent t) {
-				return !t.alive;
-			}
-		});
-		
-		for(CombCell c : cells)
-		{
-			if(c.inside != null)
-			{
-				if(!c.inside.alive)
-				{
-					c.inside = null;
-					c.content = CellContent.empty;
-				}
-			}
-		}
-		
+	{		
 		/** UPDATE MANAGER **/
 		jamManager.resetAll();
 	}
@@ -320,6 +299,8 @@ public class Comb
 		cell.inside = brood;
 		cell.content = CellContent.brood;
 		brood.hostCell = cell;
+		
+		agents.add(brood);
 	}
 
 	public Dimension getDimension() {

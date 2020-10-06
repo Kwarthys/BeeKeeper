@@ -6,15 +6,34 @@ import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.beetasks.LarvaTask;
+import com.beekeeper.parameters.ModelParameters;
 
 public class BroodBee extends WorkingAgent
 {
-	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices) {
-		super(stimuliManagerServices, controllerServices);
+	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, boolean randomInit) {
+		super(stimuliManagerServices, controllerServices, randomInit);
 		this.type = AgentType.BROOD_BEE;
 		if(this.getEnergy() < 0.5)
 		{
 			this.addToEnergy(0.5);
+		}
+	}
+	
+	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices) {
+		this(stimuliManagerServices, controllerServices, true);
+	}
+
+
+	@Override
+	protected void initPhysiology(boolean randomInit)
+	{
+		if(randomInit)
+		{
+			age = (int) (Math.random() * ModelParameters.timestepLarvaPop);			
+		}
+		else
+		{
+			age = 0;
 		}
 	}
 	
@@ -39,7 +58,26 @@ public class BroodBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{
-		this.bodySmell.addAmount(Stimulus.EthyleOleate, 1);
+		this.bodySmell.addAmount(Stimulus.EthyleOleate, 0.1);
+		
+		//if(Math.random()>0.99)System.out.println(getStringName() + " " + age);
+		
+		if(age > ModelParameters.timestepLarvaPop)
+		{
+			//larva old enough to become a bee
+			if(hostCell.visiting == null)
+			{
+				//room for eclosion, a bee is born
+				
+				//kill larva
+				this.alive = false;
+				
+				//spawn bee
+				controllerServices.spawnBeeAt(hostCell.getCombID(), getPosition());
+				
+				//System.out.println("A BEE IS BORN " + age + " " + ModelParameters.timestepLarvaPop);
+			}
+		}
 	}
 
 	@Override

@@ -171,16 +171,23 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
+		this(stimuliManagerServices, controllerServices, true);
+	}
+	
+	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, boolean randomInit)
+	{
 		super(stimuliManagerServices);
 		this.controllerServices = controllerServices;
 		this.bodySmell.setControllerServices(controllerServices);
-		setEnergy(Math.random()*0.8+0.2);
 		fillTaskList();
 
+		setEnergy(Math.random()*0.5+0.5);
 		hunger = Math.random() * 0.7;
-		hjTiter = ModelParameters.getStartingBeeHJTiter();//Math.random() * Math.random() * Math.random();
+		initPhysiology(randomInit);
 	}
 	
+	protected abstract void initPhysiology(boolean randomInit);
+
 	/**
 	 * For now only the queen implements this and can lay eggs. In the future they might all brood
 	 */
@@ -190,23 +197,19 @@ public abstract class WorkingAgent extends EmitterAgent
 	{		
 		boolean debugtime = false;//Math.random() > 0.99;
 		
+		age++;
+		
 		long startlive = 0;
 		if(debugtime)
 		{
 			startlive = System.nanoTime();
 		}
 		
-		if(alive == false)
+		if(alive == false || getEnergy() == 0)
 		{
+			controllerServices.notifyDeath(this);
 			return;
 		}
-
-		if(getEnergy() == 0)
-		{
-			alive = false;
-			return;
-		}
-
 
 		StimuliMap s;
 
@@ -314,7 +317,15 @@ public abstract class WorkingAgent extends EmitterAgent
 		return s;
 	}
 
-	public boolean isHungry() {return hunger > 0.5 && currentTask.taskName == "AskingFood";}
+	public boolean isHungry()
+	{
+		boolean isAskingFood = false;
+		if(currentTask != null)
+		{
+			isAskingFood = currentTask.taskName == "AskingFood";
+		}
+		return hunger > 0.5 && isAskingFood;
+	}
 
 	public void recieveFood()
 	{
@@ -385,6 +396,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		if(hostCell != null)
 		{
 			hostCell.notifyLanding(this);
+			controllerServices.notifyLanding(this);
 			return true;
 		}
 		else
@@ -422,6 +434,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			//We are at the bottom !
 			if(goOut)
 			{
+				controllerServices.notifyLiftoff(this);
 				hostCell.freeCell();
 				this.hostCell = null;
 				//System.out.println(this.getStringName() + " liftoff !");

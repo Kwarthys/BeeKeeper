@@ -5,6 +5,7 @@ import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public class QueenTask extends Task {
 
@@ -17,7 +18,7 @@ public class QueenTask extends Task {
 		this.motivated = false;
 
 		//LAY EGG
-		this.rootActivity.addTaskNode(new Action(2,0.001, agentServices) {
+		this.rootActivity.addTaskNode(new Action(ModelParameters.LAYEGG_MEANDURATION, 0.01, agentServices) {
 			
 			@Override
 			public void execute() {

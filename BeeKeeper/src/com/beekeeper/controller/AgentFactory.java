@@ -1,5 +1,6 @@
 package com.beekeeper.controller;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,7 +137,7 @@ public class AgentFactory
 
 	public void spawnALarvae(CombCell cell, Comb host, StimuliManagerServices services, MainControllerServices controllerServices)
 	{
-		WorkingAgent larvae = new BroodBee(services, controllerServices);
+		WorkingAgent larvae = new BroodBee(services, controllerServices, false);
 		
 		host.setCellAgentContent(cell.x, cell.y, larvae);
 		
@@ -162,5 +163,13 @@ public class AgentFactory
 		host.setCellVisit(x, y, queen);
 		
 		allAgents.add(queen);
+	}
+
+	public void spawnWorkerAt(Comb host, Point pos, MainControllerServices controllerServices)
+	{		
+		WorkingAgent bee = new AdultBee(host.getServices().getCurrentSManagerServices(), controllerServices, false);
+		typesOfIndex.put(bee.getID(), AgentType.ADULT_BEE);
+		host.setCellVisit(pos.x, pos.y, bee);
+		allAgents.add(bee);
 	}
 }

@@ -8,8 +8,11 @@ import java.util.Iterator;
 
 import com.beekeeper.controller.AgentFactory;
 import com.beekeeper.controller.MainControllerServices;
+import com.beekeeper.controller.MyThreadedExecutor;
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
+import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
@@ -74,6 +77,54 @@ public class CombManager {
 			return CombManager.this.isCombUp(combID);
 		}
 	};
+	
+	public void liveAgents() throws InterruptedException
+	{
+		ArrayList<Thread> threads = new ArrayList<>();
+		MyThreadedExecutor exec = new MyThreadedExecutor(combs.get(0).getAgents());
+		Thread t = new Thread(exec);
+		threads.add(t);
+		t.start();
+		
+		//System.out.println("frame 0");
+		
+		for(int i = 1; i < combs.size()-1; i+=2)
+		{
+			//System.out.print(i);
+			ArrayList<Agent> agents = new ArrayList<>(combs.get(i).getAgents());
+			//System.out.println(i+1);
+			agents.addAll(combs.get(i+1).getAgents());
+			exec = new MyThreadedExecutor(agents);
+			t = new Thread(exec);
+			threads.add(t);
+			t.start();
+		}
+		
+		exec = new MyThreadedExecutor(combs.get(combs.size()-1).getAgents());
+		t = new Thread(exec);
+		threads.add(t);
+		t.start();
+		//System.out.println("Started " + threads.size() + " threads");
+		
+		for(Thread th : threads)
+		{
+			th.join();
+		}
+	}
+	
+	public void notifyDead(Agent a)
+	{
+		if(a.getBeeType() == AgentType.BROOD_BEE)
+		{
+			a.hostCell.inside = null;
+			a.hostCell.content = CellContent.empty;
+			a.hostCell.notifyAgentLeft(a);
+		}
+		else
+		{
+			a.hostCell.freeCell();			
+		}
+	}
 
 	public void liftFrame(int frameIndex)
 	{

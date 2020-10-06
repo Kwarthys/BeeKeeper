@@ -154,18 +154,22 @@ public class StimuliMap
 		
 		for(Stimulus s : smells)
 		{
-			double otherCoef = StimulusFactory.getPropag(s);
-			double ownCoef = 1-otherCoef;
+			//double otherCoef = StimulusFactory.getPropag(s);
+			//double ownCoef = 1-otherCoef;
+			double ownCoef = StimulusFactory.getPropag(s);
+			double otherCoef = 1-ownCoef;
+			
+			//System.out.println(map1.getAmount(Stimulus.EthyleOleate) + " vs " + map2.getAmount(Stimulus.EthyleOleate));
 
 			double newAmount1 = ownCoef * map1.getAmount(s) + otherCoef * map2.getAmount(s);
 			double newAmount2 = ownCoef * map2.getAmount(s) + otherCoef * map1.getAmount(s);
 			
-			/*
+			
 			//DEBUG
-			System.out.println("\nContact");
-			System.out.println("From " + map1.getAmount(s) + " to " + newAmount1);
-			System.out.println("From " + map2.getAmount(s) + " to " + newAmount2);
-			*/
+			//System.out.println("\nContact");
+			//System.out.println("From " + map1.getAmount(s) + " to " + newAmount1);
+			//System.out.println("From " + map2.getAmount(s) + " to " + newAmount2);
+			
 			
 			map1.setAmount(s, newAmount1);
 			map2.setAmount(s, newAmount2);

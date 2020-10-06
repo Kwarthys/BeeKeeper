@@ -36,6 +36,7 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
 			public void execute() {
+				//System.out.println(agentServices.getID() + " Entering");
 				agentServices.enterHive();
 				c=0;
 			}
@@ -47,9 +48,10 @@ public class ForagerTask extends Task {
 		});
 		
 		//Foraging outside
-		this.rootActivity.addTaskNode(new Action(20,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(200,0,agentServices) {
 			@Override
 			public void execute() {
+				//System.out.println(agentServices.getID() + " go forage");
 				back = true;
 			}
 			
@@ -60,9 +62,10 @@ public class ForagerTask extends Task {
 		});
 		
 		//Go Out
-		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
 			@Override
 			public void execute() {
+				//System.out.println(agentServices.getID() + " MovingOut");
 				ForagerTask.this.motivated = false;
 				back = false;
 				if(!agentServices.tryMoveDown(true))

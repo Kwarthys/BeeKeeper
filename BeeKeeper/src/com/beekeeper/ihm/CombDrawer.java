@@ -65,7 +65,7 @@ public class CombDrawer extends JPanel{
 		paintActors(g);
 
 		g.setColor(Color.white);
-		g.drawString(String.valueOf(this.agents.size()) + " Adult bees.", 0, 20);
+		g.drawString(String.valueOf(this.agents.size()) + " bees.", 0, 20);
 
 		g.dispose();
 	}
@@ -73,9 +73,9 @@ public class CombDrawer extends JPanel{
 	protected void paintPheromones(Graphics g)
 	{
 		//for(StimuliTile st : stimuliManagerServices.getTiles())
-		
+
 		double amounts[] = stimuliManagerServices.getAmountsFor(drawnStimulus);
-		
+
 		Dimension size = stimuliManagerServices.getSize();
 		for(int i = 0; i < size.width * size.height; ++i)
 		{
@@ -109,7 +109,7 @@ public class CombDrawer extends JPanel{
 
 			Point p = fromLinearToHex(new Point(x,y));
 
-			int cap = 4;
+			int cap = 500;
 			int s = capColor(sA, cap);
 
 			p.x -= CELL_SIZE/2;
@@ -117,7 +117,7 @@ public class CombDrawer extends JPanel{
 
 			g.setColor(new Color(s,s,s));
 			g.fillOval((int)(p.x*zoom), (int)(p.y*zoom), 2*CELL_SIZE,2*CELL_SIZE);
-			
+
 			/*
 			p.y *= 2;
 			p.x *= 5;
@@ -125,7 +125,7 @@ public class CombDrawer extends JPanel{
 
 			g.setColor(Color.WHITE);
 			g.drawString(String.valueOf((int)(sA)), p.x, p.y);
-			*/
+			 */
 		}
 	}
 
@@ -179,42 +179,44 @@ public class CombDrawer extends JPanel{
 		{
 			if(a!=null)
 			{
-				Point p = a.getPosition();
-				if(p!=null && a.getHunger() > 0)
-				{
-					boolean drawing = true;
-					if(drawnTasks.compareTo("All") != 0)
+				if(a.getBeeType() != AgentType.BROOD_BEE)
+				{				
+					Point p = a.getPosition();
+					if(p!=null && a.getHunger() > 0)
 					{
-						if(a.getBeeType() == AgentType.ADULT_BEE)
+						boolean drawing = true;
+						if(drawnTasks.compareTo("All") != 0)
 						{
-							drawing = drawnTasks.compareTo(((WorkingAgent)a).getTaskName()) == 0;
-						}
-					}
-
-					if(drawing)
-					{
-						p = fromLinearToHex(p);
-
-						int x = p.x;
-						int y = p.y;
-
-						int e = 255 - (int)(a.getHunger() * 255);
-						if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:1]");
-						else
-						{
-							if(a.getBeeType() == AgentType.QUEEN)
+							if(a.getBeeType() == AgentType.ADULT_BEE)
 							{
-								g.setColor(Color.WHITE);
-								g.fillRect((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom*1.5), (int)(CELL_SIZE*2/3*zoom*1.5));	
+								drawing = drawnTasks.compareTo(((WorkingAgent)a).getTaskName()) == 0;
 							}
+						}
+
+						if(drawing)
+						{
+							p = fromLinearToHex(p);
+
+							int x = p.x;
+							int y = p.y;
+
+							int e = 255 - (int)(a.getHunger() * 255);
+							if(e > 255 || e < 0)System.err.println(a.getHunger() + " should be in [0:1]");
 							else
 							{
-								g.setColor(new Color(255,255-e,0));
-								g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));						
+								if(a.getBeeType() == AgentType.QUEEN)
+								{
+									g.setColor(Color.WHITE);
+									g.fillRect((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom*1.5), (int)(CELL_SIZE*2/3*zoom*1.5));	
+								}
+								else
+								{
+									g.setColor(new Color(255,255-e,0));
+									g.fillOval((int)((x-CELL_SIZE/3)*zoom),(int)((y-CELL_SIZE/3)*zoom), (int)(CELL_SIZE*2/3*zoom), (int)(CELL_SIZE*2/3*zoom));						
+								}
 							}
 						}
 					}
-
 				}
 			}
 		}

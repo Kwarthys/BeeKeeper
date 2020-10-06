@@ -34,19 +34,31 @@ public class ModelParameters
 	public static boolean BYPASS_MOTIVATION = false;
 	public static boolean BYPASS_PHYSIOLOGY = false;
 	
-	public static boolean UI_ENABLED = false;
+	public static boolean UI_ENABLED = true;
 	
-	public static final double secondToTimeStepCoef = 1;
+	public static final double secondToTimeStepCoef = 2;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 500;//1/secondToTimeStepCoef//100
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 0;//1/secondToTimeStepCoef//100
 	/*****************************/
 	
 
+	/*** CHEATSHEET ***/
+	private static final int SECOND = (int) (secondToTimeStepCoef);
+	private static final int MINUTE = (int) (60 * SECOND);
+	private static final int HOUR = (int) (60 * MINUTE);
+	private static final int DAY = (int) (24 * HOUR);
+	/******************/
+	
+	//Normal age (nurse) go a year, foraging go 30days, at 20+10 rouglhy. 11months->11days while foraging (*30)
+	public static int foragingAgePenalty = 30;
+	public static int maxTimestepAge = (int) (/*1year*/ 364 * DAY / SIMU_ACCELERATION);
+	public static int timestepLarvaPop = (int)(/*20days*/ 20 * DAY / SIMU_ACCELERATION);
+
 	//Free 1957 : Tranmission of food between worker -> Empty stomach after 8ish hours of starvation
-	public static final double HUNGER_INCREMENT = 1 / (60 * 60 * 8 * secondToTimeStepCoef) * SIMU_ACCELERATION;
+	public static final double HUNGER_INCREMENT = 1 / (8 * HOUR) * SIMU_ACCELERATION;
 	
 	//Huang & Otis 1991 - Inspection and feeding ... fed every ~35min
-	public static final double LARVAE_HUNGER_INCREMENT = 0.5 / (35 * 60 * secondToTimeStepCoef) * SIMU_ACCELERATION;
+	public static final double LARVAE_HUNGER_INCREMENT = 0.5 / (35 * MINUTE) * SIMU_ACCELERATION;
 	
 	public static final double MOTIVATION_STEP = 0.01; //ACCELERATION ? maybe not
 	
@@ -58,12 +70,15 @@ public class ModelParameters
 	public static final double WORKER_FEEDING_MEANDURATION = Math.max(1, 60 / SIMU_ACCELERATION); //Estimated
 	
 	//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim 0.8 at 5 days to compensate EO effects
-	public static final double HJ_INCREMENT = 0.8 / (5 * 24 * 60 * 60 * secondToTimeStepCoef) * SIMU_ACCELERATION;
+	public static final double HJ_INCREMENT = 0.8 / (5 * DAY) * SIMU_ACCELERATION;
 	
 	//Esters usually have 16hours so we'll say that for now
-	public static final double ETHYLE_OLEATE_HALFLIFE = 16 * 60 * 60 / SIMU_ACCELERATION;
+	public static final double ETHYLE_OLEATE_HALFLIFE = 16 * HOUR / SIMU_ACCELERATION;
 	//No idea of even what to ask google or biologists for that
 	public static final double ETHYLE_OLEATE_TRANSMISSIBILITY = Math.max(1, 60 / SIMU_ACCELERATION);
+
+	/* 1 egg per minut */
+	public static final double LAYEGG_MEANDURATION = MINUTE / SIMU_ACCELERATION;
 	
 	public static final double getEthyleOleateEmitedByHJ(double hjTiter)
 	{
@@ -82,10 +97,10 @@ public class ModelParameters
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static int NUMBER_FRAMES = 3;
-	public static int NUMBER_BEES = 6000;
+	public static int NUMBER_FRAMES = 10;
+	public static int NUMBER_BEES = 40000;
 	public static int NUMBER_LARVAE = 500;
-	public static int SIMU_LENGTH = (int) (24 * 60 * 60 * secondToTimeStepCoef);
+	public static int SIMU_LENGTH = HOUR;
 	public static StartMode startMode = StartMode.Random;
 	
 	public static double getStartingBeeHJTiter()
@@ -100,6 +115,10 @@ public class ModelParameters
 		default:
 			return Math.random();
 		}		
+	}
+
+	public static int getAgeFromStartingHJ(double hjTiter) {
+		return (int) (hjTiter * 20 * 24 * 60 * 60 * secondToTimeStepCoef);
 	}
 	
 	/*****************************/

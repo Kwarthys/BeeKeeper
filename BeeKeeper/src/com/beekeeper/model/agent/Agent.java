@@ -9,11 +9,14 @@ import com.beekeeper.utils.IDManager;
 
 public abstract class Agent
 {	
-	private double energy;
+	protected int age = 0;
+	protected int activeAge = 0;
+	
+	private double energy = 1;
 	
 	protected int ID;
 	
-	protected double hunger = Math.random() * 0.5;
+	protected double hunger = 0;
 	public double getHunger() {return hunger;}	
 	protected boolean receivingFood = false;
 	

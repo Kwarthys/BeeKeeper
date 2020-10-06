@@ -6,22 +6,19 @@ import com.beekeeper.model.agent.Agent;
 
 public class MyThreadedExecutor implements Runnable {
 	
-	private int startIndex;
-	private int stopIndex;
 	private ArrayList<Agent> agentList;
 	
-	public MyThreadedExecutor(ArrayList<Agent> agentList, int startIndex, int stopIndex)
+	public MyThreadedExecutor(ArrayList<Agent> agentList)
 	{
-		this.startIndex = startIndex;
-		this.stopIndex = stopIndex;
 		this.agentList = agentList;
 	}
 
 	@Override
 	public void run()
 	{
-		for(int i = startIndex; i < stopIndex; ++i)
+		for(int i = 0; i < agentList.size(); ++i)
 		{
+			//System.out.println("Living " + agentList.get(i).getStringName());
 			agentList.get(i).live();
 		}
 	}

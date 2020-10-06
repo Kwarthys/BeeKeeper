@@ -53,4 +53,7 @@ public class TestAgent extends WorkingAgent {
 		return "TestAgent "+ID;
 	}
 
+	@Override
+	protected void initPhysiology(boolean randomInit) {}
+
 }

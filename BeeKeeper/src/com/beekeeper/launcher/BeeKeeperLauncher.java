@@ -1,8 +1,6 @@
 package com.beekeeper.launcher;
 
 import com.beekeeper.controller.MainController;
-import com.beekeeper.model.stimuli.Stimulus;
-import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.parameters.ModelParameters;
 
 public class BeeKeeperLauncher {
@@ -11,7 +9,7 @@ public class BeeKeeperLauncher {
 	{	
 		System.setProperty("sun.java2d.opengl", "true");
 		long start = System.nanoTime();
-		System.out.println(StimulusFactory.getPropag(Stimulus.EthyleOleate));
+		//System.out.println("propag: " + StimulusFactory.getPropag(Stimulus.EthyleOleate));
 		new MainController();
 		long progTime = (System.nanoTime() - start)/1000000000;
 		long simuTime = (long) (ModelParameters.SIMU_LENGTH / ModelParameters.secondToTimeStepCoef);

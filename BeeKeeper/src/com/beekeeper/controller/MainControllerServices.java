@@ -1,8 +1,10 @@
 package com.beekeeper.controller;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentStateSnapshot;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CombCell;
@@ -17,6 +19,8 @@ public interface MainControllerServices
 	public CombCell askLandingZone();
 
 	public void notifyWindowClosed();
+	
+	public void notifyDeath(Agent a);
 
 	public void notifyAgentContact(int id1, int id2, double amount);
 	public HashMap<Integer, Integer> getAgentContacts();
@@ -37,4 +41,11 @@ public interface MainControllerServices
 	public ArrayList<AgentStateSnapshot> getAllAdults();
 	
 	public void setNumberOfSecondsToGoFast(int seconds);
+	
+	public boolean isFastForward();
+
+	public void spawnBeeAt(int combID, Point position);
+
+	public void notifyLiftoff(Agent agent);
+	public void notifyLanding(Agent agent);
 }

@@ -26,6 +26,11 @@ public class QueenBee extends WorkingAgent {
 	}
 
 	@Override
+	protected void initPhysiology(boolean randomInit) {
+		
+	}
+
+	@Override
 	protected void advanceMetabolism()
 	{
 		
