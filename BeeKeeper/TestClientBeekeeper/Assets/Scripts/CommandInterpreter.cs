@@ -8,6 +8,8 @@ public class CommandInterpreter : MonoBehaviour
     public HiveModel model;
     public ContactGrapherRetriever contactRetriever;
 
+    public FrameManager frameManager;
+
     public void postOrder(NetCommand command)
     {
         List<int> ids;
@@ -16,6 +18,16 @@ public class CommandInterpreter : MonoBehaviour
 
         switch (command.command)
         {
+            case "Restarted":
+            case "Started":
+                int[] parsedArray = new int[data.Length];
+                for (int i = 0; i < data.Length; ++i)
+                {
+                    parsedArray[i] = int.Parse(data[i]);
+                }
+                frameManager.registerNewInit(parsedArray);
+                break;
+
             case "AGENTS":
                 ts = new List<Vector3>();
                 ids = new List<int>();
@@ -26,6 +38,7 @@ public class CommandInterpreter : MonoBehaviour
                     ids.Add(int.Parse(data[i]));
                 }
                 model.registerOrder(new UpdateOrder(ts, ids));
+                //Debug.Log("recieved agent update");
                 break;
 
             case "FORAGERS":
@@ -40,7 +53,6 @@ public class CommandInterpreter : MonoBehaviour
                 break;
 
             case "CONTENT":
-
                 ids = new List<int>();
                 List<int> codes = new List<int>();
                 List<int> quantities = new List<int>();
@@ -55,26 +67,37 @@ public class CommandInterpreter : MonoBehaviour
                 break;
 
             case "STATES":
-
                 ids = new List<int>();
+                List<int> ages = new List<int>();
                 List<float> jhAmounts = new List<float>();
                 List<string> taskNames = new List<string>();
 
-                for (int i = 0; i < data.Length; i+=3)
+                for (int i = 0; i < data.Length; i+=4)
                 {
                     ids.Add(int.Parse(data[i]));
-                    jhAmounts.Add(float.Parse(data[i + 1], CultureInfo.InvariantCulture));
-                    taskNames.Add(data[i + 2]);
+                    ages.Add(int.Parse(data[i + 1]));
+                    jhAmounts.Add(float.Parse(data[i + 2], CultureInfo.InvariantCulture));
+                    taskNames.Add(data[i + 3]);
                 }
-                model.registerStatusUpdate(new UpdateStatus(int.Parse(command.param),  ids, jhAmounts, taskNames));
+                model.registerStatusUpdate(new UpdateStatus(int.Parse(command.param),  ids, jhAmounts, taskNames, ages));
                 break;
 
             case "CONTACTS":
-                Debug.Log(command.command + " " + command.data);
+                ids = new List<int>();
+                List<int> amounts = new List<int>();
+
+                for (int i = 0; i < data.Length; i+=2)
+                {
+                    ids.Add(int.Parse(data[i]));
+                    amounts.Add(int.Parse(data[i+1]));
+                }
+
+                model.registerContactUpdate(new UpdateContactOrder(ids, amounts));
+
                 break;
 
             default:
-                Debug.Log("NOT INTERPRETED : " + command.command + " " + command.data);
+                Debug.Log("NOT INTERPRETED : " + command.command + " " + command.param + " " + command.data);
                 break;
         }
     }

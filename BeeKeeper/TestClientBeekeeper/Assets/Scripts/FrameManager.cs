@@ -9,6 +9,9 @@ public class FrameManager : MonoBehaviour
 
     private List<FrameBehaviour> frames = new List<FrameBehaviour>();
 
+    private volatile bool registeredInit = false;
+    private volatile int[] registeredInitParams;
+
     public void treatOrder(UpdateContent order)
     {
         CombPointCloud cpc = getCloudOfId(order.combID);
@@ -27,9 +30,9 @@ public class FrameManager : MonoBehaviour
         if(cpc == null)
         {
             //Spawn it
+            //Debug.LogError("Shouldn't have to create a frame"); this can happen at start, but is quickly overriden by the correct stuff
             int fid = combId / 2;
-            FrameBehaviour f = Instantiate(framePrefab, new Vector3(0, 0, -fid * 0.1f), Quaternion.identity).GetComponent<FrameBehaviour>();
-            f.id = fid;
+            FrameBehaviour f = spawnAFrame(fid);
 
             cpc = f.getCPC(combId);
 
@@ -37,6 +40,55 @@ public class FrameManager : MonoBehaviour
         }
         return cpc;
     }
+
+    public void registerNewInit(int[] initParams)
+    {
+        registeredInit = true;
+        registeredInitParams = initParams;
+    }
+
+    private void Update()
+    {
+        if(registeredInit)
+        {
+            registeredInit = false;
+            initialiseWith(registeredInitParams);
+        }
+    }
+
+    private void initialiseWith(int[] combIDs)
+    {
+        foreach(FrameBehaviour f in frames)
+        {
+            Destroy(f.gameObject);
+        }
+
+        frames.Clear();
+
+        for(int i = 0; i < combIDs.Length; i+=2)
+        {
+            FrameBehaviour f = spawnAFrame(combIDs[i] / 2);
+
+            if(combIDs[i] > combIDs[i+1])
+            {
+                f.transform.Rotate(Vector3.up, 180, Space.World);
+            }
+
+            //Debug.Log("Spanwed frame" + combIDs[i] / 2 + " at pos " + (frames.Count));
+
+            frames.Add(f);
+        }
+    }
+
+    
+    private FrameBehaviour spawnAFrame(int id)
+    {
+        FrameBehaviour f = Instantiate(framePrefab, new Vector3(0, 0, -id * 0.1f), Quaternion.identity).GetComponent<FrameBehaviour>();
+        f.id = id;
+
+        return f;
+    }
+    
 
     public Vector3 getAbsolutePosOf(Vector3 relativePos)
     {

@@ -30,6 +30,10 @@ public class NetworkManager {
 	public void registerControllerServices(MainControllerServices services)
 	{
 		this.controlerServices = services;
+		tcpHandlers.forEach((tcpc) -> tcpc.registerControllerServices(services));
+		udpConnected.forEach((InetAddress a, UDPClientHandler client) -> {
+			client.registerControllerServices(services);
+		});
 	}
 	
 	public NetworkManager()

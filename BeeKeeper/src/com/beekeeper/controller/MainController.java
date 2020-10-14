@@ -21,12 +21,11 @@ import com.beekeeper.model.comb.CombManager;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.tasks.Task;
-import com.beekeeper.network.NetworkManager;
 import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
 
 public class MainController
-{	
+{
 	ArrayList<CombDrawer> drawers = new ArrayList<CombDrawer>();
 
 	private ArrayList<Comb> combs = new ArrayList<Comb>();
@@ -38,20 +37,22 @@ public class MainController
 	private BeeWindow window;
 
 	private AgentFactory agentFactory;
-	
+
 	private ArrayList<Agent> foragers = new ArrayList<>();
 	private ArrayList<Integer> deadAdults = new ArrayList<>();
 
 	//private int simuStep = 0;
 
 	private boolean closed;
-	
+
 	private int timeStepPauseToIgnore = 0;
-	
+
 	private volatile int turnIndex = -1;
-	
+
 	private HashMap<Integer, Integer> contactsQuantitiesByIndex = new HashMap<>();
 	private boolean contactsLocked = false;
+	
+	private volatile boolean restartAsked = false;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
 
@@ -101,6 +102,14 @@ public class MainController
 			{
 				deadAdults.add(a.getID());				
 			}
+		}
+		
+		@Override
+		public void askRestart()
+		{
+			//MainController.this.restartAsked = true;
+			restartAsked = true;
+			System.out.println("RestartAsked on " + this);
 		}
 
 		@Override
@@ -238,10 +247,16 @@ public class MainController
 			this.window = new BeeWindow(g,drawers, this.controlServices);
 			closed = false;			
 		}
-		
-		NetworkManager nm = new NetworkManager(controlServices);
-
-		programLoop();
+	}
+	
+	public MainControllerServices getServices()
+	{
+		return controlServices;
+	}
+	
+	public boolean start()
+	{
+		boolean restart = programLoop();
 
 		if(this.window != null)
 		{
@@ -249,7 +264,6 @@ public class MainController
 		}
 
 		this.logger.closing();
-		nm.closing();
 
 		try {
 			System.out.println("Waiting");
@@ -258,18 +272,9 @@ public class MainController
 			e.printStackTrace();
 		}
 
-		/*
-		while(!logger.threadFinished())
-		{
-			System.out.println("Waiting");
-			try {
-				Thread.sleep(500);//30
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		 */
 		System.out.println("expe done");
+		
+		return restart;
 	}
 	
 	private void registerContactFor(int agentIndex, int quantity)
@@ -355,7 +360,7 @@ public class MainController
 		logger.log(sb.toString());
 	}
 
-	private void programLoop()
+	private boolean programLoop()
 	{
 		boolean DEBUGTIME = false;
 		boolean MONITORTIME = true;
@@ -377,11 +382,11 @@ public class MainController
 		System.out.println("|");
 
 		logTurn("turnIndex", "beeID", "TaskName", "Physio");
-		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed)
+		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed && !restartAsked)
 		{
 			long startLoopTime = System.nanoTime();
 			
-			//System.out.println("turn " + turnIndex);
+			System.out.println("turn " + turnIndex + "services:" + getServices() + " | " + agentFactory.allAgents.size() + " agents.");
 			
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{
@@ -491,5 +496,8 @@ public class MainController
 			}
 		}
 		System.out.println();
+		
+		return restartAsked;
+		
 	}
 }

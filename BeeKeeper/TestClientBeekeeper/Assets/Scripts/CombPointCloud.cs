@@ -17,8 +17,8 @@ public class CombPointCloud : MonoBehaviour
 
     private void OnValidate()
     {
-        init();
-        createMesh();
+        //init();
+        //createMesh();
     }
 
     private void Start()

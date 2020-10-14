@@ -25,4 +25,10 @@ public class IDManager : MonoBehaviour
 
         return currentMaxIndex++;
     }
+
+    public void reinit()
+    {
+        currentMaxIndex = 0;
+        freedIds.Clear();
+    }
 }

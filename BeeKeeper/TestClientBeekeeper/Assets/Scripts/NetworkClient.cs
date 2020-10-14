@@ -6,26 +6,14 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
-using Unity.Jobs;
-using Unity.Collections;
 
 public class NetworkClient : MonoBehaviour
 {
-    public CommandInterpreter commander;
+    public CommandInterpreter commandInterpreter;
 
     IPEndPoint ip;
     Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     UdpClient udpC;
-
-    private List<Vector3> targets = new List<Vector3>();
-
-    /*
-    NativeArray<bool> flag;
-    NativeArray<bool> recieverRun;
-    NativeList<float> targets;
-    
-    JobHandle recieverHandle;
-    */
 
     void Start()
     {
@@ -68,31 +56,24 @@ public class NetworkClient : MonoBehaviour
 
         //Debug.Log("New Command : c:" + c.command + ".p:" + c.param + ".d:" + c.data);
 
-        commander.postOrder(c);
-
-        //Debug.Log("Parse took " + (DateTime.Now - t));
-
-        //pointCloudReferencer.registerOrder(new UpdateOrder(startingIndex, targets));
+        commandInterpreter.postOrder(c);
     }
 
 
     public void OnApplicationQuit()
     {
-        //recieverRun[0] = false;
         s.Send(Encoding.Default.GetBytes("CLOSE"));
-        //targets.Dispose();
-        //flag.Dispose();
     }
 
     private void readTCP()
     {
         while(true)
         {
+            //Debug.Log("Waiting TCP");            
             byte[] rawData = new byte[8192];
             s.Receive(rawData);
             string data = Encoding.Default.GetString(rawData);
             parseModel(data);
-            //Debug.Log("fromTCP : " + data.Length + " : " + data);            
         }
     }
 

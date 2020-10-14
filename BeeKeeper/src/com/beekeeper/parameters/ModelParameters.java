@@ -38,7 +38,7 @@ public class ModelParameters
 	
 	public static final double secondToTimeStepCoef = 2;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 0;//1/secondToTimeStepCoef//100
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 500;//1/secondToTimeStepCoef//100
 	/*****************************/
 	
 
@@ -97,10 +97,10 @@ public class ModelParameters
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static int NUMBER_FRAMES = 10;
-	public static int NUMBER_BEES = 40000;
-	public static int NUMBER_LARVAE = 500;
-	public static int SIMU_LENGTH = HOUR;
+	public static int NUMBER_FRAMES = 2;
+	public static int NUMBER_BEES = 2000;
+	public static int NUMBER_LARVAE = 300;
+	public static int SIMU_LENGTH = 20*MINUTE;
 	public static StartMode startMode = StartMode.Random;
 	
 	public static double getStartingBeeHJTiter()

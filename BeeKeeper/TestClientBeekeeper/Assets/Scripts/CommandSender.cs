@@ -18,9 +18,8 @@ public class CommandSender : MonoBehaviour
         sender.sendTCP(request);
     }
 
-    public void askForContacts()
+    public void sendString(string s)
     {
-        string request = "Contacts";
-        sender.sendTCP(request);
+        sender.sendTCP(s);
     }
 }

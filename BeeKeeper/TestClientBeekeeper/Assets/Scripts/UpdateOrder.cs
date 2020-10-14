@@ -14,6 +14,18 @@ public class UpdateOrder
     }
 }
 
+public class UpdateContactOrder
+{
+    public List<int> ids;
+    public List<int> amounts;
+
+    public UpdateContactOrder(List<int> ids, List<int> amounts)
+    {
+        this.ids = ids;
+        this.amounts = amounts;
+    }
+}
+
 public class UpdateContentOrder
 {
     public int combID;
@@ -36,15 +48,16 @@ public class UpdateStatus
     public List<int> ids;
     public List<float> jhAmounts;
     public List<string> taskNames;
-    //real age?
+    public List<int> ages;
 
     public int timeStep;
 
-    public UpdateStatus(int timeStep, List<int> ids, List<float> JHAmounts, List<string> taskName)
+    public UpdateStatus(int timeStep, List<int> ids, List<float> JHAmounts, List<string> taskName, List<int> ages)
     {
         this.ids = ids;
         this.jhAmounts = JHAmounts;
         this.taskNames = taskName;
+        this.ages = ages;
 
         this.timeStep = timeStep;
     }

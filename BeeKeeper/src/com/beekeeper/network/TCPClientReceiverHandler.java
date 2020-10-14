@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
+import com.beekeeper.model.comb.Comb;
 
 public class TCPClientReceiverHandler implements Runnable {
 
@@ -19,12 +19,14 @@ public class TCPClientReceiverHandler implements Runnable {
 	private PrintWriter writer;
 	private BufferedInputStream reader;
 
-	private MainControllerServices services;
+	private volatile MainControllerServices services;
 
 	public TCPClientReceiverHandler(Socket client, NetworkManager serverManager, MainControllerServices services) {
 		socket = client;
 		this.serverManager = serverManager;
 		this.services = services;
+		
+		serverManager.registerTCPHandler(this);
 	}
 
 	@Override
@@ -43,18 +45,39 @@ public class TCPClientReceiverHandler implements Runnable {
 					
 					System.out.println("TREATING");
 					
+					StringBuffer sb;
+					
 					switch(request.header)
 					{
 						case "STARTUDP":
 							System.out.println("Creating udp");
 							serverManager.createUDPClientHandler(socket.getInetAddress());
-							writer.write("Started");
+							sb = new StringBuffer();
+							sb.append("Started -1");
+							for(Comb c : services.getCombs())
+							{
+								sb.append(" ");
+								sb.append(c.ID);
+							}
+							writer.write(sb.toString());
 							break;
 							
 						case "CLOSE":
 							connectionClosed = true;
 							serverManager.closeUDPClientHandler(socket.getInetAddress());
 							writer.write("ADIEU");
+							break;
+							
+						case "RESTART":
+							sb = new StringBuffer();
+							sb.append("Restarted -1");
+							for(Comb c : services.getCombs())
+							{
+								sb.append(" ");
+								sb.append(c.ID);
+							}
+							writer.write(sb.toString());
+							services.askRestart();
 							break;
 							
 						case "FrUP":
@@ -88,7 +111,7 @@ public class TCPClientReceiverHandler implements Runnable {
 							ArrayList<Integer> deads = services.getTheDead();
 							if(deads.size() > 0)
 							{
-								StringBuffer sb = new StringBuffer();
+								sb = new StringBuffer();
 								sb.append("DEATHS -1 ");
 								for(Integer id : deads)
 								{
@@ -151,6 +174,11 @@ public class TCPClientReceiverHandler implements Runnable {
 			}
 			data = request.split(" ", 2)[1].split(" ");
 		}
+	}
+
+	public void registerControllerServices(MainControllerServices services)
+	{
+		this.services = services;
 	}
 
 }

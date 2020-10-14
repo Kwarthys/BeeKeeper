@@ -20,6 +20,8 @@ public interface MainControllerServices
 
 	public void notifyWindowClosed();
 	
+	public void askRestart();
+	
 	public void notifyDeath(Agent a);
 
 	public void notifyAgentContact(int id1, int id2, double amount);

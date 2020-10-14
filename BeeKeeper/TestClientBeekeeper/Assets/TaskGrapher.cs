@@ -1,23 +1,29 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TaskGrapher : MonoBehaviour
 {
     private List<TaskGraphData> data = new List<TaskGraphData>();
+    private MyLockedList<UpdateStatus> asyncDataList = new MyLockedList<UpdateStatus>();
 
     private int nextIndex = 0;
 
     public MyMesh3DGraph grapher;
 
-    private bool lockToken = false;
-
     private List<string> allKnownTaskNames = new List<string>();
+
+    private bool initAsked = false;
 
     public void Update()
     {
-        if (lockToken) return;
-        lockToken = true;
+        //float startTreat = Time.realtimeSinceStartup;
+        while(asyncDataList.tryReadFifo(out UpdateStatus status))
+        {
+            treatData(status);
+        }
+        //Debug.Log("TGD treatement took " + (Time.realtimeSinceStartup - startTreat) +"s");
 
         int index = 0;
 
@@ -41,8 +47,7 @@ public class TaskGrapher : MonoBehaviour
             index += tgd.tasks.Values.Count;
         }
 
-
-        lockToken = false;
+        //Debug.Log("TGD update took " + (Time.realtimeSinceStartup - startTreat) + "s");
     }
 
     private Vector3[] buildPointsWithData(int pointIndex, TaskGraphData taskData)
@@ -72,22 +77,34 @@ public class TaskGrapher : MonoBehaviour
         return pointList.ToArray();
     }
 
-    public void postData(UpdateStatus status)
+    private void treatData(UpdateStatus status)
     {
-        while (lockToken) { }
-        lockToken = true;
+        if (initAsked)
+        {
+            if(status.timeStep > 10)
+            {
+                Debug.Log("Ejecting T" + status.timeStep);
+                return;
+            }
+            else
+            {
+                initAsked = false;
+            }
+        }
 
-
+        //Debug.Log("TGD recieved: " + status.timeStep);
+        
+        //Retrieving correct data to update
         TaskGraphData graphData;
-        if(data.Count == 0)
+        if (data.Count == 0)
         {
             graphData = new TaskGraphData(status.timeStep, nextIndex++);
         }
-        else if(data[data.Count-1].timestep == status.timeStep)
+        else if (data[data.Count - 1].timestep == status.timeStep)
         {
             graphData = data[data.Count - 1];
         }
-        else if(data[data.Count - 1].timestep < status.timeStep)
+        else if (data[data.Count - 1].timestep < status.timeStep)
         {
             graphData = new TaskGraphData(status.timeStep, nextIndex++);
             data[data.Count - 1].ready = true;
@@ -101,9 +118,9 @@ public class TaskGrapher : MonoBehaviour
 
 
         //TREAT DATA
-        for(int i = 0; i < status.ids.Count; ++i)
+        for (int i = 0; i < status.ids.Count; ++i)
         {
-            if(!graphData.tasks.ContainsKey(status.taskNames[i]))
+            if (!graphData.tasks.ContainsKey(status.taskNames[i]))
             {
                 graphData.tasks[status.taskNames[i]] = 0;
             }
@@ -112,8 +129,11 @@ public class TaskGrapher : MonoBehaviour
         }
 
         data.Add(graphData);
+    }
 
-        lockToken = false;
+    public void postData(UpdateStatus status)
+    {
+        asyncDataList.waitAndPost(status);
     }
 
     private void fillTheGaps(TaskGraphData tgd)
@@ -125,6 +145,15 @@ public class TaskGrapher : MonoBehaviour
                 tgd.tasks[taskName] = 0;
             }
         }
+    }
+
+    internal void reinit()
+    {
+        grapher.reinit();
+        nextIndex = 0;
+        data.Clear();
+        asyncDataList.Clear();
+        initAsked = true;
     }
 }
 
