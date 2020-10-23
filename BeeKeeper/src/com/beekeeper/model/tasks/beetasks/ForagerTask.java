@@ -62,7 +62,7 @@ public class ForagerTask extends Task {
 		});
 		
 		//Go Out
-		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(0.1,0,agentServices) {
 			@Override
 			public void execute() {
 				//System.out.println(agentServices.getID() + " MovingOut");

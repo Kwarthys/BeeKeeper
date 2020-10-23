@@ -26,7 +26,7 @@ public class PlayerRayCastExecute : MonoBehaviour
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Interactible item = hit.collider.transform.GetComponent<Interactible>();
+                    Interactible item = hit.collider.transform.GetComponentInParent<Interactible>();
                     if (item != null)
                     {
                         item.interact(this);

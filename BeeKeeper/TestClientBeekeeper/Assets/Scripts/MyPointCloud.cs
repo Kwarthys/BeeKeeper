@@ -11,6 +11,7 @@ public class MyPointCloud : MonoBehaviour
         public Vector3 target;
         public Vector3 origin;
         public float timeAtLastUpdate;
+        public bool enabled = true;
 
         public MyPoint(Vector3 pos)
         {
@@ -40,7 +41,7 @@ public class MyPointCloud : MonoBehaviour
     //Moving points
     private MyPoint[] points = new MyPoint[PointCloudReferencer.cloudMaxSize];
 
-    private int serverRefreshRate = 100;
+    public int serverRefreshRate = 500;
 
     private List<int> indecies = new List<int>();
 
@@ -56,28 +57,35 @@ public class MyPointCloud : MonoBehaviour
         GetComponent<MeshRenderer>().material = new Material(Shader.Find("Custom/PointToSquareShader"));        
     }
 
+    public void disablePointID(int pointID)
+    {
+        points[pointID] = null;
+    }
+
     public void UpdatePointTarget(int pointId, Vector3 newTarget)
     {
         MyPoint thePoint = points[pointId];
 
         if(thePoint == null)
         {
-            points[pointId] = new MyPoint(newTarget);
+            thePoint = new MyPoint(newTarget);
+            points[pointId] = thePoint;
+
             if (newTarget.z == -1)
             {
-                points[pointId].pos = getRandomPosForForaging(pointId);
+                thePoint.pos = getRandomPosForForaging(pointId);
             }
         }
         else
         {
-            points[pointId].target = newTarget;
-            points[pointId].timeAtLastUpdate = Time.time * 1000f;
-            points[pointId].origin = points[pointId].pos;
+            thePoint.target = newTarget;
+            thePoint.timeAtLastUpdate = Time.time * 1000f;
+            thePoint.origin = thePoint.pos;
         }
 
         if (newTarget.z == -1)
         {
-            points[pointId].target = getRandomPosForForaging(pointId);
+            thePoint.target = getRandomPosForForaging(pointId);
             if (pointId % 100 == 0)
             {
                 //Debug.Log("Forager" + pointId + " Target: " + points[pointId].target + " and pos: " + points[pointId].pos);
@@ -92,7 +100,7 @@ public class MyPointCloud : MonoBehaviour
 
     private Vector3 getRandomPosForForaging(int id)
     {
-        return ((Random.onUnitSphere) * 200f + 80f * Vector3.up - points[id].pos).normalized * 2f + points[id].pos;
+        return ((Random.onUnitSphere) * 50f + 5f * Vector3.up - points[id].pos).normalized * 2f + points[id].pos;
     }
 
     private void Update()
@@ -109,7 +117,7 @@ public class MyPointCloud : MonoBehaviour
         
         //Move 'em
         foreach (MyPoint p in points)
-        {    
+        {
             if(p != null)
             {
                 if (p.timeAtLastUpdate != -1)
@@ -121,6 +129,7 @@ public class MyPointCloud : MonoBehaviour
                     if (t > 1)
                     {
                         p.timeAtLastUpdate = -1;
+                        t = 1;
                     }
                     else
                     {
@@ -133,7 +142,9 @@ public class MyPointCloud : MonoBehaviour
             }
         }
 
-        if(indecies.Count < points.Length)
+        mesh.vertices = MyPoint.getPos(points);
+
+        if(indecies.Count < mesh.vertices.Length)
         {
             for(int i = indecies.Count; i < points.Length; ++i)
             {
@@ -141,12 +152,11 @@ public class MyPointCloud : MonoBehaviour
             }
         }
 
-        while(indecies.Count > points.Length)
+        while(indecies.Count > mesh.vertices.Length)
         {
             indecies.RemoveAt(indecies.Count - 1);
         }
 
-        mesh.vertices = MyPoint.getPos(points);
         mesh.SetIndices(indecies, MeshTopology.Points, 0);
     }
 }

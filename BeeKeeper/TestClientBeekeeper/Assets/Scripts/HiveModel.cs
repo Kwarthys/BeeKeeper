@@ -7,17 +7,17 @@ using UnityEngine;
 
 public class HiveModel : MonoBehaviour
 {
-    public PointCloudReferencer pointCloud;
+    //public PointCloudReferencer pointCloud;
 
     public FrameManager frameManager;
 
-    public IDManager idManager;
+    private IDManager idManager = new IDManager();
 
     public CommandSender commandSender;
 
-    //private List<BeeAgent> agents = new List<BeeAgent>();
-
     public Dictionary<int, BeeAgent> theAgents = new Dictionary<int, BeeAgent>();
+
+    //public PointCloudReferencer pointCloud;
 
     private MyLockedList<UpdateOrder> agentOrders = new MyLockedList<UpdateOrder>();
     private MyLockedList<UpdateContentOrder> incContentOrders = new MyLockedList<UpdateContentOrder>();
@@ -59,7 +59,10 @@ public class HiveModel : MonoBehaviour
                     a = new BeeAgent();
                     a.id = updateOrder.targetsIDs[i];
                     a.pos = updateOrder.newTargets[i];
-                    a.pointID = idManager.getNextFreeIndex();
+
+                    //a.pointID = idManager.getNextFreeIndex();
+                    a.pointID = frameManager.getPointIDForPos(a.pos);
+
                     theAgents.Add(updateOrder.targetsIDs[i], a);
 
                     newAgents++;
@@ -67,7 +70,24 @@ public class HiveModel : MonoBehaviour
                 else
                 {
                     a = theAgents[updateOrder.targetsIDs[i]];
+
+                    bool changed = false;
+
+                    if(a.pos.z != updateOrder.newTargets[i].z)
+                    {
+                        //Change of Frame
+                        frameManager.freeFrameIDForPos(a.pos, a.pointID);
+                        a.pointID = frameManager.getPointIDForPos(updateOrder.newTargets[i]);
+
+                        //do something to animate that change, not mandatory tho
+                        changed = true;
+                    }
+
                     a.pos = updateOrder.newTargets[i];
+                    if(changed)
+                    {
+                        a.pos.x = -a.pos.x; //Encoding the change to be detected by the manager
+                    }
                 }
 
                 if (a.pos.z == -1)
@@ -76,12 +96,14 @@ public class HiveModel : MonoBehaviour
                 }
                 else
                 {
-                    targets.Add(frameManager.getAbsolutePosOf(a.pos));
+                    //targets.Add(frameManager.getPosOnFrame(a.pos));
+                    targets.Add(a.pos);
                 }
                 ids.Add(a.pointID);
             }
             //Debug.Log("AgentLoop" + updateOrder.targetsIDs.Count + "(" + newAgents + ") update took " + (Time.realtimeSinceStartup - loopUpdate) * 1000 + "ms.");
-            pointCloud.updatePoints(new UpdateOrder(targets, ids));
+            //pointCloud.updatePoints(new UpdateOrder(targets, ids));
+            frameManager.updateBeePoints(new UpdateOrder(targets, ids));
 
             //if (newAgents != 0) Debug.Log("created " + newAgents + " newAgents / total: " + theAgents.Count);
         }
@@ -191,6 +213,11 @@ public class HiveModel : MonoBehaviour
         return c;
     }
 
+    public void askTimeAcceleration(int seconds)
+    {
+        commandSender.sendAskFFW(seconds);
+    }
+
     public void restartSimulation()
     {
         //Debug.Log("Restarting");
@@ -208,7 +235,7 @@ public class HiveModel : MonoBehaviour
 
         commandSender.sendString("RESTART");
 
-        initAskedForUpdate = 60;
+        initAskedForUpdate = 10;
     }
 }
 

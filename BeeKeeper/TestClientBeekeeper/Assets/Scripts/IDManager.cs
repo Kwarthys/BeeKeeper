@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IDManager : MonoBehaviour
+public class IDManager
 {
     private List<int> freedIds = new List<int>();
 
-    [SerializeField]
     private int currentMaxIndex = 0;
 
     public void freeIndex(int index)

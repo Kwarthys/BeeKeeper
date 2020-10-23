@@ -122,6 +122,10 @@ public class TCPClientReceiverHandler implements Runnable {
 								writer.write(sb.toString());			
 							}
 							break;
+							
+						default:
+							writer.write(request.header + " unknown");
+							break;
 					}				
 					
 					System.out.println("replying to " + request.header);

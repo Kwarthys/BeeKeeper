@@ -168,6 +168,8 @@ public class Comb
 					
 					combManagerServices.switchAgentHostComb(ID, who);
 					
+					//System.out.println("combswitch");
+					
 					return true;
 				}
 			}

@@ -80,8 +80,7 @@ public abstract class Action implements TaskNode {
 	*/
 	protected void advanceTimeStep()
 	{
-		timeSteps++;
-		if(timeSteps >= totalTimeSteps)
+		if(++timeSteps >= totalTimeSteps)
 		{
 			timeSteps = 0;
 			actionOver = true;

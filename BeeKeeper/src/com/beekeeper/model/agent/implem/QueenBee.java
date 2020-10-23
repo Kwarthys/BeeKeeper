@@ -27,13 +27,13 @@ public class QueenBee extends WorkingAgent {
 
 	@Override
 	protected void initPhysiology(boolean randomInit) {
-		
+		age = 0;
 	}
 
 	@Override
 	protected void advanceMetabolism()
 	{
-		
+		//System.out.println(getStringName() + " e:" + getEnergy() + " - " + ModelParameters.QUEEN_TASKS_ENERGYCOSTS);
 	}
 
 	@Override

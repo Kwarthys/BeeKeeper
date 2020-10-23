@@ -18,7 +18,7 @@ public class AskFoodTask extends Task {
 		this.motivated = false;
 		
 		//eating at cell
-		this.rootActivity.addTaskNode(new Action(2, 0, agentServices) {			
+		this.rootActivity.addTaskNode(new Action(6, 0, agentServices) {			
 			@Override
 			public void execute() {
 				agentServices.receiveFood();
@@ -32,7 +32,7 @@ public class AskFoodTask extends Task {
 		});
 		
 		//checking cell
-		this.rootActivity.addTaskNode(new Action(0.5, 0, agentServices) {
+		this.rootActivity.addTaskNode(new Action(2, 0, agentServices) {
 			
 			@Override
 			public void execute() {

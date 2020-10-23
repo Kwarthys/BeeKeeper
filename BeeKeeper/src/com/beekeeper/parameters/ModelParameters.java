@@ -26,7 +26,7 @@ public class ModelParameters
 	/******************************/	
 	
 	/** META-PARAMS **/
-	public static final double SIMU_ACCELERATION = 1;
+	public static final double SIMU_ACCELERATION = 3;
 	/**********************/
 	
 	
@@ -80,6 +80,9 @@ public class ModelParameters
 	/* 1 egg per minut */
 	public static final double LAYEGG_MEANDURATION = MINUTE / SIMU_ACCELERATION;
 	
+	/* want it to be half tired after an hour */
+	public static final double QUEEN_TASKS_ENERGYCOSTS = 1.0/2.0/HOUR;
+	
 	public static final double getEthyleOleateEmitedByHJ(double hjTiter)
 	{
 		return hjTiter * 0.000000004 * SIMU_ACCELERATION; //Calculated with google sheet to match biological observation : https://docs.google.com/spreadsheets/d/1G8Npmpj3zvKJWzIT85aO0ulNe2J9UrzrpwM7wehnqgA/edit?usp=sharing
@@ -97,10 +100,10 @@ public class ModelParameters
 	
 	public static enum StartMode{Old, NewBorn, Random;}
 	
-	public static int NUMBER_FRAMES = 2;
-	public static int NUMBER_BEES = 2000;
+	public static int NUMBER_FRAMES = 1;
+	public static int NUMBER_BEES = 10;
 	public static int NUMBER_LARVAE = 300;
-	public static int SIMU_LENGTH = 20*MINUTE;
+	public static int SIMU_LENGTH = 20*HOUR;
 	public static StartMode startMode = StartMode.Random;
 	
 	public static double getStartingBeeHJTiter()

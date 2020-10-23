@@ -6,7 +6,6 @@ using UnityEngine;
 public class CommandInterpreter : MonoBehaviour
 {
     public HiveModel model;
-    public ContactGrapherRetriever contactRetriever;
 
     public FrameManager frameManager;
 
@@ -46,7 +45,7 @@ public class CommandInterpreter : MonoBehaviour
                 ts = new List<Vector3>();
                 for (int i = 0; i < data.Length; ++i)
                 {
-                    ts.Add(new Vector3(-1, -1, -1));//foragerCode
+                    ts.Add(new Vector3(0,0, -1));//foragerCode
                     ids.Add(int.Parse(data[i]));
                 }
                 model.registerOrder(new UpdateOrder(ts, ids));

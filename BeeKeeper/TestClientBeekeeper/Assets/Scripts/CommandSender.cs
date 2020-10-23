@@ -22,4 +22,10 @@ public class CommandSender : MonoBehaviour
     {
         sender.sendTCP(s);
     }
+
+    public void sendAskFFW(int seconds)
+    {
+        string request = "FFWD " + seconds.ToString();
+        sender.sendTCP(request);
+    }
 }

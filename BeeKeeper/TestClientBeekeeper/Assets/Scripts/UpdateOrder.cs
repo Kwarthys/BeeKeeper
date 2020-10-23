@@ -12,6 +12,18 @@ public class UpdateOrder
         this.newTargets = newTargets;
         this.targetsIDs = targetsIDs;
     }
+
+    public UpdateOrder()
+    {
+        this.newTargets = new List<Vector3>();
+        this.targetsIDs = new List<int>();
+    }
+
+    public void add(Vector3 target, int ID)
+    {
+        newTargets.Add(target);
+        targetsIDs.Add(ID);
+    }
 }
 
 public class UpdateContactOrder

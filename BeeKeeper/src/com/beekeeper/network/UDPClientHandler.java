@@ -14,6 +14,8 @@ import com.beekeeper.model.agent.AgentStateSnapshot;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.cell.CellContent;
+import com.beekeeper.network.netutils.NetBalancer;
+import com.beekeeper.network.netutils.NetBalancerCallBack;
 import com.beekeeper.parameters.ModelParameters;
 
 public class UDPClientHandler implements Runnable {
@@ -21,13 +23,12 @@ public class UDPClientHandler implements Runnable {
 	private volatile boolean running = true;
 
 	private InetAddress inetAddress;
-	private DatagramSocket udpServer;
-
-	private int index = -1;
-
+	//private DatagramSocket udpServer;
 	private static final int maxAgentCount = 10000;
-	private static final int sendRate = 100;
-
+	private static final int sendRate = 50;
+	
+	private ArrayList<NetBalancer> functions = new ArrayList<>();
+	
 	private volatile MainControllerServices services;
 
 	public void stop()
@@ -37,8 +38,73 @@ public class UDPClientHandler implements Runnable {
 
 	public UDPClientHandler(InetAddress inetAddress, DatagramSocket udpServer, MainControllerServices services) {
 		this.inetAddress = inetAddress;
-		this.udpServer = udpServer;
+		//this.udpServer = udpServer;
 		this.services = services;
+		
+		functions.add(new NetBalancer(new NetBalancerCallBack() {
+			
+			@Override
+			public void call() {
+				try {
+					sendForagerDatagram(udpServer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}, 1,0,true));
+		
+		functions.add(new NetBalancer(new NetBalancerCallBack() {
+			
+			@Override
+			public void call() {
+				try {
+					sendAdultStates(udpServer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, 10,0,false));
+		
+		functions.add(new NetBalancer(new NetBalancerCallBack() {
+			
+			@Override
+			public void call() {
+				try {
+					sendAdultsPositions(udpServer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, 1,0,true));
+		
+		functions.add(new NetBalancer(new NetBalancerCallBack() {
+			
+			@Override
+			public void call() {
+				try {
+					sendFramesContent(udpServer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, 10,3,true));
+		
+		functions.add(new NetBalancer(new NetBalancerCallBack() {
+			
+			@Override
+			public void call() {
+				try {
+					sendAgentContacts(udpServer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, 10,7, false));
 	}
 
 	@Override
@@ -46,53 +112,25 @@ public class UDPClientHandler implements Runnable {
 		System.out.println("UDP Spam started to " + inetAddress);
 		while(running)
 		{
-			try
+			services.waitForTimeStep();
+			
+			boolean ff = services.isFastForward();
+			
+			for(int i = 0; i < functions.size(); ++i)
 			{
-				boolean ff = services.isFastForward();
-
-				/*** FORAGERS ***/
-				if(index%4 == 0 && !ff)
+				NetBalancer n = functions.get(i);
+				if(!(ff && n.affectedByCondition))
 				{
-					//System.out.println(index + " sending FORAGERS");
-					sendForagerDatagram(udpServer);
+					n.call();
 				}
 
-				/*** STATUS ***/
-				if(index%20 == 10)
-				{
-					//System.out.println(index + " sending STATUS");
-					sendAdultStates(udpServer);
+				try {
+					Thread.sleep(sendRate);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-
-				/*** POS ***/
-				if(index%2 == 1 && !ff)
-				{
-					//System.out.println(index + " sending POS");
-					sendAdultsPositions(udpServer);
-				}
-
-				/*** FRAMECONTENT AND CONTACTS***/
-				if(++index%20 == 0)
-				{
-					//System.out.println(index + " sending FRAMECONTENT");
-					sendFramesContent(udpServer);
-					sendAgentContacts(udpServer);
-					index = 0;
-				}
-
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}		
-
-
-			try {
-				Thread.sleep(sendRate);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			}	
 		}
 		System.out.println("UDP Spam stopped to " + inetAddress);
 	}
@@ -100,7 +138,11 @@ public class UDPClientHandler implements Runnable {
 	private void sendForagerDatagram(DatagramSocket udpServer) throws IOException
 	{
 		ArrayList<Integer> foragers = services.getForagers();
-		if(foragers.size() == 0)return;
+		if(foragers.size() == 0)
+		{
+			System.out.println("noForagers to send");
+			return;
+		}
 		StringBuffer foragerData = new StringBuffer();
 		foragerData.append("FORAGERS -1 ");
 		foragerData.append(foragers.get(0));

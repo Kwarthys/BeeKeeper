@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MyMesh3DGraph : MonoBehaviour
 {
@@ -90,7 +91,7 @@ public class MyMesh3DGraph : MonoBehaviour
             curve.color = getColorOfTask(taskName);
 
             GameObject label = Instantiate(legendText, textParentItem);
-            label.GetComponent<Text>().text = taskName;
+            label.GetComponent<TextMeshProUGUI>().text = taskName;
 
             curve.label = label;
             curve.labelXOffset = xTagsGraphOffset;

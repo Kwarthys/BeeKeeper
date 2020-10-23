@@ -39,7 +39,9 @@ public class MainController
 	private AgentFactory agentFactory;
 
 	private ArrayList<Agent> foragers = new ArrayList<>();
+	private ArrayList<Integer> foragersIDS = new ArrayList<>();  //shortcut to avoid thread collapse
 	private ArrayList<Integer> deadAdults = new ArrayList<>();
+	private ArrayList<Agent> newLandings = new ArrayList<>();
 
 	//private int simuStep = 0;
 
@@ -53,6 +55,8 @@ public class MainController
 	private boolean contactsLocked = false;
 	
 	private volatile boolean restartAsked = false;
+	
+	private volatile boolean timeStepOver = false;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
 
@@ -139,9 +143,7 @@ public class MainController
 
 		@Override
 		public ArrayList<Integer> getForagers() {
-			ArrayList<Integer> ids = new ArrayList<>();
-			MainController.this.foragers.forEach((Agent a) -> ids.add(a.getID()));
-			return ids;
+			return foragersIDS;
 		}
 
 		@Override
@@ -219,12 +221,23 @@ public class MainController
 
 		@Override
 		public void notifyLiftoff(Agent agent) {
-			foragers.remove(agent);
+			foragers.add(agent);
+			foragersIDS.add(agent.getID());
 		}
 
 		@Override
 		public void notifyLanding(Agent agent) {
-			foragers.add(agent);
+			//foragers.remove(agent);
+			newLandings.add(agent);
+			foragersIDS.remove(foragersIDS.indexOf(agent.getID()));
+		}
+
+		@Override
+		public void waitForTimeStep()
+		{
+			while(!timeStepOver && !restartAsked);
+			timeStepOver = false;
+			return;
 		}
 	};
 
@@ -386,7 +399,7 @@ public class MainController
 		{
 			long startLoopTime = System.nanoTime();
 			
-			System.out.println("turn " + turnIndex + "services:" + getServices() + " | " + agentFactory.allAgents.size() + " agents.");
+			//System.out.println("turn " + turnIndex + "services:" + getServices() + " | " + agentFactory.allAgents.size() + " agents.");
 			
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{
@@ -406,6 +419,14 @@ public class MainController
 				a.live();
 			}
 			
+			Iterator<Agent> it = newLandings.iterator();
+			while(it.hasNext())
+			{
+				Agent a = it.next();
+				foragers.remove(a);
+				it.remove();
+			}
+			
 			
 			if(DEBUGTIME)System.out.println("AllAgent lived at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 			if(MONITORTIME)
@@ -419,6 +440,8 @@ public class MainController
 			this.combManager.updateStimuli();
 			
 			if(DEBUGTIME)System.out.println("updateStimuli at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
+			
+			timeStepOver = true;
 			
 			/*** MONITOR TIME ***/
 			if(MONITORTIME)

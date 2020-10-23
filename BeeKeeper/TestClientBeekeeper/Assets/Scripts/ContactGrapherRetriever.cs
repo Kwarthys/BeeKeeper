@@ -10,7 +10,7 @@ public class ContactGrapherRetriever : MonoBehaviour
     public Vector3 dimension;
     public Vector3 maxValues;
 
-    public InstantPointCloud pointCloud;
+    public PointCloudReferencer pointCloud;
 
     public float refreshRate = 10;
 
@@ -20,17 +20,19 @@ public class ContactGrapherRetriever : MonoBehaviour
     {
         if(Time.realtimeSinceStartup - lastRefresh > refreshRate)
         {
+            List<Vector3> targets = new List<Vector3>();
+            List<int> ids = new List<int>();
+
             //update graph
             int size = model.theAgents.Count;
-            Vector3[] points = new Vector3[size];
-            int index = 0;
             foreach (BeeAgent b in model.theAgents.Values)
             {                
                 Vector3 point = transformPoint(new Vector3(b.age, b.JH, b.amountExchanged));
-                points[index++] = point;
-
-                pointCloud.registerPointCloud(points);
+                targets.Add(point);
+                ids.Add(b.pointID);
             }
+
+            pointCloud.updatePoints(new UpdateOrder(targets, ids));
 
             lastRefresh = Time.realtimeSinceStartup;
         }        
@@ -50,7 +52,7 @@ public class ContactGrapherRetriever : MonoBehaviour
         return transformedPos;
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.right * dimension.x);

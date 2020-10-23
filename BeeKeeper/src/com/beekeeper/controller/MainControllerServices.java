@@ -50,4 +50,9 @@ public interface MainControllerServices
 
 	public void notifyLiftoff(Agent agent);
 	public void notifyLanding(Agent agent);
+	
+	/**
+	 * Blocking call that will be released when next timestep is finished. Will not work if multiple client are requesting
+	 */
+	public void waitForTimeStep();
 }

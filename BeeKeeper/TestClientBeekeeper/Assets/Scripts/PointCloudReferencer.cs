@@ -12,6 +12,10 @@ public class PointCloudReferencer : MonoBehaviour
 
     public static int pointUpdateTime = 0;
 
+    public int lerpTime = 500;
+
+    public IDManager idManager = new IDManager();
+
     private List<MyPointCloud> clouds = new List<MyPointCloud>();
 
     public void updatePoints(UpdateOrder o)
@@ -23,6 +27,11 @@ public class PointCloudReferencer : MonoBehaviour
         }
     }
 
+    public void freeIndex(int pointID)
+    {
+        idManager.freeIndex(pointID);
+        getCloudFor(pointID).disablePointID(pointID);
+    }
 
     private MyPointCloud getCloudFor(int pointId)
     {
@@ -43,5 +52,6 @@ public class PointCloudReferencer : MonoBehaviour
         MyPointCloud newCloud = c.GetComponent<MyPointCloud>();
         clouds.Add(newCloud);
         newCloud.startingIndex = starting;
+        newCloud.serverRefreshRate = lerpTime;
     }
 }

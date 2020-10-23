@@ -20,9 +20,11 @@ public class FrameBehaviour : Interactible
     public Vector3 initPos;
     public Quaternion initRot;
 
+    public PointCloudReferencer pointCloud;
+
     private void Start()
     {
-        depthRenderer = transform.Find("Depth").GetComponent<Renderer>();
+        depthRenderer = transform.Find("Model").Find("Depth").GetComponent<Renderer>();
         baseDepthColor = depthRenderer.material.color;
 
         initPos = transform.position;
