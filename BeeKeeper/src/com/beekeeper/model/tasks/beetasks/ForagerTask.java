@@ -4,11 +4,15 @@ import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public class ForagerTask extends Task {
 	
 	private boolean back = false;
 	private int c = 0;
+
+	//private int trackedIdsUp = 1000;
+	//private int trackedIdsDown = 998;
 
 	public ForagerTask(WorkingAgentServices agentServices)
 	{
@@ -18,7 +22,7 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
 			public void execute() {
-				//System.out.println(agentServices.getID() + " Wandering");
+				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " Wandering");
 				if(!agentServices.tryMoveUp())
 				{
 					//agentServices.dropMotivation();
@@ -28,7 +32,7 @@ public class ForagerTask extends Task {
 			
 			@Override
 			public boolean check() {
-				return back && agentServices.isInside() && c < 35;
+				return back && agentServices.isInside() && c < 35;//35
 			}
 		});
 		
@@ -36,8 +40,8 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
 			@Override
 			public void execute() {
-				//System.out.println(agentServices.getID() + " Entering");
-				agentServices.enterHive();
+				/*boolean entered = */agentServices.enterHive();
+				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " Entering - " + entered);
 				c=0;
 			}
 			
@@ -48,10 +52,10 @@ public class ForagerTask extends Task {
 		});
 		
 		//Foraging outside
-		this.rootActivity.addTaskNode(new Action(200,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(ModelParameters.FORAGING_TIME_SEC,0,agentServices) {//200,0,age...
 			@Override
 			public void execute() {
-				//System.out.println(agentServices.getID() + " go forage");
+				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " go forage");
 				back = true;
 			}
 			
@@ -65,7 +69,6 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.1,0,agentServices) {
 			@Override
 			public void execute() {
-				//System.out.println(agentServices.getID() + " MovingOut");
 				ForagerTask.this.motivated = false;
 				back = false;
 				if(!agentServices.tryMoveDown(true))
@@ -78,6 +81,8 @@ public class ForagerTask extends Task {
 					agentServices.resetMotivation();
 					ForagerTask.this.motivated = true;
 				}
+				
+				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " MovingOut out?-" + agentServices.isInside());
 			}
 			
 			@Override

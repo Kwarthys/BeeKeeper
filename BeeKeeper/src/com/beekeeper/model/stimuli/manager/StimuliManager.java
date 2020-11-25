@@ -41,7 +41,7 @@ public class StimuliManager
 
 		@Override
 		public StimuliManagerServices createNewEqualAndGetServices() {
-			StimuliManager s = new StimuliManager(StimuliManager.this, -1);
+			StimuliManager s = new StimuliManager(StimuliManager.this, gridSize,-1);
 			return s.getServices();
 		}
 
@@ -77,9 +77,11 @@ public class StimuliManager
 		gridSize = new Dimension(combSize);
 	}
 
-	public StimuliManager(StimuliManager stimuliManagerToCopy, int id)
+	public StimuliManager(StimuliManager stimuliManagerToCopy, Dimension combSize, int id)
 	{		
 		smID = id;
+
+		gridSize = new Dimension(combSize);
 		
 		map = new HashMap<>();
 		

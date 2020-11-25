@@ -30,7 +30,7 @@ public class MainController
 
 	private ArrayList<Comb> combs = new ArrayList<Comb>();
 
-	private MyLogger logger = new MyLogger();
+	private MyLogger logger;
 
 	private CombManager combManager;
 
@@ -220,16 +220,26 @@ public class MainController
 		}
 
 		@Override
-		public void notifyLiftoff(Agent agent) {
+		public synchronized void notifyLiftoff(Agent agent) {
 			foragers.add(agent);
 			foragersIDS.add(agent.getID());
+			/*
+			if(agent.getID() == 999)
+			{
+				System.out.println("999 liftoff confirmed");
+			}
+			*/
 		}
 
 		@Override
-		public void notifyLanding(Agent agent) {
+		public synchronized void notifyLanding(Agent agent) {
 			//foragers.remove(agent);
 			newLandings.add(agent);
-			foragersIDS.remove(foragersIDS.indexOf(agent.getID()));
+			int index = foragersIDS.indexOf(agent.getID());
+			if(index != -1)
+			{
+				foragersIDS.remove(index);				
+			}
 		}
 
 		@Override
@@ -238,6 +248,11 @@ public class MainController
 			while(!timeStepOver && !restartAsked);
 			timeStepOver = false;
 			return;
+		}
+
+		@Override
+		public void hitFrame(int frameIndex) {
+			combManager.hitFrame(frameIndex);
 		}
 	};
 
@@ -260,6 +275,13 @@ public class MainController
 			this.window = new BeeWindow(g,drawers, this.controlServices);
 			closed = false;			
 		}
+		
+		if(ModelParameters.LOGGING)
+		{
+			logger = new MyLogger();
+		}
+		
+		combManager.printCombPopulations();
 	}
 	
 	public MainControllerServices getServices()
@@ -276,11 +298,11 @@ public class MainController
 			this.window.dispose();
 		}
 
-		this.logger.closing();
+		if(ModelParameters.LOGGING)this.logger.closing();
 
 		try {
 			System.out.println("Waiting");
-			this.logger.getThread().join();
+			if(ModelParameters.LOGGING)this.logger.getThread().join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -290,7 +312,7 @@ public class MainController
 		return restart;
 	}
 	
-	private void registerContactFor(int agentIndex, int quantity)
+	private synchronized void registerContactFor(int agentIndex, int quantity)
 	{
 		if(contactsLocked)
 		{
@@ -306,6 +328,7 @@ public class MainController
 			}
 			else
 			{
+				//TODO rare nullPointerException here, added the SYNCHRONIZED to check
 				contactsQuantitiesByIndex.put(agentIndex, contactsQuantitiesByIndex.get(agentIndex) + quantity);
 			}
 		}
@@ -315,13 +338,6 @@ public class MainController
 	{
 		timeStepPauseToIgnore = number;
 	}
-
-	/*
-	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
-	{
-		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
-	}
-	 */
 	private void reverseFrame(int index)
 	{
 		if(index >= combManager.getCombsServices().size()/2 || index < 0)
@@ -358,31 +374,25 @@ public class MainController
 		this.agentFactory.spawnALarvae(cell, host, host.getServices().getCurrentSManagerServices(), controlServices);
 	}
 
-	private void logTurn(String... ss)
+	/*
+	private void logTurn(int turnIndex, int beeID, String beeTaskName, double beePhysio)
 	{
-		StringBuffer sb = new StringBuffer();
-		for(int i = 0; i < ss.length; ++i)
-		{
-			if(i!=0)
-			{
-				sb.append(",");
-			}
-			sb.append(ss[i]);
-		}
-
-		logger.log(sb.toString());
+		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
+	 */
 
 	private boolean programLoop()
 	{
 		boolean DEBUGTIME = false;
-		boolean MONITORTIME = true;
+		boolean MONITORTIME = false;
 		int minLoopMs = -1;
 		int maxLoopMs = 0;
 		long totalLoopMs = 0;
 		long totalAgents = 0;
 		long totalDeaths = 0;
 		int startingAverageIndex = 0;
+		
+		int logTurnInterval = 4000;
 		
 		turnIndex = 0;
 		int displayBar = 20;
@@ -394,7 +404,8 @@ public class MainController
 		}
 		System.out.println("|");
 
-		logTurn("turnIndex", "beeID", "TaskName", "Physio");
+		if(ModelParameters.LOGGING)logger.log("turnIndex", "beeID", "TaskName", "HJ", "EO");
+		
 		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed && !restartAsked)
 		{
 			long startLoopTime = System.nanoTime();
@@ -410,13 +421,36 @@ public class MainController
 			
 			try {
 				combManager.liveAgents();
+				
+				if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
+				{
+					combManager.logTurn(logger, turnIndex);
+					//System.out.println("Logging " + turnIndex + "/" + ModelParameters.SIMU_LENGTH);
+				}
+				
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
 			
+			//int foragersNb = foragers.size();
+			//if(turnIndex%200==0)System.out.println(foragersNb + " foragers / " + (combManager.getNumberOfAgents() + foragersNb) + " total.");
+			
 			for(Agent a : foragers)
-			{
-				a.live();
+			{				
+				if(a==null)
+				{
+					System.out.println("MainController loop : Null entry in the foragers - that is weird");
+					//TODO investigate null here
+				}
+				else
+				{
+					a.live();
+					if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
+					{
+						WorkingAgent w = (WorkingAgent) a;
+						logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()));				
+					}
+				}
 			}
 			
 			Iterator<Agent> it = newLandings.iterator();

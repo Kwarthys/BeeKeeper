@@ -277,7 +277,12 @@ public class Comb
 	
 	public boolean isCellContentEmpty(int x, int y)
 	{
-		return this.cells.get(x + y * size.width).content == CellContent.empty;
+		if(x + y * size.width > 0 && x + y * size.width < cells.size())
+		{
+			return this.cells.get(x + y * size.width).content == CellContent.empty;			
+		}
+		
+		return false;
 	}
 
 	public boolean isCellVisitEmpty(int x, int y) {

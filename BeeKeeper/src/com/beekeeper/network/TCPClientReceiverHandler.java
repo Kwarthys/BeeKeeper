@@ -43,7 +43,7 @@ public class TCPClientReceiverHandler implements Runnable {
 				try {
 					request = new ClientRequest(read());
 					
-					System.out.println("TREATING");
+					//System.out.println("TREATING");
 					
 					StringBuffer sb;
 					
@@ -81,23 +81,21 @@ public class TCPClientReceiverHandler implements Runnable {
 							break;
 							
 						case "FrUP":
-							System.out.println("Lifting a frame");
-							//serverManager.createUDPClientHandler(socket.getInetAddress());
-							writer.write(request.data[0] + "UP");
+							//System.out.println("Lifting a frame");
+							writer.write("Frame " + request.data[0] + " UP");
 							services.liftFrame(Integer.valueOf(request.data[0]));
 							break;
 							
 						case "FrDOWN":
-							System.out.println("Droping the frame");
-							//serverManager.createUDPClientHandler(socket.getInetAddress());
+							//System.out.println("Droping the frame");
 							writer.write(request.data[0] + " DOWN at " + request.data[1]);
 							services.putFrame(Integer.valueOf(request.data[0]), Integer.valueOf(request.data[1]), Boolean.valueOf(request.data[2]));
 							break;
 							
 						case "FrHIT":
-							System.out.println("Hiting the frame");
-							//serverManager.createUDPClientHandler(socket.getInetAddress());
-							writer.write("FrHIT");
+							//System.out.println("Hiting the frame");
+							writer.write("Frame " + request.data[0] + " hit");
+							services.hitFrame(Integer.valueOf(request.data[0]));
 							break;
 							
 						case "FFWD":
@@ -136,7 +134,6 @@ public class TCPClientReceiverHandler implements Runnable {
 				}
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -150,7 +147,6 @@ public class TCPClientReceiverHandler implements Runnable {
 			this.socket.close();
 			System.out.println("TCP Dead");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

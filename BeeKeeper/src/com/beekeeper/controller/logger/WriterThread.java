@@ -26,7 +26,6 @@ public class WriterThread extends Thread {
 			System.out.println("Started writing for : expe/"+param+".csv");
 			this.writer = new BufferedWriter(fw);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -53,7 +52,6 @@ public class WriterThread extends Thread {
 			writer.close();
 			System.out.println("ClosedNicely");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -55,7 +55,7 @@ public class AgentFactory
 		
 		for(int i = 0; i < number; i++)
 		{
-			Point2D.Double point = MyUtils.getPointInRule(rule);
+			Point2D.Double point;
 			int x;
 			int y;			
 			
@@ -64,10 +64,12 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
-				if(++fails % 500 == 0)
+				if(++fails % 10000000 == 0)
 				{
 					System.err.println("AgentFactory - spawnBroodCells : WARNING can't find suitable point after " + fails + " attempts.");
 				}
+				
+				if(fails < 0)return bees;//means that we have A LOT of fails, so stop trying to spawn larvae and go with what's already there
 				
 			}while(!host.isCellContentEmpty(x, y));
 			

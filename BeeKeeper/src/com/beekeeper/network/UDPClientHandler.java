@@ -48,7 +48,6 @@ public class UDPClientHandler implements Runnable {
 				try {
 					sendForagerDatagram(udpServer);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}				
 			}
@@ -61,7 +60,6 @@ public class UDPClientHandler implements Runnable {
 				try {
 					sendAdultStates(udpServer);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -74,7 +72,6 @@ public class UDPClientHandler implements Runnable {
 				try {
 					sendAdultsPositions(udpServer);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -87,7 +84,6 @@ public class UDPClientHandler implements Runnable {
 				try {
 					sendFramesContent(udpServer);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -100,7 +96,6 @@ public class UDPClientHandler implements Runnable {
 				try {
 					sendAgentContacts(udpServer);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -127,7 +122,6 @@ public class UDPClientHandler implements Runnable {
 				try {
 					Thread.sleep(sendRate);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}	
@@ -140,7 +134,7 @@ public class UDPClientHandler implements Runnable {
 		ArrayList<Integer> foragers = services.getForagers();
 		if(foragers.size() == 0)
 		{
-			System.out.println("noForagers to send");
+			//System.out.println("noForagers to send");
 			return;
 		}
 		StringBuffer foragerData = new StringBuffer();

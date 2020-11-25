@@ -27,6 +27,20 @@ public class MyLogger
 	{
 		submit(new LogEntry(log));
 	}
+
+	public void log(String... logs)
+	{
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append(logs[0]);
+		for(int i = 1; i < logs.length; ++i)
+		{
+			sb.append(",");
+			sb.append(logs[i]);
+		}
+		
+		submit(new LogEntry(sb.toString()));
+	}
 	
 	private void submit(LogEntry entry)
 	{
@@ -65,18 +79,24 @@ public class MyLogger
 	public String getParam()
 	{
 		StringBuffer sb = new StringBuffer();
-		
+
+		sb.append(ModelParameters.identifier);
+		sb.append("_");
 		sb.append(ModelParameters.getModelState());
 		sb.append("_");
 		sb.append(ModelParameters.startMode);
 		sb.append("_");
 		sb.append(ModelParameters.NUMBER_BEES);
 		sb.append("_");
-		sb.append(ModelParameters.NUMBER_LARVAE);
+		sb.append(ModelParameters.NUMBER_LARVAE * ModelParameters.NUMBER_FRAMES);
 		sb.append("_");
 		sb.append(ModelParameters.SIMU_LENGTH);
-		sb.append("_");
-		sb.append(ModelParameters.expeIndex);
+		sb.append("_EOem");
+		sb.append(ModelParameters.EOEmissionCoef);
+		sb.append("_HJRed");
+		sb.append(ModelParameters.hjReduction);
+		sb.append("_LEOem");
+		sb.append(ModelParameters.LARVA_EO_TIMELY_EMMISION);
 		
 		return sb.toString();
 	}

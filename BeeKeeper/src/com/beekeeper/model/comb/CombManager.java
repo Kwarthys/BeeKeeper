@@ -9,9 +9,11 @@ import java.util.Iterator;
 import com.beekeeper.controller.AgentFactory;
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.controller.MyThreadedExecutor;
+import com.beekeeper.controller.logger.MyLogger;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
+import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
@@ -78,6 +80,39 @@ public class CombManager {
 		}
 	};
 	
+	public void printCombPopulations()
+	{
+		System.out.println("\n" + getNumberOfAgents() + " agents:");
+		for(Comb c : combs)
+		{
+			System.out.println(c.ID + ": " + c.getAgents().size());
+		}
+	}
+	
+	public int getNumberOfAgents()
+	{
+		int n = 0;
+		
+		for(Comb c : combs)
+		{
+			n += c.getAgents().size();
+		}
+		
+		return n;
+	}
+	
+	public void logTurn(MyLogger logger, int turnIndex) throws InterruptedException
+	{
+		for(int i = 0; i < combs.size(); i++)
+		{
+			for(Agent a : combs.get(i).getAgents())
+			{
+				WorkingAgent w = (WorkingAgent) a;
+				logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()));
+			}
+		}
+	}
+	
 	public void liveAgents() throws InterruptedException
 	{
 		ArrayList<Thread> threads = new ArrayList<>();
@@ -131,6 +166,8 @@ public class CombManager {
 		//which combs ? frameIndex*2 et frameIndex*2+1
 		Comb cA = getCombOfID(frameIndex*2);
 		Comb cB = getCombOfID(frameIndex*2+1);
+		
+		System.out.println("lifting F" + frameIndex);
 
 		//Lift the combs
 		//Create two new temporary stimuli managers from the existings ones
@@ -143,7 +180,9 @@ public class CombManager {
 	}
 
 	public void putFrame(int frameIndex, int pos, boolean reverse)
-	{
+	{		
+		System.out.println("Droping F" + frameIndex + " at " + pos + " r?" + reverse);
+		
 		showCombsIndexAsList();
 		//is pos taken ?
 		if(combsUpManagers.containsKey(combs.get(pos*2).ID))
@@ -242,42 +281,45 @@ public class CombManager {
 
 		for(int combNumber = 0; combNumber < numberOfFrames*2; ++combNumber)
 		{
-			//System.out.println("Creating the comb " + combNumber + " associated to SM" + (combNumber+1)/2);
 			StimuliManager sm = stimuliManagers.get((combNumber+1)/2);
 			Comb c = new Comb(combNumber, combSize,sm.getServices(), this.combManagerServices);
 			
-			int combWidthDivisor = (int)(Math.min(combSize.height, combSize.width)/2 * 1/(Math.sqrt(ModelParameters.NUMBER_LARVAE / Math.PI)));
-			System.out.println("combWidthDivisor: " + combWidthDivisor);
+			int numberOfLarvae = (int) (ModelParameters.NUMBER_LARVAE / numberOfFrames * getLarvaCoef(numberOfFrames*2, combNumber+1));
 			
-			/*
-			int combWidthDivisor = 30;
-			while(combSize.width/combWidthDivisor * combSize.width/combWidthDivisor * Math.PI < ModelParameters.NUMBER_LARVAE)
-			{
-				--combWidthDivisor;
-				System.out.println(combWidthDivisor);
-			}
-			System.out.println("bite");
-			*/
+			//int combWidthDivisor = ((int)(Math.min(combSize.height, combSize.width)/2 * 1/(Math.sqrt(numberOfLarvae / Math.PI))) - 1);
+			
+			double radiusForLarvae = Math.sqrt(numberOfLarvae / Math.PI / 2) * 1.5;
+			
+			//System.out.println("radiusForLarvae " + radiusForLarvae);
+
 			if(combNumber == 1)
 			{
-				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
-				//agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES*numberOfFrames*2, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
-				//agentFactory.spawnWorkers(100, c, MyUtils.getCirclePointRule(center, combSize.width/2), sm.getServices(), controlServices);
+				//agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
 			}
-			System.out.println("queen");
-			agentFactory.spawnBroodCells(ModelParameters.NUMBER_LARVAE, c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/combWidthDivisor/2), sm.getServices(), controlServices);
-			System.out.println("brood");
+					
+			//agentFactory.spawnBroodCells(numberOfLarvae, c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/combWidthDivisor/2), sm.getServices(), controlServices);
+			agentFactory.spawnBroodCells(numberOfLarvae, c, MyUtils.getCirclePointRule(center, radiusForLarvae), sm.getServices(), controlServices);
 			agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES/numberOfFrames/2, c, sm.getServices(), controlServices);
-			//agentFactory.spawnWorkers(ModelParameters.NUMBER_BEES/numberOfFrames/2, c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
-			System.out.println("workers");
 			
-			this.combs.add(c);
-
 			c.addFood();
 
+			this.combs.add(c);
 		}
 
 		return combs;
+	}
+	
+	private float getLarvaCoef(int totalCombAmount, int combNumber)
+	{
+		float middle = (totalCombAmount + 1) / 2.0f;
+		
+		float distance = Math.abs(combNumber * 1.0f - middle);
+		
+		float coef = 1 - distance / middle;
+		
+		//System.out.println(combNumber + " / " + totalCombAmount + " mid:" + middle + " d:" + distance + " -> " + coef);
+		
+		return coef;
 	}
 
 	public void hitFrame(int frameIndex)

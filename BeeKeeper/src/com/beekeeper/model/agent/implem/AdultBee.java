@@ -43,6 +43,8 @@ public class AdultBee extends WorkingAgent
 			hjTiter = 0;
 			age = 0;
 		}
+		
+		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.EO_EQUILIBRIUM);
 	}
 
 	@Override
@@ -61,7 +63,7 @@ public class AdultBee extends WorkingAgent
 	{		
 		if(currentTask != null)
 		{
-			if(currentTask.taskName == "Foraging")
+			if(currentTask.taskName == "Foraging" && ModelParameters.FORAGERS_DIE_SOONER)
 			{
 				activeAge += ModelParameters.foragingAgePenalty;
 			}
@@ -73,7 +75,7 @@ public class AdultBee extends WorkingAgent
 		
 		if(activeAge > ModelParameters.maxTimestepAge)
 		{
-			alive = false; //death from oldage
+			alive = false; //death from old age
 			System.out.println("DEATH FROM OLD AGE");
 		}
 		
@@ -96,14 +98,15 @@ public class AdultBee extends WorkingAgent
 		if(!ModelParameters.BYPASS_PHYSIOLOGY)
 		{
 			hjTiter += ModelParameters.HJ_INCREMENT;
-			hjTiter -= ModelParameters.getHJModifiedByEthyleOleate(this.bodySmell.getAmount(Stimulus.EthyleOleate));
-			hjTiter = MyUtils.clamp(hjTiter);			
+			
+			
+			hjTiter -= ModelParameters.getHJModifiedByEthyleOleate(this.lastPercievedMap.getAmount(Stimulus.EthyleOleate));
+			hjTiter = MyUtils.clamp(hjTiter);
+			
+			this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.getEthyleOleateEmitedByHJ(hjTiter));
 		}
 		
-		receivingFood = false;
-		
-		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.getEthyleOleateEmitedByHJ(hjTiter));
-		
+		receivingFood = false;		
 	}
 
 	@Override

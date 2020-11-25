@@ -31,6 +31,7 @@ public interface MainControllerServices
 	public void switchFrames(int index1, int index2);
 	public void reverseFrame(int index);
 	public void liftFrame(int frameIndex);
+	public void hitFrame(int frameIndex);
 	public void putFrame(int frameIndex, int pos, boolean reverse);
 
 	public void layEgg(CombCell cell);

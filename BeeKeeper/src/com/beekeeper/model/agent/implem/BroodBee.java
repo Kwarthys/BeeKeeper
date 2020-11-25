@@ -35,6 +35,8 @@ public class BroodBee extends WorkingAgent
 		{
 			age = 0;
 		}
+		
+		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.EO_EQUILIBRIUM);
 	}
 	
 	@Override
@@ -45,7 +47,7 @@ public class BroodBee extends WorkingAgent
 	@Override
 	public void recieveFood() {
 		//System.out.print(getStringName() + " got fed : " + getEnergy());
-		this.addToEnergy(0.3);
+		this.addToEnergy(1);
 		//System.out.println(" to " + getEnergy());
 	}
 
@@ -58,16 +60,15 @@ public class BroodBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{
-		this.bodySmell.addAmount(Stimulus.EthyleOleate, 0.1);
 		
 		//if(Math.random()>0.99)System.out.println(getStringName() + " " + age);
 		
-		if(age > ModelParameters.timestepLarvaPop)
+		if(age > ModelParameters.timestepLarvaPop && ModelParameters.LARVA_CAN_HATCH)
 		{
 			//larva old enough to become a bee
 			if(hostCell.visiting == null)
 			{
-				//room for eclosion, a bee is born
+				//room for hatching, a bee is born
 				
 				//kill larva
 				this.alive = false;

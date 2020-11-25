@@ -261,6 +261,7 @@ public abstract class WorkingAgent extends EmitterAgent
 						System.out.println("start action lookup t+" + (System.nanoTime() - startlive)/1000 + "us.");
 					}
 					currentAction = chooseNewTask(s).search();
+					//if(getID() == 999)System.out.println(getID() + " found " + currentTask.taskName);
 				}
 			}
 			else
@@ -279,8 +280,11 @@ public abstract class WorkingAgent extends EmitterAgent
 			System.out.println("action choosen at t+" + (System.nanoTime() - startlive)/1000 + "us.");
 		}
 		
+		//if(getID() == 999)System.out.println(getID() + " " + currentTask.taskName);
+		
 		//if(!isInside())System.out.println(this.ID + " " + currentTask.taskName);
-		currentAction.run();			
+		currentAction.run();	
+		
 
 
 
@@ -297,6 +301,7 @@ public abstract class WorkingAgent extends EmitterAgent
 			spreadByContact(cooperativeInteractor);
 		}
 
+		
 		advanceMetabolism();
 		this.bodySmell.evaporate();
 		
@@ -437,7 +442,7 @@ public abstract class WorkingAgent extends EmitterAgent
 				controllerServices.notifyLiftoff(this);
 				hostCell.freeCell();
 				this.hostCell = null;
-				//System.out.println(this.getStringName() + " liftoff !");
+				//if(getID() == 999)System.out.println(this.getID() + " liftoff !");
 				return true;			
 			}
 			return false;
@@ -480,10 +485,20 @@ public abstract class WorkingAgent extends EmitterAgent
 	}
 
 	public String getTaskName() {
+		if(currentTask==null)
+		{
+			System.err.println("TaskNullHere");
+			return "noTask";
+		}
 		return currentTask.taskName;
 	}
 
 	public double getPhysio() {
 		return hjTiter;
+	}
+
+	public double getEO() {
+		if(lastPercievedMap==null) return 0;
+		return lastPercievedMap.getAmount(Stimulus.EthyleOleate);
 	}
 }

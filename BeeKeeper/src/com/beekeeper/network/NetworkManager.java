@@ -49,14 +49,12 @@ public class NetworkManager {
 			serverTCPSocket = new ServerSocket(TCPport);
 			serverTCPSocket.setSoTimeout(5000);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		try {
 			serverUDPSocket = new DatagramSocket(UDPport);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -109,7 +107,6 @@ public class NetworkManager {
 					} catch (SocketTimeoutException e) {
 						//System.out.println("TimeOut");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
