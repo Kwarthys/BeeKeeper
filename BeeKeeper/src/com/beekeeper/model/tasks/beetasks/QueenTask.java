@@ -11,9 +11,11 @@ public class QueenTask extends Task {
 
 	private boolean cellFound = false;
 	private boolean moved = false;
+	
+	public static final String queenTaskName = "QueenTask";
 
 	public QueenTask(WorkingAgentServices agentServices) {
-		super(agentServices, "QueenTask");
+		super(agentServices, queenTaskName);
 		
 		this.motivated = false;
 

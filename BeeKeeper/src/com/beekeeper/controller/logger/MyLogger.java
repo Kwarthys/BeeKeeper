@@ -1,5 +1,7 @@
 package com.beekeeper.controller.logger;
 
+import java.text.DecimalFormat;
+
 import com.beekeeper.parameters.ModelParameters;
 
 public class MyLogger
@@ -79,6 +81,8 @@ public class MyLogger
 	public String getParam()
 	{
 		StringBuffer sb = new StringBuffer();
+		
+		DecimalFormat df = new DecimalFormat("#.####");
 
 		sb.append(ModelParameters.identifier);
 		sb.append("_");
@@ -91,12 +95,14 @@ public class MyLogger
 		sb.append(ModelParameters.NUMBER_LARVAE * ModelParameters.NUMBER_FRAMES);
 		sb.append("_");
 		sb.append(ModelParameters.SIMU_LENGTH);
-		sb.append("_EOem");
+		sb.append("_eOem");
 		sb.append(ModelParameters.EOEmissionCoef);
 		sb.append("_HJRed");
 		sb.append(ModelParameters.hjReduction);
-		sb.append("_LEOem");
-		sb.append(ModelParameters.LARVA_EO_TIMELY_EMMISION);
+		sb.append("_LeOem");
+		sb.append(df.format(ModelParameters.LARVA_EO_TIMELY_EMMISION));
+		sb.append("_EOTr");
+		sb.append(df.format(ModelParameters.ETHYLE_OLEATE_TRANSMISSIBILITY));
 		
 		return sb.toString();
 	}

@@ -13,9 +13,11 @@ import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
 
 public class GiveFoodTask extends Task {
+	
+	public static final String giveFoodTaskName = "GiveFood";
 
 	public GiveFoodTask(WorkingAgentServices agentServices) {
-		super(agentServices, "GiveFood");
+		super(agentServices, giveFoodTaskName);
 
 		this.threshold = 3;
 		

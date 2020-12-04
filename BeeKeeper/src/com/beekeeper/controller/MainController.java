@@ -20,6 +20,7 @@ import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombManager;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
+import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyUtils;
@@ -259,6 +260,8 @@ public class MainController
 	public MainController()
 	{
 		this.agentFactory = new AgentFactory();
+		
+		StimulusFactory.refreshDataBase();
 
 		this.combManager = new CombManager();
 		combs = this.combManager.initiateFrames(ModelParameters.NUMBER_FRAMES, agentFactory, this.controlServices);
@@ -411,6 +414,7 @@ public class MainController
 			long startLoopTime = System.nanoTime();
 			
 			//System.out.println("turn " + turnIndex + "services:" + getServices() + " | " + agentFactory.allAgents.size() + " agents.");
+			//System.out.println("turn " + turnIndex);
 			
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{

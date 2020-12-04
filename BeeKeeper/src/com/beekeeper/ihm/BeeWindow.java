@@ -14,6 +14,11 @@ import javax.swing.JPanel;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.stimuli.Stimulus;
+import com.beekeeper.model.tasks.beetasks.AskFoodTask;
+import com.beekeeper.model.tasks.beetasks.FeedLarva;
+import com.beekeeper.model.tasks.beetasks.ForagerTask;
+import com.beekeeper.model.tasks.beetasks.GiveFoodTask;
+import com.beekeeper.model.tasks.generaltasks.RandomMoveTask;
 
 @SuppressWarnings("serial")
 public class BeeWindow extends JFrame
@@ -72,7 +77,7 @@ public class BeeWindow extends JFrame
 		box = new JComboBox<Stimulus>(available);
 		
 	
-		String[] availableTask = {"All", "Give Food", "Asking Food", "Foraging", "FeedLarvae"};
+		String[] availableTask = {"All", GiveFoodTask.giveFoodTaskName, AskFoodTask.AskingFoodTaskName, ForagerTask.foragingTaskName, FeedLarva.feedLarvaeTaskName, RandomMoveTask.randomWalkTaskName};
 		taskBox = new JComboBox<String>(availableTask);
 		
 		box.addActionListener(new ActionListener() {			

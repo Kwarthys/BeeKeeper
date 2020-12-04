@@ -5,11 +5,12 @@ import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.tasks.Task;
 
 public class RandomMoveTask extends Task
-{
+{	
+	public static final String randomWalkTaskName = "RandomWalk";
 	
 	public RandomMoveTask(WorkingAgentServices s)
 	{
-		super(s, "RandomWalk");
+		super(s, randomWalkTaskName);
 		
 		rootActivity.addTaskNode(new RandomMoveAction(s));
 	}

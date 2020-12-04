@@ -68,6 +68,18 @@ public class MyUtils
 		return pointCandidate;
 	}
 	
+	public static void showArrayAsTwoDimensions(double[] ds, int width, int height)
+	{
+		for(int j = 0; j < height; ++j)
+		{
+			for(int i = 0; i < width; ++i)
+			{
+				System.out.print(ds[j*width + i] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
 	
 	public static double sigmoid(double s, double t)
 	{

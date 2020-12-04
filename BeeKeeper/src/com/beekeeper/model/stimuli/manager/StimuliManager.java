@@ -8,6 +8,8 @@ import java.util.HashMap;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.StimulusFactory;
+import com.beekeeper.parameters.ModelParameters;
+import com.beekeeper.utils.MyUtils;
 
 public class StimuliManager
 {
@@ -125,6 +127,12 @@ public class StimuliManager
 			map.put(s, new double[gridSize.height * gridSize.width]);
 		}
 		
+		if(s == Stimulus.AskFood)
+		{
+			//System.out.println("emiting " + amount);
+			//MyUtils.showArrayAsTwoDimensions(map.get(s), gridSize.width, gridSize.height);
+		}
+		
 		map.get(s)[indexFromPos(position)] += amount;
 	}
 
@@ -191,6 +199,11 @@ public class StimuliManager
 				}				
 				
 				doubleBuffer[i] = (amounts[i] * propag + (1-propag) * voisins / nbVoisins) * evap;
+				
+				if(doubleBuffer[i] < ModelParameters.SMELL_THRESHOLD)
+				{
+					doubleBuffer[i] = 0;
+				}
 			}
 			
 			map.put(smell, doubleBuffer);

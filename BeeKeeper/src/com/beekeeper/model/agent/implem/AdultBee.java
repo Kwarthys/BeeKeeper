@@ -107,7 +107,17 @@ public class AdultBee extends WorkingAgent
 		}
 		
 		receivingFood = false;		
+		
+		maxHungerFelt = Math.max(maxHungerFelt, lastPercievedMap.getAmount(Stimulus.AskFood));
+		
+		//if(getID() == 1000)
+		//{
+		//	System.out.println("maxHungerFelt: " + maxHungerFelt + " percepted AskFood:" + lastPercievedMap.getAmount(Stimulus.AskFood) + " own Hunger:" + getHunger());
+		//	System.out.println(currentTask.taskName + " " + (double)((long)(motivation*100))/100);
+		//}
 	}
+	
+	public double maxHungerFelt = 0; //TODO DEBUG
 
 	@Override
 	public String getStringName() {

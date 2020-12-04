@@ -54,56 +54,49 @@ public class BeeKeeperLauncher {
 	}
 	
 	public static void startMultipleExpeMode()
-	{		
+	{				
 		ModelParameters.UI_ENABLED = false;
 		ModelParameters.LOGGING = true;
 		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;		
-		ModelParameters.SIMU_LENGTH = 20 * ModelParameters.DAY;
+		ModelParameters.SIMU_LENGTH = 30 * ModelParameters.DAY;
 		ModelParameters.NUMBER_BEES = 1000;
-		ModelParameters.NUMBER_LARVAE = 1000;
+		ModelParameters.NUMBER_LARVAE = 800;
 		ModelParameters.NUMBER_FRAMES = 1;
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;
 		
 		
 		int charNumberA = 65;
-		StartMode[] mode = {StartMode.Old, StartMode.Random, StartMode.NewBorn};
-		//int[] nb = {0,50,500};
-		/*double[] lem = new double[8];
+		StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
+		int[] nb = {0,750,1500};
+		//double[] lem = {0.05, 0.04, 0.03};
 		
-		for(int i = 0; i < 3; ++i)
-		{
-			lem[i] = ModelParameters.LARVA_EO_TIMELY_EMMISION * Math.pow(2, i+1);
-		}	*/	
-/*
+		//for(int i = 0; i < 8; ++i)
+		//{
+		//	lem[i] = ModelParameters.LARVA_EO_TIMELY_EMMISION * Math.pow(2, i+1);
+		//}	
+
 		for(int j = 0; j < 3; ++j)
 		{
 			ModelParameters.startMode = mode[j];
 			
-			for(int i = 0; i < 8; ++i)
-			{
-				ModelParameters.NUMBER_LARVAE = 100*i;
-				
-				ModelParameters.identifier = (char)(charNumberA + i + 8*j);
+			for(int i = 0; i < 3; ++i)
+			{				
+				ModelParameters.identifier = (char)(charNumberA + i + 3*j);
+				ModelParameters.NUMBER_LARVAE = nb[i];
 				startExpeAndMonitorTime(new MainController());	
 			}
 		}
-*/	
-		ModelParameters.NUMBER_LARVAE = 0;
-		
-		ModelParameters.startMode = StartMode.Random;
-		ModelParameters.identifier = 'I';
-		startExpeAndMonitorTime(new MainController());
-		
-		ModelParameters.startMode = StartMode.NewBorn;
-		ModelParameters.identifier = 'Q';
-		startExpeAndMonitorTime(new MainController());
+	
 /*
-		for(int i = 0; i <3 ; ++i)
+		ModelParameters.startMode = StartMode.NewBorn;
+		for(int i = 2; i < 3 ; ++i)
 		{
-			ModelParameters.startMode = StartMode.NewBorn;
-			ModelParameters.identifier = (char)charNumberA;
+			ModelParameters.ETHYLE_OLEATE_TRANSMISSIBILITY = 2 * ModelParameters.DAY;
+			ModelParameters.identifier = (char)(charNumberA + i);
 			startExpeAndMonitorTime(new MainController());
+			//System.out.println("\nETHYLE_OLEATE_TRANSMISSIBILITY: " + ModelParameters.ETHYLE_OLEATE_TRANSMISSIBILITY);
+			//System.out.println("ETHYLE_OLEATE_REAL: " + StimulusFactory.getPropag(Stimulus.EthyleOleate));
 		}
 */
 		

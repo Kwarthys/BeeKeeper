@@ -13,10 +13,12 @@ public class ForagerTask extends Task {
 
 	//private int trackedIdsUp = 1000;
 	//private int trackedIdsDown = 998;
+	
+	public static final String foragingTaskName = "Foraging";
 
 	public ForagerTask(WorkingAgentServices agentServices)
 	{
-		super(agentServices, "Foraging");		
+		super(agentServices, foragingTaskName);		
 		
 		//Wandering inHive
 		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {

@@ -11,16 +11,19 @@ public class AskFoodTask extends Task {
 
 	private boolean cellChecked = false;
 	private boolean foundFood = false;
+	
+	public static final String AskingFoodTaskName = "AskingFood";
 
 	public AskFoodTask(WorkingAgentServices agentServices) {
-		super(agentServices, "AskingFood");
+		super(agentServices, AskingFoodTaskName);
 		
 		this.motivated = false;
 		
 		//eating at cell
-		this.rootActivity.addTaskNode(new Action(6, 0, agentServices) {			
+		this.rootActivity.addTaskNode(new Action(6, 0, agentServices) {		
 			@Override
 			public void execute() {
+				//if(agentServices.getID() == 1000)System.out.println(agentServices.getID() + " eating at cell");	
 				agentServices.receiveFood();
 				foundFood = false;
 			}
@@ -36,6 +39,7 @@ public class AskFoodTask extends Task {
 			
 			@Override
 			public void execute() {
+				//if(agentServices.getID() == 1000)System.out.println(agentServices.getID() + " checking cell");
 				cellChecked = true;
 				if(agentServices.getHostCell().content == CellContent.food)
 				{
@@ -53,7 +57,8 @@ public class AskFoodTask extends Task {
 		this.rootActivity.addTaskNode(new Action(0.5,0.001,agentServices) {			
 			@Override
 			public void execute() {
-				if(Math.random() > 0.5)
+				//if(agentServices.getID() == 1000)System.out.println(agentServices.getID() + " RandomMove");
+				if(Math.random() > 0.05)
 				{
 					agentServices.randomMove();	
 				}
@@ -67,7 +72,7 @@ public class AskFoodTask extends Task {
 			
 			@Override
 			public boolean check() {
-				return (Math.random() > 0.95 || !agentServices.agentNearby()) && !agentServices.isReceivingFood();
+				return (Math.random() > 0.99 || !agentServices.agentNearby()) && !agentServices.isReceivingFood();
 			}
 		});
 		
@@ -76,7 +81,8 @@ public class AskFoodTask extends Task {
 			
 			@Override
 			public void execute() {
-				agentServices.emit(Stimulus.AskFood, 200);
+				//if(agentServices.getID() == 1000)System.out.println(agentServices.getID() + " emits");
+				agentServices.emit(Stimulus.AskFood, 400);
 			}
 			
 			@Override

@@ -61,7 +61,8 @@ public class BroodBee extends WorkingAgent
 	protected void advanceMetabolism()
 	{
 		
-		//if(Math.random()>0.99)System.out.println(getStringName() + " " + age);
+		//if(getID() == 0)System.out.println(getStringName() + " " + getEnergy() + " - " + ModelParameters.LARVAE_HUNGER_INCREMENT);
+		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);
 		
 		if(age > ModelParameters.timestepLarvaPop && ModelParameters.LARVA_CAN_HATCH)
 		{

@@ -14,9 +14,11 @@ public class FeedLarva extends Task {
 	private boolean moved = false;
 	private boolean feeding = false;
 	
+	public static final String feedLarvaeTaskName = "FeedLarvae";
+	
 	public FeedLarva(WorkingAgentServices agentServices)
 	{
-		super(agentServices, "FeedLarvae");
+		super(agentServices, feedLarvaeTaskName);
 		
 		Activity larvaNear = new Activity() {			
 			@Override

@@ -7,9 +7,11 @@ import com.beekeeper.model.tasks.Task;
 
 public class RestTask extends Task
 {	
+	public static final String restTaskName = "Rest";
+	
 	public RestTask(WorkingAgentServices agentServices)
 	{
-		super(agentServices, "Rest");
+		super(agentServices, restTaskName);
 		
 		this.motivated = false;
 		

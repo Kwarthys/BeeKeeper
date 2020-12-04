@@ -14,7 +14,7 @@ public class ModelParameters
 	//public static final double HIVE_THERMAL_RESISTANCE = 15;
 	
 	//public static final double MAX_TASK_THRESHOLD = 0.80;
-	//public static final double MIN_TASK_THRESHOLD = 0.10;	
+	//public static final double MIN_TASK_THRESHOLD = 0.10;
 	//public static double getNormalisedThreshold(double t)
 	//{
 	//	return t/(MAX_TASK_THRESHOLD-MIN_TASK_THRESHOLD) - MIN_TASK_THRESHOLD/(MAX_TASK_THRESHOLD-MIN_TASK_THRESHOLD);
@@ -62,14 +62,16 @@ public class ModelParameters
 	public static int timestepLarvaPop = (int)(/*20days*/ 20 * DAY / SIMU_ACCELERATION);
 
 	//Free 1957 : Tranmission of food between worker -> Empty stomach after 8ish hours of starvation
-	public static final double HUNGER_INCREMENT = 1 / (8 * HOUR) * SIMU_ACCELERATION;
+	//Wang et al 2016: starved honey bees for 12hours -> 50%bee died
+	public static final double HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
 	
 	//Huang & Otis 1991 - Inspection and feeding ... fed every ~35min
-	public static final double LARVAE_HUNGER_INCREMENT = 0.25 / (35 * MINUTE) * SIMU_ACCELERATION;
+	//2 Days old larvae all dies in 7h of starvation (some earlier) while 4days old all survive that 7hour starvation (-> hunger doesn't start high)
+	public static final double LARVAE_HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
 	
 	public static final double MOTIVATION_STEP = 0.01; //ACCELERATION ? maybe not
 	
-	public static final double SMELL_THRESHOLD = 0.01;
+	public static final double SMELL_THRESHOLD = 0.001;
 
 	public static final double MAX_MOTIVATION = 0.9;
 
@@ -79,20 +81,19 @@ public class ModelParameters
 	public static final double FORAGING_TIME_SEC = 20*60;//20 minutes, in sec not in timesteps;
 	
 	//Esters usually have 16hours so we'll say that for now
-	public static final double ETHYLE_OLEATE_HALFLIFE = 16 * HOUR / SIMU_ACCELERATION;
-	//No idea of even what to ask google or biologists for that
-	public static final double ETHYLE_OLEATE_TRANSMISSIBILITY = Math.max(1, 60 / SIMU_ACCELERATION);
+	public static final double ETHYLE_OLEATE_HALFLIFE = 16.0 * HOUR / SIMU_ACCELERATION;
+	//No idea of even what to ask google or biologists for that        TODO 60
+	//public static double ETHYLE_OLEATE_TRANSMISSIBILITY = Math.max(1, 120.0 / SIMU_ACCELERATION); //1day's too much
+	public static double ETHYLE_OLEATE_TRANSMISSIBILITY = 6.0 * HOUR / SIMU_ACCELERATION;
 
 	/* 1 egg per minut */
-	public static final double LAYEGG_MEANDURATION = 30*MINUTE / SIMU_ACCELERATION;
+	public static final double LAYEGG_MEANDURATION = 30.0*MINUTE / SIMU_ACCELERATION;
 	
 	/* want it to be half tired after an hour */
 	public static final double QUEEN_TASKS_ENERGYCOSTS = 1.0/2.0/HOUR;
 	
 	//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim 0.8 at 5 days to compensate EO effects
 	public static double HJ_INCREMENT = 0.8 / (5 * DAY) * SIMU_ACCELERATION; //1.851e-6
-
-	public static double LARVA_EO_TIMELY_EMMISION = 0.15;
 	
 	public static double HJ_EQUILIBRIUM = 0.8;
 	public static double EO_EQUILIBRIUM = 1000;
@@ -100,7 +101,10 @@ public class ModelParameters
 	//public static double EOEmissionCoef = 0.000000004; //REVERSED WITH HJRed
 	//public static double EOEmissionCoef = 0.01; //TODO CHANGED TO 0.02
 	//public static double EOEmissionCoef = 0.02;
-	public static double EOEmissionCoef = ((1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM) / HJ_EQUILIBRIUM;
+	public static double EOEmissionCoef = ((1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM) / HJ_EQUILIBRIUM; //0.015
+
+	//public static double LARVA_EO_TIMELY_EMMISION = 0.15;
+	public static double LARVA_EO_TIMELY_EMMISION = EOEmissionCoef * 1.5;
 
 	public static final double getEthyleOleateEmitedByHJ(double hjTiter)
 	{
@@ -126,7 +130,7 @@ public class ModelParameters
 	
 	/*** SIMULATION (STARTING) CONDITIONS ***/
 	
-	public static enum StartMode{Old, NewBorn, Random;}
+	public static enum StartMode{Old, NewBorn, Random, Random20, Random80;}
 	
 	public static int NUMBER_FRAMES = 1;
 	public static int NUMBER_BEES = 1000;
@@ -142,6 +146,10 @@ public class ModelParameters
 			return 0.0;
 		case Old:
 			return 1.0;
+		case Random80:
+			return Math.random() < 0.80 ? Math.random() * 0.2 : (Math.random() * 0.2 + 0.8);
+		case Random20:
+			return Math.random() < 0.20 ? Math.random() * 0.2 : (Math.random() * 0.2 + 0.8);
 		case Random:
 		default:
 			return Math.random();

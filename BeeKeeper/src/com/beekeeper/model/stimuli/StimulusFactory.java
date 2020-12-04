@@ -22,6 +22,11 @@ public class StimulusFactory
 		return database;
 	}
 	
+	public static void refreshDataBase()
+	{
+		database = fillDataBase();
+	}
+	
 	public static AStimulus get(Stimulus key)
 	{
 		AStimulus s = null;
@@ -64,6 +69,7 @@ public class StimulusFactory
 			break;
 		case EthyleOleate:
 			s = new EthyleOleate();
+			System.out.println("New EO Instantiated " + s.getTransmissibility() + " realPropa: " + (Math.exp(-Math.log(2)/s.transmissibility_halflifelike)));
 			break;
 		default:
 			System.err.println("Stimulus Factory - default instead of " + key + ". Shouldn't happen.");
@@ -107,6 +113,7 @@ public class StimulusFactory
 	{
 		if(checkDataBaseWith(smell))
 		{
+			//if(Math.random() > 0.999999999)System.out.println(smell + " " + database.get(smell).getTransmissibility() + " " +  Math.exp(-Math.log(2) / database.get(smell).getTransmissibility() / ModelParameters.secondToTimeStepCoef));
 			return  Math.exp(-Math.log(2) / database.get(smell).getTransmissibility() / ModelParameters.secondToTimeStepCoef);
 		}
 		else

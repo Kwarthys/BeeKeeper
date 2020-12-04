@@ -2,8 +2,23 @@ import matplotlib.pyplot as plt
 import csv
 import numpy as np
 import os
+import re
 
 #defs
+
+def getCleanPowerTen(crappyPower):
+	valueLength = 1 + 3;
+	if('E-' in crappyPower):
+		key = re.sub(r'[0-9.]+', '', crappyPower.split('E')[0])
+		print(key)
+		value = crappyPower.split(key)[1].split('E')[0];
+		if(len(value) > valueLength):
+			value = value[0:valueLength]
+		print(value)
+		return key + value + 'E' + crappyPower.split('E')[1]
+	else:
+		return crappyPower;
+
 
 def getListFromExpeDict(task, dict):
 	theList = [];
@@ -13,8 +28,12 @@ def getListFromExpeDict(task, dict):
 	return theList;
 
 def getTimeStepsListFromExpeDict(dict):
+	convertInDays = True;
 	theList = [];
 	for timestep in dict:
+		v = timestep;
+		if(convertInDays):
+			timestep /= 60*60*24
 		theList.append(timestep);
 
 	return theList;
@@ -24,6 +43,8 @@ def getTimeStepsListFromExpeDict(dict):
 larvaTask = "LarvaTask";
 nurseTask = "FeedLarvae";
 foragerTask = "Foraging";
+giveFoodTask = "GiveFood";
+askFoodTask = "AskingFood";
 otherTask = "Other";
 meanHJKey = "MeanHJ";
 meanEOKey = "MeanEO"
@@ -62,7 +83,7 @@ for f in files:
 	value = value.split(".")[0];
 	
 	
-	fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4]# + " " + fileTags[6] + " " + theKey + value + "E" + powerTen
+	fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4] + " " + getCleanPowerTen(fileTags[9])
 	#if(len(fileTags) >= 9):
 	#	fileImportantName += " " + fileTags[8]
 	
@@ -79,7 +100,7 @@ for f in files:
 		line_count = 0;
 		prevIndex = -1
 		#print(f'\tturn {row[0]}, Bee ID {row[1]} was doing {row[2]} and had {row[3]} HJTiter ans row[4] EO.')
-		for row in csv_reader:			
+		for row in csv_reader:
 			if(line_count != 0):
 				index = int(row[0]);
 				if(prevIndex != index):
@@ -88,7 +109,9 @@ for f in files:
 						parsedExpe[prevIndex][larvaTask] = larvaeCount;
 						parsedExpe[prevIndex][nurseTask] = nurseCount;
 						parsedExpe[prevIndex][foragerTask] = foragerCount;
-						parsedExpe[prevIndex][otherTask] = otherCount;
+						parsedExpe[prevIndex][giveFoodTask] = giveFoodCount;
+						parsedExpe[prevIndex][askFoodTask] = askFoodCount;
+						parsedExpe[prevIndex][otherTask] = otherCount + giveFoodCount + askFoodCount;
 						parsedExpe[prevIndex][meanEOKey] = meanEO / (otherCount + foragerCount + nurseCount);
 						parsedExpe[prevIndex][meanHJKey] = meanHJ / (otherCount + foragerCount + nurseCount);
 						parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + otherCount;
@@ -97,6 +120,8 @@ for f in files:
 					nurseCount = 0
 					otherCount = 0
 					larvaeCount = 0
+					giveFoodCount = 0
+					askFoodCount = 0
 					meanHJ = 0.0
 					meanEO = 0.0
 					parsedExpe[index] = {}
@@ -112,18 +137,25 @@ for f in files:
 						nurseCount +=1;
 					elif(task == foragerTask):
 						foragerCount +=1;
+					elif(task == askFoodTask):
+						askFoodCount += 1;
+					elif(task == giveFoodTask):
+						giveFoodCount += 1;
 					else:
 						otherCount += 1;
 			
 			line_count+=1;
-	
-	parsedExpe[prevIndex][larvaTask] = larvaeCount;
-	parsedExpe[prevIndex][nurseTask] = nurseCount;
-	parsedExpe[prevIndex][foragerTask] = foragerCount;
-	parsedExpe[prevIndex][otherTask] = otherCount;
-	parsedExpe[prevIndex][meanEOKey] = meanEO / (otherCount + foragerCount + nurseCount);
-	parsedExpe[prevIndex][meanHJKey] = meanHJ / (otherCount + foragerCount + nurseCount);
-	parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + otherCount;
+			
+	if(prevIndex != -1):
+		parsedExpe[prevIndex][larvaTask] = larvaeCount;
+		parsedExpe[prevIndex][nurseTask] = nurseCount;
+		parsedExpe[prevIndex][foragerTask] = foragerCount;
+		parsedExpe[prevIndex][giveFoodTask] = giveFoodCount;
+		parsedExpe[prevIndex][askFoodTask] = askFoodCount;
+		parsedExpe[prevIndex][otherTask] = otherCount + giveFoodCount + askFoodCount;
+		parsedExpe[prevIndex][meanEOKey] = meanEO / (otherCount + foragerCount + nurseCount);
+		parsedExpe[prevIndex][meanHJKey] = meanHJ / (otherCount + foragerCount + nurseCount);
+		parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + otherCount;
 	
 	allParsedExpes[fileImportantName] = parsedExpe;
 	
@@ -149,7 +181,7 @@ index = 1;
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	#         row, col
-	plt.subplot(3,8, index, title=key);
+	plt.subplot(3,3, index, title=key);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label=nurseTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label=foragerTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(otherTask, expe), label=otherTask);
@@ -171,17 +203,32 @@ plt.figure(1, figsize=(25,15))
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	
-	plt.subplot(3,8, index, title=key);
+	plt.subplot(3,3, index, title=key);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanHJKey, expe), label=meanHJKey);
 	
 	index += 1
 		
 #plt.show()		
 plt.savefig("HJ.png");		
+
+'''
+index = 1;
+plt.figure(2, figsize=(25,15))
+for key in allParsedExpes:
+	expe = allParsedExpes[key];
+	
+	plt.subplot(4,1, index, title=key);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(askFoodTask, expe), label=askFoodTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(giveFoodTask, expe), label=giveFoodTask);
+	
+	if(index == 1):
+		plt.legend()
+	
+	index += 1
 		
+plt.savefig("Food.png");		
 		
-		
-		
+'''	
 		
 		
 		
