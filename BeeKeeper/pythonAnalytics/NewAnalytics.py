@@ -56,7 +56,9 @@ path = '../' + folderName + '/';
 
 files = []
 # r=root, d=directories, f = files
-for r, d, f in os.walk(path):
+exclude = set(["bees", "beesTest"]);
+for r, dirs, f in os.walk(path):
+	dirs[:] = [d for d in dirs if d not in exclude]
 	for file in f:
 		if '.csv' in file:
 			files.append(os.path.join(r, file))
@@ -74,16 +76,9 @@ for f in files:
 	fileTags = fileTags.split("_");
 	
 	#A_Classic_NewBorn_1000_0_518400_HJInc1.8518518518518519E-6
-	#fileImportantName = fileTags[1] + " " + fileTags[2] + " " + fileTags[3] + " " + fileTags[6];
+	#fileImportantName = fileTags[1] + " " + fileTags[2] + " " + fileTags[3] + " " + fileTags[6];	
 	
-	theKey = "HJRed";
-	scientificParam = fileTags[7].split(theKey)[1];
-	powerTen = scientificParam.split("E")[1];
-	value = scientificParam.split("E")[0];
-	value = value.split(".")[0];
-	
-	
-	fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4] + " " + getCleanPowerTen(fileTags[9])
+	fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4]# + " FeedingAmount:" + fileTags[7]
 	#if(len(fileTags) >= 9):
 	#	fileImportantName += " " + fileTags[8]
 	
@@ -101,7 +96,7 @@ for f in files:
 		prevIndex = -1
 		#print(f'\tturn {row[0]}, Bee ID {row[1]} was doing {row[2]} and had {row[3]} HJTiter ans row[4] EO.')
 		for row in csv_reader:
-			if(line_count != 0):
+			if(line_count != 0 and len(row) > 4):
 				index = int(row[0]);
 				if(prevIndex != index):
 					#push changes
@@ -181,12 +176,11 @@ index = 1;
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	#         row, col
-	plt.subplot(3,3, index, title=key);
+	plt.subplot(3,1, index, title=key);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label=nurseTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label=foragerTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(otherTask, expe), label=otherTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(larvaTask, expe), label=larvaTask);
-	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanEOKey, expe), label=meanEOKey);
 	
 	#print(getListFromExpeDict("Total", expe))
 	#print("\n")
@@ -198,14 +192,16 @@ for key in allParsedExpes:
 #plt.show()
 plt.savefig("Tasks.png");
 index = 1;
-
 plt.figure(1, figsize=(25,15))
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	
-	plt.subplot(3,3, index, title=key);
+	plt.subplot(3,1, index, title=key);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanHJKey, expe), label=meanHJKey);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanEOKey, expe), label=meanEOKey);	
 	
+	if(index == 1):
+		plt.legend()
 	index += 1
 		
 #plt.show()		

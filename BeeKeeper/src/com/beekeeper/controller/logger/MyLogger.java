@@ -15,6 +15,11 @@ public class MyLogger
 		writer = new WriterThread(getParam());
 	}
 	
+	public MyLogger(int beeID)
+	{
+		writer = new WriterThread("bees/" + getParam() + "_Bee" + beeID);
+	}
+	
 	public void logTask(int beeID, String taskName)
 	{
 		submit(new LogEntry(beeID + " started " + taskName + "\n"));
@@ -59,11 +64,11 @@ public class MyLogger
 		if(writer.running)
 		{
 			writer.running = false;
-			System.out.println("Asking thread to stop");
+			//System.out.println("Asking thread to stop");
 		}
 		else
 		{
-			System.out.println("Already closed");
+			//System.out.println("Already closed");
 		}
 	}
 	
@@ -74,7 +79,7 @@ public class MyLogger
 	
 	public boolean threadFinished()
 	{
-		System.out.println("writer.done " + writer.done);
+		//System.out.println("writer.done " + writer.done);
 		return writer.done;
 	}
 
@@ -95,14 +100,8 @@ public class MyLogger
 		sb.append(ModelParameters.NUMBER_LARVAE * ModelParameters.NUMBER_FRAMES);
 		sb.append("_");
 		sb.append(ModelParameters.SIMU_LENGTH);
-		sb.append("_eOem");
-		sb.append(ModelParameters.EOEmissionCoef);
-		sb.append("_HJRed");
-		sb.append(ModelParameters.hjReduction);
-		sb.append("_LeOem");
+		sb.append("_LEoEm");
 		sb.append(df.format(ModelParameters.LARVA_EO_TIMELY_EMMISION));
-		sb.append("_EOTr");
-		sb.append(df.format(ModelParameters.ETHYLE_OLEATE_TRANSMISSIBILITY));
 		
 		return sb.toString();
 	}

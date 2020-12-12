@@ -31,6 +31,8 @@ public class CombManager {
 	private ArrayList<StimuliManager> stimuliManagers = new ArrayList<>();
 
 	private HashMap<Integer, StimuliManagerServices> combsUpManagers = new HashMap<>();
+	
+	private ArrayList<Agent> loggerBees = new ArrayList<>();
 
 	private Dimension combSize = new Dimension(78,50);
 
@@ -305,8 +307,37 @@ public class CombManager {
 
 			this.combs.add(c);
 		}
+		
+		//LOGGING BEE DATA
+		if(ModelParameters.BEELOGGING)
+		{
+			ArrayList<Integer> ids = new ArrayList<>();
+			
+			for(int i = 0; i < ModelParameters.NB_BEE_LOGGING; ++i)
+			{
+				Comb c = combs.get((int)(Math.random() * combs.size()));
+				Agent a;
+				do
+				{
+					a = c.getAgents().get((int)(Math.random() * c.getAgents().size()));
+				}while(a.getBeeType() != AgentType.ADULT_BEE || ids.contains(a.getID()));
+				
+				ids.add(a.getID());
+				a.activateLogger();
+				
+				loggerBees.add(a);
+			}
+		}
 
 		return combs;
+	}
+	
+	public void terminateBeeLogging()
+	{
+		for(Agent a : loggerBees)
+		{
+			a.terminateLogging();
+		}
 	}
 	
 	private float getLarvaCoef(int totalCombAmount, int combNumber)

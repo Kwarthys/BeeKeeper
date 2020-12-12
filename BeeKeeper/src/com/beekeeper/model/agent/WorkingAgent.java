@@ -207,6 +207,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		
 		if(alive == false || getEnergy() == 0)
 		{
+			alive = false;
 			controllerServices.notifyDeath(this);
 			return;
 		}
@@ -286,6 +287,10 @@ public abstract class WorkingAgent extends EmitterAgent
 		currentAction.run();	
 		
 
+		if(loggerAgent && ModelParameters.BEELOGGING)
+		{
+			logger.log(currentTask.taskName, df.format(hjTiter), df.format(lastPercievedMap.getAmount(Stimulus.EthyleOleate)));
+		}
 
 
 		//If action is over, remove it

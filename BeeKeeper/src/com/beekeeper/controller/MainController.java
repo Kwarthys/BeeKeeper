@@ -262,6 +262,7 @@ public class MainController
 		this.agentFactory = new AgentFactory();
 		
 		StimulusFactory.refreshDataBase();
+		ModelParameters.applyPhysioParameters();
 
 		this.combManager = new CombManager();
 		combs = this.combManager.initiateFrames(ModelParameters.NUMBER_FRAMES, agentFactory, this.controlServices);
@@ -293,7 +294,7 @@ public class MainController
 	}
 	
 	public boolean start()
-	{
+	{		
 		boolean restart = programLoop();
 
 		if(this.window != null)
@@ -302,6 +303,7 @@ public class MainController
 		}
 
 		if(ModelParameters.LOGGING)this.logger.closing();
+		if(ModelParameters.BEELOGGING)this.combManager.terminateBeeLogging();
 
 		try {
 			System.out.println("Waiting");
@@ -385,7 +387,7 @@ public class MainController
 	 */
 
 	private boolean programLoop()
-	{
+	{		
 		boolean DEBUGTIME = false;
 		boolean MONITORTIME = false;
 		int minLoopMs = -1;

@@ -57,10 +57,12 @@ public class BeeKeeperLauncher {
 	{				
 		ModelParameters.UI_ENABLED = false;
 		ModelParameters.LOGGING = true;
+		//ModelParameters.BEELOGGING = true;
+		//ModelParameters.NB_BEE_LOGGING = 24;
 		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;		
-		ModelParameters.SIMU_LENGTH = 30 * ModelParameters.DAY;
+		ModelParameters.SIMU_LENGTH = 1 * ModelParameters.DAY;
 		ModelParameters.NUMBER_BEES = 1000;
-		ModelParameters.NUMBER_LARVAE = 800;
+		ModelParameters.NUMBER_LARVAE = 750;
 		ModelParameters.NUMBER_FRAMES = 1;
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;
@@ -68,14 +70,8 @@ public class BeeKeeperLauncher {
 		
 		int charNumberA = 65;
 		StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
-		int[] nb = {0,750,1500};
-		//double[] lem = {0.05, 0.04, 0.03};
-		
-		//for(int i = 0; i < 8; ++i)
-		//{
-		//	lem[i] = ModelParameters.LARVA_EO_TIMELY_EMMISION * Math.pow(2, i+1);
-		//}	
-
+		//int[] nb = {0,750,1500}
+/*
 		for(int j = 0; j < 3; ++j)
 		{
 			ModelParameters.startMode = mode[j];
@@ -83,25 +79,25 @@ public class BeeKeeperLauncher {
 			for(int i = 0; i < 3; ++i)
 			{				
 				ModelParameters.identifier = (char)(charNumberA + i + 3*j);
-				ModelParameters.NUMBER_LARVAE = nb[i];
+				ModelParameters.LARVA_EO_TIMELY_EMMISION = lem[i];
 				startExpeAndMonitorTime(new MainController());	
 			}
 		}
-	
-/*
-		ModelParameters.startMode = StartMode.NewBorn;
-		for(int i = 2; i < 3 ; ++i)
+*/	
+
+		for(int i = 0; i < 3 ; ++i)
 		{
-			ModelParameters.ETHYLE_OLEATE_TRANSMISSIBILITY = 2 * ModelParameters.DAY;
+			ModelParameters.startMode = mode[i];
 			ModelParameters.identifier = (char)(charNumberA + i);
 			startExpeAndMonitorTime(new MainController());
-			//System.out.println("\nETHYLE_OLEATE_TRANSMISSIBILITY: " + ModelParameters.ETHYLE_OLEATE_TRANSMISSIBILITY);
-			//System.out.println("ETHYLE_OLEATE_REAL: " + StimulusFactory.getPropag(Stimulus.EthyleOleate));
 		}
-*/
+
 		
-		
-		
+/*
+		ModelParameters.startMode = StartMode.Random20;
+		ModelParameters.identifier = (char)(charNumberA+2);
+		startExpeAndMonitorTime(new MainController());
+*/		
 		
 		/*OLD CODE (just in case)
 		int simuLength = 5000;

@@ -38,13 +38,13 @@ public class StimulusFactory
 		//	System.err.println("Stimulus Factory - " + key + " Not implemented");
 		//	break;
 		case Energy:
-			System.err.println("Stimulus Factory - " + key + " Not implemented");
+			//System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
 		//case FoodSmell:
 		//	s = new FoodSmellStimulus();
 		//	break;
 		case HungerBee:
-			System.err.println("Stimulus Factory - " + key + " Not implemented");
+			//System.err.println("Stimulus Factory - " + key + " Not implemented");
 			break;
 		//case HungryLarvae:
 		//	s = new HungryLarvaeStimulus();
@@ -69,7 +69,7 @@ public class StimulusFactory
 			break;
 		case EthyleOleate:
 			s = new EthyleOleate();
-			System.out.println("New EO Instantiated " + s.getTransmissibility() + " realPropa: " + (Math.exp(-Math.log(2)/s.transmissibility_halflifelike)));
+			//System.out.println("New EO Instantiated " + s.getTransmissibility() + " realPropa: " + (Math.exp(-Math.log(2)/s.transmissibility_halflifelike)));
 			break;
 		default:
 			System.err.println("Stimulus Factory - default instead of " + key + ". Shouldn't happen.");

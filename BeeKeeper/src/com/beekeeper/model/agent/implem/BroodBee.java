@@ -46,8 +46,8 @@ public class BroodBee extends WorkingAgent
 	
 	@Override
 	public void recieveFood() {
-		//System.out.print(getStringName() + " got fed : " + getEnergy());
-		this.addToEnergy(1);
+		//if(getID() == 0)System.out.println(getStringName() + " got fed : " + getEnergy());
+		this.addToEnergy(ModelParameters.LARVAE_FEEDING_INCREMENT);
 		//System.out.println(" to " + getEnergy());
 	}
 
@@ -61,7 +61,7 @@ public class BroodBee extends WorkingAgent
 	protected void advanceMetabolism()
 	{
 		
-		//if(getID() == 0)System.out.println(getStringName() + " " + getEnergy() + " - " + ModelParameters.LARVAE_HUNGER_INCREMENT);
+		//if(getID() == 0)System.out.println(getStringName() + " " + getEnergy() + " - " + ModelParameters.LARVAE_HUNGER_INCREMENT + " + " + ModelParameters.LARVAE_FEEDING_INCREMENT);
 		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);
 		
 		if(age > ModelParameters.timestepLarvaPop && ModelParameters.LARVA_CAN_HATCH)

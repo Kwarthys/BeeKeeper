@@ -1,8 +1,11 @@
 package com.beekeeper.model.agent;
 
 import java.awt.Point;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
+import com.beekeeper.controller.logger.MyLogger;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.utils.IDManager;
@@ -15,6 +18,25 @@ public abstract class Agent
 	private double energy = 1;
 	
 	protected int ID;
+	
+	public boolean loggerAgent = false;
+	protected MyLogger logger;
+	protected DecimalFormat df = new DecimalFormat("#.####");
+	
+	public void activateLogger()
+	{
+		loggerAgent = true;
+		logger = new MyLogger(ID);
+		
+		DecimalFormatSymbols s = df.getDecimalFormatSymbols();
+		s.setDecimalSeparator('.');
+		df.setDecimalFormatSymbols(s);
+	}
+	
+	public void terminateLogging()
+	{
+		logger.closing();
+	}
 	
 	protected double hunger = 0;
 	public double getHunger() {return hunger;}	

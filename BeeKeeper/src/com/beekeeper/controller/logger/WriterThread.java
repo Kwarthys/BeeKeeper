@@ -23,7 +23,7 @@ public class WriterThread extends Thread {
 		FileWriter fw;
 		try {
 			fw = new FileWriter("expe/"+param+".csv", false);
-			System.out.println("Started writing for : expe/"+param+".csv");
+			//System.out.println("Started writing for : expe/"+param+".csv");
 			this.writer = new BufferedWriter(fw);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,7 +50,7 @@ public class WriterThread extends Thread {
 		
 		try {
 			writer.close();
-			System.out.println("ClosedNicely");
+			//System.out.println("ClosedNicely");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
