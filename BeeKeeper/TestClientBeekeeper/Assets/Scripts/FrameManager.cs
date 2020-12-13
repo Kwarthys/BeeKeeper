@@ -17,6 +17,8 @@ public class FrameManager : MonoBehaviour
 
     public PointCloudReferencer foragerCloud;
 
+    public FramePositionner positionner;
+
     public void treatOrder(UpdateContent order)
     {
         CombPointCloud cpc = getCloudOfId(order.combID);
@@ -176,8 +178,10 @@ public class FrameManager : MonoBehaviour
     
     private FrameBehaviour spawnAFrame(int id)
     {
-        FrameBehaviour f = Instantiate(framePrefab, new Vector3(0, 0, -id * 0.1f), Quaternion.identity, hiveContainer).GetComponent<FrameBehaviour>();
+        FrameBehaviour f = Instantiate(framePrefab, Vector3.zero, Quaternion.identity, hiveContainer).GetComponent<FrameBehaviour>();
         f.id = id;
+        Vector3 framePos = positionner.registerAndPlaceNewFrame(f);
+        f.transform.position = framePos;
 
         return f;
     }

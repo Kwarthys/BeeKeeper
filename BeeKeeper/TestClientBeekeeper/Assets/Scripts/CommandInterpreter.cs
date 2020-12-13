@@ -96,8 +96,8 @@ public class CommandInterpreter : MonoBehaviour
                 break;
 
             default:
-                Debug.Log("NOT INTERPRETED : " + command.command + " " + command.param + " " + command.data);
-                break;
+                Debug.Log("SERVER MESSAGE : " + command.command + " " + command.param + " " + command.data);
+                break;//
         }
     }
 }

@@ -148,6 +148,11 @@ public class HiveModel : MonoBehaviour
                 {
                     theAgents[order.ids[i]].age = order.ages[i];
                     theAgents[order.ids[i]].JH = order.jhAmounts[i];
+
+                    if (order.taskNames[i] == "Queen Task")
+                    {
+                        theAgents[order.ids[i]].isQueen = true;
+                    }
                 }
             }
         }
@@ -247,4 +252,6 @@ public class BeeAgent
     public float JH;
     public int amountExchanged;
     public Vector3 pos;
+
+    public bool isQueen = false;
 }

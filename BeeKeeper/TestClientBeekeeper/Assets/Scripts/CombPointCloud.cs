@@ -11,8 +11,6 @@ public class CombPointCloud : MonoBehaviour
 
     private int numPoints;
 
-    private int counter = 0;
-
     private Mesh mesh;
 
     private void OnValidate()

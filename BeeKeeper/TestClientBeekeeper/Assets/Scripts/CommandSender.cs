@@ -18,6 +18,12 @@ public class CommandSender : MonoBehaviour
         sender.sendTCP(request);
     }
 
+    public void hitFrame(int frameIndex)
+    {
+        string request = "FrHIT " + frameIndex;
+        sender.sendTCP(request);
+    }
+
     public void sendString(string s)
     {
         sender.sendTCP(s);

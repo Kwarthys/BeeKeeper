@@ -16,6 +16,8 @@ public class ContactGrapherRetriever : MonoBehaviour
 
     private float lastRefresh = -10;
 
+    private Dictionary<int, int> idToPointID = new Dictionary<int, int>();
+
     void Update()
     {
         if(Time.realtimeSinceStartup - lastRefresh > refreshRate)
@@ -29,7 +31,21 @@ public class ContactGrapherRetriever : MonoBehaviour
             {                
                 Vector3 point = transformPoint(new Vector3(b.age, b.JH, b.amountExchanged));
                 targets.Add(point);
-                ids.Add(b.pointID);
+
+                int pointID;
+
+                if(!idToPointID.ContainsKey(b.id))
+                {
+                    pointID = pointCloud.idManager.getNextFreeIndex();
+                    idToPointID.Add(b.id, pointID);
+
+                }
+                else
+                {
+                    pointID = idToPointID[b.id];
+                }
+
+                ids.Add(pointID);
             }
 
             pointCloud.updatePoints(new UpdateOrder(targets, ids));

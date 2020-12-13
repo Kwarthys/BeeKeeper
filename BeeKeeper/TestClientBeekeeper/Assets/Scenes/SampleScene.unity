@@ -149,6 +149,7 @@ MonoBehaviour:
   layers:
     serializedVersion: 2
     m_Bits: 256
+  positionner: {fileID: 739151494}
 --- !u!1 &102078380
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +821,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RealAge
+  m_text: Real Age
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -889,10 +890,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 556526118}
-    characterCount: 7
+    characterCount: 8
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 1
+    spaceCount: 1
+    wordCount: 2
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -1291,6 +1292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 739151492}
   - component: {fileID: 739151493}
+  - component: {fileID: 739151494}
   m_Layer: 0
   m_Name: HiveContainer
   m_TagString: Untagged
@@ -1327,6 +1329,24 @@ MonoBehaviour:
   pointCloudPrefab: {fileID: 2549565278015765890, guid: 98c892c2934cb4a4997b1a1e09e04c8a,
     type: 3}
   lerpTime: 500
+--- !u!114 &739151494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739151491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8676f5d3de2c1408533116e23be257, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  framePlaceHolderPrefab: {fileID: 147477743407957245, guid: d2193a5751941ec4d95bbe8da6346a15,
+    type: 3}
+  frameIntervals: -0.1
+  maxNumberOfFrames: 10
+  scoutDistance: 1
+  sender: {fileID: 856384928}
 --- !u!1 &792908484
 GameObject:
   m_ObjectHideFlags: 0
@@ -3089,7 +3109,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pheromone Exchages
+  m_text: Pheromone Exchanges
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3158,7 +3178,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1773768563}
-    characterCount: 18
+    characterCount: 19
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -3269,6 +3289,7 @@ MonoBehaviour:
   sender: {fileID: 856384928}
   hiveContainer: {fileID: 739151492}
   foragerCloud: {fileID: 739151493}
+  positionner: {fileID: 739151494}
 --- !u!114 &1877870044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3583,7 +3604,7 @@ PrefabInstance:
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.18
+      value: 4.28
       objectReference: {fileID: 0}
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
@@ -3593,7 +3614,7 @@ PrefabInstance:
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.01
+      value: 0.69
       objectReference: {fileID: 0}
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
@@ -3603,7 +3624,7 @@ PrefabInstance:
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
@@ -3613,7 +3634,7 @@ PrefabInstance:
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
@@ -3628,7 +3649,7 @@ PrefabInstance:
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 5960757323120779478, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
@@ -3638,7 +3659,12 @@ PrefabInstance:
     - target: {fileID: 5960757323626100974, guid: d635bc9ba1183f94a856263481318310,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960757323626100974, guid: d635bc9ba1183f94a856263481318310,
+        type: 3}
+      propertyPath: mouseSensitivity
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d635bc9ba1183f94a856263481318310, type: 3}
