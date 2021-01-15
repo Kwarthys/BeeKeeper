@@ -4,6 +4,7 @@ import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.parameters.ModelParameters;
 
 public class RestTask extends Task
 {	
@@ -15,9 +16,15 @@ public class RestTask extends Task
 		
 		this.motivated = false;
 		
-		rootActivity.addTaskNode(new Action(1,-0.1,agentServices) {			
+		rootActivity.addTaskNode(new Action(1,-ModelParameters.RESTTASK_RESTORATION,agentServices) {			
 			@Override
-			public void execute() {}
+			public void execute() {
+				//if(agentServices.getID() == 900)System.out.println("Resting: e" + agentServices.getEnergy());
+				if(Math.random() > 0.99)
+				{
+					agentServices.randomMove();
+				}
+			}
 			
 			@Override
 			public boolean check() {

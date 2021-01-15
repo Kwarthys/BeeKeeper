@@ -232,7 +232,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 
-		//System.out.println(ID + " living ! " + s.getAmount(Stimulus.HungryLarvae));
+		//System.out.println(ID + " looking for a new task ? " + (currentAction == null));
 
 		if(currentAction == null)
 		{

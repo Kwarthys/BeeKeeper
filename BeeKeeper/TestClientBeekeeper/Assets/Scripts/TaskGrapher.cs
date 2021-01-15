@@ -98,14 +98,17 @@ public class TaskGrapher : MonoBehaviour
         TaskGraphData graphData;
         if (data.Count == 0)
         {
+            //Receiving first data
             graphData = new TaskGraphData(status.timeStep, nextIndex++);
         }
         else if (data[data.Count - 1].timestep == status.timeStep)
         {
+            //Receiving additionnal data for current timestep
             graphData = data[data.Count - 1];
         }
         else if (data[data.Count - 1].timestep < status.timeStep)
         {
+
             graphData = new TaskGraphData(status.timeStep, nextIndex++);
             data[data.Count - 1].ready = true;
             fillTheGaps(data[data.Count - 1]);
@@ -120,12 +123,14 @@ public class TaskGrapher : MonoBehaviour
         //TREAT DATA
         for (int i = 0; i < status.ids.Count; ++i)
         {
-            if (!graphData.tasks.ContainsKey(status.taskNames[i]))
+            string refinedTaskName = getTaskGroup(status.taskNames[i]);
+
+            if (!graphData.tasks.ContainsKey(refinedTaskName))
             {
-                graphData.tasks[status.taskNames[i]] = 0;
+                graphData.tasks[refinedTaskName] = 0;
             }
 
-            graphData.tasks[status.taskNames[i]]++;
+            graphData.tasks[refinedTaskName]++;
         }
 
         data.Add(graphData);
@@ -154,6 +159,19 @@ public class TaskGrapher : MonoBehaviour
         data.Clear();
         asyncDataList.Clear();
         initAsked = true;
+    }
+
+    public string getTaskGroup(string taskName)
+    {
+        switch(taskName)
+        {
+            case "FeedLarvae":
+                return "Travail de Nourrice";
+            case "Foraging":
+                return "Travail de Butineuse";
+            default:
+                return "Travail Utilitaire";
+        }
     }
 }
 

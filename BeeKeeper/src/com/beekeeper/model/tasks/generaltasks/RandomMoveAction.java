@@ -9,7 +9,7 @@ public class RandomMoveAction extends Action {
 	 * Condition always true and triggers a random move for the agent and a drop of motivation;
 	 */
 	public RandomMoveAction(WorkingAgentServices s) {
-		super(0.5, 0.001, s);
+		super(1, 0.001, s);
 	}
 
 	@Override

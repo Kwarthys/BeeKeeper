@@ -19,9 +19,19 @@ public class FramePositionner : MonoBehaviour
 
     public CommandSender sender;
 
+    public bool authorizeAllDrop = false;
+
     private void Start()
     {
         framesIndex = new int[maxNumberOfFrames];
+        if(authorizeAllDrop)
+        {
+            for(int i = 0; i < maxNumberOfFrames; ++i)
+            {
+                framesIndex[i] = -1;
+            }
+        }
+
         instanciatedPlaceHolder = Instantiate(framePlaceHolderPrefab, new Vector3(0, -5, 0), Quaternion.identity).transform;
     }
 
@@ -48,16 +58,19 @@ public class FramePositionner : MonoBehaviour
         framesIndex[prevPos] = -1; //lifting it up
 
         Debug.Log("lifted F" + lifted.id + " from " + prevPos);
-        sender.liftFrame(lifted.id);
+        sender?.liftFrame(lifted.id);
 
         framePosIndexes[lifted] = -1;
     }
 
     public void notifyFrameHandled(FrameBehaviour lifted)
     {
-        if(framePosIndexes[lifted] != -1)
+        if(framePosIndexes.ContainsKey(lifted))
         {
-            notifyFrameLift(lifted);
+            if(framePosIndexes[lifted] != -1)
+            {
+                notifyFrameLift(lifted);
+            }
         }
 
         if(tryGetClosestEmptyPos(lifted.transform.position, out int index))
@@ -74,7 +87,7 @@ public class FramePositionner : MonoBehaviour
         }
     }
 
-    private bool tryGetClosestEmptyPos(Vector3 pos, out int closestIndex)
+    private bool tryGetClosestEmptyPos(Vector3 framePos, out int closestIndex)
     {
         float sqrdDistance = -1;
         closestIndex = -1;
@@ -83,7 +96,7 @@ public class FramePositionner : MonoBehaviour
         {
             if(framesIndex[i] == -1) //emptyPos
             {
-                float d = (new Vector3(0, 0, i * frameIntervals) - pos).sqrMagnitude;
+                float d = (new Vector3(0, 0, i * frameIntervals)+transform.position - framePos).sqrMagnitude;
                 if (d < sqrdDistance || sqrdDistance == -1)
                 {
                     sqrdDistance = d;
@@ -95,7 +108,7 @@ public class FramePositionner : MonoBehaviour
         return sqrdDistance != -1 && sqrdDistance < scoutDistance*scoutDistance; //squared scoutdistance
     }
 
-    public void notifyFrameDropped(FrameBehaviour f)
+    public bool notifyFrameDropped(FrameBehaviour f)
     {
         if(tryGetClosestEmptyPos(f.transform.position, out int index))
         {
@@ -113,10 +126,14 @@ public class FramePositionner : MonoBehaviour
             }
 
             Debug.Log("Dropped F" + f.id + " to " + index);
-            sender.putFrame(f.id, index, angle > 90);
+            sender?.putFrame(f.id, index, angle > 90);
 
             resetPlaceHolderPos();
+
+            return true;
         }
+
+        return false;
     }
 
     private void resetPlaceHolderPos()

@@ -44,7 +44,7 @@ public class ModelParameters
 	
 	public static final double secondToTimeStepCoef = 1;
 
-	public static long SIMULATION_SLEEP_BY_TIMESTEP = 1000;//500
+	public static long SIMULATION_SLEEP_BY_TIMESTEP = 1000;
 	
 	public static boolean LARVA_CAN_HATCH = true;
 	public static boolean FORAGERS_DIE_SOONER = true;
@@ -67,22 +67,25 @@ public class ModelParameters
 	//Wang et al 2016: starved honey bees for 12hours -> 50%bee died
 	public static final double HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
 	
-	//Huang & Otis 1991 - Inspection and feeding ... fed every ~35min
+	public static final double LARVA_FEEDING_MEANDURATION = 70 * SECOND; //Biology of Honey bee p97. //Don't wanna go below the second no matter the acceleration
+	public static final double WORKER_FEEDING_MEANDURATION = 60 * SECOND; //Estimated
+	
 	//2 Days old larvae all dies in 7h of starvation (some earlier) while 4days old all survive that 7hour starvation (-> hunger doesn't start high)
 	public static final double LARVAE_HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
 	
-	public static final double LARVAE_FEEDING_INCREMENT = LARVAE_HUNGER_INCREMENT * 1 * HOUR;
+	//Huang & Otis 1991 - Inspection and feeding ... fed every ~35min
+	public static int MIN_DURATION_LARVAEFEDAGAIN = 30 * MINUTE; //Represents the time that the larva takes to eat all that has been given to it
+	
+	public static final double LARVAE_FEEDING_INCREMENT = LARVAE_HUNGER_INCREMENT * 35 * MINUTE;
 	
 	public static final double MOTIVATION_STEP = 0.01; //ACCELERATION ? maybe not
 	
-	public static final double SMELL_THRESHOLD = 0.001;
+	public static final double SMELL_THRESHOLD = 0.0001;
 
 	public static final double MAX_MOTIVATION = 0.9;
-
-	public static final double LARVA_FEEDING_MEANDURATION = Math.max(1, 70 / SIMU_ACCELERATION); //Biology of Honey bee p97. //Don't wanna go below the second no matter the acceleration
-	public static final double WORKER_FEEDING_MEANDURATION = Math.max(1, 60 / SIMU_ACCELERATION); //Estimated
 	
-	public static final double FORAGING_TIME_SEC = 20*60;//20 minutes, in sec not in timesteps;
+	public static final double FORAGING_TIME = 20 * MINUTE;
+	public static final double FORAGING_ENERGYCOST = 0.3 / FORAGING_TIME;
 	
 	//Esters usually have 16hours so we'll say that for now
 	public static final double ETHYLE_OLEATE_HALFLIFE = 16.0 * HOUR / SIMU_ACCELERATION;
@@ -95,6 +98,9 @@ public class ModelParameters
 	
 	/* want it to be half tired after an hour */
 	public static final double QUEEN_TASKS_ENERGYCOSTS = 1.0/2.0/HOUR;
+
+	public static final double RESTTASK_RESTORATION = 1.0/(20*MINUTE);
+
 	
 	public static double HJ_EQUILIBRIUM = 0.8;
 	public static double EO_EQUILIBRIUM = 1;//from1000 to 1
@@ -106,14 +112,17 @@ public class ModelParameters
 	//public static double EOEmissionCoef = 0.01; //TODO CHANGED TO 0.02
 	//public static double EOEmissionCoef = 0.02;
 	//public static double EOEmissionCoef = ((1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM) / HJ_EQUILIBRIUM; //0.015
-	public static double EOEvapAtEOEQ = (1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM;
+	public static double getEOEvapAtEOEQ()
+	{		
+		return (1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM;
+	}
 
 	//public static double LARVA_EO_TIMELY_EMMISION = 0.15;
-	public static double LARVA_EO_TIMELY_EMMISION = EOEvapAtEOEQ * 1.5;
+	public static double LARVA_EO_TIMELY_EMMISION = 0;//getEOEvapAtEOEQ() * 1.5;
 
 	public static final double getEthyleOleateEmitedByHJ(double hjTiter)
 	{
-		return (hjTiter/HJ_EQUILIBRIUM) * (hjTiter/HJ_EQUILIBRIUM) * EOEvapAtEOEQ * SIMU_ACCELERATION;//CHANGING
+		return Math.pow((hjTiter/HJ_EQUILIBRIUM),1) * getEOEvapAtEOEQ() * SIMU_ACCELERATION;//CHANGING
 		
 		//return hjTiter * 0.000000004 * SIMU_ACCELERATION; //Calculated with google sheet to match biological observation : https://docs.google.com/spreadsheets/d/1G8Npmpj3zvKJWzIT85aO0ulNe2J9UrzrpwM7wehnqgA/edit?usp=sharing
 	}
@@ -123,7 +132,7 @@ public class ModelParameters
 	//public static double hjReduction = 0.0000000023;
 	//public static double hjReduction = HJ_INCREMENT / EO_EQUILIBRIUM; //EO alteration compensates HJ timely emission at EO_Equilibrium EO Amount
 	
-	public static double EOEmissionPower = 2.0;
+	public static double EOEmissionPower = 1.0;
 	
 	public static final double getHJModifiedByEthyleOleate(double ethyleOleateAmount)
 	{
@@ -136,9 +145,8 @@ public class ModelParameters
 	
 	public static void applyPhysioParameters()
 	{
-		EOEvapAtEOEQ = (1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM;
 		//hjReduction = HJ_INCREMENT / EO_EQUILIBRIUM;
-		//LARVA_EO_TIMELY_EMMISION = EOEmissionCoef * 1.5;
+		LARVA_EO_TIMELY_EMMISION = getEOEvapAtEOEQ() * 1.5;
 	}
 	
 	
@@ -148,8 +156,8 @@ public class ModelParameters
 	
 	public static int NUMBER_FRAMES = 1;
 	public static int NUMBER_BEES = 1000;
-	public static int NUMBER_LARVAE = 50;
-	public static int SIMU_LENGTH = 5*DAY;
+	public static int NUMBER_LARVAE = 750;
+	public static int SIMU_LENGTH = 50*DAY;
 	public static StartMode startMode = StartMode.Random;
 	
 	public static double getStartingBeeHJTiter()
@@ -157,9 +165,9 @@ public class ModelParameters
 		switch(startMode)
 		{
 		case NewBorn:
-			return 0.0;
+			return Math.random() * 0.2;
 		case Old:
-			return 1.0;
+			return Math.random() * 0.2 + 0.8;
 		case Random80:
 			return Math.random() < 0.80 ? Math.random() * 0.2 : (Math.random() * 0.2 + 0.8);
 		case Random20:

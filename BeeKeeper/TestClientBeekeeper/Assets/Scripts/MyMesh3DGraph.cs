@@ -18,7 +18,7 @@ public class MyMesh3DGraph : MonoBehaviour
 
     public GameObject curve3DMeshPrefab;
 
-    private Color[] colors = { Color.white, Color.red, Color.black, Color.blue, Color.green, Color.yellow, Color.cyan };
+    private Color[] colors = {Color.blue, Color.green, Color.magenta, Color.cyan };
 
     private Dictionary<string, Curve3DMesh> curves = new Dictionary<string, Curve3DMesh>();
     private Dictionary<string, Color> taskColors = new Dictionary<string, Color>();

@@ -2,6 +2,7 @@ package com.beekeeper.model.tasks.beetasks;
 
 import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
@@ -21,7 +22,7 @@ public class ForagerTask extends Task {
 		super(agentServices, foragingTaskName);		
 		
 		//Wandering inHive
-		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
 			@Override
 			public void execute() {
 				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " Wandering");
@@ -29,22 +30,22 @@ public class ForagerTask extends Task {
 				{
 					//agentServices.dropMotivation();
 				}
-				c++;
+				c--;
 			}
 			
 			@Override
 			public boolean check() {
-				return back && agentServices.isInside() && c < 35;//35
+				return back && agentServices.isInside() && c > 0;//35
 			}
 		});
 		
 		//Entering Hive
-		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
 			@Override
 			public void execute() {
 				/*boolean entered = */agentServices.enterHive();
 				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " Entering - " + entered);
-				c=0;
+				c = (int) (Math.random() * 20 + 10);
 			}
 			
 			@Override
@@ -54,7 +55,7 @@ public class ForagerTask extends Task {
 		});
 		
 		//Foraging outside
-		this.rootActivity.addTaskNode(new Action(ModelParameters.FORAGING_TIME_SEC,0,agentServices) {//200,0,age...
+		this.rootActivity.addTaskNode(new Action(ModelParameters.FORAGING_TIME, ModelParameters.FORAGING_ENERGYCOST,agentServices) {//200,0,age...
 			@Override
 			public void execute() {
 				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " go forage");
@@ -68,7 +69,7 @@ public class ForagerTask extends Task {
 		});
 		
 		//Go Out
-		this.rootActivity.addTaskNode(new Action(0.1,0,agentServices) {
+		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
 			@Override
 			public void execute() {
 				ForagerTask.this.motivated = false;
@@ -97,7 +98,7 @@ public class ForagerTask extends Task {
 	@Override
 	public double compute(StimuliMap smap) {
 		this.threshold = 1-(agentServices.getHJTiter()*0.7);
-		return this.thresholdSigmoid(0.5);
+		return this.thresholdSigmoid(agentServices.getHJTiter() < 0.5 ? 0 : smap.getAmount(Stimulus.Energy) > 0.7 ? 0.5 : 0);
 	}
 
 }

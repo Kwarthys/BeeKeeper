@@ -52,7 +52,7 @@ public class MainController
 
 	private volatile int turnIndex = -1;
 
-	private HashMap<Integer, Integer> contactsQuantitiesByIndex = new HashMap<>();
+	private HashMap<Integer, Double> contactsQuantitiesByIndex = new HashMap<>();
 	private boolean contactsLocked = false;
 	
 	private volatile boolean restartAsked = false;
@@ -192,15 +192,15 @@ public class MainController
 		@Override
 		public void notifyAgentContact(int id1, int id2, double amount) {
 			//System.out.println("contact " + id1 + " " + id2 + " -> " + amount);
-			registerContactFor(id1, (int) amount);
-			registerContactFor(id2, (int) amount);
+			registerContactFor(id1, amount);
+			registerContactFor(id2, amount);
 			//String s = id1 + " " + id2 + " " + (int)amount;
 			//boolean add = contactBlockingQueue.add(s);
 			//System.out.println(id1 + "-" + id2 + " exchanged " + amount + " : " + add);
 		}
 
 		@Override
-		public HashMap<Integer, Integer> getAgentContacts() {
+		public HashMap<Integer, Double> getAgentContacts() {
 			contactsLocked = true;
 			return contactsQuantitiesByIndex;
 		}
@@ -286,6 +286,8 @@ public class MainController
 		}
 		
 		combManager.printCombPopulations();
+		
+		System.out.println("MC Built");
 	}
 	
 	public MainControllerServices getServices()
@@ -317,13 +319,15 @@ public class MainController
 		return restart;
 	}
 	
-	private synchronized void registerContactFor(int agentIndex, int quantity)
+	private synchronized void registerContactFor(int agentIndex, double quantity)
 	{
 		if(contactsLocked)
 		{
 			//System.out.println("registerContactFor : Locked");
 			return; //If map is being read by another thread, we're throwing data away : shouldn't be much of an issue given the shear amount of data
 		}
+		
+		//System.out.println("Quanttt " + quantity);
 		
 		if(agentFactory.typesOfIndex.get(agentIndex) == AgentType.ADULT_BEE)
 		{
@@ -424,7 +428,14 @@ public class MainController
 			}
 			
 			turnIndex++;
+			/*
+			System.out.println(turnIndex + " FORK");
 			
+			if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
+			{
+				System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOGGING");
+			}
+			*/
 			try {
 				combManager.liveAgents();
 				
@@ -437,6 +448,10 @@ public class MainController
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+			
+			//System.out.println(turnIndex + " JOIN into FORAGERS");
+			
+			//long milis = System.nanoTime();
 			
 			//int foragersNb = foragers.size();
 			//if(turnIndex%200==0)System.out.println(foragersNb + " foragers / " + (combManager.getNumberOfAgents() + foragersNb) + " total.");
@@ -459,6 +474,9 @@ public class MainController
 				}
 			}
 			
+			//long timeForagers = (System.nanoTime() - milis)/1000;
+			//if(timeForagers > 2000)System.out.println("Foragers took " + timeForagers + "us.");
+			
 			Iterator<Agent> it = newLandings.iterator();
 			while(it.hasNext())
 			{
@@ -466,6 +484,8 @@ public class MainController
 				foragers.remove(a);
 				it.remove();
 			}
+			
+			//System.out.println(turnIndex + " FORAGERS OK");
 			
 			
 			if(DEBUGTIME)System.out.println("AllAgent lived at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
@@ -480,6 +500,11 @@ public class MainController
 			this.combManager.updateStimuli();
 			
 			if(DEBUGTIME)System.out.println("updateStimuli at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
+			
+			if(!contactsLocked)
+			{
+				contactsQuantitiesByIndex.forEach((Integer beeID, Double amount) -> {amount*=0.99;});
+			}
 			
 			timeStepOver = true;
 			

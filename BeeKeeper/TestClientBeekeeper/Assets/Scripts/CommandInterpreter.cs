@@ -83,12 +83,13 @@ public class CommandInterpreter : MonoBehaviour
 
             case "CONTACTS":
                 ids = new List<int>();
-                List<int> amounts = new List<int>();
+                List<float> amounts = new List<float>();
 
                 for (int i = 0; i < data.Length; i+=2)
                 {
                     ids.Add(int.Parse(data[i]));
-                    amounts.Add(int.Parse(data[i+1]));
+                    amounts.Add(float.Parse(data[i+1]));
+                    //if (i%200 == 0) Debug.Log(float.Parse(data[i + 1]));
                 }
 
                 model.registerContactUpdate(new UpdateContactOrder(ids, amounts));

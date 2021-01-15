@@ -63,7 +63,7 @@ public class FrameManager : MonoBehaviour
             if(target.z == -1)
             {
                 //forager
-                foragersUpdate.add(target, o.targetsIDs[i]);
+                foragersUpdate.add(target, o.targetsIDs[i], o.colors[i]);
             }
             else
             {
@@ -82,7 +82,7 @@ public class FrameManager : MonoBehaviour
                 }
 
 
-                sortedOrders[frameTargetIDInList].add(getPosOnFrame(target), o.targetsIDs[i]);
+                sortedOrders[frameTargetIDInList].add(getPosOnFrame(target), o.targetsIDs[i], o.colors[i]);
                 
 
             }            

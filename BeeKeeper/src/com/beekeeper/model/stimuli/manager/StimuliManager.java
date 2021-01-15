@@ -9,7 +9,6 @@ import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.parameters.ModelParameters;
-import com.beekeeper.utils.MyUtils;
 
 public class StimuliManager
 {

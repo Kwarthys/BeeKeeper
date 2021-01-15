@@ -20,7 +20,7 @@ public class AskFoodTask extends Task {
 		this.motivated = false;
 		
 		//eating at cell
-		this.rootActivity.addTaskNode(new Action(6, 0, agentServices) {		
+		this.rootActivity.addTaskNode(new Action(30, 0, agentServices) {		
 			@Override
 			public void execute() {
 				//if(agentServices.getID() == 1000)System.out.println(agentServices.getID() + " eating at cell");	
@@ -35,7 +35,7 @@ public class AskFoodTask extends Task {
 		});
 		
 		//checking cell
-		this.rootActivity.addTaskNode(new Action(2, 0, agentServices) {
+		this.rootActivity.addTaskNode(new Action(10, 0, agentServices) {
 			
 			@Override
 			public void execute() {
@@ -54,7 +54,7 @@ public class AskFoodTask extends Task {
 		});
 		
 		//RandomMove
-		this.rootActivity.addTaskNode(new Action(0.5,0.001,agentServices) {			
+		this.rootActivity.addTaskNode(new Action(1,0.001,agentServices) {			
 			@Override
 			public void execute() {
 				//if(agentServices.getID() == 1000)System.out.println(agentServices.getID() + " RandomMove");
@@ -77,7 +77,7 @@ public class AskFoodTask extends Task {
 		});
 		
 		//Asking
-		this.rootActivity.addTaskNode(new Action(0.1, 0, agentServices) {
+		this.rootActivity.addTaskNode(new Action(1, 0, agentServices) {
 			
 			@Override
 			public void execute() {

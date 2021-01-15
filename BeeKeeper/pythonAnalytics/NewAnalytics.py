@@ -3,6 +3,7 @@ import csv
 import numpy as np
 import os
 import re
+import random
 
 #defs
 
@@ -65,10 +66,11 @@ for r, dirs, f in os.walk(path):
 fileIndex = 1
 
 allParsedExpes = {}
+allDataPerBees = {}
 
 #parsing
 for f in files:
-	print(f + " " + str(fileIndex) + "/" + str(len(files)));
+	print(str(fileIndex) + "/" + str(len(files)) + " " + f);
 	fileIndex += 1
 	fileName = f;
 	fileTags = f.split("expe/")[1]
@@ -83,6 +85,15 @@ for f in files:
 	#	fileImportantName += " " + fileTags[8]
 	
 	parsedExpe = {}
+	dataPerBees = {}
+			
+	barSize = 40
+	barsCount = 0;
+	
+	print("|", end="");
+	for i in range(barSize-2):
+		print("-", end = "");
+	print("|");
 	
 	size = 0
 	with open(fileName) as csv_file:
@@ -90,12 +101,18 @@ for f in files:
 		for row in csv_reader:
 			size += 1;
 	
+	
 	with open(fileName) as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		line_count = 0;
 		prevIndex = -1
 		#print(f'\tturn {row[0]}, Bee ID {row[1]} was doing {row[2]} and had {row[3]} HJTiter ans row[4] EO.')
 		for row in csv_reader:
+		
+			if(line_count * 1.0 / size > barsCount / barSize):
+				print("|", end="", flush=True);				
+				barsCount+=1;
+		
 			if(line_count != 0 and len(row) > 4):
 				index = int(row[0]);
 				if(prevIndex != index):
@@ -107,9 +124,11 @@ for f in files:
 						parsedExpe[prevIndex][giveFoodTask] = giveFoodCount;
 						parsedExpe[prevIndex][askFoodTask] = askFoodCount;
 						parsedExpe[prevIndex][otherTask] = otherCount + giveFoodCount + askFoodCount;
-						parsedExpe[prevIndex][meanEOKey] = meanEO / (otherCount + foragerCount + nurseCount);
-						parsedExpe[prevIndex][meanHJKey] = meanHJ / (otherCount + foragerCount + nurseCount);
-						parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + otherCount;
+						parsedExpe[prevIndex][meanEOKey] = meanEO / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
+						parsedExpe[prevIndex][meanHJKey] = meanHJ / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
+						parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + parsedExpe[prevIndex][otherTask];
+						
+						#parsedExpe[INDEX][BeeIndex] ["HJ"] / ["EO"]
 					#newTimeStep, reset counters
 					foragerCount = 0
 					nurseCount = 0
@@ -123,6 +142,7 @@ for f in files:
 					
 				prevIndex = index
 				task = row[2];
+				beeID = row[1];
 				if(task == larvaTask):
 					larvaeCount +=1;
 				else:
@@ -138,6 +158,12 @@ for f in files:
 						giveFoodCount += 1;
 					else:
 						otherCount += 1;
+						
+					if(beeID not in dataPerBees):
+						dataPerBees[beeID] = {}
+					dataPerBees[beeID][index] = {}
+					dataPerBees[beeID][index]["HJ"] = float(row[3])
+					dataPerBees[beeID][index]["EO"] = float(row[4])
 			
 			line_count+=1;
 			
@@ -148,11 +174,15 @@ for f in files:
 		parsedExpe[prevIndex][giveFoodTask] = giveFoodCount;
 		parsedExpe[prevIndex][askFoodTask] = askFoodCount;
 		parsedExpe[prevIndex][otherTask] = otherCount + giveFoodCount + askFoodCount;
-		parsedExpe[prevIndex][meanEOKey] = meanEO / (otherCount + foragerCount + nurseCount);
-		parsedExpe[prevIndex][meanHJKey] = meanHJ / (otherCount + foragerCount + nurseCount);
-		parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + otherCount;
+		parsedExpe[prevIndex][meanEOKey] = meanEO / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
+		parsedExpe[prevIndex][meanHJKey] = meanHJ / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
+		parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + parsedExpe[prevIndex][otherTask];
+		
+	allDataPerBees[fileImportantName] = dataPerBees
 	
 	allParsedExpes[fileImportantName] = parsedExpe;
+	
+	print("")
 	
 	#print(parsedExpe)
 	#print("\n")
@@ -190,6 +220,8 @@ for key in allParsedExpes:
 	
 	index += 1
 #plt.show()
+
+
 plt.savefig("Tasks.png");
 index = 1;
 plt.figure(1, figsize=(25,15))
@@ -205,7 +237,36 @@ for key in allParsedExpes:
 	index += 1
 		
 #plt.show()		
-plt.savefig("HJ.png");		
+plt.savefig("HJ.png");	
+
+print("\nprintingBees:");
+
+findex = 1;
+for key in allParsedExpes:
+
+	print(key);
+	
+	plt.figure(2, figsize=(25,15))
+
+	expe = allParsedExpes[key];
+	#get list of random beesIndex
+	beesIndexes = random.sample(list(allDataPerBees[key].keys()), 40);
+	
+	index = 1
+	for beeIndex in beesIndexes:
+	
+		ax = plt.subplot(4,10, index, title=key[0] + " Bee" + beeIndex);
+		plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("HJ", allDataPerBees[key][beeIndex]), label="HJ");
+		plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("EO", allDataPerBees[key][beeIndex]), label="EO");
+		ax.set_ylim(ymin=0)
+	
+		if(index == 1):
+			plt.legend()
+		index += 1
+	
+	findex += 1
+	plt.savefig(key[0] + "perBees.png");		
+		
 
 '''
 index = 1;

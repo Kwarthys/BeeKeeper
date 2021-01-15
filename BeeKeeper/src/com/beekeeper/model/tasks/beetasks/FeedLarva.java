@@ -4,6 +4,7 @@ import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.stimuli.StimuliMap;
+import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Activity;
 import com.beekeeper.model.tasks.Task;
@@ -105,7 +106,7 @@ public class FeedLarva extends Task {
 		
 		this.rootActivity.addTaskNode(larvaNear);
 		//Random Move
-		this.rootActivity.addTaskNode(new Action(0.2,0.001,agentServices) {			
+		this.rootActivity.addTaskNode(new Action(0.2,0,agentServices) {			
 			@Override
 			public void execute() {
 				moved = true;
@@ -124,7 +125,7 @@ public class FeedLarva extends Task {
 	public double compute(StimuliMap smap)
 	{
 		this.threshold = 0.3 + 0.7*agentServices.getHJTiter();
-		return this.thresholdSigmoid(0.5);
+		return this.thresholdSigmoid(agentServices.getHJTiter() > 0.5 ? 0 : 0.5);
 	}
 
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Jobs;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class MyPointCloud : MonoBehaviour
         public Vector3 origin;
         public float timeAtLastUpdate;
         public bool enabled = true;
+
+        public Color color = Color.black;
 
         public MyPoint(Vector3 pos)
         {
@@ -34,6 +37,20 @@ public class MyPointCloud : MonoBehaviour
             }
             return array;
         }
+
+        public static Color[] getColors(MyPoint[] list)
+        {
+            Color[] array = new Color[list.Length];
+
+            for (int i = 0; i < list.Length; ++i)
+            {
+                if (list[i] != null)
+                {
+                    array[i] = list[i].color;
+                }
+            }
+            return array;
+        }
     }
 
     private Mesh mesh;
@@ -41,7 +58,7 @@ public class MyPointCloud : MonoBehaviour
     //Moving points
     private MyPoint[] points = new MyPoint[PointCloudReferencer.cloudMaxSize];
 
-    public int serverRefreshRate = 500;
+    public int serverRefreshRate = 1000;
 
     private List<int> indecies = new List<int>();
 
@@ -62,8 +79,10 @@ public class MyPointCloud : MonoBehaviour
         points[pointID] = null;
     }
 
-    public void UpdatePointTarget(int pointId, Vector3 newTarget)
+    public void UpdatePointTarget(int pointId, Vector3 newTarget, Color? color = null)
     {
+        Color c = color ?? Color.black;
+
         MyPoint thePoint = points[pointId];
 
         if(thePoint == null)
@@ -83,6 +102,8 @@ public class MyPointCloud : MonoBehaviour
             thePoint.origin = thePoint.pos;
         }
 
+        thePoint.color = c;
+
         if (newTarget.z == -1)
         {
             thePoint.target = getRandomPosForForaging(pointId);
@@ -100,7 +121,7 @@ public class MyPointCloud : MonoBehaviour
 
     private Vector3 getRandomPosForForaging(int id)
     {
-        return ((Random.onUnitSphere) * 50f + 5f * Vector3.up - points[id].pos).normalized * 2f + points[id].pos;
+        return (UnityEngine.Random.onUnitSphere * 50f + 5f * Vector3.up - points[id].pos).normalized * 2f + points[id].pos;
     }
 
     private void Update()
@@ -143,6 +164,7 @@ public class MyPointCloud : MonoBehaviour
         }
 
         mesh.vertices = MyPoint.getPos(points);
+        mesh.colors = MyPoint.getColors(points);
 
         if(indecies.Count < mesh.vertices.Length)
         {

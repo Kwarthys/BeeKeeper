@@ -12,7 +12,7 @@ public class ContactGrapherRetriever : MonoBehaviour
 
     public PointCloudReferencer pointCloud;
 
-    public float refreshRate = 10;
+    public float refreshRate = 1;
 
     private float lastRefresh = -10;
 
@@ -24,6 +24,9 @@ public class ContactGrapherRetriever : MonoBehaviour
         {
             List<Vector3> targets = new List<Vector3>();
             List<int> ids = new List<int>();
+            List<Color> colors = new List<Color>();
+
+            //Debug.Log("ContactGrapher AgentsSize - " + model.theAgents.Count);
 
             //update graph
             int size = model.theAgents.Count;
@@ -31,6 +34,8 @@ public class ContactGrapherRetriever : MonoBehaviour
             {                
                 Vector3 point = transformPoint(new Vector3(b.age, b.JH, b.amountExchanged));
                 targets.Add(point);
+                colors.Add(b.JH > 0.5f ? Color.yellow : Color.red);
+                //Debug.Log(b.JH > 0.5f ? Color.yellow : Color.red);
 
                 int pointID;
 
@@ -48,7 +53,7 @@ public class ContactGrapherRetriever : MonoBehaviour
                 ids.Add(pointID);
             }
 
-            pointCloud.updatePoints(new UpdateOrder(targets, ids));
+            pointCloud.updatePoints(new UpdateOrder(targets, ids, colors));
 
             lastRefresh = Time.realtimeSinceStartup;
         }        

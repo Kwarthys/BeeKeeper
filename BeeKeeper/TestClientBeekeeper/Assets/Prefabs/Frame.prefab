@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointCloudPrefab: {fileID: 2549565278015765890, guid: 98c892c2934cb4a4997b1a1e09e04c8a,
     type: 3}
-  lerpTime: 500
+  lerpTime: 1000
 --- !u!1 &5268192482874681797
 GameObject:
   m_ObjectHideFlags: 0

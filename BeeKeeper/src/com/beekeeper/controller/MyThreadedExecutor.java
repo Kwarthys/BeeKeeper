@@ -16,11 +16,14 @@ public class MyThreadedExecutor implements Runnable {
 	@Override
 	public void run()
 	{
+		//long start = System.nanoTime();
 		for(int i = 0; i < agentList.size(); ++i)
 		{
 			//System.out.println("Living " + agentList.get(i).getStringName());
 			agentList.get(i).live();
 		}
+		//long progTime = (System.nanoTime() - start)/1000;
+		//if(progTime > 2000)System.out.println("Thread took " + progTime + " us.");
 	}
 
 }

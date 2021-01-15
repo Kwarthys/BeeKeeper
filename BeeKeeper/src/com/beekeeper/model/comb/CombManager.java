@@ -157,9 +157,9 @@ public class CombManager {
 			a.hostCell.content = CellContent.empty;
 			a.hostCell.notifyAgentLeft(a);
 		}
-		else
+		else if(a.isInside())
 		{
-			a.hostCell.freeCell();			
+			a.hostCell.freeCell();
 		}
 	}
 

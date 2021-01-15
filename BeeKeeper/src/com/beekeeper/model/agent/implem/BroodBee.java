@@ -10,6 +10,8 @@ import com.beekeeper.parameters.ModelParameters;
 
 public class BroodBee extends WorkingAgent
 {
+	private int cantBeFed = 0;
+	
 	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, boolean randomInit) {
 		super(stimuliManagerServices, controllerServices, randomInit);
 		this.type = AgentType.BROOD_BEE;
@@ -41,7 +43,7 @@ public class BroodBee extends WorkingAgent
 	
 	@Override
 	public boolean isHungry() {
-		return this.getEnergy() < 0.8;
+		return this.getEnergy() < 0.8 && cantBeFed == 0;
 	}
 	
 	@Override
@@ -49,6 +51,7 @@ public class BroodBee extends WorkingAgent
 		//if(getID() == 0)System.out.println(getStringName() + " got fed : " + getEnergy());
 		this.addToEnergy(ModelParameters.LARVAE_FEEDING_INCREMENT);
 		//System.out.println(" to " + getEnergy());
+		cantBeFed = ModelParameters.MIN_DURATION_LARVAEFEDAGAIN;
 	}
 
 	@Override
@@ -60,6 +63,10 @@ public class BroodBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{
+		if(cantBeFed > 0)
+		{
+			cantBeFed--;
+		}
 		
 		//if(getID() == 0)System.out.println(getStringName() + " " + getEnergy() + " - " + ModelParameters.LARVAE_HUNGER_INCREMENT + " + " + ModelParameters.LARVAE_FEEDING_INCREMENT);
 		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);

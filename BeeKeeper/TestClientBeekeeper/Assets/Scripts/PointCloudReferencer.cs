@@ -23,7 +23,7 @@ public class PointCloudReferencer : MonoBehaviour
         for(int i = 0; i < o.targetsIDs.Count; ++i)
         {
             MyPointCloud c = getCloudFor(o.targetsIDs[i]);
-            if (c != null) c.UpdatePointTarget(o.targetsIDs[i], o.newTargets[i]);
+            if (c != null) c.UpdatePointTarget(o.targetsIDs[i], o.newTargets[i], o.colors[i]);
         }
     }
 

@@ -46,7 +46,7 @@ public class GiveFoodTask extends Task {
 		});
 
 		//Finding someone to feed
-		this.rootActivity.addTaskNode(new Action(0.2,0, agentServices) {
+		this.rootActivity.addTaskNode(new Action(1,0, agentServices) {
 			@Override
 			public void execute() {
 				CombCell hostCell = agentServices.getHostCell();

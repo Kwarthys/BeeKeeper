@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,9 +26,11 @@ public class UDPClientHandler implements Runnable {
 	private InetAddress inetAddress;
 	//private DatagramSocket udpServer;
 	private static final int maxAgentCount = 10000;
-	private static final int sendRate = 50;
+	private static final int sendRate = 100;
 	
 	private ArrayList<NetBalancer> functions = new ArrayList<>();
+	
+	private DecimalFormat format = new DecimalFormat("#.###");
 	
 	private volatile MainControllerServices services;
 
@@ -58,18 +61,6 @@ public class UDPClientHandler implements Runnable {
 			@Override
 			public void call() {
 				try {
-					sendAdultStates(udpServer);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}, 10,0,false));
-		
-		functions.add(new NetBalancer(new NetBalancerCallBack() {
-			
-			@Override
-			public void call() {
-				try {
 					sendAdultsPositions(udpServer);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -82,12 +73,24 @@ public class UDPClientHandler implements Runnable {
 			@Override
 			public void call() {
 				try {
+					sendAdultStates(udpServer);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 3,0,false));
+		
+		functions.add(new NetBalancer(new NetBalancerCallBack() {
+			
+			@Override
+			public void call() {
+				try {
 					sendFramesContent(udpServer);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-		}, 10,3,true));
+		}, 3,1,true));
 		
 		functions.add(new NetBalancer(new NetBalancerCallBack() {
 			
@@ -99,7 +102,7 @@ public class UDPClientHandler implements Runnable {
 					e.printStackTrace();
 				}
 			}
-		}, 10,7, false));
+		}, 3,2, false));
 	}
 
 	@Override
@@ -254,16 +257,17 @@ public class UDPClientHandler implements Runnable {
 
 		//long nano = System.nanoTime();
 
-		HashMap<Integer, Integer> contactsQtt = services.getAgentContacts();
+		HashMap<Integer, Double> contactsQtt = services.getAgentContacts();
 
 		for(Integer key : contactsQtt.keySet())
 		{
-			String futureString = " " + key + " " + contactsQtt.get(key);
+			//System.out.println(contactsQtt.get(key) + " -> " + format.format(contactsQtt.get(key)));
+			String futureString = " " + key + " " + format.format(contactsQtt.get(key));
 
 			if(sb.length() + futureString.length() > 20000)
 			{
 				byte[] data = sb.toString().getBytes();
-				//System.out.println("Sending data:" + data.length + " || " + combBuffer.toString());
+				//System.out.println("Sending data:" + data.length + " || " + sb.toString());
 				DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 				udpServer.send(p);
 
@@ -274,13 +278,13 @@ public class UDPClientHandler implements Runnable {
 			sb.append(futureString);
 		}
 
-		//map has beel locked for less than 2ms
+		//map has been locked for less than 2ms
 		services.freeLockAgentContacts();
 
 		//System.out.println("Map got locked for " + (float)((System.nanoTime() - nano)/1000)/1000 + "ms.");
 
 		byte[] data = sb.toString().getBytes();
-		//System.out.println("Sending data:" + data.length + " || " + combBuffer.toString());
+		//System.out.println("Sending data:" + data.length + " || " + sb.toString());
 		DatagramPacket p = new DatagramPacket(data, data.length, inetAddress, 4244);
 		udpServer.send(p);
 

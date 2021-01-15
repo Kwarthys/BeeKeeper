@@ -1,7 +1,6 @@
 package com.beekeeper.model.tasks;
 
 import com.beekeeper.model.agent.WorkingAgentServices;
-import com.beekeeper.parameters.ModelParameters;
 
 public abstract class Action implements TaskNode {
 	
@@ -13,9 +12,9 @@ public abstract class Action implements TaskNode {
 	
 	protected WorkingAgentServices agentServices;
 	
-	public Action(double durationSec, double energyCost, WorkingAgentServices s)
+	public Action(double durationTimeStep, double energyCost, WorkingAgentServices s)
 	{
-		this.totalTimeSteps = durationSec * ModelParameters.secondToTimeStepCoef;
+		this.totalTimeSteps = Math.max(durationTimeStep, 1);
 		this.energyCost = energyCost;
 		this.agentServices = s;
 	}

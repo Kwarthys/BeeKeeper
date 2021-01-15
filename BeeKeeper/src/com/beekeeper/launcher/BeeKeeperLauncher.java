@@ -18,8 +18,8 @@ public class BeeKeeperLauncher {
 		//long start = System.nanoTime();
 
 
-		//startNetworkMode();
-		startMultipleExpeMode();
+		startNetworkMode();
+		//startMultipleExpeMode();
 
 		//long progTime = (System.nanoTime() - start)/1000000000;
 		//long simuTime = (long) (ModelParameters.SIMU_LENGTH / ModelParameters.secondToTimeStepCoef);
@@ -32,9 +32,19 @@ public class BeeKeeperLauncher {
 		NetworkManager nm = new NetworkManager();
 
 		MainController mc;
+		
+		//ModelParameters.UI_ENABLED = false;
+		ModelParameters.SIMU_LENGTH = 50 * ModelParameters.DAY;
+		ModelParameters.NUMBER_BEES = 200;
+		ModelParameters.NUMBER_LARVAE = 400;//750;
+		ModelParameters.NUMBER_FRAMES = 1;
+		ModelParameters.LARVA_CAN_HATCH = false;
+		ModelParameters.FORAGERS_DIE_SOONER = false;
+		ModelParameters.startMode = StartMode.Random80;
 
 		do
 		{
+			IDManager.resetIDCounter();
 			mc = new MainController();
 			nm.registerControllerServices(mc.getServices());
 		}while(mc.start());
@@ -48,21 +58,21 @@ public class BeeKeeperLauncher {
 		System.out.println("Running simulation " + index );
 		IDManager.resetIDCounter();
 		mc.start();
-		long progTime = (System.nanoTime() - start)/1000000000;
+		long progTime = (System.nanoTime() - start)/1000000;
 		long simuTime = (long) (ModelParameters.SIMU_LENGTH / ModelParameters.secondToTimeStepCoef);
-		System.out.println("Prog took " + progTime + "s to simulate " + simuTime + "s (x" + simuTime*1.0/progTime + "). " + index++);
+		System.out.println("Prog took " + progTime + "ms to simulate " + simuTime + "s (x" + simuTime*1000.0/progTime + "). " + index++);
 	}
 	
 	public static void startMultipleExpeMode()
 	{				
-		ModelParameters.UI_ENABLED = false;
+		//ModelParameters.UI_ENABLED = false;
 		ModelParameters.LOGGING = true;
 		//ModelParameters.BEELOGGING = true;
 		//ModelParameters.NB_BEE_LOGGING = 24;
-		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;		
-		ModelParameters.SIMU_LENGTH = 1 * ModelParameters.DAY;
+		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;
+		ModelParameters.SIMU_LENGTH = 20 * ModelParameters.DAY;
 		ModelParameters.NUMBER_BEES = 1000;
-		ModelParameters.NUMBER_LARVAE = 750;
+		ModelParameters.NUMBER_LARVAE = 750;//750;
 		ModelParameters.NUMBER_FRAMES = 1;
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;
@@ -70,35 +80,35 @@ public class BeeKeeperLauncher {
 		
 		int charNumberA = 65;
 		StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
-		//int[] nb = {0,750,1500}
+		int[] nb = {0,750,1800};
 /*
 		for(int j = 0; j < 3; ++j)
 		{
 			ModelParameters.startMode = mode[j];
-			
+
 			for(int i = 0; i < 3; ++i)
-			{				
+			{
 				ModelParameters.identifier = (char)(charNumberA + i + 3*j);
-				ModelParameters.LARVA_EO_TIMELY_EMMISION = lem[i];
+				ModelParameters.NUMBER_LARVAE = nb[i];
 				startExpeAndMonitorTime(new MainController());	
 			}
 		}
-*/	
-
+*/
+/*
 		for(int i = 0; i < 3 ; ++i)
 		{
 			ModelParameters.startMode = mode[i];
 			ModelParameters.identifier = (char)(charNumberA + i);
 			startExpeAndMonitorTime(new MainController());
 		}
+*/
 
-		
-/*
+
 		ModelParameters.startMode = StartMode.Random20;
-		ModelParameters.identifier = (char)(charNumberA+2);
+		ModelParameters.identifier = 'C';
 		startExpeAndMonitorTime(new MainController());
-*/		
-		
+
+
 		/*OLD CODE (just in case)
 		int simuLength = 5000;
 		int reps = 5;

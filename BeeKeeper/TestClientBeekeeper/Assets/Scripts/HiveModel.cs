@@ -50,6 +50,7 @@ public class HiveModel : MonoBehaviour
 
             List<Vector3> targets = new List<Vector3>();
             List<int> ids = new List<int>();
+            List<Color> colors = new List<Color>();
 
             for (int i = 0; i < updateOrder.targetsIDs.Count; ++i)
             {
@@ -73,14 +74,23 @@ public class HiveModel : MonoBehaviour
 
                     bool changed = false;
 
-                    if(a.pos.z != updateOrder.newTargets[i].z)
+                    if (a.pointID == -2)//Uncomplete agent code
                     {
-                        //Change of Frame
-                        frameManager.freeFrameIDForPos(a.pos, a.pointID);
-                        a.pointID = frameManager.getPointIDForPos(updateOrder.newTargets[i]);
-
-                        //do something to animate that change, not mandatory tho
+                        a.pos = updateOrder.newTargets[i];
+                        a.pointID = frameManager.getPointIDForPos(a.pos);
                         changed = true;
+                    }
+                    else
+                    {
+                        if (a.pos.z != updateOrder.newTargets[i].z)
+                        {
+                            //Change of Frame
+                            frameManager.freeFrameIDForPos(a.pos, a.pointID);
+                            a.pointID = frameManager.getPointIDForPos(updateOrder.newTargets[i]);
+
+                            //do something to animate that change, not mandatory tho
+                            changed = true;
+                        }
                     }
 
                     a.pos = updateOrder.newTargets[i];
@@ -100,10 +110,11 @@ public class HiveModel : MonoBehaviour
                     targets.Add(a.pos);
                 }
                 ids.Add(a.pointID);
+                colors.Add(a.JH > 0.5f ? Color.yellow : Color.red);
             }
             //Debug.Log("AgentLoop" + updateOrder.targetsIDs.Count + "(" + newAgents + ") update took " + (Time.realtimeSinceStartup - loopUpdate) * 1000 + "ms.");
             //pointCloud.updatePoints(new UpdateOrder(targets, ids));
-            frameManager.updateBeePoints(new UpdateOrder(targets, ids));
+            frameManager.updateBeePoints(new UpdateOrder(targets, ids, colors));
 
             //if (newAgents != 0) Debug.Log("created " + newAgents + " newAgents / total: " + theAgents.Count);
         }
@@ -167,7 +178,20 @@ public class HiveModel : MonoBehaviour
                 if(theAgents.ContainsKey(order.ids[i]))
                 {
                     theAgents[order.ids[i]].amountExchanged = order.amounts[i];
-                } // Ignoring the agents that have still not been recieved via position
+                } // Ignoring NO MORE the agents that have still not been recieved via position
+                else
+                {
+                    BeeAgent a = new BeeAgent();
+                    a.id = order.ids[i];
+                    a.pos = Vector3.zero;
+
+                    //a.pointID = idManager.getNextFreeIndex();
+                    //a.pointID = frameManager.getPointIDForPos(a.pos);
+                    a.pointID = -2;
+                    //Code to notify this is an uncomplete agent
+
+                    theAgents.Add(a.id, a);
+                }
             }
         }
     }
@@ -250,7 +274,7 @@ public class BeeAgent
     public int pointID;
     public int age;
     public float JH;
-    public int amountExchanged;
+    public float amountExchanged;
     public Vector3 pos;
 
     public bool isQueen = false;

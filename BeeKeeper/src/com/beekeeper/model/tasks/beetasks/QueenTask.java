@@ -35,7 +35,7 @@ public class QueenTask extends Task {
 		});
 
 		//INSPECT CELL
-		this.rootActivity.addTaskNode(new Action(0.2,ModelParameters.QUEEN_TASKS_ENERGYCOSTS, agentServices) {
+		this.rootActivity.addTaskNode(new Action(1,ModelParameters.QUEEN_TASKS_ENERGYCOSTS, agentServices) {
 			
 			@Override
 			public void execute() {
@@ -50,7 +50,7 @@ public class QueenTask extends Task {
 		});
 
 		//RANDOM MOVE
-		this.rootActivity.addTaskNode(new Action(0.5,ModelParameters.QUEEN_TASKS_ENERGYCOSTS, agentServices) {
+		this.rootActivity.addTaskNode(new Action(1,ModelParameters.QUEEN_TASKS_ENERGYCOSTS, agentServices) {
 			
 			@Override
 			public void execute() {

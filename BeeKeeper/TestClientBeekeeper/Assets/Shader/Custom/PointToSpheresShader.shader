@@ -2,8 +2,6 @@
 {
 	Properties{
 	  _Radius("Sphere Radius", float) = 0.01
-	  _Color("Color", Color) = (0,0,0,1)
-	  _Color2("Color2", Color) = (0,0,0,1)
 	}
 		SubShader{
 		LOD 200
@@ -75,7 +73,7 @@
 				*/
 
 
-				p.color = i[0].color * _Color;
+				p.color = i[0].color;// *_Color;
 				p.normal = float3(0, 0, 1);
 				p.pos = i[0].pos + float4(-s, s, 0, 0);
 				OutputStream.Append(p);
@@ -86,7 +84,7 @@
 				OutputStream.RestartStrip();
 				
 				
-				p.color = i[0].color * _Color2;
+				p.color = i[0].color;// *_Color2;
 				p.normal = float3(0, 0, 1);
 				p.pos = i[0].pos + float4(s, s, 0, 0);
 				OutputStream.Append(p);
