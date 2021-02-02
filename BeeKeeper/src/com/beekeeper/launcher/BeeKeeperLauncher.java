@@ -36,7 +36,7 @@ public class BeeKeeperLauncher {
 		//ModelParameters.UI_ENABLED = false;
 		ModelParameters.SIMU_LENGTH = 50 * ModelParameters.DAY;
 		ModelParameters.NUMBER_BEES = 200;
-		ModelParameters.NUMBER_LARVAE = 400;//750;
+		ModelParameters.NUMBER_LARVAE = 2000;//750;
 		ModelParameters.NUMBER_FRAMES = 1;
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;

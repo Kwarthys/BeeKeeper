@@ -53,6 +53,8 @@ public class MyPointCloud : MonoBehaviour
         }
     }
 
+    public float pointsSize = 1;
+
     private Mesh mesh;
 
     //Moving points
@@ -71,7 +73,9 @@ public class MyPointCloud : MonoBehaviour
         mesh = new Mesh();
 
         GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshRenderer>().material = new Material(Shader.Find("Custom/PointToSquareShader"));        
+        MeshRenderer m = GetComponent<MeshRenderer>();
+        m.material = new Material(Shader.Find("Custom/BeePointCloudShader"));
+        m.material.SetFloat("_Radius", pointsSize);
     }
 
     public void disablePointID(int pointID)

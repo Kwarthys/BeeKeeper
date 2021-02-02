@@ -8,7 +8,7 @@ public class FrameManager : MonoBehaviour
     public GameObject framePrefab;
     public CommandSender sender;
 
-    private List<FrameBehaviour> frames = new List<FrameBehaviour>();
+    private List<TextureBasedFrameBehaviour> frames = new List<TextureBasedFrameBehaviour>();
 
     private volatile bool registeredInit = false;
     private volatile int[] registeredInitParams;
@@ -19,19 +19,43 @@ public class FrameManager : MonoBehaviour
 
     public FramePositionner positionner;
 
+    public List<TextureBasedFrameBehaviour> getFrames() { return frames; }
+
     public void treatOrder(UpdateContent order)
     {
-        CombPointCloud cpc = getCloudOfId(order.combID);
-        cpc.setColors(getFullArray(order.colorsOfCellIDs, cpc.rows * cpc.columns));
+        //CombPointCloud cpc = getCloudOfId(order.combID);
+        //cpc.setColors(getFullArray(order.colorsOfCellIDs, cpc.rows * cpc.columns));
+
+        int combID = order.combID;
+
+        getFrameWithCombID(combID).setColors(order.colorsOfCellIDs, combID);
     }
 
+    private TextureBasedFrameBehaviour getFrameWithCombID(int combID)
+    {
+        int frameID = combID / 2;
+
+        TextureBasedFrameBehaviour f = null;
+
+        for (int i = 0; i < frames.Count && f == null; ++i)
+        {
+            if(frames[i].frameID == frameID)
+            {
+                return frames[i];
+            }
+        }
+
+        return spawnAFrame(frameID);
+    }
+
+  /*  
     private CombPointCloud getCloudOfId(int combId)
     {
         CombPointCloud cpc = null;
 
         for(int i = 0; i < frames.Count && cpc==null; ++i)
         {
-            cpc = frames[i].getCPC(combId);
+            //cpc = frames[i].getCPC(combId);
         }
 
         if(cpc == null)
@@ -39,15 +63,15 @@ public class FrameManager : MonoBehaviour
             //Spawn it
             //Debug.LogError("Shouldn't have to create a frame"); this can happen at start, but is quickly overriden by the correct stuff
             int fid = combId / 2;
-            FrameBehaviour f = spawnAFrame(fid);
+            TextureBasedFrameBehaviour f = spawnAFrame(fid);
 
-            cpc = f.getCPC(combId);
+            //cpc = f.getCPC(combId);
 
-            frames.Add(f);
+            //frames.Add(f);
         }
         return cpc;
     }
-
+*/
 
     public void updateBeePoints(UpdateOrder o)
     {
@@ -91,7 +115,7 @@ public class FrameManager : MonoBehaviour
         for(int i = 0; i < sortedOrders.Count; ++i)
         {
             //if (Random.value > 0.99f) Debug.Log("Order " + i + " populated with " + sortedOrders[i].targetsIDs.Count);
-            frames[i].pointCloud.updatePoints(sortedOrders[i]);
+            frames[i].beePointCloud.updatePoints(sortedOrders[i]);
         }
 
         //Debug.Log("FUpdate: " + foragersUpdate.targetsIDs.Count);
@@ -110,7 +134,7 @@ public class FrameManager : MonoBehaviour
 
         if (frames.Count > frameID)
         {
-            cloud = frames[frameID].pointCloud;
+            cloud = frames[frameID].beePointCloud;
             return true;
         }
 
@@ -153,7 +177,7 @@ public class FrameManager : MonoBehaviour
 
     private void initialiseWith(int[] combIDs)
     {
-        foreach(FrameBehaviour f in frames)
+        foreach(TextureBasedFrameBehaviour f in frames)
         {
             Destroy(f.gameObject);
         }
@@ -162,7 +186,7 @@ public class FrameManager : MonoBehaviour
 
         for(int i = 0; i < combIDs.Length; i+=2)
         {
-            FrameBehaviour f = spawnAFrame(combIDs[i] / 2);
+            TextureBasedFrameBehaviour f = spawnAFrame(combIDs[i] / 2);
 
             if(combIDs[i] > combIDs[i+1])
             {
@@ -176,20 +200,35 @@ public class FrameManager : MonoBehaviour
     }
 
     
-    private FrameBehaviour spawnAFrame(int id)
+    private TextureBasedFrameBehaviour spawnAFrame(int id)
     {
-        FrameBehaviour f = Instantiate(framePrefab, Vector3.zero, Quaternion.identity, hiveContainer).GetComponent<FrameBehaviour>();
-        f.id = id;
+        TextureBasedFrameBehaviour f = Instantiate(framePrefab, Vector3.zero, Quaternion.identity, hiveContainer).GetComponent<TextureBasedFrameBehaviour>();
+        f.frameID = id;
         Vector3 framePos = positionner.registerAndPlaceNewFrame(f);
-        f.transform.position = framePos;
+        f.transform.localPosition = framePos;
+
+        frames.Add(f);
 
         return f;
     }
-    
 
-    public Vector3 getPosOnFrame(Vector3 relativePos)
+    /*
+    private void Start()
     {
+        Vector3 test = new Vector3(0, 0, 0);
+        Debug.Log(test + " " + getPosOnFrame(test, true));
+        test = new Vector3(78, 50, 0);
+        Debug.Log(test + " " + getPosOnFrame(test, true));
+    }
+    */
+
+    public Vector3 getPosOnFrame(Vector3 relativePos, bool debug = false)
+    {
+        float sizeCoef = 0.0055f;
+
         Transform combStarter = getStartTransformForComb((int)relativePos.z);
+
+        if (debug) Debug.Log(combStarter.position);
 
         bool changedOfFrame = false;
         if(relativePos.x < 0)
@@ -205,31 +244,27 @@ public class FrameManager : MonoBehaviour
             return relativePos;
         }
 
+        relativePos.x += (relativePos.y % 2 == 0 ? 0 : 0.5f); //hexagonal grid, offseting one row each two
+        relativePos *= sizeCoef;
+
         Vector3 absolute = combStarter.localPosition;
-        absolute.x -= relativePos.x + (relativePos.y % 2 == 0 ? 0 : 0.5f); //hexagonal grid, offseting one row each two
+        absolute.x += relativePos.x;
         absolute.y -= relativePos.y;
 
         if(changedOfFrame)
         {
-            absolute.z += (relativePos.z%2==0 ? 1 : -1) * 0.1f / 0.02f;
+            absolute.z += (relativePos.z%2==0 ? 1 : -1) * 0.1f / sizeCoef;
         }
 
         //absolute += -combStarter.right * (relativePos.x + (relativePos.y % 2 == 0 ? 0 : 0.5f)) * 0.02f;
         //absolute += -combStarter.up * relativePos.y * 0.02f;
 
-        return absolute * 0.02f;
+        return absolute;
     }
 
     private Transform getStartTransformForComb(int combID)
     {
-        Transform starter = null;
-
-        for (int i = 0; i < frames.Count && starter == null; ++i)
-        {
-            starter = frames[i].getStarterOfId(combID);
-        }
-
-        return starter;
+        return getFrameWithCombID(combID).getStarterOfFace(combID);
     }
 
     private Color[] getFullArray(Dictionary<int, Color> colorsOfCellIDs, int length)
@@ -250,11 +285,11 @@ public class FrameManager : MonoBehaviour
         return colorsArray;
     }
 
-    private FrameBehaviour getFrameOfIndex(int index)
+    private TextureBasedFrameBehaviour getFrameOfIndex(int index)
     {
-        foreach(FrameBehaviour f in frames)
+        foreach(TextureBasedFrameBehaviour f in frames)
         {
-            if(f.id == index)
+            if(f.frameID == index)
             {
                 return f;
             }
@@ -265,7 +300,7 @@ public class FrameManager : MonoBehaviour
 
     public void setFrameSelected(int frameIndex, bool selected)
     {
-        frames[frameIndex].setVisualSelectedStatus(selected);
+        //frames[frameIndex].setVisualSelectedStatus(selected);
     }
 
     public void toggleFrameState(int frameIndex)
@@ -275,7 +310,7 @@ public class FrameManager : MonoBehaviour
             return;
         }
 
-        FrameBehaviour frame = frames[frameIndex];
+        TextureBasedFrameBehaviour frame = frames[frameIndex];
 
         if (frame.isUp)
         {

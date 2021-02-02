@@ -32,38 +32,42 @@ public class FramePositionner : MonoBehaviour
             }
         }
 
-        instanciatedPlaceHolder = Instantiate(framePlaceHolderPrefab, new Vector3(0, -5, 0), Quaternion.identity).transform;
+        instanciatedPlaceHolder = Instantiate(framePlaceHolderPrefab, new Vector3(0, -5, 0), Quaternion.identity, transform).transform;
     }
 
-    private Dictionary<FrameBehaviour, int> framePosIndexes = new Dictionary<FrameBehaviour, int>();
+    private Dictionary<TextureBasedFrameBehaviour, int> framePosIndexes = new Dictionary<TextureBasedFrameBehaviour, int>();
 
-    public Vector3 registerAndPlaceNewFrame(FrameBehaviour f)
+    public Vector3 registerAndPlaceNewFrame(TextureBasedFrameBehaviour f)
     {
         framePosIndexes.Add(f, instanciatedFrame);
-        framesIndex[instanciatedFrame] = f.id;
+        framesIndex[instanciatedFrame] = f.frameID;
 
         return getPosForIndex(instanciatedFrame++);
     }
 
     private Vector3 getPosForIndex(int index)
     {
-        Vector3 pos = transform.position;
+        //Vector3 pos = transform.position;
+        Vector3 pos = Vector3.zero;
         pos.z += frameIntervals * index;
         return pos;
     }
 
-    public void notifyFrameLift(FrameBehaviour lifted)
+    public void notifyFrameLift(TextureBasedFrameBehaviour lifted)
     {
-        int prevPos = framePosIndexes[lifted];
-        framesIndex[prevPos] = -1; //lifting it up
+        if(framePosIndexes.ContainsKey(lifted))
+        {
+            int prevPos = framePosIndexes[lifted];
+            framesIndex[prevPos] = -1; //lifting it up
 
-        Debug.Log("lifted F" + lifted.id + " from " + prevPos);
-        sender?.liftFrame(lifted.id);
+            Debug.Log("lifted F" + lifted.frameID + " from " + prevPos);
+            sender?.liftFrame(lifted.frameID);
 
-        framePosIndexes[lifted] = -1;
+            framePosIndexes[lifted] = -1;
+        }
     }
 
-    public void notifyFrameHandled(FrameBehaviour lifted)
+    public void notifyFrameHandled(TextureBasedFrameBehaviour lifted)
     {
         if(framePosIndexes.ContainsKey(lifted))
         {
@@ -79,7 +83,7 @@ public class FramePositionner : MonoBehaviour
             //Debug.DrawRay(new Vector3(0, 0, index * frameIntervals), Vector3.up * 2, Color.red);
             //Debug.Log("Found " + index);
             //move a ghost or smthg
-            instanciatedPlaceHolder.position = getPosForIndex(index);
+            instanciatedPlaceHolder.localPosition = getPosForIndex(index);
         }
         else
         {
@@ -89,6 +93,8 @@ public class FramePositionner : MonoBehaviour
 
     private bool tryGetClosestEmptyPos(Vector3 framePos, out int closestIndex)
     {
+        Vector3 frameLocalPos = transform.InverseTransformPoint(framePos);
+
         float sqrdDistance = -1;
         closestIndex = -1;
 
@@ -96,7 +102,7 @@ public class FramePositionner : MonoBehaviour
         {
             if(framesIndex[i] == -1) //emptyPos
             {
-                float d = (new Vector3(0, 0, i * frameIntervals)+transform.position - framePos).sqrMagnitude;
+                float d = (new Vector3(0, 0, i * frameIntervals) - frameLocalPos).sqrMagnitude;
                 if (d < sqrdDistance || sqrdDistance == -1)
                 {
                     sqrdDistance = d;
@@ -108,25 +114,31 @@ public class FramePositionner : MonoBehaviour
         return sqrdDistance != -1 && sqrdDistance < scoutDistance*scoutDistance; //squared scoutdistance
     }
 
-    public bool notifyFrameDropped(FrameBehaviour f)
+    public bool notifyFrameDropped(TextureBasedFrameBehaviour f, bool replaceFrame = true)
     {
         if(tryGetClosestEmptyPos(f.transform.position, out int index))
         {
-            framesIndex[index] = f.id;
+            framesIndex[index] = f.frameID;
             framePosIndexes[f] = index;
 
             float angle = Vector3.Angle(f.transform.forward, transform.forward);
 
-            f.transform.rotation = Quaternion.identity;
-            f.transform.position = getPosForIndex(index);
-
-            if (angle > 90)
+            if(replaceFrame)
             {
-                f.transform.Rotate(transform.up, 180);
+                f.transform.SetParent(transform);
+
+                f.transform.localRotation = Quaternion.identity;
+                f.transform.localPosition = getPosForIndex(index);
+
+                if (angle > 90)
+                {
+                    f.transform.Rotate(transform.up, 180);
+                }
+
             }
 
-            Debug.Log("Dropped F" + f.id + " to " + index);
-            sender?.putFrame(f.id, index, angle > 90);
+            Debug.Log("Dropped F" + f.frameID + " to " + index);
+            sender?.putFrame(f.frameID, index, angle > 90);
 
             resetPlaceHolderPos();
 

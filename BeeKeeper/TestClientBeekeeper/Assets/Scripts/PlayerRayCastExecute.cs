@@ -12,7 +12,7 @@ public class PlayerRayCastExecute : MonoBehaviour
     private bool knobState = false;
 
     private Transform grabbed;
-    private FrameBehaviour frameGrabbed; //if handling a frame, shortcut to avoid getcomponents
+    private TextureBasedFrameBehaviour frameGrabbed; //if handling a frame, shortcut to avoid getcomponents
 
     public FramePositionner positionner;
     public FramePositionner falseHivePositionner;
@@ -102,7 +102,7 @@ public class PlayerRayCastExecute : MonoBehaviour
                     //start shaknig anim
 
                     //send message through positionner command sender
-                    positionner.sender.hitFrame(frameGrabbed.id);
+                    positionner.sender.hitFrame(frameGrabbed.frameID);
                 }
 
                 if (Input.mouseScrollDelta.y != 0)
@@ -129,7 +129,7 @@ public class PlayerRayCastExecute : MonoBehaviour
         tograb.SetParent(transform);
         grabbed = tograb;
 
-        FrameBehaviour f = tograb.GetComponent<FrameBehaviour>();
+        TextureBasedFrameBehaviour f = tograb.GetComponent<TextureBasedFrameBehaviour>();
         if(f!=null)
         {
             frameGrabbed = f;

@@ -18,6 +18,8 @@ public class PointCloudReferencer : MonoBehaviour
 
     private List<MyPointCloud> clouds = new List<MyPointCloud>();
 
+    public float pointsSize = 1;
+
     public void updatePoints(UpdateOrder o)
     {
         for(int i = 0; i < o.targetsIDs.Count; ++i)
@@ -50,6 +52,7 @@ public class PointCloudReferencer : MonoBehaviour
     {
         GameObject c = Instantiate(pointCloudPrefab, transform);
         MyPointCloud newCloud = c.GetComponent<MyPointCloud>();
+        newCloud.pointsSize = pointsSize;
         clouds.Add(newCloud);
         newCloud.startingIndex = starting;
         newCloud.serverRefreshRate = lerpTime;

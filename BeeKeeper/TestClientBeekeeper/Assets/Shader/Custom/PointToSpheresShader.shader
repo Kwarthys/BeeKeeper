@@ -1,14 +1,14 @@
 ﻿Shader "Custom/PointToSquareShader"
 {
 	Properties{
-	  _Radius("Sphere Radius", float) = 0.01
+	  _Radius("Sphere Radius", float) = 0.0025
 	}
 		SubShader{
 		LOD 200
-		//Tags { "RenderType" = "Opaque" }
+		Tags { "RenderType" = "Opaque" }
 		//if you want transparency
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
-		//Blend SrcAlpha OneMinusSrcAlpha
+		//Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
+		Blend SrcAlpha OneMinusSrcAlpha
 		Pass {
 			CGPROGRAM
 			#pragma vertex vert
@@ -103,5 +103,5 @@
 			ENDCG
 		}
 	}
-		//FallBack "Diffuse"
+		FallBack "Diffuse"
 }

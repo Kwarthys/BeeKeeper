@@ -4,8 +4,8 @@
 	  _Radius("Sphere Radius", float) = 1
 	}
 		SubShader{
-	   LOD 200
-	   Tags { "RenderType" = "Opaque" }
+	    LOD 200
+	    Tags { "RenderType" = "Opaque" }
 		//if you want transparency
 		//Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
 		Blend SrcAlpha OneMinusSrcAlpha
