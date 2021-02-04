@@ -296,7 +296,7 @@ public class CombManager {
 
 			if(combNumber == 1)
 			{
-				//agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
+				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
 			}
 					
 			//agentFactory.spawnBroodCells(numberOfLarvae, c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/combWidthDivisor/2), sm.getServices(), controlServices);

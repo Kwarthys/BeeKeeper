@@ -94,12 +94,12 @@ public class ModelParameters
 	public static double ETHYLE_OLEATE_TRANSMISSIBILITY = 6.0 * HOUR / SIMU_ACCELERATION;
 
 	/* 1 egg per minut */
-	public static final double LAYEGG_MEANDURATION = 30.0*MINUTE / SIMU_ACCELERATION;
+	public static final double LAYEGG_MEANDURATION = 5;//30.0*MINUTE / SIMU_ACCELERATION;
 	
 	/* want it to be half tired after an hour */
-	public static final double QUEEN_TASKS_ENERGYCOSTS = 1.0/2.0/HOUR;
+	public static final double QUEEN_TASKS_ENERGYCOSTS = 0;//1.0/2.0/HOUR;
 
-	public static final double RESTTASK_RESTORATION = 1.0/(20*MINUTE);
+	public static final double RESTTASK_RESTORATION = 1;//1.0/(20*MINUTE);
 
 	
 	public static double HJ_EQUILIBRIUM = 0.8;

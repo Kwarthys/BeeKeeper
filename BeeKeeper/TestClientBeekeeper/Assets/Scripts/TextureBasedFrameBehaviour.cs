@@ -60,11 +60,11 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
 
     private Texture2D buildTexture(Dictionary<int, Color> cellsColor, bool reverseDrawing = false)
     {
-        Texture2D t = new Texture2D(frameSize.x * cellResolution + cellResolution/2, frameSize.y * cellResolution + cellResolution / 2);
+        Texture2D t = new Texture2D(frameSize.x * cellResolution + cellResolution/2, frameSize.y * cellResolution);
 
         Color background = new Color(0, 0, 0, 0);
-        Color[] backgrounds = new Color[(frameSize.x * cellResolution + cellResolution / 2) * (frameSize.y * cellResolution + cellResolution / 2)];
-        for (int a = 0; a < (frameSize.x * cellResolution + cellResolution / 2) * (frameSize.y * cellResolution + cellResolution / 2); ++a)
+        Color[] backgrounds = new Color[t.width * t.height];
+        for (int a = 0; a < t.width * t.height; ++a)
         {
             backgrounds[a] = background;
         }
@@ -75,12 +75,12 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
         {
             for (int i = 0; i < frameSize.x; ++i)
             {
-                int offset = j % 2 == 0 ? 0 : cellResolution / 2;// : 0;
+                int offset = j % 2 == 0 ? cellResolution / 2 : 0;
 
-                if (reverseDrawing) offset = -offset;
+                if (reverseDrawing) offset = j % 2 == 0 ? 0 : cellResolution / 2;
 
-                int cellx = reverseDrawing ? frameSize.x - i : i;
-                int celly = frameSize.y - j;
+                int cellx = reverseDrawing ? frameSize.x - 1 - i: i;
+                int celly = frameSize.y - 1 - j;
 
                 int cellIndex = celly * frameSize.x + cellx;
 
