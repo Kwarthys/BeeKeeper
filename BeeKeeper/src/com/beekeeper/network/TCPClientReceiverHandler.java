@@ -105,6 +105,19 @@ public class TCPClientReceiverHandler implements Runnable {
 							services.setNumberOfSecondsToGoFast(Integer.valueOf(request.data[0]));
 							break;
 							
+						case "REBASE":
+							// REBASE TRUE/FALSE [FRAME IDS TO KEEP]
+							System.out.println("Asking a rebase");
+							int[] frameIds = new int[request.data.length-1];
+							for(int i = 0; i < frameIds.length; ++i)
+							{
+								frameIds[i] = Integer.valueOf(request.data[i+1]);
+							}
+							services.rebase(frameIds, Boolean.valueOf(request.data[0]));
+							writer.write("Rebasing " + request.data[0]);
+							
+							break;
+							
 						case "Deaths":
 							ArrayList<Integer> deads = services.getTheDead();
 							if(deads.size() > 0)

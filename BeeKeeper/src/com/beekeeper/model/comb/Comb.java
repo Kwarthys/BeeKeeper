@@ -381,4 +381,20 @@ public class Comb
 	public boolean isUp() {
 		return this.combManagerServices.isCombUp(ID);
 	}
+
+	
+	/**
+	 * Empty the comb, basically replacing it with a fresh new empty one.
+	 * Clears the walking agents and the content of the cells
+	 */
+	public void reset()
+	{		
+		agents.clear();
+		
+		for(CombCell c : cells)
+		{
+			c.visiting = null;
+			c.content = CellContent.empty;
+		}
+	}
 }

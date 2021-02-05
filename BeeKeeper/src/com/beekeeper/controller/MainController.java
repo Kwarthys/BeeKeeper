@@ -57,6 +57,10 @@ public class MainController
 	
 	private volatile boolean restartAsked = false;
 	
+	private volatile boolean rebaseAsked = false;
+	private int[] rebaseData;
+	private boolean rebaseKeepForagers = false;
+	
 	private volatile boolean timeStepOver = false;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
@@ -254,6 +258,13 @@ public class MainController
 		@Override
 		public void hitFrame(int frameIndex) {
 			combManager.hitFrame(frameIndex);
+		}
+
+		@Override
+		public void rebase(int[] frameIds, boolean keepForagers) {
+			rebaseData = frameIds;
+			rebaseAsked = true;	
+			rebaseKeepForagers = keepForagers;
 		}
 	};
 
@@ -505,6 +516,35 @@ public class MainController
 			{
 				contactsQuantitiesByIndex.forEach((Integer beeID, Double amount) -> {amount*=0.99;});
 			}
+			
+			if(rebaseAsked)
+			{
+				rebaseAsked = false;
+				
+				for(Comb c : combs)
+				{
+					boolean found = false;
+					
+					for(int datai = 0; datai < rebaseData.length && !found; datai++)
+					{
+						if(rebaseData[datai] == c.ID/2) //converting from combID to FrameID
+						{
+							found = true;
+						}
+					}
+					
+					if(!found)
+					{
+						c.reset();
+					}
+				}
+				
+				if(!rebaseKeepForagers)
+				{
+					foragers.clear();
+				}
+			}
+			
 			
 			timeStepOver = true;
 			

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,6 +33,18 @@ public class CommandSender : MonoBehaviour
     public void sendAskFFW(int seconds)
     {
         string request = "FFWD " + seconds.ToString();
+        sender.sendTCP(request);
+    }
+
+    public void sendAskRebase(int[] frameIds, bool keepFrameInside)
+    {
+        string request = "REBASE " + keepFrameInside;
+        foreach(int i in frameIds)
+        {
+            request += " " + i;
+        }
+
+        Debug.Log("sending " + request);
         sender.sendTCP(request);
     }
 }

@@ -266,6 +266,32 @@ public class HiveModel : MonoBehaviour
 
         initAskedForUpdate = 10;
     }
+
+    public void askRebase(bool keepFrameInside)
+    {
+        List<int> framesToKeepIds = new List<int>();
+
+        Dictionary<int, bool> states = frameManager.positionner.getFrameStates();
+
+        string debugString = "";
+
+        foreach(int fID in states.Keys)
+        {
+            Debug.Log("evaluating " + fID);
+
+            bool state = states[fID];
+
+            if(state == FramePositionner.FRAMESTATE_IN && keepFrameInside || state == FramePositionner.FRAMESTATE_OUT && !keepFrameInside)
+            {
+                framesToKeepIds.Add(fID);
+                debugString += " " + fID;
+            }
+        }
+
+        Debug.Log("Asking rebase for " + debugString);
+
+        commandSender.sendAskRebase(framesToKeepIds.ToArray(), keepFrameInside);
+    }
 }
 
 public class BeeAgent

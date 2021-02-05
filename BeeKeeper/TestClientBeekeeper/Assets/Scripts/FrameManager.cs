@@ -194,8 +194,6 @@ public class FrameManager : MonoBehaviour
             }
 
             //Debug.Log("Spanwed frame" + combIDs[i] / 2 + " at pos " + (frames.Count));
-
-            frames.Add(f);
         }
     }
 
@@ -302,7 +300,7 @@ public class FrameManager : MonoBehaviour
     {
         //frames[frameIndex].setVisualSelectedStatus(selected);
     }
-
+    
     public void toggleFrameState(int frameIndex)
     {
         if(frameIndex >= frames.Count)

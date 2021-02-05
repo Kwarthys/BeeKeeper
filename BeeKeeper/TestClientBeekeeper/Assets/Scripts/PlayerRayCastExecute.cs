@@ -15,7 +15,6 @@ public class PlayerRayCastExecute : MonoBehaviour
     private TextureBasedFrameBehaviour frameGrabbed; //if handling a frame, shortcut to avoid getcomponents
 
     public FramePositionner positionner;
-    public FramePositionner falseHivePositionner;
 
     // Update is called once per frame
     void Update()
@@ -55,14 +54,7 @@ public class PlayerRayCastExecute : MonoBehaviour
                 if (frameGrabbed != null)
                 {
                     positionner.notifyFrameDropped(frameGrabbed);
-                    if (falseHivePositionner.notifyFrameDropped(frameGrabbed))
-                    {
-                        grabbed.SetParent(positionner.transform);
-                    }
-                    else
-                    {
-                        grabbed.SetParent(positionner.transform);
-                    }
+                    grabbed.SetParent(positionner.transform);
                 }
                 else
                 {
@@ -77,7 +69,6 @@ public class PlayerRayCastExecute : MonoBehaviour
                 if(frameGrabbed!=null)
                 {
                     positionner.notifyFrameHandled(frameGrabbed);
-                    falseHivePositionner.notifyFrameHandled(frameGrabbed);
                 }
                 //frameHandling
 

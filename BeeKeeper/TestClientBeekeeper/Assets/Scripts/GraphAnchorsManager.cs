@@ -19,8 +19,6 @@ public class GraphAnchorsManager : MonoBehaviour
     private float timeAtStart = -1;
     private bool moving = false;
 
-    private bool dismiss = false;
-
     void Update()
     {
         int keyPadPressed = -1;

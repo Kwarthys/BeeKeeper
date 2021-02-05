@@ -33,6 +33,8 @@ public interface MainControllerServices
 	public void liftFrame(int frameIndex);
 	public void hitFrame(int frameIndex);
 	public void putFrame(int frameIndex, int pos, boolean reverse);
+	
+	public void rebase(int[] frameIds, boolean keepForagers);
 
 	public void layEgg(CombCell cell);
 

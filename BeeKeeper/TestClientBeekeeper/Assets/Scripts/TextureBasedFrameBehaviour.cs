@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
-public class TextureBasedFrameBehaviour : MonoBehaviour
+public class TextureBasedFrameBehaviour : Interactible
 {
     public GameObject faceA;
     public GameObject faceB;
@@ -26,16 +27,40 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
 
     public PointCloudReferencer beePointCloud;
 
+    private Dictionary<int, Color> cellsColorMemoryA = new Dictionary<int, Color>();
+    private Dictionary<int, Color> cellsColorMemoryB = new Dictionary<int, Color>();
+
     // Start is called before the first frame update
     void Start()
     {
         renderA = faceA.GetComponent<MeshRenderer>();
         renderB = faceB.GetComponent<MeshRenderer>();
 
+        createTextures();
+
         setRandomColors();
 
         initPos = transform.position;
         initRot = transform.rotation;
+    }
+
+    private void createTextures()
+    {
+        Texture2D t = new Texture2D(frameSize.x * cellResolution + cellResolution / 2, frameSize.y * cellResolution);
+
+        Color background = new Color(0, 0, 0, 0);
+        Color[] backgrounds = new Color[t.width * t.height];
+        for (int a = 0; a < t.width * t.height; ++a)
+        {
+            backgrounds[a] = background;
+        }
+
+        t.SetPixels(backgrounds);
+        renderA.material.mainTexture = t;
+
+        t = new Texture2D(frameSize.x * cellResolution + cellResolution / 2, frameSize.y * cellResolution);
+        t.SetPixels(backgrounds);
+        renderB.material.mainTexture = t;
     }
 
     public Transform getStarterOfFace(int combID)
@@ -45,6 +70,16 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
 
         if (combID == faceAID) return frameAStart;
         if (combID == faceBID) return frameBStart;
+        else return null;
+    }
+
+    public Dictionary<int, Color> getCombColorsMemory(int combID)
+    {
+        int faceAID = frameID * 2;
+        int faceBID = frameID * 2 + 1;
+
+        if (combID == faceAID) return cellsColorMemoryA;
+        if (combID == faceBID) return cellsColorMemoryB;
         else return null;
     }
 
@@ -58,18 +93,9 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
         else return null;
     }
 
-    private Texture2D buildTexture(Dictionary<int, Color> cellsColor, bool reverseDrawing = false)
+    private Texture2D updateTexture(Dictionary<int, Color> cellsColor, Texture2D t, Dictionary<int, Color> combColorsMemory = null, bool reverseDrawing = false)
     {
-        Texture2D t = new Texture2D(frameSize.x * cellResolution + cellResolution/2, frameSize.y * cellResolution);
-
-        Color background = new Color(0, 0, 0, 0);
-        Color[] backgrounds = new Color[t.width * t.height];
-        for (int a = 0; a < t.width * t.height; ++a)
-        {
-            backgrounds[a] = background;
-        }
-
-        t.SetPixels(backgrounds);
+        bool changed = false;
 
         for (int j = 0; j < frameSize.y; ++j)
         {
@@ -91,11 +117,35 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
                     c = cellsColor[cellIndex];
                 }
 
-                drawCell(i * cellResolution + offset + cellResolution / 2, j * cellResolution + cellResolution / 2, c, t);
+                bool redrawNeeded = true;
+
+                if(combColorsMemory != null)
+                {
+                    if(combColorsMemory.ContainsKey(cellIndex))
+                    {
+                        if(c == combColorsMemory[cellIndex])
+                        {
+                            redrawNeeded = false;
+                        }
+                    }
+                }
+
+                if(redrawNeeded)
+                {
+                    drawCell(i * cellResolution + offset + cellResolution / 2, j * cellResolution + cellResolution / 2, c, t);
+
+                    if(combColorsMemory != null)
+                        combColorsMemory[cellIndex] = c;
+
+                    changed = true;
+                }
             }
         }
 
-        t.Apply();
+        if (changed)
+        {
+            t.Apply();
+        }
 
         return t;
     }
@@ -112,18 +162,20 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
             }
         }
 
-        renderA.material.mainTexture = buildTexture(cellsColor);
-        renderB.material.mainTexture = buildTexture(cellsColor);
+        updateTexture(cellsColor, (Texture2D)renderA.material.mainTexture);
+        updateTexture(cellsColor, (Texture2D)renderB.material.mainTexture, null, true);
     }
 
     public void setColors(Dictionary<int, Color> colors, int combID)
     {
-        getCombRenderer(combID).material.mainTexture = buildTexture(colors, combID%2==1);
+        Profiler.BeginSample("TextureBasedFrameRecolor");
+        updateTexture(colors, (Texture2D)getCombRenderer(combID).material.mainTexture, getCombColorsMemory(combID), combID % 2==1);
+        Profiler.EndSample();
     }
 
     private void drawCell(int centerX, int centerY, Color c, Texture2D t)
     {
-        for(int j = 0; j < cellResolution; ++j)
+        for (int j = 0; j < cellResolution; ++j)
         {
             for (int i = 0; i < cellResolution; ++i)
             {
@@ -142,5 +194,10 @@ public class TextureBasedFrameBehaviour : MonoBehaviour
                 }
             }
         }
+    }
+
+    public override void interact(PlayerRayCastExecute executor)
+    {
+        executor.grab(transform);
     }
 }

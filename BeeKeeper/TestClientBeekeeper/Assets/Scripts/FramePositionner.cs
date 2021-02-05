@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ public class FramePositionner : MonoBehaviour
 
     private int instanciatedFrame = 0;
 
-    private int[] framesIndex;
+    private int[] framesSlotsIndex;
 
     public CommandSender sender;
 
@@ -23,12 +24,12 @@ public class FramePositionner : MonoBehaviour
 
     private void Start()
     {
-        framesIndex = new int[maxNumberOfFrames];
+        framesSlotsIndex = new int[maxNumberOfFrames];
         if(authorizeAllDrop)
         {
             for(int i = 0; i < maxNumberOfFrames; ++i)
             {
-                framesIndex[i] = -1;
+                framesSlotsIndex[i] = -1;
             }
         }
 
@@ -39,8 +40,14 @@ public class FramePositionner : MonoBehaviour
 
     public Vector3 registerAndPlaceNewFrame(TextureBasedFrameBehaviour f)
     {
+        if(instanciatedFrame > maxNumberOfFrames)
+        {
+            Debug.LogError("Max number of 8 frames reached");
+            return Vector3.zero;
+        }
+
         framePosIndexes.Add(f, instanciatedFrame);
-        framesIndex[instanciatedFrame] = f.frameID;
+        framesSlotsIndex[instanciatedFrame] = f.frameID;
 
         return getPosForIndex(instanciatedFrame++);
     }
@@ -58,7 +65,7 @@ public class FramePositionner : MonoBehaviour
         if(framePosIndexes.ContainsKey(lifted))
         {
             int prevPos = framePosIndexes[lifted];
-            framesIndex[prevPos] = -1; //lifting it up
+            framesSlotsIndex[prevPos] = -1; //lifting it up
 
             Debug.Log("lifted F" + lifted.frameID + " from " + prevPos);
             sender?.liftFrame(lifted.frameID);
@@ -98,9 +105,9 @@ public class FramePositionner : MonoBehaviour
         float sqrdDistance = -1;
         closestIndex = -1;
 
-        for(int i = 0; i < framesIndex.Length; ++i)
+        for(int i = 0; i < framesSlotsIndex.Length; ++i)
         {
-            if(framesIndex[i] == -1) //emptyPos
+            if(framesSlotsIndex[i] == -1) //emptyPos
             {
                 float d = (new Vector3(0, 0, i * frameIntervals) - frameLocalPos).sqrMagnitude;
                 if (d < sqrdDistance || sqrdDistance == -1)
@@ -118,12 +125,17 @@ public class FramePositionner : MonoBehaviour
     {
         if(tryGetClosestEmptyPos(f.transform.position, out int index))
         {
-            framesIndex[index] = f.frameID;
+            framesSlotsIndex[index] = f.frameID;
             framePosIndexes[f] = index;
 
             float angle = Vector3.Angle(f.transform.forward, transform.forward);
 
-            if(replaceFrame)
+            Debug.Log("Angle " + angle);
+
+            Debug.DrawRay(f.transform.position, -f.transform.forward, Color.red, 1);
+            Debug.DrawRay(f.transform.position, transform.forward, Color.blue, 1);
+
+            if (replaceFrame)
             {
                 f.transform.SetParent(transform);
 
@@ -134,7 +146,6 @@ public class FramePositionner : MonoBehaviour
                 {
                     f.transform.Rotate(transform.up, 180);
                 }
-
             }
 
             Debug.Log("Dropped F" + f.frameID + " to " + index);
@@ -151,5 +162,20 @@ public class FramePositionner : MonoBehaviour
     private void resetPlaceHolderPos()
     {
         instanciatedPlaceHolder.position = new Vector3(0, -5, 0);
+    }
+
+    public static bool FRAMESTATE_OUT = false;
+    public static bool FRAMESTATE_IN = true;
+
+    public Dictionary<int, bool> getFrameStates()
+    {
+        Dictionary<int, bool> states = new Dictionary<int, bool>();
+
+        foreach(TextureBasedFrameBehaviour f in framePosIndexes.Keys)
+        {
+            states[f.frameID] = framePosIndexes[f] != -1;
+        }
+
+        return states;
     }
 }
