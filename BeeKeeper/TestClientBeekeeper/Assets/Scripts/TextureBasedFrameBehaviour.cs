@@ -25,6 +25,8 @@ public class TextureBasedFrameBehaviour : Interactible
 
     public bool isUp = false;
 
+    public bool isReversed = false;
+
     public PointCloudReferencer beePointCloud;
 
     private Dictionary<int, Color> cellsColorMemoryA = new Dictionary<int, Color>();

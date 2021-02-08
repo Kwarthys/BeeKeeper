@@ -148,8 +148,14 @@ public class FramePositionner : MonoBehaviour
                 }
             }
 
+            bool reversed = angle > 90;
+
+            bool wasReversed = f.isReversed;
+
+            f.isReversed = reversed;
+
             Debug.Log("Dropped F" + f.frameID + " to " + index);
-            sender?.putFrame(f.frameID, index, angle > 90);
+            sender?.putFrame(f.frameID, index, reversed != wasReversed);
 
             resetPlaceHolderPos();
 
