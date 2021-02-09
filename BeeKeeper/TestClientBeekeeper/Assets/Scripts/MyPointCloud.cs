@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Jobs;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class MyPointCloud : MonoBehaviour
 {
@@ -24,7 +25,8 @@ public class MyPointCloud : MonoBehaviour
             timeAtLastUpdate = -1;
         }
 
-        public static Vector3[] getPos(MyPoint[] list)
+        /*
+        public static Vector3[] getAllPos(MyPoint[] list)
         {
             Vector3[] array = new Vector3[list.Length];
 
@@ -38,7 +40,7 @@ public class MyPointCloud : MonoBehaviour
             return array;
         }
 
-        public static Color[] getColors(MyPoint[] list)
+        public static Color[] getAllColors(MyPoint[] list)
         {
             Color[] array = new Color[list.Length];
 
@@ -51,20 +53,25 @@ public class MyPointCloud : MonoBehaviour
             }
             return array;
         }
+        */
     }
+
+    public static int ID = 0;
+
+    private int id;
 
     public float pointsSize = 1;
 
     private Mesh mesh;
 
     //Moving points
-    private MyPoint[] points = new MyPoint[PointCloudReferencer.cloudMaxSize];
+    //private MyPoint[] points = new MyPoint[PointCloudReferencer.cloudMaxSize];
+
+    private Dictionary<int, MyPoint> points = new Dictionary<int, MyPoint>();
 
     public int serverRefreshRate = 1000;
 
     private List<int> indecies = new List<int>();
-
-    private List<UpdateOrder> orders = new List<UpdateOrder>();
 
     public int startingIndex = -1;
 
@@ -72,38 +79,44 @@ public class MyPointCloud : MonoBehaviour
     {
         mesh = new Mesh();
 
+        //mesh.SetIndices(new int[0], MeshTopology.Points, 0);
+
         GetComponent<MeshFilter>().mesh = mesh;
         MeshRenderer m = GetComponent<MeshRenderer>();
         m.material = new Material(Shader.Find("Custom/BeePointCloudShader"));
         m.material.SetFloat("_Radius", pointsSize);
+
+        id = ID++;
     }
 
     public void disablePointID(int pointID)
     {
-        points[pointID] = null;
+        //points[pointID] = null;
+        points.Remove(pointID);
     }
 
     public void UpdatePointTarget(int pointId, Vector3 newTarget, Color? color = null)
     {
         Color c = color ?? Color.black;
 
-        MyPoint thePoint = points[pointId];
+        //MyPoint thePoint = points[pointId];        
 
-        if(thePoint == null)
+        if(points.TryGetValue(pointId, out MyPoint thePoint))
+        {
+            thePoint.target = newTarget;
+            thePoint.timeAtLastUpdate = Time.time * 1000f;
+            thePoint.origin = thePoint.pos;
+        }
+        else
         {
             thePoint = new MyPoint(newTarget);
-            points[pointId] = thePoint;
+            //points[pointId] = thePoint;
+            points.Add(pointId, thePoint);
 
             if (newTarget.z == -1)
             {
                 thePoint.pos = getRandomPosForForaging(pointId);
             }
-        }
-        else
-        {
-            thePoint.target = newTarget;
-            thePoint.timeAtLastUpdate = Time.time * 1000f;
-            thePoint.origin = thePoint.pos;
         }
 
         thePoint.color = c;
@@ -128,61 +141,66 @@ public class MyPointCloud : MonoBehaviour
         return (UnityEngine.Random.onUnitSphere * 50f + 5f * Vector3.up - points[id].pos).normalized * 2f + points[id].pos;
     }
 
+    //Profiler.BeginSample("PCU meshupdate");
+    //Profiler.EndSample();
+
     private void Update()
     {
         float time = Time.time;
 
-        /*** debug
-        if(points[0] != null)
+        List<MyPoint> thePoints = new List<MyPoint>(points.Values); //Play with a copy to avoid multithread shenanigans
+
+        int numberOfPoints = thePoints.Count;
+
+        Vector3[] pointsPos = new Vector3[numberOfPoints];
+        Color[] colors = new Color[numberOfPoints];
+
+        int pi = 0;
+        foreach (MyPoint p in thePoints)
         {
-            MyPoint p = points[0];
-            Debug.Log(p.timeAtLastUpdate + " " + Time.time*1000f + " " + ((Time.time * 1000f - p.timeAtLastUpdate) / (serverRefreshRate)) + "||" + p.pos + " -> " + p.target);
-        }
-        */
-        
-        //Move 'em
-        foreach (MyPoint p in points)
-        {
-            if(p != null)
+            if (p.timeAtLastUpdate != -1)
             {
-                if (p.timeAtLastUpdate != -1)
+                float t = (Time.time * 1000f - p.timeAtLastUpdate) / (serverRefreshRate);
+
+                if (t < 0) t = 0;
+
+                if (t > 1)
                 {
-                    float t = (Time.time * 1000f - p.timeAtLastUpdate) / (serverRefreshRate);
-
-                    if (t < 0) t = 0;
-
-                    if (t > 1)
-                    {
-                        p.timeAtLastUpdate = -1;
-                        t = 1;
-                    }
-                    else
-                    {
-                        p.pos = new Vector3(
-                            Mathf.Lerp(p.origin.x, p.target.x, t),
-                            Mathf.Lerp(p.origin.y, p.target.y, t),
-                            Mathf.Lerp(p.origin.z, p.target.z, t));
-                    }
+                    p.timeAtLastUpdate = -1;
+                    t = 1;
+                }
+                else
+                {
+                    p.pos = new Vector3(
+                        Mathf.Lerp(p.origin.x, p.target.x, t),
+                        Mathf.Lerp(p.origin.y, p.target.y, t),
+                        Mathf.Lerp(p.origin.z, p.target.z, t));
                 }
             }
+
+            colors[pi] = p.color;
+            pointsPos[pi] = p.pos;
+
+            pi++;
         }
 
-        mesh.vertices = MyPoint.getPos(points);
-        mesh.colors = MyPoint.getColors(points);
+        mesh.Clear();
 
-        if(indecies.Count < mesh.vertices.Length)
+        mesh.vertices = pointsPos;
+        mesh.colors = colors;
+
+        for (int i = indecies.Count; i < numberOfPoints; ++i) // adding indecies if needed
         {
-            for(int i = indecies.Count; i < points.Length; ++i)
-            {
-                indecies.Add(i);
-            }
+            indecies.Add(i);
         }
 
-        while(indecies.Count > mesh.vertices.Length)
+        while (indecies.Count > numberOfPoints) // removing indecies if needed
         {
             indecies.RemoveAt(indecies.Count - 1);
         }
-
         mesh.SetIndices(indecies, MeshTopology.Points, 0);
+
+        //Debug.Log(numberOfPoints + " " + pointsPos.Length + " " + colors.Length + " " + indecies.Count);
+        //Debug.Log(id + ":" + mesh.vertices.Length + " " + mesh.colors.Length + " " + pointsPos.Length + " " + colors.Length + " " + indecies.Count + " / " + pi + " " + numberOfPoints);
     }
 }

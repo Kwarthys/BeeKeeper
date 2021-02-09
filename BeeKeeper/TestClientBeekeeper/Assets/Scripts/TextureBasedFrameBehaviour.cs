@@ -170,9 +170,9 @@ public class TextureBasedFrameBehaviour : Interactible
 
     public void setColors(Dictionary<int, Color> colors, int combID)
     {
-        Profiler.BeginSample("TextureBasedFrameRecolor");
+        //Profiler.BeginSample("TextureBasedFrameRecolor");
         updateTexture(colors, (Texture2D)getCombRenderer(combID).material.mainTexture, getCombColorsMemory(combID), combID % 2==1);
-        Profiler.EndSample();
+        //Profiler.EndSample();
     }
 
     private void drawCell(int centerX, int centerY, Color c, Texture2D t)

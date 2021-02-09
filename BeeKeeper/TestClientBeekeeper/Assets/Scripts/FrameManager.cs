@@ -228,6 +228,8 @@ public class FrameManager : MonoBehaviour
 
         if (debug) Debug.Log(combStarter.position);
 
+        float combFace = relativePos.z;
+
         bool changedOfFrame = false;
         if(relativePos.x < 0)
         {
@@ -251,7 +253,7 @@ public class FrameManager : MonoBehaviour
 
         if(changedOfFrame)
         {
-            absolute.z += (relativePos.z%2==0 ? 1 : -1) * 0.1f / sizeCoef;
+            absolute.z += (combFace % 2 == 1 ? 1 : -1) * 0.02f;// * sizeCoef;
         }
 
         //absolute += -combStarter.right * (relativePos.x + (relativePos.y % 2 == 0 ? 0 : 0.5f)) * 0.02f;
