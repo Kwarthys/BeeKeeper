@@ -389,12 +389,14 @@ public class Comb
 	 */
 	public void reset()
 	{		
-		agents.clear();
-		
 		for(CombCell c : cells)
 		{
-			c.visiting = null;
 			c.content = CellContent.empty;
 		}
+		
+		for(Agent a : agents)
+		{
+			a.alive = false; //this is a blood bath
+		}		
 	}
 }

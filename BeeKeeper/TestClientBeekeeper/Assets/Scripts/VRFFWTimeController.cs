@@ -15,38 +15,29 @@ public class VRFFWTimeController : MonoBehaviour
 
     void Update()
     {
-        if(myInputs.getPadPress(VRInteractionProfileManager.TIME_PROFILE))
-        {
-            float padV = myInputs.getVerticalPad();
-            float padH = myInputs.getHorizontalPad();
-            //Debug.Log(myInputs.getHorizontalPad() + " " + myInputs.getVerticalPad());
+        VRGetInput.PadPress press = myInputs.getPadPressPos(VRInteractionProfileManager.TIME_PROFILE);
 
-            if(Mathf.Abs(padV) > Mathf.Abs(padH))
-            {
-                if(padV > 0)
-                {
-                    Debug.Log("Skipping " + BOT_SECONDSKIP + "s.");
-                    model.askTimeAcceleration(BOT_SECONDSKIP);
-                }
-                else
-                {
-                    Debug.Log("Skipping " + TOP_SECONDSKIP + "s.");
-                    model.askTimeAcceleration(TOP_SECONDSKIP);
-                }
-            }
-            else
-            {
-                if (padH > 0)
-                {
-                    Debug.Log("Skipping " + RIGHT_SECONDSKIP + "s.");
-                    model.askTimeAcceleration(RIGHT_SECONDSKIP);
-                }
-                else
-                {
-                    Debug.Log("Skipping " + LEFT_SECONDSKIP + "s.");
-                    model.askTimeAcceleration(LEFT_SECONDSKIP);
-                }
-            }
+        switch(press)
+        {
+            case VRGetInput.PadPress.Top:
+                Debug.Log("Skipping " + TOP_SECONDSKIP + "s.");
+                model.askTimeAcceleration(TOP_SECONDSKIP);
+                break;
+            case VRGetInput.PadPress.Bot:
+                Debug.Log("Skipping " + BOT_SECONDSKIP + "s.");
+                model.askTimeAcceleration(BOT_SECONDSKIP);
+                break;
+            case VRGetInput.PadPress.Right:
+                Debug.Log("Skipping " + RIGHT_SECONDSKIP + "s.");
+                model.askTimeAcceleration(RIGHT_SECONDSKIP);
+                break;
+            case VRGetInput.PadPress.Left:
+                Debug.Log("Skipping " + LEFT_SECONDSKIP + "s.");
+                model.askTimeAcceleration(LEFT_SECONDSKIP);
+                break;
+            case VRGetInput.PadPress.None:
+                //do Nothing
+                break;
         }
     }
 }

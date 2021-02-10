@@ -96,9 +96,24 @@ public class CommandInterpreter : MonoBehaviour
 
                 break;
 
+            case "DEATHS":
+                ids = new List<int>();
+
+                if(int.Parse(command.param) != 0)
+                {
+                    for (int i = 0; i < data.Length; i ++)
+                    {
+                        ids.Add(int.Parse(data[i]));
+                    }
+
+                    model.registerDeathList(ids);
+                }
+
+                break;
+
             default:
-                Debug.Log("SERVER MESSAGE : " + command.command + " " + command.param + " " + command.data);
-                break;//
+                Debug.Log("NaC::SERVER MESSAGE : " + command.command + " " + command.param + " " + command.data);
+                break;
         }
     }
 }

@@ -47,4 +47,9 @@ public class CommandSender : MonoBehaviour
         Debug.Log("sending " + request);
         sender.sendTCP(request);
     }
+
+    public void askForTheDead()
+    {
+        sender.sendTCP("Deaths");
+    }
 }

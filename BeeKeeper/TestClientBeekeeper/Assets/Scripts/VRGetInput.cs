@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class VRGetInput : MonoBehaviour
 {
+    /*** Registering input on either of the two controllers, and comparing them to the Profile system before sending the results ***/
+
     public VRInteractionProfileManager profileManager;
 
     public bool getPadPress(int profile = -1)
     {
-        return (Input.GetKeyDown(KeyCode.JoystickButton8) || Input.GetKeyDown(KeyCode.JoystickButton9)) && checkProfile(profile);    
+        return (Input.GetKeyDown(KeyCode.JoystickButton8) || Input.GetKeyDown(KeyCode.JoystickButton9)) && checkProfile(profile);
     }
 
     public float getTriggerAxis(int profile = -1)
@@ -38,18 +40,68 @@ public class VRGetInput : MonoBehaviour
 
     public float getHorizontalPad(int profile = -1)
     {
-        return Input.GetAxis("ViveHorizontalPad") * (checkProfile(profile) ? 1 : 0);
+        float horizontal = Input.GetAxis("ViveHorizontalPad");
+
+        if (horizontal == 0)
+        {
+            horizontal = Input.GetAxis("ViveHorizontalPad2");
+        }
+        return horizontal * (checkProfile(profile) ? 1 : 0);
     }
 
     public float getVerticalPad(int profile = -1)
     {
-        return Input.GetAxis("ViveVerticalPad") * (checkProfile(profile) ? 1 : 0);
+        float vertical = Input.GetAxis("ViveVerticalPad");
+
+        if (vertical == 0)
+        {
+            vertical = Input.GetAxis("ViveVerticalPad2");
+        }
+        return vertical * (checkProfile(profile) ? 1 : 0);
     }
 
 
 
     private bool checkProfile(int profile)
     {
-        return profile == -1 || profile == profileManager.activeProfile.index; 
+        return profile == -1 || profile == profileManager.activeProfile.index;
+    }
+
+    public enum PadPress { Top, Bot, Left, Right, None };
+
+    public PadPress getPadPressPos(int profile = -1)
+    {
+        if(!getPadPress(profile))
+        {
+            return PadPress.None;
+        }
+
+        float padV = getVerticalPad(profile);
+        float padH = getHorizontalPad(profile);
+        //Debug.Log(myInputs.getHorizontalPad() + " " + myInputs.getVerticalPad());
+
+
+        if (Mathf.Abs(padV) > Mathf.Abs(padH))
+        {
+            if (padV > 0)
+            {
+                return PadPress.Bot;
+            }
+            else
+            {
+                return PadPress.Top;
+            }
+        }
+        else
+        {
+            if (padH > 0)
+            {
+                return PadPress.Right;
+            }
+            else
+            {
+                return PadPress.Left;
+            }
+        }
     }
 }

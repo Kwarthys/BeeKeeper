@@ -120,18 +120,16 @@ public class TCPClientReceiverHandler implements Runnable {
 							
 						case "Deaths":
 							ArrayList<Integer> deads = services.getTheDead();
-							if(deads.size() > 0)
+							sb = new StringBuffer();
+							sb.append("DEATHS ");
+							sb.append(deads.size());
+							for(Integer id : deads)
 							{
-								sb = new StringBuffer();
-								sb.append("DEATHS -1 ");
-								for(Integer id : deads)
-								{
-									sb.append(" ");
-									sb.append(id);
-								}
-								System.out.println("sending " + sb.toString());
-								writer.write(sb.toString());			
+								sb.append(" ");
+								sb.append(id);
 							}
+							System.out.println("sending " + sb.toString());
+							writer.write(sb.toString());
 							break;
 							
 						default:

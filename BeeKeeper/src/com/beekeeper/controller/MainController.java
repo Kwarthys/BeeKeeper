@@ -103,11 +103,11 @@ public class MainController
 			return null;
 		}
 		
-		public void notifyDeath(Agent a) {
+		public synchronized void notifyDeath(Agent a) {
 			combManager.notifyDead(a);
 			agentFactory.allAgents.remove(a);
 			
-			if(a.getBeeType() != AgentType.BROOD_BEE)
+			if(a.getBeeType() != AgentType.BROOD_BEE && !deadAdults.contains(a.getID()))
 			{
 				deadAdults.add(a.getID());				
 			}
@@ -153,10 +153,10 @@ public class MainController
 
 		@Override
 		public ArrayList<Integer> getTheDead() {
-			ArrayList<Integer> theDeads = new ArrayList<>();
-			deadAdults.forEach((Integer id) -> theDeads.add(id));
+			ArrayList<Integer> theDead = new ArrayList<>();
+			deadAdults.forEach((Integer id) -> theDead.add(id));
 			deadAdults.clear();
-			return theDeads;
+			return theDead;
 		}
 
 		@Override
@@ -535,7 +535,7 @@ public class MainController
 					
 					if(!found)
 					{
-						c.reset();
+						c.reset(); // reset if not in the list
 					}
 				}
 				

@@ -144,6 +144,7 @@ public class TextureBasedFrameBehaviour : Interactible
             }
         }
 
+        //Only applying the changes if any have been made
         if (changed)
         {
             t.Apply();

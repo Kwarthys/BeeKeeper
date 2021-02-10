@@ -23,10 +23,14 @@ public class HiveModel : MonoBehaviour
     private MyLockedList<UpdateContentOrder> incContentOrders = new MyLockedList<UpdateContentOrder>();
     private MyLockedList<UpdateContactOrder> contactOrders = new MyLockedList<UpdateContactOrder>();
     private MyLockedList<UpdateStatus> statusOrders = new MyLockedList<UpdateStatus>();
+    private MyLockedList<List<int>> deadOrder = new MyLockedList<List<int>>();
 
     public TaskGrapher taskGrapher;
 
     private int initAskedForUpdate = 0;
+
+    public float deathUpdateTime = 10;
+    private float lastDeathUpdate = 0;
 
     void Update()
     {
@@ -36,8 +40,15 @@ public class HiveModel : MonoBehaviour
         updateContent();
         updateContacts();
         updateStatus();
+        updateDeaths();
 
         if (initAskedForUpdate > 0) initAskedForUpdate--;
+
+        if(Time.realtimeSinceStartup - lastDeathUpdate > deathUpdateTime)
+        {
+            lastDeathUpdate = Time.realtimeSinceStartup;
+            commandSender.askForTheDead();
+        }
     }
 
     public void updateAgents()
@@ -196,6 +207,14 @@ public class HiveModel : MonoBehaviour
         }
     }
 
+    public void updateDeaths()
+    {
+        while(deadOrder.tryReadFifo(out List<int> deadIds) && initAskedForUpdate == 0)
+        {
+            //Delete the BeeAgents and free their ids in the different clouds
+        }
+    }
+
     public void registerContactUpdate(UpdateContactOrder order)
     {
         contactOrders.waitAndPost(order);
@@ -217,6 +236,13 @@ public class HiveModel : MonoBehaviour
     {
         agentOrders.waitAndPost(updateOrder);
     }
+
+    public void registerDeathList(List<int> deadIds)
+    {
+        deadOrder.waitAndPost(deadIds);
+    }
+
+
     /*
     private BeeAgent getAgentOfId(int id)
     {

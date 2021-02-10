@@ -182,6 +182,7 @@ public class MyPointCloud : MonoBehaviour
             pointsPos[pi] = p.pos;
 
             pi++;
+            //a for loop could have been used
         }
 
         mesh.Clear();
