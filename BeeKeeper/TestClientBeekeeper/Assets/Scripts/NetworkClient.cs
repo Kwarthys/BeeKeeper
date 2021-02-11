@@ -46,6 +46,7 @@ public class NetworkClient : MonoBehaviour
 
         if(data.Length < 3)
         {
+            //Debug.Log("NaC: Server Said " + rawData);
             return;
         }
 

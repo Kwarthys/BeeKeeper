@@ -211,7 +211,14 @@ public class HiveModel : MonoBehaviour
     {
         while(deadOrder.tryReadFifo(out List<int> deadIds) && initAskedForUpdate == 0)
         {
-            //Delete the BeeAgents and free their ids in the different clouds
+            foreach(int id in deadIds)
+            {
+                BeeAgent agent = theAgents[id];
+                //Delete the BeeAgents and free their ids in the different clouds
+                frameManager.freeFrameIDForPos(agent.pos, agent.pointID);
+
+                theAgents.Remove(id);
+            }
         }
     }
 

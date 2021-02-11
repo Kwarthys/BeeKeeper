@@ -300,6 +300,8 @@ public class UDPClientHandler implements Runnable {
 			StringBuffer combBuffer = new StringBuffer();
 			combBuffer.append("CONTENT ");
 			combBuffer.append(c.ID);
+			
+			int cellSent = 0;
 
 			for(int i = 0; i < combSize; ++i)
 			{
@@ -323,7 +325,15 @@ public class UDPClientHandler implements Runnable {
 					}
 					combBuffer.append(" ");
 					combBuffer.append(nextData);
+					
+					cellSent++;
 				}
+			}
+			
+			if(cellSent == 0)
+			{
+				combBuffer.append(" -1");
+				//System.out.println("Empty comb detected");
 			}
 
 			byte[] data = combBuffer.toString().getBytes();

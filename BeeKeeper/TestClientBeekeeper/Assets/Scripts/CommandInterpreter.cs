@@ -56,6 +56,13 @@ public class CommandInterpreter : MonoBehaviour
                 List<int> codes = new List<int>();
                 List<int> quantities = new List<int>();
 
+                if(data.Length < 3)
+                {
+                    //Debug.Log("EmptyComb Recieved");
+                    model.registerContentUpdate(new UpdateContentOrder(int.Parse(command.param), ids, quantities, codes));
+                    break;
+                }
+
                 for (int i = 0; i < data.Length; i+=3)
                 {
                     ids.Add(int.Parse(data[i]));
@@ -108,6 +115,8 @@ public class CommandInterpreter : MonoBehaviour
 
                     model.registerDeathList(ids);
                 }
+
+                Debug.Log("Got death for " + ids.Count + " agents");
 
                 break;
 
