@@ -85,6 +85,7 @@ public class CommandInterpreter : MonoBehaviour
                     jhAmounts.Add(float.Parse(data[i + 2], CultureInfo.InvariantCulture));
                     taskNames.Add(data[i + 3]);
                 }
+                model.registerNewTimeStep(int.Parse(command.param));
                 model.registerStatusUpdate(new UpdateStatus(int.Parse(command.param),  ids, jhAmounts, taskNames, ages));
                 break;
 

@@ -32,6 +32,10 @@ public class HiveModel : MonoBehaviour
     public float deathUpdateTime = 10;
     private float lastDeathUpdate = 0;
 
+    public int lastRegisteredTimeStep = -1;
+
+    public TimeWarpFeedbackManager warpFeedback;
+
     void Update()
     {
         float updateStartTime = Time.realtimeSinceStartup;
@@ -278,6 +282,7 @@ public class HiveModel : MonoBehaviour
     public void askTimeAcceleration(int seconds)
     {
         commandSender.sendAskFFW(seconds);
+        warpFeedback.warpstarted(lastRegisteredTimeStep, lastRegisteredTimeStep + seconds * 1);
     }
 
     public void restartSimulation()
@@ -298,6 +303,8 @@ public class HiveModel : MonoBehaviour
         commandSender.sendString("RESTART");
 
         initAskedForUpdate = 10;
+
+        lastRegisteredTimeStep = -1;
     }
 
     public void askRebase(bool keepFrameInside)
@@ -324,6 +331,14 @@ public class HiveModel : MonoBehaviour
         Debug.Log("Asking rebase for " + debugString);
 
         commandSender.sendAskRebase(framesToKeepIds.ToArray(), keepFrameInside);
+    }
+
+    public void registerNewTimeStep(int receivedTS)
+    {
+        if(receivedTS > lastRegisteredTimeStep && initAskedForUpdate == 0)
+        {
+            lastRegisteredTimeStep = receivedTS;
+        }
     }
 }
 
