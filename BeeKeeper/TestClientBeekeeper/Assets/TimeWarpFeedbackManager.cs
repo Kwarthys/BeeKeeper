@@ -6,7 +6,7 @@ using TMPro;
 
 public class TimeWarpFeedbackManager : MonoBehaviour
 {
-    public HiveModel model;
+    //public HiveModel model;
 
     private int firstStepWarp = -1;
     private float timeAtStartWarp = -1;
@@ -40,12 +40,10 @@ public class TimeWarpFeedbackManager : MonoBehaviour
         visualFeedbackHolder.SetActive(true);
     }
 
-    private void Update()
+    public void notifyNewTSRecieved(int currentTS)
     {
         if(warping)
         {
-            int currentTS = model.lastRegisteredTimeStep;
-
             int warped = currentTS - firstStepWarp;
             int warpTotal = targetStepWarp - firstStepWarp;
 

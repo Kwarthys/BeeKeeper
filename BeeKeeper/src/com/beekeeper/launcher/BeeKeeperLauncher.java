@@ -35,8 +35,8 @@ public class BeeKeeperLauncher {
 		
 		//ModelParameters.UI_ENABLED = false;
 		ModelParameters.SIMU_LENGTH = 50 * ModelParameters.DAY;
-		ModelParameters.NUMBER_BEES = 2000;
-		ModelParameters.NUMBER_LARVAE = 750;//750;
+		ModelParameters.NUMBER_BEES = 20;
+		ModelParameters.NUMBER_LARVAE = 70;//750;
 		ModelParameters.NUMBER_FRAMES = 8; //MAX IS 8
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;
@@ -71,9 +71,9 @@ public class BeeKeeperLauncher {
 		//ModelParameters.NB_BEE_LOGGING = 24;
 		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;
 		ModelParameters.SIMU_LENGTH = 20 * ModelParameters.DAY;
-		ModelParameters.NUMBER_BEES = 1000;
-		ModelParameters.NUMBER_LARVAE = 750;//750;
-		ModelParameters.NUMBER_FRAMES = 1;
+		ModelParameters.NUMBER_BEES = 20;
+		ModelParameters.NUMBER_LARVAE = 5;//750;
+		ModelParameters.NUMBER_FRAMES = 5;
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;
 		

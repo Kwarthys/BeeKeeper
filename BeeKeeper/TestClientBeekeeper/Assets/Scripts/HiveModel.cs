@@ -328,7 +328,7 @@ public class HiveModel : MonoBehaviour
             }
         }
 
-        Debug.Log("Asking rebase for " + debugString);
+        Debug.Log("Asking rebase " + keepFrameInside + " " + debugString);
 
         commandSender.sendAskRebase(framesToKeepIds.ToArray(), keepFrameInside);
     }
@@ -338,6 +338,7 @@ public class HiveModel : MonoBehaviour
         if(receivedTS > lastRegisteredTimeStep && initAskedForUpdate == 0)
         {
             lastRegisteredTimeStep = receivedTS;
+            warpFeedback.notifyNewTSRecieved(receivedTS);
         }
     }
 }

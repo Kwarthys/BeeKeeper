@@ -45,6 +45,7 @@ public class FrameManager : MonoBehaviour
             }
         }
 
+        Debug.LogError("Spawning " + frameID + " from GetFrameWithCombID");
         return spawnAFrame(frameID);
     }
 
@@ -184,8 +185,11 @@ public class FrameManager : MonoBehaviour
 
         frames.Clear();
 
+        positionner.reset();
+
         for(int i = 0; i < combIDs.Length; i+=2)
         {
+            Debug.Log("Spawning " + combIDs[i] / 2 + " from initialiseWith");
             TextureBasedFrameBehaviour f = spawnAFrame(combIDs[i] / 2);
 
             if(combIDs[i] > combIDs[i+1])
@@ -200,6 +204,8 @@ public class FrameManager : MonoBehaviour
     
     private TextureBasedFrameBehaviour spawnAFrame(int id)
     {
+        //Debug.Log("Spawning frame " + id);
+
         TextureBasedFrameBehaviour f = Instantiate(framePrefab, Vector3.zero, Quaternion.identity, hiveContainer).GetComponent<TextureBasedFrameBehaviour>();
         f.frameID = id;
         Vector3 framePos = positionner.registerAndPlaceNewFrame(f);

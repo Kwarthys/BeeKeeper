@@ -22,6 +22,8 @@ public class FramePositionner : MonoBehaviour
 
     public bool authorizeAllDrop = false;
 
+    private Dictionary<TextureBasedFrameBehaviour, int> framePosIndexes = new Dictionary<TextureBasedFrameBehaviour, int>();
+
     private void Start()
     {
         framesSlotsIndex = new int[maxNumberOfFrames];
@@ -34,9 +36,15 @@ public class FramePositionner : MonoBehaviour
         }
 
         instanciatedPlaceHolder = Instantiate(framePlaceHolderPrefab, new Vector3(0, -5, 0), Quaternion.identity, transform).transform;
+
+        instanciatedFrame = 0;
+        framePosIndexes = new Dictionary<TextureBasedFrameBehaviour, int>();
     }
 
-    private Dictionary<TextureBasedFrameBehaviour, int> framePosIndexes = new Dictionary<TextureBasedFrameBehaviour, int>();
+    public void reset()
+    {
+        Start();        
+    }
 
     public Vector3 registerAndPlaceNewFrame(TextureBasedFrameBehaviour f)
     {
@@ -45,6 +53,8 @@ public class FramePositionner : MonoBehaviour
             Debug.LogError("Max number of 8 frames reached");
             return Vector3.zero;
         }
+
+        Debug.Log("instanciatedFrame " + instanciatedFrame);
 
         framePosIndexes.Add(f, instanciatedFrame);
         framesSlotsIndex[instanciatedFrame] = f.frameID;

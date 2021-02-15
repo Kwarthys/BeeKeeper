@@ -30,13 +30,13 @@ public class OptiTrackReferencer : MonoBehaviour
             }
             //Enable or disable tracking script on tracked object depending on active OptiTrack
             Debug.Log("Removed this");
-            /*
+            
             OptitrackRigidBody o = g.GetComponent<OptitrackRigidBody>();
             if (o != null)
             {
                 o.enabled = active;
             }
-            */
+            
         }
     }
 }

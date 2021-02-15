@@ -75,7 +75,3 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-
-#Assets only meaningfull in situ
-/[Aa]ssets/[Ss]teamVR/*
-/[Aa]ssets/[Oo]ptiTrack/*
