@@ -123,12 +123,30 @@ public class TCPClientReceiverHandler implements Runnable {
 							sb = new StringBuffer();
 							sb.append("DEATHS ");
 							sb.append(deads.size());
-							for(Integer id : deads)
+							int c = 0;
+							for(int i = 0; i < deads.size(); ++i)
 							{
+								if(c > 1500)
+								{
+									System.out.println("sending " + c + " deaths");
+									writer.write(sb.toString());
+									writer.flush();									
+									
+									sb = new StringBuffer();
+									sb.append("DEATHS ");
+									sb.append(deads.size());
+									
+									c = 0;
+								}
+								
 								sb.append(" ");
-								sb.append(id);
-							}
-							System.out.println("sending " + sb.toString());
+								sb.append(deads.get(i));								
+								
+								c++;
+							}					
+							
+							
+							System.out.println("sending " + c + " deaths");
 							writer.write(sb.toString());
 							break;
 							

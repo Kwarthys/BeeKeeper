@@ -29,7 +29,6 @@ public class OptiTrackReferencer : MonoBehaviour
                 r.isKinematic = active;
             }
             //Enable or disable tracking script on tracked object depending on active OptiTrack
-            Debug.Log("Removed this");
             
             OptitrackRigidBody o = g.GetComponent<OptitrackRigidBody>();
             if (o != null)

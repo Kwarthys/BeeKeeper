@@ -217,11 +217,18 @@ public class HiveModel : MonoBehaviour
         {
             foreach(int id in deadIds)
             {
-                BeeAgent agent = theAgents[id];
-                //Delete the BeeAgents and free their ids in the different clouds
-                frameManager.freeFrameIDForPos(agent.pos, agent.pointID);
+                if(theAgents.ContainsKey(id))
+                {
+                    BeeAgent agent = theAgents[id];
+                    //Delete the BeeAgents and free their ids in the different clouds
+                    frameManager.freeFrameIDForPos(agent.pos, agent.pointID);
 
-                theAgents.Remove(id);
+                    theAgents.Remove(id);
+                }
+                else
+                {
+                    Debug.LogWarning("dead id not found in the system");
+                }
             }
         }
     }

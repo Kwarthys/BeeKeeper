@@ -189,7 +189,7 @@ public class FrameManager : MonoBehaviour
 
         for(int i = 0; i < combIDs.Length; i+=2)
         {
-            Debug.Log("Spawning " + combIDs[i] / 2 + " from initialiseWith");
+            //Debug.Log("Spawning " + combIDs[i] / 2 + " from initialiseWith");
             TextureBasedFrameBehaviour f = spawnAFrame(combIDs[i] / 2);
 
             if(combIDs[i] > combIDs[i+1])

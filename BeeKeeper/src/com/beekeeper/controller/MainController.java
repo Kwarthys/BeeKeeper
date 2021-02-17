@@ -23,6 +23,7 @@ import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
+import com.beekeeper.utils.MyLockedList;
 import com.beekeeper.utils.MyUtils;
 
 public class MainController
@@ -41,7 +42,7 @@ public class MainController
 
 	private ArrayList<Agent> foragers = new ArrayList<>();
 	private ArrayList<Integer> foragersIDS = new ArrayList<>();  //shortcut to avoid thread collapse
-	private ArrayList<Integer> deadAdults = new ArrayList<>();
+	private MyLockedList<Integer> deadAdults = new MyLockedList<>();
 	private ArrayList<Agent> newLandings = new ArrayList<>();
 
 	//private int simuStep = 0;
@@ -109,8 +110,11 @@ public class MainController
 			
 			if(a.getBeeType() != AgentType.BROOD_BEE && !deadAdults.contains(a.getID()))
 			{
-				deadAdults.add(a.getID());				
+				deadAdults.waitAndPost(a.getID());				
 			}
+			
+			while(contactsLocked) {}; //Might be a problem to actively wait for lock. Should be ok tho.
+			contactsQuantitiesByIndex.remove(a.getID());
 		}
 		
 		@Override
@@ -152,11 +156,8 @@ public class MainController
 		}
 
 		@Override
-		public ArrayList<Integer> getTheDead() {
-			ArrayList<Integer> theDead = new ArrayList<>();
-			deadAdults.forEach((Integer id) -> theDead.add(id));
-			deadAdults.clear();
-			return theDead;
+		public synchronized ArrayList<Integer> getTheDead() {
+			return deadAdults.waitGetFullCopyAndEmpty();
 		}
 
 		@Override
@@ -467,8 +468,11 @@ public class MainController
 			//int foragersNb = foragers.size();
 			//if(turnIndex%200==0)System.out.println(foragersNb + " foragers / " + (combManager.getNumberOfAgents() + foragersNb) + " total.");
 			
-			for(Agent a : foragers)
+			Iterator<Agent> foragersIT = foragers.iterator();
+			while(foragersIT.hasNext())
 			{				
+				Agent a = foragersIT.next();
+				
 				if(a==null)
 				{
 					System.out.println("MainController loop : Null entry in the foragers - that is weird");
@@ -482,6 +486,11 @@ public class MainController
 						WorkingAgent w = (WorkingAgent) a;
 						logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()));				
 					}
+				}
+				
+				if(!a.alive)
+				{
+					foragersIT.remove();
 				}
 			}
 			
@@ -539,9 +548,16 @@ public class MainController
 					}
 				}
 				
+				System.out.println("rebaseKeepForagers " + rebaseKeepForagers);
+				
 				if(!rebaseKeepForagers)
 				{
-					foragers.clear();
+					Iterator<Agent> fit = foragers.iterator();
+					while(fit.hasNext())
+					{
+						Agent a = fit.next();
+						a.alive = false;
+					}
 				}
 			}
 			

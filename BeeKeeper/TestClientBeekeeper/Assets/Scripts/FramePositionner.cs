@@ -54,7 +54,7 @@ public class FramePositionner : MonoBehaviour
             return Vector3.zero;
         }
 
-        Debug.Log("instanciatedFrame " + instanciatedFrame);
+        //Debug.Log("instanciatedFrame " + instanciatedFrame);
 
         framePosIndexes.Add(f, instanciatedFrame);
         framesSlotsIndex[instanciatedFrame] = f.frameID;

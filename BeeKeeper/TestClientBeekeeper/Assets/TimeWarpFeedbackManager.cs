@@ -21,6 +21,10 @@ public class TimeWarpFeedbackManager : MonoBehaviour
     public TextMeshProUGUI text;
     public GameObject visualFeedbackHolder;
 
+    private bool update;
+
+    private int lastReceivedTS = -1;
+
     private void Start()
     {
         text.text = "";
@@ -40,33 +44,44 @@ public class TimeWarpFeedbackManager : MonoBehaviour
         visualFeedbackHolder.SetActive(true);
     }
 
-    public void notifyNewTSRecieved(int currentTS)
+    private void Update()
     {
-        if(warping)
+        if(update)
         {
-            int warped = currentTS - firstStepWarp;
-            int warpTotal = targetStepWarp - firstStepWarp;
+            update = false;
 
-            float advance = warped * 1.0f / warpTotal;
-
-            visualFeedback.fillAmount = 1 - advance;
-
-            if (Time.realtimeSinceStartup - lastRefresh > refreshRate)
+            if (warping)
             {
-                lastRefresh = Time.realtimeSinceStartup;
+                int warped = lastReceivedTS - firstStepWarp;
+                int warpTotal = targetStepWarp - firstStepWarp;
 
-                float timeTakenPerTS = (Time.realtimeSinceStartup - timeAtStartWarp) / warped;
-                float timeEstimate = (warpTotal - warped) * timeTakenPerTS;
+                float advance = warped * 1.0f / warpTotal;
 
-                text.text = (int)(timeEstimate) + " s.";
-            }
+                visualFeedback.fillAmount = 1 - advance;
 
-            if(advance > 1)
-            {
-                warping = false;
-                text.text = "";
-                visualFeedbackHolder.SetActive(false);
+                if (Time.realtimeSinceStartup - lastRefresh > refreshRate)
+                {
+                    lastRefresh = Time.realtimeSinceStartup;
+
+                    float timeTakenPerTS = (Time.realtimeSinceStartup - timeAtStartWarp) / warped;
+                    float timeEstimate = (warpTotal - warped) * timeTakenPerTS;
+
+                    text.text = (int)(timeEstimate) + " s.";
+                }
+
+                if (advance > 1)
+                {
+                    warping = false;
+                    text.text = "";
+                    visualFeedbackHolder.SetActive(false);
+                }
             }
         }
+    }
+
+    public void notifyNewTSRecieved(int currentTS)
+    {
+        lastReceivedTS = currentTS;
+        update = true;
     }
 }

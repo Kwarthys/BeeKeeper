@@ -111,6 +111,10 @@ public class CommandInterpreter : MonoBehaviour
                 {
                     for (int i = 0; i < data.Length; i ++)
                     {
+                        if(!int.TryParse(data[i], out int pi))
+                        {
+                            Debug.Log("Couldnt parse " + data[i]);
+                        }
                         ids.Add(int.Parse(data[i]));
                     }
 
