@@ -512,6 +512,7 @@ MonoBehaviour:
   faceB: {fileID: 3595787073087834999}
   frameAStart: {fileID: 3595787073435542525}
   frameBStart: {fileID: 3595787073484662787}
+  exterior: {fileID: 1353701800750899140}
   frameID: 0
   cellResolution: 10
   initPos: {x: 0, y: 0, z: 0}

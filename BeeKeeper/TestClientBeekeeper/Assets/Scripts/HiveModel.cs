@@ -125,7 +125,8 @@ public class HiveModel : MonoBehaviour
                     targets.Add(a.pos);
                 }
                 ids.Add(a.pointID);
-                colors.Add(a.JH > 0.5f ? Color.yellow : Color.red);
+                //colors.Add(a.JH > 0.5f ? Color.yellow : Color.red);
+                colors.Add(a.getColor());
             }
             //Debug.Log("AgentLoop" + updateOrder.targetsIDs.Count + "(" + newAgents + ") update took " + (Time.realtimeSinceStartup - loopUpdate) * 1000 + "ms.");
             //pointCloud.updatePoints(new UpdateOrder(targets, ids));
@@ -175,7 +176,7 @@ public class HiveModel : MonoBehaviour
                     theAgents[order.ids[i]].age = order.ages[i];
                     theAgents[order.ids[i]].JH = order.jhAmounts[i];
 
-                    if (order.taskNames[i] == "Queen Task")
+                    if (order.taskNames[i] == "QueenTask")
                     {
                         theAgents[order.ids[i]].isQueen = true;
                     }
@@ -358,6 +359,27 @@ public class BeeAgent
     public float JH;
     public float amountExchanged;
     public Vector3 pos;
+
+    public Color getColor()
+    {
+        Color c = new Color();
+
+        if(JH > .5f)
+        {
+            c = Color.yellow;
+        }
+        else
+        {
+            c = Color.red;
+        }
+
+        if(isQueen)
+        {
+            c = Color.white;
+        }
+
+        return c;
+    }
 
     public bool isQueen = false;
 }

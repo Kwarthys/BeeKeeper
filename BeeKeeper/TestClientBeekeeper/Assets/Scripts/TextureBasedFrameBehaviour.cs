@@ -14,6 +14,8 @@ public class TextureBasedFrameBehaviour : Interactible
     public Transform frameAStart;
     public Transform frameBStart;
 
+    public GameObject exterior;
+
     public int frameID = 0;
 
     public int cellResolution = 10;

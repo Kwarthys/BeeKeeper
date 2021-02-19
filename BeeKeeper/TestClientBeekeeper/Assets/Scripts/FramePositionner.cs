@@ -82,6 +82,8 @@ public class FramePositionner : MonoBehaviour
 
             framePosIndexes[lifted] = -1;
         }
+
+        lifted.exterior.SetActive(false);
     }
 
     public void notifyFrameHandled(TextureBasedFrameBehaviour lifted)
@@ -133,17 +135,19 @@ public class FramePositionner : MonoBehaviour
 
     public bool notifyFrameDropped(TextureBasedFrameBehaviour f, bool replaceFrame = true)
     {
-        if(tryGetClosestEmptyPos(f.transform.position, out int index))
+        f.exterior.SetActive(true);
+
+        if (tryGetClosestEmptyPos(f.transform.position, out int index))
         {
             framesSlotsIndex[index] = f.frameID;
             framePosIndexes[f] = index;
 
             float angle = Vector3.Angle(f.transform.forward, transform.forward);
 
-            Debug.Log("Angle " + angle);
+            //Debug.Log("Angle " + angle);
 
-            Debug.DrawRay(f.transform.position, -f.transform.forward, Color.red, 1);
-            Debug.DrawRay(f.transform.position, transform.forward, Color.blue, 1);
+            //Debug.DrawRay(f.transform.position, -f.transform.forward, Color.red, 1);
+            //Debug.DrawRay(f.transform.position, transform.forward, Color.blue, 1);
 
             if (replaceFrame)
             {

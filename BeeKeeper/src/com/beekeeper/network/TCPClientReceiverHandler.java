@@ -145,8 +145,7 @@ public class TCPClientReceiverHandler implements Runnable {
 								c++;
 							}					
 							
-							
-							System.out.println("sending " + c + " deaths");
+							if(c!=0)System.out.println("sending " + c + " deaths");
 							writer.write(sb.toString());
 							break;
 							
@@ -155,7 +154,7 @@ public class TCPClientReceiverHandler implements Runnable {
 							break;
 					}				
 					
-					System.out.println("replying to " + request.header);
+					//System.out.println("replying to " + request.header);
 					writer.flush();
 					
 				} catch (Exception e) {
