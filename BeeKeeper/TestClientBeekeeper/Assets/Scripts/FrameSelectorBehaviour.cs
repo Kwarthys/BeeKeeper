@@ -16,9 +16,15 @@ public class FrameSelectorBehaviour : MonoBehaviour
 
     public CommandSender sender;
 
+    private bool checkInput()
+    {
+        return myInput.getGripButttonDown(VRInteractionProfileManager.FRAME_PROFILE);
+        //return myInput.getPadPress(VRInteractionProfileManager.FRAME_PROFILE);
+    }
+
     private void Update()
     {
-        if(myInput.getPadPress(VRInteractionProfileManager.FRAME_PROFILE))
+        if(checkInput())
         {
             //Select or Deselect
             if(pickedUp == null)

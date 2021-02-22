@@ -28,9 +28,18 @@ public class VRGetInput : MonoBehaviour
         return (Input.GetKey(KeyCode.JoystickButton15) || Input.GetKey(KeyCode.JoystickButton14)) && checkProfile(profile);
     }
 
+
+    private bool gripLastState = false;
+
     public bool getGripButttonDown(int profile = -1)
     {
-        return Input.GetAxis("ViveGrip") != 0 && checkProfile(profile);
+        bool grip = Input.GetAxis("ViveGrip") != 0 || Input.GetAxis("ViveGrip2") != 0;
+
+        bool value = grip && checkProfile(profile) && !gripLastState;
+
+        gripLastState = grip;
+
+        return value;
     }
 
     public bool getMenuButtonDown(int profile = -1)
@@ -67,6 +76,7 @@ public class VRGetInput : MonoBehaviour
         return profile == -1 || profile == profileManager.activeProfile.index;
     }
 
+
     public enum PadPress { Top, Bot, Left, Right, None };
 
     public PadPress getPadPressPos(int profile = -1)
@@ -79,7 +89,6 @@ public class VRGetInput : MonoBehaviour
         float padV = getVerticalPad(profile);
         float padH = getHorizontalPad(profile);
         //Debug.Log(myInputs.getHorizontalPad() + " " + myInputs.getVerticalPad());
-
 
         if (Mathf.Abs(padV) > Mathf.Abs(padH))
         {

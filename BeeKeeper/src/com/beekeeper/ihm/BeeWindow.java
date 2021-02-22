@@ -30,7 +30,7 @@ public class BeeWindow extends JFrame
 	private JComboBox<String> taskBox;
 	//private FrameHandlerPanel frameHandler;
 	private TimeClickerInterface timerInterface;
-	//@SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	private TaskGrapher grapher;
 	
 	private JPanel boxContainer = new JPanel();
@@ -158,7 +158,7 @@ public class BeeWindow extends JFrame
 		c.gridy = 1;
 		c.weightx=1.0;
 		c.weighty=1.0;
-		container.add(grapher,c);
+		//container.add(grapher,c);
 
 		
 		this.repaint();
