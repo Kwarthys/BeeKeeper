@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class FrameSelectorBehaviour : MonoBehaviour
 {
@@ -16,16 +17,47 @@ public class FrameSelectorBehaviour : MonoBehaviour
 
     public CommandSender sender;
 
+    public VelocityEstimator velocityEstimator;
+    public float maxVelocity = 0;
+
+    public float trackGlitchLowerLimit = 1500;
+    public float realHitLowerLimit = 100;
+
     private bool checkInput()
     {
-        return myInput.getGripButttonDown(VRInteractionProfileManager.FRAME_PROFILE);
+        return myInput.getTriggerPress(VRInteractionProfileManager.FRAME_PROFILE);
+        //return myInput.getGripButttonDown(VRInteractionProfileManager.FRAME_PROFILE);
         //return myInput.getPadPress(VRInteractionProfileManager.FRAME_PROFILE);
+    }
+
+    private bool checkIfHit()
+    {
+        float vel = velocityEstimator.GetAccelerationEstimate().magnitude;
+
+        if (vel > trackGlitchLowerLimit)
+        {
+            vel = 0;
+        }
+
+        //Debug.Log(maxVelocity + " " + vel);
+        maxVelocity = Mathf.Max(maxVelocity, vel);
+
+        if (vel > realHitLowerLimit)
+        {
+            Debug.Log("hit " + vel);
+            return true;
+        }
+        return false;
     }
 
     private void Update()
     {
+
+        //velocityEstimator.FinishEstimatingVelocity();
+
         if(checkInput())
         {
+            Debug.Log("Triggered");
             //Select or Deselect
             if(pickedUp == null)
             {
@@ -38,6 +70,8 @@ public class FrameSelectorBehaviour : MonoBehaviour
                     f.transform.localRotation = Quaternion.identity;
 
                     positionner.notifyFrameLift(f);
+
+                    velocityEstimator.BeginEstimatingVelocity();
                 }
             }
             else
@@ -45,19 +79,24 @@ public class FrameSelectorBehaviour : MonoBehaviour
                 pickedUp.transform.SetParent(null);
                 positionner.notifyFrameDropped(pickedUp);
                 pickedUp = null;
+                velocityEstimator.FinishEstimatingVelocity();
             }
         }
 
         if(pickedUp != null)
         {
             positionner.notifyFrameHandled(pickedUp);
+
+            if(checkIfHit())
+            {
+                //Hit frame
+                sender?.hitFrame(pickedUp.frameID);
+            }
         }
 
-        if(myInput.getTriggerPress(VRInteractionProfileManager.FRAME_PROFILE) && pickedUp != null)
-        {
-            //Hit frame
-            sender?.hitFrame(pickedUp.frameID);
-        }
+        //if(myInput.getTriggerPress(VRInteractionProfileManager.FRAME_PROFILE) && pickedUp != null)
+        //{
+        //}
     }
 
     private bool tryGetNearestFrame(out TextureBasedFrameBehaviour nearest)

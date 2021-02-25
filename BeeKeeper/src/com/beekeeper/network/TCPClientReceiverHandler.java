@@ -126,7 +126,7 @@ public class TCPClientReceiverHandler implements Runnable {
 							int c = 0;
 							for(int i = 0; i < deads.size(); ++i)
 							{
-								if(c > 1500)
+								if(c > 1000)
 								{
 									System.out.println("sending " + c + " deaths");
 									writer.write(sb.toString());

@@ -13,6 +13,11 @@ public class VRGetInput : MonoBehaviour
         return (Input.GetKeyDown(KeyCode.JoystickButton8) || Input.GetKeyDown(KeyCode.JoystickButton9)) && checkProfile(profile);
     }
 
+    public bool getPadDown(int profile = -1)
+    {
+        return (Input.GetKey(KeyCode.JoystickButton8) || Input.GetKey(KeyCode.JoystickButton9)) && checkProfile(profile);
+    }
+
     public float getTriggerAxis(int profile = -1)
     {
         return Input.GetAxis("ViveTrigger") * (checkProfile(profile) ? 1 : 0);
@@ -79,13 +84,8 @@ public class VRGetInput : MonoBehaviour
 
     public enum PadPress { Top, Bot, Left, Right, None };
 
-    public PadPress getPadPressPos(int profile = -1)
+    private PadPress getPadAxis(int profile = -1)
     {
-        if(!getPadPress(profile))
-        {
-            return PadPress.None;
-        }
-
         float padV = getVerticalPad(profile);
         float padH = getHorizontalPad(profile);
         //Debug.Log(myInputs.getHorizontalPad() + " " + myInputs.getVerticalPad());
@@ -112,5 +112,25 @@ public class VRGetInput : MonoBehaviour
                 return PadPress.Left;
             }
         }
+    }
+
+    public PadPress getPadPressPos(int profile = -1)
+    {
+        if (!getPadPress(profile))
+        {
+            return PadPress.None;
+        }
+
+        return getPadAxis(profile);
+    }
+
+    public PadPress getPadDownPos(int profile = -1)
+    {
+        if (!getPadDown(profile))
+        {
+            return PadPress.None;
+        }
+
+        return getPadAxis(profile);
     }
 }

@@ -405,7 +405,7 @@ public class MainController
 	private boolean programLoop()
 	{		
 		boolean DEBUGTIME = false;
-		boolean MONITORTIME = false;
+		boolean MONITORTIME = true;
 		int minLoopMs = -1;
 		int maxLoopMs = 0;
 		long totalLoopMs = 0;
@@ -449,7 +449,7 @@ public class MainController
 			}
 			*/
 			try {
-				combManager.liveAgents();
+				combManager.liveAgents(timeStepPauseToIgnore != 0);
 				
 				if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
 				{

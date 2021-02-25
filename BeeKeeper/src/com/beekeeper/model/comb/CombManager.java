@@ -115,12 +115,32 @@ public class CombManager {
 		}
 	}
 	
-	public void liveAgents() throws InterruptedException
+	public void liveAgents(boolean timeAccelerated) throws InterruptedException
+	{
+		//if(timeAccelerated)
+		//{
+			liveAgentsThreaded();	
+		//}
+		//else
+		//{
+		//	for(Comb c : combs)
+		//	{
+		//		for(Agent a : c.getAgents())
+		//		{
+		//			a.live();
+		//		}
+		//	}
+		//}
+	}
+	
+	private void liveAgentsThreaded() throws InterruptedException
 	{
 		ArrayList<Thread> threads = new ArrayList<>();
 		MyThreadedExecutor exec = new MyThreadedExecutor(combs.get(0).getAgents());
 		Thread t = new Thread(exec);
 		threads.add(t);
+		t.setName("LivingAgents0");
+		//System.out.println("start0");
 		t.start();
 		
 		//System.out.println("frame 0");
@@ -133,18 +153,23 @@ public class CombManager {
 			agents.addAll(combs.get(i+1).getAgents());
 			exec = new MyThreadedExecutor(agents);
 			t = new Thread(exec);
+			t.setName("LivingAgents"+i);
 			threads.add(t);
+			//System.out.println("start"+i);
 			t.start();
 		}
 		
 		exec = new MyThreadedExecutor(combs.get(combs.size()-1).getAgents());
 		t = new Thread(exec);
 		threads.add(t);
+		t.setName("LivingAgentsLast");
+		//System.out.println("startlast");
 		t.start();
 		//System.out.println("Started " + threads.size() + " threads");
 		
 		for(Thread th : threads)
 		{
+			//System.out.println("Waiting");
 			th.join();
 		}
 	}

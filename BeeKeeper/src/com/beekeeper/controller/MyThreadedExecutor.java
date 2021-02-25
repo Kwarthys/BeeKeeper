@@ -24,6 +24,8 @@ public class MyThreadedExecutor implements Runnable {
 		}
 		//long progTime = (System.nanoTime() - start)/1000;
 		//if(progTime > 2000)System.out.println("Thread took " + progTime + " us.");
+		
+		//System.out.println("ThreadFinished in " + progTime + " µs");
 	}
 
 }

@@ -11,6 +11,7 @@ public class VRInteractionProfileManager : MonoBehaviour
 
     public List<GameObject> TimeProfileSpecific = new List<GameObject>();
     public List<GameObject> FrameProfileSpecific = new List<GameObject>();
+    public List<GameObject> GraphProfileSpecific = new List<GameObject>();
 
     public TextMeshProUGUI displayText;
 
@@ -67,6 +68,13 @@ public class VRInteractionProfileManager : MonoBehaviour
                 g.SetActive(true);
             }
         }
+        else if (profileIndex == GRAPH_PROFILE)
+        {
+            foreach (GameObject g in GraphProfileSpecific)
+            {
+                g.SetActive(true);
+            }
+        }
     }
 
     private void deactivateProfile(int profileIndex)
@@ -81,6 +89,13 @@ public class VRInteractionProfileManager : MonoBehaviour
         else if (profileIndex == FRAME_PROFILE)
         {
             foreach (GameObject g in FrameProfileSpecific)
+            {
+                g.SetActive(false);
+            }
+        }
+        else if (profileIndex == GRAPH_PROFILE)
+        {
+            foreach (GameObject g in GraphProfileSpecific)
             {
                 g.SetActive(false);
             }
