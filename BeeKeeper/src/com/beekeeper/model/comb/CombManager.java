@@ -8,8 +8,8 @@ import java.util.Iterator;
 
 import com.beekeeper.controller.AgentFactory;
 import com.beekeeper.controller.MainControllerServices;
-import com.beekeeper.controller.MyThreadedExecutor;
 import com.beekeeper.controller.logger.MyLogger;
+import com.beekeeper.controller.threadedexecution.WorkDispatcher;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
@@ -35,6 +35,9 @@ public class CombManager {
 	private ArrayList<Agent> loggerBees = new ArrayList<>();
 
 	private Dimension combSize = new Dimension(78,50);
+	
+	private int startingPopulationOfThreadPoll = 5;
+	private WorkDispatcher workDispatcher = new WorkDispatcher(startingPopulationOfThreadPoll);
 
 	private CombManagerServices combManagerServices = new CombManagerServices() {		
 		@Override
@@ -144,8 +147,15 @@ public class CombManager {
 		*/
 	}
 	
+	public void shutDownExecutionThreads()
+	{
+		workDispatcher.stopAllThreads(combs.get(0).getAgents().get(0));
+	}
+	
 	private void liveAgentsThreaded() throws InterruptedException
 	{
+		/******* OLD VERSION USING TERMINATING THREADS *******/
+		/*		 
 		ArrayList<Thread> threads = new ArrayList<>();
 		MyThreadedExecutor exec = new MyThreadedExecutor(combs.get(0).getAgents());
 		Thread t = new Thread(exec);
@@ -183,6 +193,50 @@ public class CombManager {
 			//System.out.println("Waiting");
 			th.join();
 		}
+		*/
+		
+		/******* NEW VERSION USING PERSISTENT THREAD POLL *****/
+		
+		boolean debugWorkAllocation = false;
+		
+		ArrayList<Agent> lastInsideCombList = new ArrayList<>();
+		
+		for(int i = 0; i < combs.size(); i+=2)
+		{
+			Comb faceA = combs.get(i);
+			Comb faceB = combs.get(i+1);
+			
+			if(faceA.isUp())
+			{
+				if(lastInsideCombList.size() > 0)
+				{
+					if(debugWorkAllocation)System.out.println("launching memory alone");
+					workDispatcher.getThatWorkDone(lastInsideCombList);
+					lastInsideCombList.clear();
+				}
+
+				if(debugWorkAllocation)System.out.println("launching " + i + " " + (i+1));
+				workDispatcher.getThatWorkDone(faceA.getAgents());
+				workDispatcher.getThatWorkDone(faceB.getAgents());
+			}
+			else
+			{
+				if(debugWorkAllocation)System.out.println("launching " + i + " with memory and saving " + (i+1));
+				lastInsideCombList.addAll(new ArrayList<Agent>(faceA.getAgents()));
+				workDispatcher.getThatWorkDone(lastInsideCombList);
+				lastInsideCombList = new ArrayList<Agent>(faceB.getAgents());
+			}
+		}
+		
+		if(lastInsideCombList.size() > 0)
+		{
+			if(debugWorkAllocation)System.out.println("launching memory outfor");
+			workDispatcher.getThatWorkDone(lastInsideCombList);
+			lastInsideCombList.clear();
+		}
+		
+		workDispatcher.waitForWorkToEnd();
+		if(debugWorkAllocation)System.out.println("TheEnd\n");
 	}
 	
 	public void notifyDead(Agent a)

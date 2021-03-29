@@ -318,6 +318,7 @@ public class MainController
 
 		if(ModelParameters.LOGGING)this.logger.closing();
 		if(ModelParameters.BEELOGGING)this.combManager.terminateBeeLogging();
+		this.combManager.shutDownExecutionThreads();
 
 		try {
 			System.out.println("Waiting");
@@ -471,7 +472,7 @@ public class MainController
 			Iterator<Agent> foragersIT = foragers.iterator();
 			while(foragersIT.hasNext())
 			{				
-				Agent a = foragersIT.next();
+				Agent a = foragersIT.next(); //TODO CONCURRENT MODIFICATION EXCEPTION HERE
 				
 				if(a==null)
 				{

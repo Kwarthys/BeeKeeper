@@ -42,7 +42,7 @@ public class BeeKeeperLauncher {
 		ModelParameters.FORAGERS_DIE_SOONER = false;
 		ModelParameters.startMode = StartMode.Random80;
 		
-		//ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0; // always max speed
+		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0; // always max speed
 
 		do
 		{
