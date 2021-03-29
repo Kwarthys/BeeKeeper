@@ -117,20 +117,31 @@ public class CombManager {
 	
 	public void liveAgents(boolean timeAccelerated) throws InterruptedException
 	{
-		//if(timeAccelerated)
-		//{
+		liveAgentsThreaded();	
+		
+		/*
+		if(!timeAccelerated)
+		{
 			liveAgentsThreaded();	
-		//}
-		//else
-		//{
-		//	for(Comb c : combs)
-		//	{
-		//		for(Agent a : c.getAgents())
-		//		{
-		//			a.live();
-		//		}
-		//	}
-		//}
+		}
+		else
+		{
+			for(int i = 0; i < combs.size(); ++i)
+			{
+				Comb c = combs.get(i);
+				Iterator<Agent> it = new ArrayList<Agent>(c.getAgents()).iterator();
+				while(it.hasNext())
+				{
+					it.next().live();
+				}
+				
+				//for(Agent a : c.getAgents())
+				//{
+				//	a.live();
+				//}
+			}
+		}
+		*/
 	}
 	
 	private void liveAgentsThreaded() throws InterruptedException
