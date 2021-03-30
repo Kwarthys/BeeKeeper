@@ -9,6 +9,9 @@ public class PersistentExecutorThread implements Runnable {
 	
 	public int index = 0;
 	
+	private volatile boolean working = false;
+	private volatile boolean pilingUp = false;
+	
 	private volatile boolean interuptionAsked = false;
 	
 	private volatile ArrayBlockingQueue<Agent> agentPoll = new ArrayBlockingQueue<>(16000);
@@ -20,13 +23,16 @@ public class PersistentExecutorThread implements Runnable {
 	
 	public boolean isWorking()
 	{
-		return agentPoll.size() != 0;
+		return agentPoll.size() != 0 || working || pilingUp;
 	}
 	
 	public void addWork(ArrayList<Agent> agents)
 	{		
+		pilingUp = true;
 		agentPoll.addAll(new ArrayList<Agent>(agents));
-		//System.out.println("Just added " + agents.size() + " now at " + agentPoll.size());
+		pilingUp = false;
+		
+		//System.out.println(index + " Just added " + agents.size() + " now at " + agentPoll.size());
 	}
 	
 	public void addWork(Agent agent)
@@ -47,10 +53,19 @@ public class PersistentExecutorThread implements Runnable {
 			try {
 				
 				Agent a = agentPoll.take();
+				working = true;
 				if(!interuptionAsked)
 				{
 					a.live();
 				}
+				working = false;
+				
+				/*
+				if(!isWorking())
+				{
+					System.out.println(index + " job's done");
+				}
+				*/
 				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

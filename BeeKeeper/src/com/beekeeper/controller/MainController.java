@@ -469,6 +469,8 @@ public class MainController
 			//int foragersNb = foragers.size();
 			//if(turnIndex%200==0)System.out.println(foragersNb + " foragers / " + (combManager.getNumberOfAgents() + foragersNb) + " total.");
 			
+			//System.out.println("Starting forager turn");
+			
 			Iterator<Agent> foragersIT = foragers.iterator();
 			while(foragersIT.hasNext())
 			{				
