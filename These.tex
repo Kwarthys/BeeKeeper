@@ -1,0 +1,103 @@
+\documentclass[10pt,a4paper]{article}
+
+
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+		\Large Mémoire de Thèse\\
+		\vspace{4em}
+		\LARGE\textbf{Visualisation et Interactions avec une colonie d'abeilles virtuelle :\\}
+		\vspace{1em}
+		\Large\textbf{Simulation, pédagogie et complexité.\\}		
+		\vspace{8em}
+		\LARGE Thomas Alves\\
+		\vspace{8em}
+		\Large Dirigé par Thierry Duval et Vincent Rodin\\
+		Encadré par Jérémy Rivière\\
+		\vspace{8em}
+		\Large UBO IMT-A LABSTICC\\
+		\end{center}	 
+	\end{titlepage}
+	
+\tableofcontents
+	
+\section{Introduction}
+\begin{itemize}
+	\item Colonie d'abeille en tant que système complexe. Beaucoup de recherche sur les butineuses mais moins sur l'intérieur de la ruche.	
+	\item Comprendre l'auto organisation interne par la modélisation SMA vs Équation différentielles - de l'importance des contacts individuels.	
+	\item Transmettre et faciliter l'apprentissage avec l'environnement immersif.
+\end{itemize}
+\section{Etat de l'art: Simulation Multi-Agents Interactives}
+	\subsection{SMA : Rercéer et comprendre des systemes complexes existants}
+		Comprendre les mécanismes, créer un modèle puis évaluer l'impact des différents paramètres sur l'évolution du comportement du système.
+	\subsection{Manipuler et observer ces systèmes complexes}
+		Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilsation d'interacteurs tangibles.
+\section{État de l'art: Modèles Multi-Agents et prise de décision}
+	Etat de l'art de l'article PAAMS
+	\subsection{Foraging for work}
+	\subsection{Modèles à seuils}
+	\subsection{Motivation, un pas vers les BDI ?}
+		Pas encore fait mais le parallèle est peut-être intéressant ?
+\section{Proposition Modèle de prise de décision PAAMS}
+	Description du modèle d'interruption PAAMS
+	\subsection{Modélisation des tâches : Tâches, Activités, Actions et Subsomption Hiérarchiques}
+	\subsection{Interruption : Motivation}
+		\subsubsection{Etat de l'art rapide sur la Motivation}
+		\subsubsection{Notre utilisation de la Motivation}
+	\subsection{Sélection : Modèle à seuil}
+	\subsection{Utilisation en Swarm Robotics}
+		L'exemple avancé dans l'article PAAMS pourrait être poussé un peu grâce au travail du stagiaire et à des nouveaux trucs que j'ai compris pendant la paramétrisation complexe du bousin.
+			
+\section{Simulation Multi-Agents d'une colonie d'abeilles}
+	\subsection{Biologie : Connaissances des biologistes sur l'abeille}
+		Synthèse des connaissances, notamment de notre visite à Avignon et ses 43 degrés à l'ombre.\\
+		
+		Rôles et fonctions physiologiques associées.\\
+		Différents rôles de différentes phéromones.\\
+		Modélisation simplifiée : \\
+		Cas classique de la vie d'une abeille.\\
+		Quels changements provoquent quelles réactions dans le métabolisme de l'abeille, et donc dans la répartition du travail.
+	\subsection{Description du modèle adapté}
+		Application du modèle théorique à notre simulation de colonie d'abeilles virtuelle.
+		Simplification gigantesque de la biologie de l'abeille, ainsi que des différentes tâches au sein de la colonie.
+		On veut de la répartition des tâches dans le plus simple des contextes.
+	\subsection{Description de l'implémentation}
+		L'implémentation du modèle de prise de décision décris dans la partie d'avant, et modèle biologique de l'abeille adulte avec le systeme a seuil.
+	\subsection{Calibration}
+		\subsubsection{Calibration rapide - Accélération}
+			Dans sa version PAAMS avec la biologie accélérée
+			Obtenir des résultats dans trop de temps de simulation. Le but était de vérifier la répartition des taches a l'aide du modèle, pas encore de chercher une validité biologique.
+		\subsubsection{Calibration biologique - Données directes et indirectes}
+			En ajustant les paramètres connus grâce à la biologie, comme les durées de vie ou la durée et fréquence des nourrissements par exemple.
+			Paramétristaion des paramètres indirects, ou émergents, comme par exemple le fameux "UNE nourrice s'occupe de DEUX larves", qui n'est codé nul part mais qu'on doit retrouver. [Spoiler alert on le retrouve pas, et je ne sais pas pourquoi]
+	\subsection{Analyse des résultats}
+		Ce qui marche, ce que ça montre et ce qui ne marche pas, et ce que ça peut vouloir dire.
+		
+			
+\section{État de L'art VISU INTER}
+	Comment mieux comprendre un système complexe : Environnement immersif et interacteurs tangibles. Ruche, cadre et connaissances apicoles.
+	\subsection{DataViz}
+		Comment visualiser de grande quantité de données, les données micro.
+	\subsection{Interaction / visu immersive pour comprendre}
+		Environnement immersif
+	\subsection{Interaction tangible}
+		Interacteurs tangibles
+\section{Proposition visu interaction}
+	Notre proposition
+	\subsection{Interaction Immersive avec Manettes}
+		Manipulation des cadres avec les manettes
+	\subsection{Interaction Immersice ET tangible}
+		L'apport et les contraintes du tangible (qu'il faut encore définir) pour la manipulation des cadres
+	\subsection{Visualisation : Graph3D sur l'état interne de la colonie}
+		Le graph3D et les information qu'il apporte
+	\subsection{Résultats/Évaluation Visualisation Interactive proposée}
+\section{Discussions}
+	Comment l'ensemble se comporte et avis critique sur la totalité. Notamment le modèle multi agent simplifié qui apporte une quantité gigantesque de biais.
+\section*{Conclusion}
+	C'était cool
+\section*{Perspectives}
+	Tout est possible, pousser le modèle de l'abeille de la simulation, pousser le domaine tangible avec peut être un cadre manette (un cadre avec un ou deux boutons?)
+\section*{Rideau}
+	clapclapclapclapclapclapclapclapclapclap
+
+\end{document}
