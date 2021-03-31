@@ -31,7 +31,9 @@ public class WorkDispatcher {
 	{
 		PersistentExecutorThread t = new PersistentExecutorThread(threads.size());
 		
-		new Thread(t).start();
+		Thread nt = new Thread(t);		
+		nt.setName("PersistentThread" + threads.size());		
+		nt.start();
 		
 		threads.add(t);
 		

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import com.beekeeper.model.agent.Agent;
+import com.beekeeper.parameters.ModelParameters;
 
 public class PersistentExecutorThread implements Runnable {
 	
@@ -14,11 +15,12 @@ public class PersistentExecutorThread implements Runnable {
 	
 	private volatile boolean interuptionAsked = false;
 	
-	private volatile ArrayBlockingQueue<Agent> agentPoll = new ArrayBlockingQueue<>(16000);
+	private volatile ArrayBlockingQueue<Agent> agentPoll;
 	
 	public PersistentExecutorThread(int index)
 	{
 		this.index = index;
+		agentPoll = new ArrayBlockingQueue<>((int)(ModelParameters.NUMBER_BEES * 1.1));
 	}
 	
 	public boolean isWorking()
@@ -29,7 +31,7 @@ public class PersistentExecutorThread implements Runnable {
 	public void addWork(ArrayList<Agent> agents)
 	{		
 		pilingUp = true;
-		agentPoll.addAll(new ArrayList<Agent>(agents));
+		agentPoll.addAll(new ArrayList<Agent>(agents)); //TODO Most weird nullPointerException right here
 		pilingUp = false;
 		
 		//System.out.println(index + " Just added " + agents.size() + " now at " + agentPoll.size());
@@ -58,14 +60,15 @@ public class PersistentExecutorThread implements Runnable {
 				{
 					a.live();
 				}
-				working = false;
 				
 				/*
-				if(!isWorking())
+				if(!(agentPoll.size() != 0 || pilingUp))
 				{
-					System.out.println(index + " job's done");
+					System.out.println(index + " job's done " + System.nanoTime());
 				}
-				*/
+				*/	
+				
+				working = false;
 				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

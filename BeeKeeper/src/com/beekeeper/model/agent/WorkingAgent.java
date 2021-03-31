@@ -294,7 +294,7 @@ public abstract class WorkingAgent extends EmitterAgent
 
 
 		//If action is over, remove it
-		if(currentAction.isOver())
+		if(currentAction.isOver()) // TODO NullPointer right here
 		{
 			//System.out.println("Action done");
 			currentAction = null;

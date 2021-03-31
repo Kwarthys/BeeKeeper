@@ -3,8 +3,10 @@ package com.beekeeper.controller;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -40,7 +42,8 @@ public class MainController
 
 	private AgentFactory agentFactory;
 
-	private ArrayList<Agent> foragers = new ArrayList<>();
+	//private ArrayList<Agent> foragers = new ArrayList<>();
+	private List<Agent> foragers = Collections.synchronizedList(new ArrayList<Agent>());
 	private ArrayList<Integer> foragersIDS = new ArrayList<>();  //shortcut to avoid thread collapse
 	private MyLockedList<Integer> deadAdults = new MyLockedList<>();
 	private ArrayList<Agent> newLandings = new ArrayList<>();
@@ -55,13 +58,13 @@ public class MainController
 
 	private HashMap<Integer, Double> contactsQuantitiesByIndex = new HashMap<>();
 	private boolean contactsLocked = false;
-	
+
 	private volatile boolean restartAsked = false;
-	
+
 	private volatile boolean rebaseAsked = false;
 	private int[] rebaseData;
 	private boolean rebaseKeepForagers = false;
-	
+
 	private volatile boolean timeStepOver = false;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
@@ -74,9 +77,9 @@ public class MainController
 		@Override
 		public CombCell askLandingZone() {
 			ArrayList<Comb> theCombs = new ArrayList<>(combs);
-			
+
 			Iterator<Comb> it = theCombs.iterator();
-			
+
 			while(it.hasNext())
 			{
 				Comb c = it.next();
@@ -86,7 +89,7 @@ public class MainController
 					//System.out.println(c.ID + " is Up, can't land");
 				}
 			}			
-			
+
 			Collections.shuffle(theCombs);
 			for(Comb cb : theCombs)
 			{				
@@ -103,20 +106,20 @@ public class MainController
 
 			return null;
 		}
-		
+
 		public synchronized void notifyDeath(Agent a) {
 			combManager.notifyDead(a);
 			agentFactory.allAgents.remove(a);
-			
+
 			if(a.getBeeType() != AgentType.BROOD_BEE && !deadAdults.contains(a.getID()))
 			{
 				deadAdults.waitAndPost(a.getID());				
 			}
-			
+
 			while(contactsLocked) {}; //Might be a problem to actively wait for lock. Should be ok tho.
 			contactsQuantitiesByIndex.remove(a.getID());
 		}
-		
+
 		@Override
 		public void askRestart()
 		{
@@ -180,7 +183,7 @@ public class MainController
 					toReturn.add(new AgentStateSnapshot((WorkingAgent)a));
 				}
 			}
-			
+
 			return toReturn;
 		}
 
@@ -226,15 +229,12 @@ public class MainController
 		}
 
 		@Override
-		public synchronized void notifyLiftoff(Agent agent) {
-			foragers.add(agent);
-			foragersIDS.add(agent.getID());
-			/*
-			if(agent.getID() == 999)
-			{
-				System.out.println("999 liftoff confirmed");
+		public /*synchronized*/ void notifyLiftoff(Agent agent)
+		{
+			synchronized (foragers) {
+				foragers.add(agent);
+				foragersIDS.add(agent.getID());
 			}
-			*/
 		}
 
 		@Override
@@ -272,7 +272,7 @@ public class MainController
 	public MainController()
 	{
 		this.agentFactory = new AgentFactory();
-		
+
 		StimulusFactory.refreshDataBase();
 		ModelParameters.applyPhysioParameters();
 
@@ -291,22 +291,22 @@ public class MainController
 			this.window = new BeeWindow(g,drawers, this.controlServices);
 			closed = false;			
 		}
-		
+
 		if(ModelParameters.LOGGING)
 		{
 			logger = new MyLogger();
 		}
-		
+
 		combManager.printCombPopulations();
-		
+
 		System.out.println("MC Built");
 	}
-	
+
 	public MainControllerServices getServices()
 	{
 		return controlServices;
 	}
-	
+
 	public boolean start()
 	{		
 		boolean restart = programLoop();
@@ -328,10 +328,10 @@ public class MainController
 		}
 
 		System.out.println("expe done");
-		
+
 		return restart;
 	}
-	
+
 	private synchronized void registerContactFor(int agentIndex, double quantity)
 	{
 		if(contactsLocked)
@@ -339,9 +339,9 @@ public class MainController
 			//System.out.println("registerContactFor : Locked");
 			return; //If map is being read by another thread, we're throwing data away : shouldn't be much of an issue given the shear amount of data
 		}
-		
+
 		//System.out.println("Quanttt " + quantity);
-		
+
 		if(agentFactory.typesOfIndex.get(agentIndex) == AgentType.ADULT_BEE)
 		{
 			if(!contactsQuantitiesByIndex.containsKey(agentIndex))
@@ -355,7 +355,7 @@ public class MainController
 			}
 		}
 	}
-	
+
 	private void setNbOfTimeStepToGoFast(int number)
 	{
 		timeStepPauseToIgnore = number;
@@ -389,7 +389,7 @@ public class MainController
 
 		this.window.updateDrawersPos();
 	}
-	
+
 	private void layEgg(CombCell cell)
 	{
 		Comb host = combManager.getCombOfID(cell.getCombID());
@@ -406,16 +406,16 @@ public class MainController
 	private boolean programLoop()
 	{		
 		boolean DEBUGTIME = false;
-		boolean MONITORTIME = true;
+		boolean MONITORTIME = false;
 		int minLoopMs = -1;
 		int maxLoopMs = 0;
 		long totalLoopMs = 0;
 		long totalAgents = 0;
 		long totalDeaths = 0;
 		int startingAverageIndex = 0;
-		
+
 		int logTurnInterval = 4000;
-		
+
 		turnIndex = 0;
 		int displayBar = 20;
 
@@ -427,116 +427,132 @@ public class MainController
 		System.out.println("|");
 
 		if(ModelParameters.LOGGING)logger.log("turnIndex", "beeID", "TaskName", "HJ", "EO");
-		
+
 		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed && !restartAsked)
 		{
 			long startLoopTime = System.nanoTime();
-			
+
 			//System.out.println("turn " + turnIndex + "services:" + getServices() + " | " + agentFactory.allAgents.size() + " agents.");
 			//System.out.println("turn " + turnIndex);
-			
+
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{
 				System.out.print("|");
 			}
-			
+
 			turnIndex++;
 			/*
 			System.out.println(turnIndex + " FORK");
-			
+
 			if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
 			{
 				System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOGGING");
 			}
-			*/
+			 */
 			try {
 				combManager.liveAgents(timeStepPauseToIgnore != 0);
-				
+
 				if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
 				{
 					combManager.logTurn(logger, turnIndex);
 					//System.out.println("Logging " + turnIndex + "/" + ModelParameters.SIMU_LENGTH);
 				}
-				
+
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
-			
+
 			//System.out.println(turnIndex + " JOIN into FORAGERS");
-			
+
 			//long milis = System.nanoTime();
-			
+
 			//int foragersNb = foragers.size();
 			//if(turnIndex%200==0)System.out.println(foragersNb + " foragers / " + (combManager.getNumberOfAgents() + foragersNb) + " total.");
-			
-			//System.out.println("Starting forager turn");
-			
-			Iterator<Agent> foragersIT = foragers.iterator();
-			while(foragersIT.hasNext())
-			{				
-				Agent a = foragersIT.next(); //TODO CONCURRENT MODIFICATION EXCEPTION HERE
-				
-				if(a==null)
-				{
-					System.out.println("MainController loop : Null entry in the foragers - that is weird");
-					//TODO investigate null here
-				}
-				else
-				{
-					a.live();
-					if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
+
+			//System.out.println("Starting forager turn " + turnIndex + " total agents " + agentFactory.allAgents.size() + " (" + foragers.size() + ") " + System.nanoTime());
+
+			synchronized (foragers)
+			{
+				Iterator<Agent> foragersIT = foragers.iterator();
+				while(foragersIT.hasNext())
+				{	
+
+					try
 					{
-						WorkingAgent w = (WorkingAgent) a;
-						logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()));				
+						Agent a = foragersIT.next();	
+						//Agent a = foragersIT.next(); //TODO CONCURRENT MODIFICATION EXCEPTION HERE
+
+						if(a==null)
+						{
+							System.out.println("MainController loop : Null entry in the foragers - that is weird");
+							//TODO investigate null here
+						}
+						else
+						{
+							a.live();
+							if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
+							{
+								WorkingAgent w = (WorkingAgent) a;
+								logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()));				
+							}
+						}
+
+						if(!a.alive)
+						{
+							foragersIT.remove();
+						}
+
+					}		
+					catch (ConcurrentModificationException e)
+					{
+						System.out.println("Exception " + System.nanoTime());
+						e.printStackTrace();
+						System.exit(1);
+
 					}
 				}
-				
-				if(!a.alive)
+
+				//long timeForagers = (System.nanoTime() - milis)/1000;
+				//if(timeForagers > 2000)System.out.println("Foragers took " + timeForagers + "us.");
+
+				Iterator<Agent> it = newLandings.iterator();
+				while(it.hasNext())
 				{
-					foragersIT.remove();
+					Agent a = it.next();
+					foragers.remove(a);
+					it.remove();
 				}
+
+
 			}
-			
-			//long timeForagers = (System.nanoTime() - milis)/1000;
-			//if(timeForagers > 2000)System.out.println("Foragers took " + timeForagers + "us.");
-			
-			Iterator<Agent> it = newLandings.iterator();
-			while(it.hasNext())
-			{
-				Agent a = it.next();
-				foragers.remove(a);
-				it.remove();
-			}
-			
-			//System.out.println(turnIndex + " FORAGERS OK");
-			
-			
+			//System.out.println("Finished forager turn " + turnIndex + " total agents " + agentFactory.allAgents.size() + " (" + foragers.size() + ")");
+
 			if(DEBUGTIME)System.out.println("AllAgent lived at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 			if(MONITORTIME)
 				totalAgents += (System.nanoTime() - startLoopTime)/1000000;
-			
+
 			if(MONITORTIME)
 				totalDeaths += (System.nanoTime() - startLoopTime)/1000000;
-			
+
 			if(DEBUGTIME)System.out.println("Deaths cleanup at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 
 			this.combManager.updateStimuli();
-			
+
 			if(DEBUGTIME)System.out.println("updateStimuli at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
-			
+
 			if(!contactsLocked)
 			{
 				contactsQuantitiesByIndex.forEach((Integer beeID, Double amount) -> {amount*=0.99;});
 			}
-			
+
 			if(rebaseAsked)
 			{
 				rebaseAsked = false;
-				
+
 				for(Comb c : combs)
 				{
 					boolean found = false;
-					
+
 					for(int datai = 0; datai < rebaseData.length && !found; datai++)
 					{
 						if(rebaseData[datai] == c.ID/2) //converting from combID to FrameID
@@ -544,15 +560,15 @@ public class MainController
 							found = true;
 						}
 					}
-					
+
 					if(!found)
 					{
 						c.reset(); // reset if not in the list
 					}
 				}
-				
+
 				System.out.println("rebaseKeepForagers " + rebaseKeepForagers);
-				
+
 				if(!rebaseKeepForagers)
 				{
 					Iterator<Agent> fit = foragers.iterator();
@@ -563,10 +579,10 @@ public class MainController
 					}
 				}
 			}
-			
-			
+
+
 			timeStepOver = true;
-			
+
 			/*** MONITOR TIME ***/
 			if(MONITORTIME)
 			{
@@ -574,16 +590,16 @@ public class MainController
 				totalLoopMs += loopMS;
 				minLoopMs = (int) Math.min(loopMS, minLoopMs);
 				maxLoopMs = (int) Math.max(loopMS, maxLoopMs);
-				
+
 				if(minLoopMs == -1)
 				{
 					minLoopMs = (int) loopMS;
 				}
-				
-				if(turnIndex%60*ModelParameters.secondToTimeStepCoef == 0)
+
+				if(turnIndex%3600*ModelParameters.secondToTimeStepCoef == 0)
 				{
 					StringBuffer theLog = new StringBuffer();
-					theLog.append("60s Average: ");
+					theLog.append("1h Average: ");
 					theLog.append(totalLoopMs/(turnIndex-startingAverageIndex));
 					theLog.append("(");
 					theLog.append(totalAgents/(turnIndex-startingAverageIndex));
@@ -595,7 +611,10 @@ public class MainController
 					theLog.append(minLoopMs);
 					theLog.append(" Max: ");
 					theLog.append(maxLoopMs);
-					
+
+					theLog.append(" || Turn ");
+					theLog.append(turnIndex);
+
 					System.out.println(theLog.toString());
 
 					minLoopMs = -1;
@@ -617,11 +636,11 @@ public class MainController
 					}
 				});
 			}
-			
+
 			long loopTime = (System.nanoTime() - startLoopTime)/1000000;
-			
+
 			if(DEBUGTIME)System.out.println("Loop took " + loopTime + "ms.");
-			
+
 			if(ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP > 0)
 			{
 				if(timeStepPauseToIgnore == 0)
@@ -643,8 +662,8 @@ public class MainController
 			}
 		}
 		System.out.println();
-		
+
 		return restartAsked;
-		
+
 	}
 }

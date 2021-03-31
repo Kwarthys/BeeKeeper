@@ -18,8 +18,8 @@ public class BeeKeeperLauncher {
 		//long start = System.nanoTime();
 
 
-		startNetworkMode();
-		//startMultipleExpeMode();
+		//startNetworkMode();
+		startMultipleExpeMode();
 
 		//long progTime = (System.nanoTime() - start)/1000000000;
 		//long simuTime = (long) (ModelParameters.SIMU_LENGTH / ModelParameters.secondToTimeStepCoef);
@@ -42,7 +42,7 @@ public class BeeKeeperLauncher {
 		ModelParameters.FORAGERS_DIE_SOONER = false;
 		ModelParameters.startMode = StartMode.Random80;
 		
-		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0; // always max speed
+		//ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0; // always max speed
 
 		do
 		{
@@ -72,10 +72,10 @@ public class BeeKeeperLauncher {
 		//ModelParameters.BEELOGGING = true;
 		//ModelParameters.NB_BEE_LOGGING = 24;
 		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;
-		ModelParameters.SIMU_LENGTH = 20 * ModelParameters.DAY;
-		ModelParameters.NUMBER_BEES = 20;
-		ModelParameters.NUMBER_LARVAE = 5;//750;
-		ModelParameters.NUMBER_FRAMES = 5;
+		ModelParameters.SIMU_LENGTH = 10 * ModelParameters.DAY;
+		ModelParameters.NUMBER_BEES = 50;
+		ModelParameters.NUMBER_LARVAE = 50;//750;
+		ModelParameters.NUMBER_FRAMES = 3;
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;
 		
@@ -107,7 +107,7 @@ public class BeeKeeperLauncher {
 
 
 		ModelParameters.startMode = StartMode.Random20;
-		ModelParameters.identifier = 'C';
+		ModelParameters.identifier = 'A';
 		startExpeAndMonitorTime(new MainController());
 
 
