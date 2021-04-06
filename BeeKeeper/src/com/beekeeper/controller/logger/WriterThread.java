@@ -78,7 +78,7 @@ public class WriterThread extends Thread {
 			while(!work.isEmpty())
 			{
 				try {
-					String w = work.poll(); //TODO TAKE instead of poll, send special value to close "stop"
+					String w = work.poll();
 					if(w != null)
 					{
 						writer.write(w);

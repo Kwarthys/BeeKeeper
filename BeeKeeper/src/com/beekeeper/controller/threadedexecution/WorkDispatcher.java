@@ -56,7 +56,7 @@ public class WorkDispatcher {
 		if(!jobStarted)
 		{			
 			createAndStartANewThread().addWork(agents);
-			System.out.println("All thread busy, created a new one: " + threads.size() + " total");
+			//System.out.println("All thread busy, created a new one: " + threads.size() + " total");
 		}
 	}
 	

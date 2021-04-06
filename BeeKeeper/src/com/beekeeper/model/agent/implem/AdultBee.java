@@ -63,7 +63,7 @@ public class AdultBee extends WorkingAgent
 	{		
 		if(currentTask != null)
 		{
-			if(currentTask.taskName == "Foraging" && ModelParameters.FORAGERS_DIE_SOONER)
+			if(currentTask.taskName == ForagerTask.foragingTaskName && ModelParameters.FORAGERS_DIE_SOONER)
 			{
 				activeAge += ModelParameters.foragingAgePenalty;
 			}
@@ -89,8 +89,8 @@ public class AdultBee extends WorkingAgent
 		}
 		else
 		{
-			//Outside bees can consume resource they gather
-			hunger -= Math.random()*ModelParameters.HUNGER_INCREMENT;
+			//Outside bees consume resource they gather
+			hunger = 0;
 		}
 		
 		hunger = MyUtils.clamp(hunger + ModelParameters.HUNGER_INCREMENT);
@@ -117,7 +117,7 @@ public class AdultBee extends WorkingAgent
 		//}
 	}
 	
-	public double maxHungerFelt = 0; //TODO DEBUG
+	public double maxHungerFelt = 0; //tracking DEBUG
 
 	@Override
 	public String getStringName() {

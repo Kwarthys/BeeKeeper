@@ -11,6 +11,11 @@ public abstract class EmitterAgent extends Agent
 	protected StimuliMap bodySmell;
 	public StimuliMap getBodySmells() {return new StimuliMap(bodySmell);}
 	
+	public double getTotalExchangedAmount()
+	{
+		return bodySmell.getTotalExchangedAmount();
+	}
+	
 	protected StimuliManagerServices stimuliManagerServices;
 
 	public EmitterAgent(StimuliManagerServices stimuliManagerServices)

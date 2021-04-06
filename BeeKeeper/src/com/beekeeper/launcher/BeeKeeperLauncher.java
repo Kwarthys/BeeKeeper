@@ -67,22 +67,27 @@ public class BeeKeeperLauncher {
 	
 	public static void startMultipleExpeMode()
 	{				
-		//ModelParameters.UI_ENABLED = false;
+		ModelParameters.UI_ENABLED = false;
 		ModelParameters.LOGGING = true;
 		//ModelParameters.BEELOGGING = true;
 		//ModelParameters.NB_BEE_LOGGING = 24;
 		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;
 		ModelParameters.SIMU_LENGTH = 10 * ModelParameters.DAY;
-		ModelParameters.NUMBER_BEES = 50;
-		ModelParameters.NUMBER_LARVAE = 50;//750;
-		ModelParameters.NUMBER_FRAMES = 3;
-		ModelParameters.LARVA_CAN_HATCH = false;
-		ModelParameters.FORAGERS_DIE_SOONER = false;
+		ModelParameters.NUMBER_BEES = 500;
+		ModelParameters.NUMBER_LARVAE = 700;
+		ModelParameters.NUMBER_FRAMES = 8;
+		//ModelParameters.LARVA_CAN_HATCH = false;
+		//ModelParameters.FORAGERS_DIE_SOONER = false;
+		//ModelParameters.SPAWN_A_QUEEN = false;
+		
+		
+		//10000 - 5000 - 8 - 10D : Prog took 24711954ms to simulate 864000s (x34.96283620469672).
+		//500 - 700 - 8 - 10D : Prog took 1713176ms to simulate 864000s (x504.326467333187).
 		
 		
 		int charNumberA = 65;
-		StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
-		int[] nb = {0,750,1800};
+		//StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
+		int[] nb = {1,2,4,10,100,200,1000,2000,5000};
 /*
 		for(int j = 0; j < 3; ++j)
 		{
@@ -96,57 +101,23 @@ public class BeeKeeperLauncher {
 			}
 		}
 */
-/*
-		for(int i = 0; i < 3 ; ++i)
+
+		ModelParameters.startMode = StartMode.Random80;
+		for(int i = 0; i < 1 ; ++i)
 		{
-			ModelParameters.startMode = mode[i];
+			//ModelParameters.startMode = mode[i];
+			ModelParameters.SIMU_ACCELERATION = nb[i];
+			ModelParameters.SIMU_LENGTH = 10 * ModelParameters.DAY / nb[i];
 			ModelParameters.identifier = (char)(charNumberA + i);
 			startExpeAndMonitorTime(new MainController());
 		}
-*/
 
 
+/*
 		ModelParameters.startMode = StartMode.Random20;
 		ModelParameters.identifier = 'A';
 		startExpeAndMonitorTime(new MainController());
-
-
-		/*OLD CODE (just in case)
-		int simuLength = 5000;
-		int reps = 5;
-
-		for(int i = 0; i<reps;++i)
-		{			
-			ModelParameters.paramExpe(150, 150, simuLength, StartMode.Random,i);
-			new MainController();
-		}
-
-
-		for(int i = 0; i<reps;++i)
-		{	
-		ModelParameters.paramExpe(150, 150, simuLength, StartMode.Old,i);
-		new MainController();
-		}
-
-		for(int i = 0; i<reps;++i)
-		{	
-		ModelParameters.paramExpe(150, 150, simuLength, StartMode.NewBorn,i);
-		new MainController();
-		}
-
-		for(int i = 0; i<reps;++i)
-		{	
-		ModelParameters.paramExpe(150, 50, simuLength, StartMode.Random,i);
-		new MainController();
-		}
-
-		for(int i = 0; i<reps;++i)
-		{	
-		ModelParameters.paramExpe(150, 300, simuLength, StartMode.Random,i);
-		new MainController();
-		}
-		Toolkit.getDefaultToolkit().beep();
-		 */
+*/
 
 		Toolkit.getDefaultToolkit().beep();
 		System.out.println("All Expes Done");

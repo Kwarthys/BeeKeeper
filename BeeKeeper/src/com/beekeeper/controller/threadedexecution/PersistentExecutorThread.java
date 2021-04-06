@@ -71,7 +71,6 @@ public class PersistentExecutorThread implements Runnable {
 				working = false;
 				
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -12,6 +12,7 @@ import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
+import com.beekeeper.model.tasks.beetasks.AskFoodTask;
 import com.beekeeper.parameters.ModelParameters;
 
 public abstract class WorkingAgent extends EmitterAgent
@@ -27,7 +28,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	protected Action currentAction = null;
 
 	protected WorkingAgent cooperativeInteractor = null;
-
+	
 	public Point2D.Double target = null;
 
 	public Task getCurrentTask() {return currentTask;}
@@ -314,6 +315,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		{
 			System.out.println("fully lived at t+" + (System.nanoTime() - startlive)/1000 + "us.");
 		}
+		
+		this.bodySmell.evaporate();
 	}
 
 	protected abstract void advanceMetabolism();
@@ -332,7 +335,7 @@ public abstract class WorkingAgent extends EmitterAgent
 		boolean isAskingFood = false;
 		if(currentTask != null)
 		{
-			isAskingFood = currentTask.taskName == "AskingFood";
+			isAskingFood = currentTask.taskName == AskFoodTask.AskingFoodTaskName;
 		}
 		return hunger > 0.5 && isAskingFood;
 	}
@@ -492,7 +495,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	public String getTaskName() {
 		if(currentTask==null)
 		{
-			System.err.println("TaskNullHere");
+			System.err.println("WorkingAgent - GetTaskName - TaskNullHere"); //TODO TaskNullHere
 			return "noTask";
 		}
 		return currentTask.taskName;

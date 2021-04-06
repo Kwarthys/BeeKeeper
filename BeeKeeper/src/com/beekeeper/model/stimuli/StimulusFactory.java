@@ -89,7 +89,7 @@ public class StimulusFactory
 	{
 		if(checkDataBaseWith(smell))
 		{
-			return Math.exp(-Math.log(2) / database.get(smell).getHalfLife() / ModelParameters.secondToTimeStepCoef);	
+			return Math.exp(-Math.log(2) / database.get(smell).getHalfLife() / ModelParameters.secondToTimeStepCoef);
 		}
 		else
 		{

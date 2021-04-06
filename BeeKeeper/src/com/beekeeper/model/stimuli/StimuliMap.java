@@ -15,6 +15,18 @@ public class StimuliMap
 	
 	public int agentID;
 	
+	private double totalExchangedAmount = 0;
+	
+	public void evaporateExchangedAmount()
+	{
+		totalExchangedAmount *= 0.99;
+	}
+	
+	public double getTotalExchangedAmount()
+	{
+		return totalExchangedAmount;
+	}
+	
 	public void setControllerServices(MainControllerServices controllerServices)
 	{
 		this.controllerServices = controllerServices;
@@ -150,6 +162,8 @@ public class StimuliMap
 		{
 			double exchangedAmount = Math.abs(map1.getAmount(Stimulus.EthyleOleate) - map2.getAmount(Stimulus.EthyleOleate))/2;
 			controllerServices.notifyAgentContact(map1.agentID, map2.agentID, exchangedAmount);
+			map1.totalExchangedAmount += exchangedAmount;
+			map2.totalExchangedAmount += exchangedAmount;
 		}
 		
 		for(Stimulus s : smells)

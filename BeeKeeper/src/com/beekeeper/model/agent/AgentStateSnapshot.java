@@ -5,6 +5,7 @@ public class AgentStateSnapshot
 	public int agentID;
 	public int agentAge;
 	public double jhAmount;
+	public double exchangedPheromones;
 	public String taskName;
 	
 	public AgentStateSnapshot(WorkingAgent agent)
@@ -13,6 +14,7 @@ public class AgentStateSnapshot
 		jhAmount = agent.getHJ();
 		taskName = agent.getTaskName();
 		agentAge = agent.age;
+		exchangedPheromones = agent.getTotalExchangedAmount();
 	}
 
 }

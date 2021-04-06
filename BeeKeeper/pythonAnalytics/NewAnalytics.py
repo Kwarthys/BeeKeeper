@@ -41,6 +41,11 @@ def getTimeStepsListFromExpeDict(dict):
 	
 #PROGRAM
 
+displayLINES = 1
+displayROWS = 1
+
+printManyBees = True;
+
 larvaTask = "LarvaTask";
 nurseTask = "FeedLarvae";
 foragerTask = "Foraging";
@@ -80,7 +85,8 @@ for f in files:
 	#A_Classic_NewBorn_1000_0_518400_HJInc1.8518518518518519E-6
 	#fileImportantName = fileTags[1] + " " + fileTags[2] + " " + fileTags[3] + " " + fileTags[6];	
 	
-	fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4]# + " FeedingAmount:" + fileTags[7]
+	#fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4]# + " FeedingAmount:" + fileTags[7]
+	fileImportantName = fileTags[0] + ": Acc" + fileTags[6]
 	#if(len(fileTags) >= 9):
 	#	fileImportantName += " " + fileTags[8]
 	
@@ -206,7 +212,7 @@ index = 1;
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	#         row, col
-	plt.subplot(3,1, index, title=key);
+	plt.subplot(displayROWS,displayLINES, index, title=key);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label=nurseTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label=foragerTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(otherTask, expe), label=otherTask);
@@ -228,7 +234,7 @@ plt.figure(1, figsize=(25,15))
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	
-	plt.subplot(3,1, index, title=key);
+	plt.subplot(displayROWS,displayLINES, index, title=key);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanHJKey, expe), label=meanHJKey);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanEOKey, expe), label=meanEOKey);	
 	
@@ -237,35 +243,37 @@ for key in allParsedExpes:
 	index += 1
 		
 #plt.show()		
-plt.savefig("HJ.png");	
+plt.savefig("HJ.png");
 
-print("\nprintingBees:");
+if printManyBees:
+	
+	print("\nprintingBees:");
 
-findex = 1;
-for key in allParsedExpes:
+	findex = 1;
+	for key in allParsedExpes:
 
-	print(key);
-	
-	plt.figure(2, figsize=(25,15))
+		print(key);
+		
+		plt.figure(2, figsize=(25,15))
 
-	expe = allParsedExpes[key];
-	#get list of random beesIndex
-	beesIndexes = random.sample(list(allDataPerBees[key].keys()), 40);
-	
-	index = 1
-	for beeIndex in beesIndexes:
-	
-		ax = plt.subplot(4,10, index, title=key[0] + " Bee" + beeIndex);
-		plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("HJ", allDataPerBees[key][beeIndex]), label="HJ");
-		plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("EO", allDataPerBees[key][beeIndex]), label="EO");
-		ax.set_ylim(ymin=0)
-	
-		if(index == 1):
-			plt.legend()
-		index += 1
-	
-	findex += 1
-	plt.savefig(key[0] + "perBees.png");		
+		expe = allParsedExpes[key];
+		#get list of random beesIndex
+		beesIndexes = random.sample(list(allDataPerBees[key].keys()), 40);
+		
+		index = 1
+		for beeIndex in beesIndexes:
+		
+			ax = plt.subplot(4,10, index, title=key[0] + " Bee" + beeIndex);
+			plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("HJ", allDataPerBees[key][beeIndex]), label="HJ");
+			plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("EO", allDataPerBees[key][beeIndex]), label="EO");
+			ax.set_ylim(ymin=0)
+		
+			if(index == 1):
+				plt.legend()
+			index += 1
+		
+		findex += 1
+		plt.savefig(key[0] + "perBees.png");		
 		
 
 '''

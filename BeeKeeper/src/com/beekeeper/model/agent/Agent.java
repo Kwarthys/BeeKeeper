@@ -23,6 +23,8 @@ public abstract class Agent
 	protected MyLogger logger;
 	protected DecimalFormat df = new DecimalFormat("#.####");
 	
+	public int getRealAge() {return age;}
+	
 	public void activateLogger()
 	{
 		loggerAgent = true;

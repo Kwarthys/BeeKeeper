@@ -28,7 +28,7 @@ public class ModelParameters
 	/******************************/	
 	
 	/** META-PARAMS **/
-	public static final double SIMU_ACCELERATION = 1;
+	public static double SIMU_ACCELERATION = 1;
 	
 	public static boolean LOGGING = false;
 	public static boolean BEELOGGING = false;
@@ -48,6 +48,11 @@ public class ModelParameters
 	
 	public static boolean LARVA_CAN_HATCH = true;
 	public static boolean FORAGERS_DIE_SOONER = true;
+	
+	/**
+	 * The queen's speed is calculated upon that
+	 */
+	public static int COLONY_TARGET_SIZE = 10000;
 	/*****************************/
 	
 
@@ -60,23 +65,31 @@ public class ModelParameters
 	
 	//Normal age (nurse) go a year, foraging go 30days, at 20+10 rouglhy. 11months->11days while foraging (*30)
 	public static int foragingAgePenalty = 30;
-	public static int maxTimestepAge = (int) (/*1year*/ 364 * DAY / SIMU_ACCELERATION);
-	public static int timestepLarvaPop = (int)(/*20days*/ 20 * DAY / SIMU_ACCELERATION);
+	public static int maxTimestepAge;
+	public static int timestepLarvaPop;
 
 	//Free 1957 : Tranmission of food between worker -> Empty stomach after 8ish hours of starvation
 	//Wang et al 2016: starved honey bees for 12hours -> 50%bee died
-	public static final double HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
+	public static double HUNGER_INCREMENT;
 	
-	public static final double LARVA_FEEDING_MEANDURATION = 70 * SECOND; //Biology of Honey bee p97. //Don't wanna go below the second no matter the acceleration
-	public static final double WORKER_FEEDING_MEANDURATION = 60 * SECOND; //Estimated
+	public static double LARVA_FEEDING_MEANDURATION; //Biology of Honey bee p97.
+	public static double WORKER_FEEDING_MEANDURATION; //Estimated
 	
 	//2 Days old larvae all dies in 7h of starvation (some earlier) while 4days old all survive that 7hour starvation (-> hunger doesn't start high)
-	public static final double LARVAE_HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
+	public static double LARVAE_HUNGER_INCREMENT;
 	
 	//Huang & Otis 1991 - Inspection and feeding ... fed every ~35min
-	public static int MIN_DURATION_LARVAEFEDAGAIN = 30 * MINUTE; //Represents the time that the larva takes to eat all that has been given to it
+	/**
+	 * Represents the time that the larva takes to eat all that has been given to it
+	 */
+	public static int MIN_DURATION_LARVAEFEDAGAIN;
 	
-	public static final double LARVAE_FEEDING_INCREMENT = LARVAE_HUNGER_INCREMENT * 35 * MINUTE;
+	/**
+	 * Quantity of food (i.e energy) given at each feeding
+	 */
+	public static double LARVAE_FEEDING_QUANTITY;
+
+	public static double LARVA_EO_TIMELY_EMMISION;
 	
 	public static final double MOTIVATION_STEP = 0.01; //ACCELERATION ? maybe not
 	
@@ -84,29 +97,31 @@ public class ModelParameters
 
 	public static final double MAX_MOTIVATION = 0.9;
 	
-	public static final double FORAGING_TIME = 20 * MINUTE;
-	public static final double FORAGING_ENERGYCOST = 0.3 / FORAGING_TIME;
+	public static double FORAGING_TIME;
+	public static double FORAGING_ENERGYCOST;
 	
 	//Esters usually have 16hours so we'll say that for now
-	public static final double ETHYLE_OLEATE_HALFLIFE = 16.0 * HOUR / SIMU_ACCELERATION;
+	public static double ETHYLE_OLEATE_HALFLIFE;
 	//Experience this makes 50-50 when NEWBORN with 2-1 Larva/bees
 	//public static double ETHYLE_OLEATE_TRANSMISSIBILITY = Math.max(1, 120.0 / SIMU_ACCELERATION); //1day's too much
-	public static double ETHYLE_OLEATE_TRANSMISSIBILITY = 6.0 * HOUR / SIMU_ACCELERATION;
+	public static double ETHYLE_OLEATE_TRANSMISSIBILITY;
 
-	/* 1 egg per minut */
-	public static final double LAYEGG_MEANDURATION = 30.0*MINUTE / SIMU_ACCELERATION;
+	/**
+	 * Targeting a 50day full replenishement of the targeted colony size
+	 */
+	public static double LAYEGG_MEANDURATION;
 	
 	/* want it to be half tired after an hour */
-	public static final double QUEEN_TASKS_ENERGYCOSTS = 1.0/2.0/HOUR;
+	public static double QUEEN_TASKS_ENERGYCOSTS;
 
-	public static final double RESTTASK_RESTORATION = 1.0/(20*MINUTE);
+	public static double RESTTASK_RESTORATION;
 
 	
 	public static double HJ_EQUILIBRIUM = 0.8;
 	public static double EO_EQUILIBRIUM = 1;//from1000 to 1
 	
-	//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim EQUILIBRIUM at 5 days //////to compensate EO effects?
-	public static double HJ_INCREMENT = HJ_EQUILIBRIUM / (5 * DAY) * SIMU_ACCELERATION; //1.851e-6
+	//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim EQUILIBRIUM at 5 days ////// compensate EO effects?
+	public static double HJ_INCREMENT; //1.851e-6
 	
 	//public static double EOEmissionCoef = 0.000000004; //REVERSED WITH HJRed
 	//public static double EOEmissionCoef = 0.01; //TODO CHANGED TO 0.02
@@ -117,12 +132,9 @@ public class ModelParameters
 		return (1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM;
 	}
 
-	//public static double LARVA_EO_TIMELY_EMMISION = 0.15;
-	public static double LARVA_EO_TIMELY_EMMISION = 0;//getEOEvapAtEOEQ() * 1.5;
-
 	public static final double getEthyleOleateEmitedByHJ(double hjTiter)
 	{
-		return Math.pow((hjTiter/HJ_EQUILIBRIUM),1) * getEOEvapAtEOEQ() * SIMU_ACCELERATION;//CHANGING
+		return Math.pow((hjTiter/HJ_EQUILIBRIUM),1) * getEOEvapAtEOEQ();// * SIMU_ACCELERATION;
 		
 		//return hjTiter * 0.000000004 * SIMU_ACCELERATION; //Calculated with google sheet to match biological observation : https://docs.google.com/spreadsheets/d/1G8Npmpj3zvKJWzIT85aO0ulNe2J9UrzrpwM7wehnqgA/edit?usp=sharing
 	}
@@ -136,17 +148,58 @@ public class ModelParameters
 	
 	public static final double getHJModifiedByEthyleOleate(double ethyleOleateAmount)
 	{
-		double reduction = Math.pow((ethyleOleateAmount / EO_EQUILIBRIUM),EOEmissionPower) * HJ_INCREMENT * SIMU_ACCELERATION;//Changing
+		double reduction = Math.pow((ethyleOleateAmount / EO_EQUILIBRIUM),EOEmissionPower) * HJ_INCREMENT;// * SIMU_ACCELERATION;//Changing
 		
 		//double reduction = ethyleOleateAmount * 0.01 * SIMU_ACCELERATION;  //Calculated with google sheet to match biological observation, see link above
 		//System.out.println("EthyleOleate at " + ethyleOleateAmount + ", HJ down by " + reduction);
 		return reduction;
 	}
 	
+	/**
+	 * Re calculate all the parameters given potentially new fundamental parameters
+	 */
 	public static void applyPhysioParameters()
 	{
+		/*** PHEROMONES ***/		
+		//Esters usually have 16hours so we'll say that for now
+		ETHYLE_OLEATE_HALFLIFE = 16.0 * HOUR / SIMU_ACCELERATION;
+		//Experience this makes 50-50 when NEWBORN with 2-1 Larva/bees
+		ETHYLE_OLEATE_TRANSMISSIBILITY = 6.0 * HOUR / SIMU_ACCELERATION;
+		
+		
+		StimulusFactory.refreshDataBase();
+		
+		
+		LARVA_EO_TIMELY_EMMISION = getEOEvapAtEOEQ() * 1.5;		
+		
 		//hjReduction = HJ_INCREMENT / EO_EQUILIBRIUM;
-		LARVA_EO_TIMELY_EMMISION = getEOEvapAtEOEQ() * 1.5;
+		maxTimestepAge = (int) (/*1year*/ 364 * DAY / SIMU_ACCELERATION);
+		timestepLarvaPop = (int)(/*20days*/ 20 * DAY / SIMU_ACCELERATION);
+		HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
+		
+		LARVA_FEEDING_MEANDURATION = 70 * SECOND * SIMU_ACCELERATION;; //Biology of Honey bee p97.
+		WORKER_FEEDING_MEANDURATION = 60 * SECOND * SIMU_ACCELERATION;; //Estimated
+		
+		//2 Days old larvae all dies in 7h of starvation (some earlier) while 4days old all survive that 7hour starvation (-> hunger doesn't start high)
+		LARVAE_HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
+		
+		//Huang & Otis 1991 - Inspection and feeding ... fed every ~35min
+		MIN_DURATION_LARVAEFEDAGAIN = (int) (30 * MINUTE / SIMU_ACCELERATION); //Represents the time that the larva takes to eat all that has been given to it
+		
+		LARVAE_FEEDING_QUANTITY = LARVAE_HUNGER_INCREMENT * 35 * MINUTE;// / SIMU_ACCELERATION;
+		
+		FORAGING_TIME = Math.max(20 * MINUTE / SIMU_ACCELERATION, 20);
+		FORAGING_ENERGYCOST = 0.3 / FORAGING_TIME;
+		
+		LAYEGG_MEANDURATION = (50 * DAY) / COLONY_TARGET_SIZE / SIMU_ACCELERATION;
+		
+		/* want it to be half tired after an hour */
+		QUEEN_TASKS_ENERGYCOSTS = 1.0/HOUR * SIMU_ACCELERATION;
+
+		RESTTASK_RESTORATION = 1.0/(20*MINUTE) * SIMU_ACCELERATION;
+		
+		//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim EQUILIBRIUM at 5 days //////to compensate EO effects?
+		HJ_INCREMENT = HJ_EQUILIBRIUM / (5 * DAY) * SIMU_ACCELERATION; //1.851e-6
 	}
 	
 	
@@ -159,6 +212,7 @@ public class ModelParameters
 	public static int NUMBER_LARVAE = 750;
 	public static int SIMU_LENGTH = 50*DAY;
 	public static StartMode startMode = StartMode.Random;
+	public static boolean SPAWN_A_QUEEN = true;
 	
 	public static double getStartingBeeHJTiter()
 	{

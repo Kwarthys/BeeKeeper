@@ -49,7 +49,7 @@ public class BroodBee extends WorkingAgent
 	@Override
 	public void recieveFood() {
 		//if(getID() == 0)System.out.println(getStringName() + " got fed : " + getEnergy());
-		this.addToEnergy(ModelParameters.LARVAE_FEEDING_INCREMENT);
+		this.addToEnergy(ModelParameters.LARVAE_FEEDING_QUANTITY);
 		//System.out.println(" to " + getEnergy());
 		cantBeFed = ModelParameters.MIN_DURATION_LARVAEFEDAGAIN;
 	}

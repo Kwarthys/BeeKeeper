@@ -22,7 +22,6 @@ import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombManager;
 import com.beekeeper.model.comb.CombServices;
 import com.beekeeper.model.comb.cell.CombCell;
-import com.beekeeper.model.stimuli.StimulusFactory;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
 import com.beekeeper.utils.MyLockedList;
@@ -273,7 +272,6 @@ public class MainController
 	{
 		this.agentFactory = new AgentFactory();
 
-		StimulusFactory.refreshDataBase();
 		ModelParameters.applyPhysioParameters();
 
 		this.combManager = new CombManager();
@@ -414,10 +412,11 @@ public class MainController
 		long totalDeaths = 0;
 		int startingAverageIndex = 0;
 
-		int logTurnInterval = 4000;
+		int logTurnInterval = ModelParameters.SIMU_LENGTH / 200; //Want 200 logs
+		logTurnInterval = Math.max(logTurnInterval, 1); //can't be lower than 1 or that % will explode
 
 		turnIndex = 0;
-		int displayBar = 20;
+		int displayBar = 30;
 
 		System.out.print("|");
 		for(int i = 1; i < displayBar-1; ++i)
@@ -480,7 +479,7 @@ public class MainController
 					try
 					{
 						Agent a = foragersIT.next();	
-						//Agent a = foragersIT.next(); //TODO CONCURRENT MODIFICATION EXCEPTION HERE
+						//Agent a = foragersIT.next(); // CONCURRENT MODIFICATION EXCEPTION HERE :: should be fixed
 
 						if(a==null)
 						{
@@ -540,10 +539,12 @@ public class MainController
 
 			if(DEBUGTIME)System.out.println("updateStimuli at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
 
+			/* ******* THIS HAS BEEN MOVED INSIDE EACH AGENTS BODYSMELL
 			if(!contactsLocked)
 			{
 				contactsQuantitiesByIndex.forEach((Integer beeID, Double amount) -> {amount*=0.99;});
 			}
+			*/
 
 			if(rebaseAsked)
 			{

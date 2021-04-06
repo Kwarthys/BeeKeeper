@@ -113,7 +113,7 @@ public class CombManager {
 			for(Agent a : combs.get(i).getAgents())
 			{
 				WorkingAgent w = (WorkingAgent) a;
-				logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()));
+				logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()), String.valueOf(w.getRealAge()), String.valueOf(w.getTotalExchangedAmount()));
 			}
 		}
 	}
@@ -384,9 +384,9 @@ public class CombManager {
 			
 			//System.out.println("radiusForLarvae " + radiusForLarvae);
 
-			if(combNumber == 1)
+			if(combNumber == 1 && ModelParameters.SPAWN_A_QUEEN)
 			{
-				//agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
+				agentFactory.spawnAQueen(c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/2), sm.getServices(), controlServices);
 			}
 					
 			//agentFactory.spawnBroodCells(numberOfLarvae, c, MyUtils.getCirclePointRule(center, Math.min(combSize.height, combSize.width)/combWidthDivisor/2), sm.getServices(), controlServices);
