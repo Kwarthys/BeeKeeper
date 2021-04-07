@@ -75,7 +75,7 @@ public class BeeKeeperLauncher {
 		ModelParameters.SIMU_LENGTH = 10 * ModelParameters.DAY;
 		ModelParameters.NUMBER_BEES = 500;
 		ModelParameters.NUMBER_LARVAE = 700;
-		ModelParameters.NUMBER_FRAMES = 8;
+		ModelParameters.NUMBER_FRAMES = 2;
 		//ModelParameters.LARVA_CAN_HATCH = false;
 		//ModelParameters.FORAGERS_DIE_SOONER = false;
 		//ModelParameters.SPAWN_A_QUEEN = false;
@@ -87,7 +87,8 @@ public class BeeKeeperLauncher {
 		
 		int charNumberA = 65;
 		//StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
-		int[] nb = {1,2,4,10,100,200,1000,2000,5000};
+		//int[] nb = {1,2,4,10,100,200,1000,2000,5000};
+		int[] nb = {2,3,5,10,50,100,200,500,1000};
 /*
 		for(int j = 0; j < 3; ++j)
 		{
@@ -103,11 +104,9 @@ public class BeeKeeperLauncher {
 */
 
 		ModelParameters.startMode = StartMode.Random80;
-		for(int i = 0; i < 1 ; ++i)
+		for(int i = 0; i < 9 ; ++i)
 		{
-			//ModelParameters.startMode = mode[i];
-			ModelParameters.SIMU_ACCELERATION = nb[i];
-			ModelParameters.SIMU_LENGTH = 10 * ModelParameters.DAY / nb[i];
+			ModelParameters.LARVA_EO_EMISSION_COEF = nb[i];
 			ModelParameters.identifier = (char)(charNumberA + i);
 			startExpeAndMonitorTime(new MainController());
 		}

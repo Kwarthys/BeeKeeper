@@ -1,5 +1,7 @@
 package com.beekeeper.controller.logger;
 
+import java.text.DecimalFormat;
+
 import com.beekeeper.parameters.ModelParameters;
 
 public class MyLogger
@@ -97,7 +99,7 @@ public class MyLogger
 	{
 		StringBuffer sb = new StringBuffer();
 		
-		//DecimalFormat df = new DecimalFormat("#.####");
+		DecimalFormat df = new DecimalFormat("#.####");
 
 		sb.append(ModelParameters.identifier);
 		sb.append("_");
@@ -112,8 +114,8 @@ public class MyLogger
 		sb.append(ModelParameters.SIMU_LENGTH);
 		sb.append("_");
 		sb.append(ModelParameters.SIMU_ACCELERATION);
-		//sb.append("_LEoEm");
-		//sb.append(df.format(ModelParameters.LARVA_EO_TIMELY_EMMISION));
+		sb.append("_LEoEmC");
+		sb.append(df.format(ModelParameters.LARVA_EO_EMISSION_COEF));
 		
 		return sb.toString();
 	}

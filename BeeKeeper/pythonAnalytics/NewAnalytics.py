@@ -41,10 +41,25 @@ def getTimeStepsListFromExpeDict(dict):
 	
 #PROGRAM
 
+linesEntry = int(input("LineNumber "));
+rowsEntry = int(input("RowNumber "));
+printBeesEntry = input("printBees ");
+
 displayLINES = 1
 displayROWS = 1
-
 printManyBees = True;
+
+if(linesEntry > 0 and linesEntry < 10):
+	displayLINES = linesEntry
+
+if(rowsEntry > 0 and rowsEntry < 10):
+	displayROWS = rowsEntry	
+
+if(printBeesEntry == "False" or printBeesEntry == "false" or printBeesEntry == "0"):
+	printManyBees = False;
+	
+
+
 
 larvaTask = "LarvaTask";
 nurseTask = "FeedLarvae";
@@ -86,7 +101,8 @@ for f in files:
 	#fileImportantName = fileTags[1] + " " + fileTags[2] + " " + fileTags[3] + " " + fileTags[6];	
 	
 	#fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4]# + " FeedingAmount:" + fileTags[7]
-	fileImportantName = fileTags[0] + ": Acc" + fileTags[6]
+	#fileImportantName = fileTags[0] + ": Acc" + fileTags[6]
+	fileImportantName = fileTags[0] + ": " + fileTags[7]
 	#if(len(fileTags) >= 9):
 	#	fileImportantName += " " + fileTags[8]
 	

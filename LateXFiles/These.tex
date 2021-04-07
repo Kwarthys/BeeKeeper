@@ -15,8 +15,18 @@
 		\vspace{8em}
 		\Large Dirigé par Thierry Duval et Vincent Rodin\\
 		Encadré par Jérémy Rivière\\
-		\vspace{8em}
-		\Large UBO IMT-A LABSTICC\\
+		\vspace{7em}
+		\begin{figure}[!h]
+		\centering
+		\includegraphics[height=0.1\textwidth]{Pictures/Logos/labsticc.png}
+		\hspace{0.4cm}
+		\includegraphics[height=0.1\textwidth]{Pictures/Logos/cnrs.png}
+		\hspace{0.4cm}
+		\includegraphics[height=0.08\textwidth]{Pictures/Logos/ubo.png}
+		\hspace{0.4cm}
+		\includegraphics[height=0.1\textwidth]{Pictures/Logos/imta.png}
+		\end{figure}
+		%\Large UBO IMT-A LABSTICC\\
 		\end{center}	 
 	\end{titlepage}
 	
@@ -48,22 +58,39 @@
 			On se base sur l'idée du Flow, avec la motivation de l'individu qui baisse lorsqu'il est confronté à l'échec.
 	\subsection{Modélisation des tâches : Exécution du comportement}
 		\subsubsection{Actions, Activités et Tâches}
-			Description de ces 3 concepts
-		\subsubsection{Subsomption Hiérarchique}
-			Comment les 3 concepts s'intègrent dans cette subsomption et ce qu'elle nous apporte Figure \ref{ModelisationTache}.
+			Afin de modéliser nos tâches, nous allons utiliser 3 concepts, actions, activités et tâches. Une action est définie comme une interaction avec l'environnement extérieur, d'une durée déterminée et courte (pas plus de quelques pas de temps). Elle n'est donc pas forcément élémentaire, mais doit s'en approcher. Chaque action possède une condition d'activation.\\
+			Ensuite, une activité est une ensemble d'actions et/ou d'autres activités. Une activité possède aussi sa propre condition d'activation. Indirectement, tout ce qu'elle contient partage alors sa condition d'activation, ce qui nous permet de factoriser cette condition et d'alléger notre écriture, tout en permettant des comportements complexes.\\
+			Pour finir, une tâche est l'ensemble des activités et actions qui concernent un comportement. On peut donc voir une tâche comme l'activité racine, un peu a la manière d'un système de fichier: les activités sont des dossiers et contiennent d'autre dossier, ou des fichiers que sont les actions.
+		\subsubsection{Subsomption Hiérarchique et Exécution}
+			\paragraph{}
+			Une architecture de subsomption permet de hiérarchiser différents comportement entre eux, afin d'obtenir un comportement complexe. Dans un ordre défini, la subsomption interroge tour à tour la condition d'activation de ses différents blocs comportement, et exécute le premier dont la condition est valide. Par exemple, modéliser le comportement d'un mouton peut se faire en deux blocs. Un premier bloc "Brouter", toujours valide. Au dessus de celui ci, donc avec une priorité plus importante, un autre bloc "Fuir", qui s'active dès que le mouton perçoit un prédateur. Ainsi, tant qu'aucun grand méchant loup n'est en vue, le mouton va brouter paisiblement. Dès qu'il en verra un, alors il pourra fuir.
+			\paragraph{}
+			Une subsomption hiérarchique ajoute à cette structure simple, le fait que chaque bloc comportement puisse être une autre architecture de subsomption. Cette légère modification apporte une grande modularité dans la conception de ces architectures, et permet de modéliser des comportements plus complexes sans la lourdeur des subsomption classiques.
+			
+			\paragraph{}
+			Ce que j'ai donc appelé "bloc comportement" des subsomptions correspond à nos actions et activités. Les blocs qui contiennent une autre subsomption sont appelés activités, et ceux qui contiennent du comportement sont des actions. Ensuite, la subsomption en elle même est alors une tâche, vous trouverez Figure \ref{ModelisationTache} une représentation graphique de subsomption hiérarchique contenant nos concepts définis plus tôt.
 			
 			\begin{figure}
 			\centering
 			\includegraphics[width=\textwidth]{Pictures/Figures/ModelisationTache.png}
-			\caption{WAOW}
+			\caption{Modélisation d'une tâche.}
 			\label{ModelisationTache}
 			\end{figure}
-		\subsubsection{Exécution des tâches}
+		\paragraph{}
+			Ainsi, pour qu'un agent puisse exécuter une tâche, il interroge l'activité racine puis va récursivement interroger ses composants. Chaque activité ou action interrogée va ainsi vérifier sa condition d'activation. Une activité dont l'activation est valide va alors continuer d'interroger ses composantes. On a donc une recherche en profondeur, qui s'arrête dès qu'une action interrogée voit sa condition d'activation validée. Cette action est alors remontée à l'agent, qui pourra alors l'exécuter pendant toute sa durée. Ensuite, une fois l'action terminée, tout ce processus recommence afin de pouvoir récupérer une nouvelle action à exécuter.
+			
+			\paragraph{}
+			Exemple swarm robotics
+				
+			
+			
 			Les deux points clés : Évaluation systématique et Intégration de la motivation dans le calcul de score.
-			Cas typique d'exécution.
-	\subsection{Sélection : Modèle à seuil}
-	\subsection{Utilisation en Swarm Robotics}
+	\subsection{Sélection : Modèle à Seuil}
+		
+	\subsection{Modèle de prise de décision}
+		Récapitulatif, exemple et conclusion sur le modèle en entier.
 		L'exemple avancé dans l'article PAAMS pourrait être poussé un peu grâce au travail du stagiaire et à des nouveaux trucs que j'ai compris pendant la paramétrisation complexe du bousin.
+		\subsubsection{Utilisation en Swarm Robotics}
 			
 \section{Simulation Multi-Agents d'une colonie d'abeilles}
 	\subsection{Biologie : Connaissances des biologistes sur l'abeille}

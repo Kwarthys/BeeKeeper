@@ -52,7 +52,7 @@ public class ModelParameters
 	/**
 	 * The queen's speed is calculated upon that
 	 */
-	public static int COLONY_TARGET_SIZE = 10000;
+	public static int COLONY_TARGET_SIZE = 2000;
 	/*****************************/
 	
 
@@ -155,6 +155,8 @@ public class ModelParameters
 		return reduction;
 	}
 	
+	public static double LARVA_EO_EMISSION_COEF = 1.5;
+	
 	/**
 	 * Re calculate all the parameters given potentially new fundamental parameters
 	 */
@@ -164,13 +166,11 @@ public class ModelParameters
 		//Esters usually have 16hours so we'll say that for now
 		ETHYLE_OLEATE_HALFLIFE = 16.0 * HOUR / SIMU_ACCELERATION;
 		//Experience this makes 50-50 when NEWBORN with 2-1 Larva/bees
-		ETHYLE_OLEATE_TRANSMISSIBILITY = 6.0 * HOUR / SIMU_ACCELERATION;
+		ETHYLE_OLEATE_TRANSMISSIBILITY = 6.0 * HOUR / SIMU_ACCELERATION;		
 		
+		StimulusFactory.refreshDataBase();		
 		
-		StimulusFactory.refreshDataBase();
-		
-		
-		LARVA_EO_TIMELY_EMMISION = getEOEvapAtEOEQ() * 1.5;		
+		LARVA_EO_TIMELY_EMMISION = getEOEvapAtEOEQ() * LARVA_EO_EMISSION_COEF;		
 		
 		//hjReduction = HJ_INCREMENT / EO_EQUILIBRIUM;
 		maxTimestepAge = (int) (/*1year*/ 364 * DAY / SIMU_ACCELERATION);

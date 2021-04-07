@@ -10,27 +10,32 @@
 \contentsline {subsection}{\numberline {4.1}Interruption : Motivation}{2}{}%
 \contentsline {subsubsection}{\numberline {4.1.1}Etat de l'art rapide sur la Motivation}{2}{}%
 \contentsline {subsubsection}{\numberline {4.1.2}Notre utilisation de la Motivation}{2}{}%
-\contentsline {subsection}{\numberline {4.2}Modélisation des tâches : Exécution du comportement}{2}{}%
-\contentsline {subsubsection}{\numberline {4.2.1}Actions, Activités et Tâches}{2}{}%
-\contentsline {subsubsection}{\numberline {4.2.2}Subsomption Hiérarchique}{3}{}%
-\contentsline {subsubsection}{\numberline {4.2.3}Exécution des tâches}{3}{}%
-\contentsline {subsection}{\numberline {4.3}Sélection : Modèle à seuil}{3}{}%
-\contentsline {subsection}{\numberline {4.4}Utilisation en Swarm Robotics}{3}{}%
-\contentsline {section}{\numberline {5}Simulation Multi-Agents d'une colonie d'abeilles}{3}{}%
-\contentsline {subsection}{\numberline {5.1}Biologie : Connaissances des biologistes sur l'abeille}{3}{}%
-\contentsline {subsection}{\numberline {5.2}Description du modèle adapté}{4}{}%
-\contentsline {subsection}{\numberline {5.3}Description de l'implémentation}{4}{}%
-\contentsline {subsection}{\numberline {5.4}Calibration}{4}{}%
-\contentsline {subsubsection}{\numberline {5.4.1}Calibration rapide - Accélération}{4}{}%
-\contentsline {subsubsection}{\numberline {5.4.2}Calibration biologique - Données directes et indirectes}{4}{}%
-\contentsline {subsection}{\numberline {5.5}Analyse des résultats}{4}{}%
-\contentsline {section}{\numberline {6}État de L'art VISU INTER}{4}{}%
-\contentsline {subsection}{\numberline {6.1}DataViz}{4}{}%
-\contentsline {subsection}{\numberline {6.2}Interaction / visu immersive pour comprendre}{4}{}%
-\contentsline {subsection}{\numberline {6.3}Interaction tangible}{4}{}%
-\contentsline {section}{\numberline {7}Proposition visu interaction}{5}{}%
-\contentsline {subsection}{\numberline {7.1}Interaction Immersive avec Manettes}{5}{}%
-\contentsline {subsection}{\numberline {7.2}Interaction Immersice ET tangible}{5}{}%
-\contentsline {subsection}{\numberline {7.3}Visualisation : Graph3D sur l'état interne de la colonie}{5}{}%
-\contentsline {subsection}{\numberline {7.4}Résultats/Évaluation Visualisation Interactive proposée}{5}{}%
-\contentsline {section}{\numberline {8}Discussions}{5}{}%
+\contentsline {subsection}{\numberline {4.2}Modélisation des tâches : Exécution du comportement}{3}{}%
+\contentsline {subsubsection}{\numberline {4.2.1}Actions, Activités et Tâches}{3}{}%
+\contentsline {subsubsection}{\numberline {4.2.2}Subsomption Hiérarchique et Exécution}{3}{}%
+\contentsline {paragraph}{}{3}{}%
+\contentsline {paragraph}{}{3}{}%
+\contentsline {paragraph}{}{3}{}%
+\contentsline {paragraph}{}{3}{}%
+\contentsline {paragraph}{}{4}{}%
+\contentsline {subsection}{\numberline {4.3}Sélection : Modèle à Seuil}{4}{}%
+\contentsline {subsection}{\numberline {4.4}Modèle de prise de décision}{4}{}%
+\contentsline {subsubsection}{\numberline {4.4.1}Utilisation en Swarm Robotics}{4}{}%
+\contentsline {section}{\numberline {5}Simulation Multi-Agents d'une colonie d'abeilles}{4}{}%
+\contentsline {subsection}{\numberline {5.1}Biologie : Connaissances des biologistes sur l'abeille}{4}{}%
+\contentsline {subsection}{\numberline {5.2}Description du modèle adapté}{5}{}%
+\contentsline {subsection}{\numberline {5.3}Description de l'implémentation}{5}{}%
+\contentsline {subsection}{\numberline {5.4}Calibration}{5}{}%
+\contentsline {subsubsection}{\numberline {5.4.1}Calibration rapide - Accélération}{5}{}%
+\contentsline {subsubsection}{\numberline {5.4.2}Calibration biologique - Données directes et indirectes}{5}{}%
+\contentsline {subsection}{\numberline {5.5}Analyse des résultats}{5}{}%
+\contentsline {section}{\numberline {6}État de L'art VISU INTER}{5}{}%
+\contentsline {subsection}{\numberline {6.1}DataViz}{5}{}%
+\contentsline {subsection}{\numberline {6.2}Interaction / visu immersive pour comprendre}{5}{}%
+\contentsline {subsection}{\numberline {6.3}Interaction tangible}{6}{}%
+\contentsline {section}{\numberline {7}Proposition visu interaction}{6}{}%
+\contentsline {subsection}{\numberline {7.1}Interaction Immersive avec Manettes}{6}{}%
+\contentsline {subsection}{\numberline {7.2}Interaction Immersice ET tangible}{6}{}%
+\contentsline {subsection}{\numberline {7.3}Visualisation : Graph3D sur l'état interne de la colonie}{6}{}%
+\contentsline {subsection}{\numberline {7.4}Résultats/Évaluation Visualisation Interactive proposée}{6}{}%
+\contentsline {section}{\numberline {8}Discussions}{6}{}%

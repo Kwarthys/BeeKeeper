@@ -20,7 +20,7 @@ public class PersistentExecutorThread implements Runnable {
 	public PersistentExecutorThread(int index)
 	{
 		this.index = index;
-		agentPoll = new ArrayBlockingQueue<>((int)(ModelParameters.NUMBER_BEES * 1.1));
+		agentPoll = new ArrayBlockingQueue<>((int)((ModelParameters.COLONY_TARGET_SIZE) * 1.5));
 	}
 	
 	public boolean isWorking()
