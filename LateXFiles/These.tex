@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{report}
 \usepackage{graphicx}
 
 
@@ -32,36 +32,44 @@
 	
 \tableofcontents
 	
-\section{Introduction}
+\chapter*{Introduction}
+Orga Abeille - Visu Interagir avec - Simuler - Modeliser - (pk existant pas bon)proposition Modele motivation (orga++) - Eval Ccl (motivation mieux) - Enfin intéragir et visu\\
 \begin{itemize}
-	\item Colonie d'abeille en tant que système complexe. Beaucoup de recherche sur les butineuses mais moins sur l'intérieur de la ruche.	
+	\item Colonie d'abeille en tant que système complexe. Beaucoup de recherche sur les butineuses mais moins sur l'intérieur de la ruche.
+	\item Multi agent car concentration sur les individus et leurs interactions
 	\item Comprendre l'auto organisation interne par la modélisation SMA vs Équation différentielles - de l'importance des contacts individuels.	
 	\item Transmettre et faciliter l'apprentissage avec l'environnement immersif.
 \end{itemize}
-\section{Etat de l'art: Simulation Multi-Agents Interactives}
-	\subsection{SMA : Rercéer et comprendre des systemes complexes existants}
-		Comprendre les mécanismes, créer un modèle puis évaluer l'impact des différents paramètres sur l'évolution du comportement du système.
-	\subsection{Manipuler et observer ces systèmes complexes}
-		Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilsation d'interacteurs tangibles.
-\section{État de l'art: Modèles Multi-Agents et prise de décision}
+\chapter{État de l'Art: Insectes Sociaux et Simulation Multi-Agents}
+	\section{Connaissances Biologiques de l'Abeille "Apis Melifera"}
+			Synthèse des connaissances, notamment de notre visite à Avignon et ses 43 degrés à l'ombre.\\
+		\subsection{Auto-Organisation de la Colonie}
+		\subsection{Pheromones et Physiologie}
+		
+			Rôles et fonctions physiologiques associées.\\
+			Différents rôles de différentes phéromones.\\
+			Modélisation simplifiée : \\
+			Cas classique de la vie d'une abeille.\\
+			Quels changements provoquent quelles réactions dans le métabolisme de l'abeille, et donc dans la répartition du travail.
+	\section{Simuler des insectes sociaux}
+		\subsection{Systeme complexe}
 	Etat de l'art de l'article PAAMS
-	\subsection{Foraging for work}
-	\subsection{Modèles à seuils}
-	\subsection{Motivation, un pas vers les BDI ?}
-		Pas encore fait mais le parallèle est peut-être intéressant ?
-\section{Proposition Modèle de prise de décision PAAMS}
+		\subsection{Modeles Existants}
+			\subsubsection{Foraging For Work}
+			\subsubsection{Modèles à Seuils}
+			
+	\section*{Conclusion}
+	
+\chapter{Proposition Modèle de Prise de Décision}
 	Description du modèle d'interruption PAAMS	
 	
-	\subsection{Agent}
-		Définition d'un agent
+	\section{Modélisation des tâches : Exécution du comportement}	
 	
-	\subsection{Modélisation des tâches : Exécution du comportement}	
-	
-		\subsubsection{Actions, Activités et Tâches}
+		\subsection{Actions, Activités et Tâches}
 			Afin de modéliser nos tâches, nous allons utiliser 3 concepts, actions, activités et tâches. Une action est définie comme une interaction avec l'environnement extérieur, d'une durée déterminée et courte (pas plus de quelques pas de temps). Elle n'est donc pas forcément élémentaire, mais doit s'en approcher. Chaque action possède une condition d'activation.\\
 			Ensuite, une activité est une ensemble d'actions et/ou d'autres activités. Une activité possède aussi sa propre condition d'activation. Indirectement, tout ce qu'elle contient partage alors sa condition d'activation, ce qui nous permet de factoriser cette condition et d'alléger notre écriture, tout en permettant des comportements complexes.\\
 			Pour finir, une tâche est l'ensemble des activités et actions qui concernent un comportement. On peut donc voir une tâche comme l'activité racine, un peu a la manière d'un système de fichier: les activités sont des dossiers et contiennent d'autre dossier, ou des fichiers que sont les actions.
-		\subsubsection{Subsomption Hiérarchique et Exécution}
+		\subsection{Subsomption Hiérarchique et Exécution}
 		
 			Une architecture de subsomption permet de hiérarchiser différents comportement entre eux, afin d'obtenir un comportement complexe. Dans un ordre défini, la subsomption interroge tour à tour la condition d'activation de ses différents blocs comportement, et exécute le premier dont la condition est valide. Par exemple, modéliser le comportement d'un mouton peut se faire en deux blocs. Un premier bloc "Brouter", toujours valide. Au dessus de celui ci, donc avec une priorité plus importante, un autre bloc "Fuir", qui s'active dès que le mouton à perçu un prédateur dans un temps déterminé. Ainsi, tant qu'aucun grand méchant loup n'est en vue, le mouton va brouter paisiblement. Dès qu'il en verra un, alors il pourra fuir.
 			
@@ -84,16 +92,8 @@
 			Pour reprendre l'exemple du mouton, nous pouvons complexifier sont comportement, en transformant son action "Fuir", en une activité "Fuir" contenant deux actions. L'action prioritaire "Esquiver" a pour condition le fait le voir le loup droit devant, et consiste à fuir mais en tournant, afin d'éviter le loup. Ensuite, la deuxième action, "Pleine Puissance" est l'action par défaut, sans condition, qui consiste à courir tout droit tant que le loup n'a pas été vu depuis un certain temps.
 			
 			La condition d'activation de l'activité "Fuir" définie plus tôt, le fait d'avoir vu un prédateur dans les dernières secondes/minutes, est alors nécessaire à l'activation des deux actions "Esquiver" et "Pleine Puissance" sans que nous ayons à les réécrire explicitement.
-	
-	\subsection{Interruption : Motivation}
-		\subsubsection{Etat de l'art rapide sur la Motivation}
-			Les deux types de motivation qu'on a pu croiser dans la littérature. La motivation comme stimulus source de l'action (Drogoul), et la motivation comme perception interne (Flow), guide de l'action. On utilise les deux pour deux cas différents.
-		\subsubsection{Action Démotivante et Tâche Motivée}
-			On se base sur l'idée du Flow. Nos agents vont essayer d'estimer leur apport a la société dans leur tâche actuelle. Ainsi, lorsqu'un agent verra qu'il n'arrive pas a réaliser sa tâche, il sera dans l'état de malaise décrit pas le Flow et cherchera de plus en plus à changer de tâche. Nous cherchons alors à mesurer l'efficacité de chaque agent dans sa tâche, afin de pouvoir détecter lorsqu'il arrive a la réaliser, mais surtout lorsqu'il n'y arrive pas. Il suffit alors de déterminer dans le comportement de l'agent, quelles sont les actions réalisées lorsque celui ci n'arrive pas a réussir sa tâche. Par exemple, un robot ayant pour tâche de récolter des ressources aura dans cet algorithme une séquence de déplacement aléatoire lorsqu'aucune ressource n'est en vue. Répéter en boucle ce déplacement aléatoire, cette action, est un signe que ce robot n'arrive pas a correctement réaliser sa tâche, il devrait donc essayer de faire autre chose.
 			
-			Nous venons alors ajouter aux Actions définies plus tôt le fait de pouvoir être "Démotivante". Lors de l'exécution d'une action "Démotivante", un agent va baisser sa motivation interne d'un montant défini. Le but est d'augmenter les chances qu'il abandonne cette tâche au profit d'une autre, lors du processus de sélection que nous allons détailler plus tard. L'action de déplacement aléatoire du robot que nous venons de citer est un bon exemple d'Action démotivante. Nous pouvons alors augmenter notre concept de tâche, en disant qu'une tâche est "motivée" lorsqu'elle contient au moins une action démotivante.
-			
-	\subsection{Sélection : Modèle à Seuil}
+	\section{Sélection : Modèle à Seuil}
 		Agent toujours à jours des stimuli internes / externes\\
 		Executer la bonne tâche pour la bonne durée\\
 		
@@ -102,57 +102,83 @@
 		Comparer les scores\\
 		Quand sélectionner une tâche\\
 		
-	\subsection{Notre Modèle de prise de décision}
+	\section{Interruption : Motivation}
+		\subsection{Etat de l'art rapide sur la Motivation}
+			Les deux types de motivation qu'on a pu croiser dans la littérature. La motivation comme stimulus source de l'action (Drogoul), et la motivation comme perception interne (Flow), guide de l'action. On utilise les deux pour deux cas différents.
+		\subsection{Action Démotivante et Tâche Motivée}
+			On se base sur l'idée du Flow. Nos agents vont essayer d'estimer leur apport a la société dans leur tâche actuelle. Ainsi, lorsqu'un agent verra qu'il n'arrive pas a réaliser sa tâche, il sera dans l'état de malaise décrit pas le Flow et cherchera de plus en plus à changer de tâche. Nous cherchons alors à mesurer l'efficacité de chaque agent dans sa tâche, afin de pouvoir détecter lorsqu'il arrive a la réaliser, mais surtout lorsqu'il n'y arrive pas. Il suffit alors de déterminer dans le comportement de l'agent, quelles sont les actions réalisées lorsque celui ci n'arrive pas a réussir sa tâche. Par exemple, un robot ayant pour tâche de récolter des ressources aura dans cet algorithme une séquence de déplacement aléatoire lorsqu'aucune ressource n'est en vue. Répéter en boucle ce déplacement aléatoire, cette action, est un signe que ce robot n'arrive pas a correctement réaliser sa tâche, il devrait donc essayer de faire autre chose.
+			
+			Nous venons alors ajouter aux Actions définies plus tôt le fait de pouvoir être "Démotivante". Lors de l'exécution d'une action "Démotivante", un agent va baisser sa motivation interne d'un montant défini. Le but est d'augmenter les chances qu'il abandonne cette tâche au profit d'une autre, lors du processus de sélection que nous allons détailler plus tard. L'action de déplacement aléatoire du robot que nous venons de citer est un bon exemple d'Action démotivante. Nous pouvons alors augmenter notre concept de tâche, en disant qu'une tâche est "motivée" lorsqu'elle contient au moins une action démotivante.
+	
+	\section{Définir un Agent}
+		Définition d'un agent
+		
+	\section{Conclusion}
+		\subsection{Récapitulatif de notre proposition de modèle de prise de décision}
 		Récapitulatif, exemple et conclusion sur le modèle en entier.
 		L'exemple avancé dans l'article PAAMS pourrait être poussé un peu grâce au travail du stagiaire et à des nouveaux trucs que j'ai compris pendant la paramétrisation complexe du bousin.
 		
-		\subsubsection{Utilisation en Swarm Robotics}
+		\subsection{Utilisation en Swarm Robotics}
 			Les systèmes multi-agents sont souvents utilisés dans la mise en place d'essaims de robots, "Swarm Robotics". Ces essaims consistent en une grande quantité (dizaines) de robots simples, amenés à exécuter des tâches complexes. A l'image de la capacité de fourragement des fourmis est souvent utilisée comme cas d'application, nous avons donc construit notre exemple dans ce contexte. Un ensemble de robots va devoir ramener des ressources à leur base commune. Les ressources sont éparpillées dans l'environnement et doivent être traitées par un robot avant d'être déplacées jusqu'à la base. En plus de cette activité de collecte, les robots vont devoir assurer une surveillance de la base, en patrouillant autour.
 			
-\section{Simulation Multi-Agents d'une colonie d'abeilles}
-	\subsection{Biologie : Connaissances des biologistes sur l'abeille}
-		Synthèse des connaissances, notamment de notre visite à Avignon et ses 43 degrés à l'ombre.\\
-		
-		Rôles et fonctions physiologiques associées.\\
-		Différents rôles de différentes phéromones.\\
-		Modélisation simplifiée : \\
-		Cas classique de la vie d'une abeille.\\
-		Quels changements provoquent quelles réactions dans le métabolisme de l'abeille, et donc dans la répartition du travail.
-	\subsection{Description du modèle adapté}
+	\section*{Conclusion}
+
+\chapter{Simulation Multi-Agents d'une colonie d'abeilles}
+	\section{Description du modèle adapté}
 		Application du modèle théorique à notre simulation de colonie d'abeilles virtuelle.
 		Simplification gigantesque de la biologie de l'abeille, ainsi que des différentes tâches au sein de la colonie.
 		On veut de la répartition des tâches dans le plus simple des contextes.
-	\subsection{Description de l'implémentation}
+	\section{Description de l'implémentation}
 		L'implémentation du modèle de prise de décision décris dans la partie d'avant, et modèle biologique de l'abeille adulte avec le systeme a seuil.
-	\subsection{Calibration}
-		\subsubsection{Calibration rapide - Accélération}
+	\section{Calibration}
+		\subsection{Calibration rapide - Accélération}
 			Dans sa version PAAMS avec la biologie accélérée
 			Obtenir des résultats dans trop de temps de simulation. Le but était de vérifier la répartition des taches a l'aide du modèle, pas encore de chercher une validité biologique.
-		\subsubsection{Calibration biologique - Données directes et indirectes}
+		\subsection{Calibration biologique - Données directes et indirectes}
 			En ajustant les paramètres connus grâce à la biologie, comme les durées de vie ou la durée et fréquence des nourrissements par exemple.
-			Paramétristaion des paramètres indirects, ou émergents, comme par exemple le fameux "UNE nourrice s'occupe de DEUX larves", qui n'est codé nul part mais qu'on doit retrouver. [Spoiler alert on le retrouve pas, et je ne sais pas pourquoi]
-	\subsection{Analyse des résultats}
+			Paramétristaion des paramètres indirects, ou émergents, comme par exemple le fameux "UNE nourrice s'occupe de DEUX larves", qui n'est codé nul part mais qu'on doit retrouver.
+	\section{Evaluation Expe resultats et conclusion}
 		Ce qui marche, ce que ça montre et ce qui ne marche pas, et ce que ça peut vouloir dire.
+			
+	\section*{Conclusion}
+
+
+\chapter{Etat de l'art: Simulation Multi-Agents Interactives}
+	\section{SMA : Recréer et comprendre des systemes complexes existants par l'interaction}
+		Comprendre les mécanismes, créer un modèle puis évaluer l'impact des différents paramètres sur l'évolution du comportement du système.
+	\section{Manipuler et observer ces systèmes complexes}
+		Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilsation d'interacteurs tangibles.
+	Comment mieux comprendre un système complexe : Environnement immersif et interacteurs tangibles. Ruche, cadre et connaissances apicoles.
+	\section{DataViz}
+		Comment visualiser de grande quantité de données, les données micro.
+	\section{Interaction / visu immersive pour comprendre}
+		Environnement immersif
+	\section{Interaction tangible}
+		Interacteurs tangibles
 		
 			
-\section{État de L'art VISU INTER}
-	Comment mieux comprendre un système complexe : Environnement immersif et interacteurs tangibles. Ruche, cadre et connaissances apicoles.
-	\subsection{DataViz}
-		Comment visualiser de grande quantité de données, les données micro.
-	\subsection{Interaction / visu immersive pour comprendre}
-		Environnement immersif
-	\subsection{Interaction tangible}
-		Interacteurs tangibles
-\section{Proposition visu interaction}
+	\section*{Conclusion}
+		
+		
+		
+		
+\chapter{Proposition visu interaction}
 	Notre proposition
-	\subsection{Interaction Immersive avec Manettes}
+	\section{Interaction Immersive avec Manettes}
 		Manipulation des cadres avec les manettes
-	\subsection{Interaction Immersice ET tangible}
+	\section{Interaction Immersice ET tangible}
 		L'apport et les contraintes du tangible (qu'il faut encore définir) pour la manipulation des cadres
-	\subsection{Visualisation : Graph3D sur l'état interne de la colonie}
+	\section{Visualisation : Graph3D sur l'état interne de la colonie}
 		Le graph3D et les information qu'il apporte
-	\subsection{Résultats/Évaluation Visualisation Interactive proposée}
-\section{Discussions}
+	\section{Résultats/Évaluation Visualisation Interactive proposée}
+	
+			
+	\section*{Conclusion}
+	
+	
+	
+	
+\chapter*{Discussions}
 	Comment l'ensemble se comporte et avis critique sur la totalité. Notamment le modèle multi agent simplifié qui apporte une quantité gigantesque de biais.
 \section*{Conclusion}
 	C'était cool
