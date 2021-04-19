@@ -25,6 +25,8 @@ public abstract class Agent
 	
 	public int getRealAge() {return age;}
 	
+	public abstract void logTurn(MyLogger logger, int turnIndex);
+	
 	public void activateLogger()
 	{
 		loggerAgent = true;

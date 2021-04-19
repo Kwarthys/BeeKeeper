@@ -4,7 +4,6 @@ import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.agent.WorkingAgentServices;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.stimuli.StimuliMap;
-import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Activity;
 import com.beekeeper.model.tasks.Task;

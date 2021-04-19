@@ -41,7 +41,7 @@ def getTimeStepsListFromExpeDict(dict):
 	
 #PROGRAM
 
-linesEntry = int(input("LineNumber "));
+linesEntry = int(input("ColumnNumber "));
 rowsEntry = int(input("RowNumber "));
 printBeesEntry = input("printBees ");
 
@@ -100,9 +100,10 @@ for f in files:
 	#A_Classic_NewBorn_1000_0_518400_HJInc1.8518518518518519E-6
 	#fileImportantName = fileTags[1] + " " + fileTags[2] + " " + fileTags[3] + " " + fileTags[6];	
 	
-	#fileImportantName = fileTags[0] + ": " + fileTags[2] + " larvae:" + fileTags[4]# + " FeedingAmount:" + fileTags[7]
+	fileImportantName = fileTags[0] + ": " + fileTags[2] + " " + fileTags[4] + "larvae."
+	
 	#fileImportantName = fileTags[0] + ": Acc" + fileTags[6]
-	fileImportantName = fileTags[0] + ": " + fileTags[7]
+	#fileImportantName = fileTags[0] + ": " + fileTags[7]
 	#if(len(fileTags) >= 9):
 	#	fileImportantName += " " + fileTags[8]
 	
@@ -289,7 +290,7 @@ if printManyBees:
 			index += 1
 		
 		findex += 1
-		plt.savefig(key[0] + "perBees.png");		
+		plt.savefig("perBees" + key[0] + ".png");		
 		
 
 '''

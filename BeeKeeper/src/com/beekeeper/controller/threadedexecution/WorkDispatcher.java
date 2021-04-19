@@ -23,7 +23,7 @@ public class WorkDispatcher {
 		for(PersistentExecutorThread t : threads)
 		{
 			t.askInterruption();
-			t.addWork(dummy);
+			t.addWork(dummy); //to free the thread from the waiting lock
 		}
 	}
 	

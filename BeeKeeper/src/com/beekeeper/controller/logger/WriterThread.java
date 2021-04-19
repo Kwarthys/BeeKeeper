@@ -9,7 +9,7 @@ import com.beekeeper.parameters.ModelParameters;
 
 public class WriterThread extends Thread {
 
-	private ArrayBlockingQueue<String> work = new ArrayBlockingQueue<String>((int) ((ModelParameters.NUMBER_BEES + ModelParameters.NUMBER_LARVAE) * 1.5));
+	private ArrayBlockingQueue<String> work = new ArrayBlockingQueue<String>(ModelParameters.colonyMajoredEstimatedMaxSize);
 	public volatile boolean running = true;
 	public volatile boolean done = false;
 	

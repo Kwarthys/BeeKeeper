@@ -50,7 +50,7 @@ public class ModelParameters
 	public static boolean FORAGERS_DIE_SOONER = true;
 	
 	/**
-	 * The queen's speed is calculated upon that
+	 * Adjust the queen's laying speed to maintain this number of larvae for the duration of the simulation
 	 */
 	public static int COLONY_TARGET_SIZE = 2000;
 	/*****************************/
@@ -63,10 +63,15 @@ public class ModelParameters
 	public static final int DAY = (int) (24 * HOUR);
 	/******************/
 	
-	//Normal age (nurse) go a year, foraging go 30days, at 20+10 rouglhy. 11months->11days while foraging (*30)
-	public static int foragingAgePenalty = 30;
+	//Normal age (nurse) go a year, foraging go 30days, at 20+10 rouglhy. 11months->11days while foraging (*30) (*30 was a bit too high so pushed back to *25)
+	public static int foragingAgePenalty = 25;
 	public static int maxTimestepAge;
 	public static int timestepLarvaPop;
+	
+	/**
+	 * Total agent population should not be higher than that. This is used for the capacity of different buffers
+	 */
+	public static int colonyMajoredEstimatedMaxSize;
 
 	//Free 1957 : Tranmission of food between worker -> Empty stomach after 8ish hours of starvation
 	//Wang et al 2016: starved honey bees for 12hours -> 50%bee died
@@ -144,7 +149,7 @@ public class ModelParameters
 	//public static double hjReduction = 0.0000000023;
 	//public static double hjReduction = HJ_INCREMENT / EO_EQUILIBRIUM; //EO alteration compensates HJ timely emission at EO_Equilibrium EO Amount
 	
-	public static double EOEmissionPower = 1.0;
+	public static double EOEmissionPower = 0.5;
 	
 	public static final double getHJModifiedByEthyleOleate(double ethyleOleateAmount)
 	{
@@ -155,7 +160,7 @@ public class ModelParameters
 		return reduction;
 	}
 	
-	public static double LARVA_EO_EMISSION_COEF = 1.5;
+	public static double LARVA_EO_EMISSION_COEF = 2; //Found experimentally
 	
 	/**
 	 * Re calculate all the parameters given potentially new fundamental parameters
@@ -191,10 +196,12 @@ public class ModelParameters
 		FORAGING_TIME = Math.max(20 * MINUTE / SIMU_ACCELERATION, 20);
 		FORAGING_ENERGYCOST = 0.3 / FORAGING_TIME;
 		
-		LAYEGG_MEANDURATION = (50 * DAY) / COLONY_TARGET_SIZE / SIMU_ACCELERATION;
+		LAYEGG_MEANDURATION = timestepLarvaPop / COLONY_TARGET_SIZE;
 		
-		/* want it to be half tired after an hour */
-		QUEEN_TASKS_ENERGYCOSTS = 1.0/HOUR * SIMU_ACCELERATION;
+		colonyMajoredEstimatedMaxSize = 3 * (COLONY_TARGET_SIZE + NUMBER_BEES + NUMBER_LARVAE);
+		
+		/* want it to be tired after an hour */
+		QUEEN_TASKS_ENERGYCOSTS = 0;//1.0/HOUR * SIMU_ACCELERATION;
 
 		RESTTASK_RESTORATION = 1.0/(20*MINUTE) * SIMU_ACCELERATION;
 		
@@ -242,8 +249,20 @@ public class ModelParameters
 	public static char identifier = '-';
 	
 	public static String getModelState()
-	{
+	{		
 		StringBuffer sb = new StringBuffer();
+		
+		if(SPAWN_A_QUEEN && FORAGERS_DIE_SOONER && LARVA_CAN_HATCH && !BYPASS_MOTIVATION && !BYPASS_PHYSIOLOGY)
+		{
+			sb.append("Real");
+		}
+		else if(!BYPASS_MOTIVATION && !BYPASS_PHYSIOLOGY)
+		{
+			sb.append("Classic");
+		}
+		
+		
+		
 		if(BYPASS_MOTIVATION)
 		{
 			sb.append("NoMot");
@@ -251,11 +270,6 @@ public class ModelParameters
 		if(BYPASS_PHYSIOLOGY)
 		{
 			sb.append("NoPhysio");
-		}
-		
-		if(!BYPASS_MOTIVATION && !BYPASS_PHYSIOLOGY)
-		{
-			sb.append("Classic");
 		}
 		return sb.toString();
 	}

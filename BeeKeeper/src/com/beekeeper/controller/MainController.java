@@ -416,7 +416,7 @@ public class MainController
 		logTurnInterval = Math.max(logTurnInterval, 1); //can't be lower than 1 or that % will explode
 
 		turnIndex = 0;
-		int displayBar = 30;
+		int displayBar = 70;
 
 		System.out.print("|");
 		for(int i = 1; i < displayBar-1; ++i)
@@ -425,7 +425,7 @@ public class MainController
 		}
 		System.out.println("|");
 
-		if(ModelParameters.LOGGING)logger.log("turnIndex", "beeID", "TaskName", "HJ", "EO");
+		if(ModelParameters.LOGGING)logger.log("TurnIndex", "BeeID", "TaskName", "HJ", "EO", "RealAge", "pHExchanged");
 
 		while(turnIndex < ModelParameters.SIMU_LENGTH && !closed && !restartAsked)
 		{
@@ -491,8 +491,7 @@ public class MainController
 							a.live();
 							if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
 							{
-								WorkingAgent w = (WorkingAgent) a;
-								logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()));				
+								a.logTurn(logger, turnIndex);
 							}
 						}
 

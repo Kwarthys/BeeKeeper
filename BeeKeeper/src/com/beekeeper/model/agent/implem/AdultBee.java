@@ -76,7 +76,7 @@ public class AdultBee extends WorkingAgent
 		if(activeAge > ModelParameters.maxTimestepAge)
 		{
 			alive = false; //death from old age
-			System.out.println("DEATH FROM OLD AGE");
+			//System.out.println("DEATH FROM OLD AGE at " + age + " s.");
 		}
 		
 		if(isInside())

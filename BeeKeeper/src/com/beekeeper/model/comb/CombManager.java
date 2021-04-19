@@ -13,7 +13,7 @@ import com.beekeeper.controller.threadedexecution.WorkDispatcher;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.EmitterAgent;
-import com.beekeeper.model.agent.WorkingAgent;
+import com.beekeeper.model.agent.FakeAgent;
 import com.beekeeper.model.comb.cell.CellContent;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.manager.StimuliManager;
@@ -36,7 +36,7 @@ public class CombManager {
 
 	private Dimension combSize = new Dimension(78,50);
 	
-	private int startingPopulationOfThreadPoll = 5;
+	private int startingPopulationOfThreadPoll = 1;
 	private WorkDispatcher workDispatcher = new WorkDispatcher(startingPopulationOfThreadPoll);
 
 	private CombManagerServices combManagerServices = new CombManagerServices() {		
@@ -112,8 +112,7 @@ public class CombManager {
 		{
 			for(Agent a : combs.get(i).getAgents())
 			{
-				WorkingAgent w = (WorkingAgent) a;
-				logger.log(String.valueOf(turnIndex), String.valueOf(w.getID()), w.getTaskName(), String.valueOf(w.getPhysio()), String.valueOf(w.getEO()), String.valueOf(w.getRealAge()), String.valueOf(w.getTotalExchangedAmount()));
+				a.logTurn(logger, turnIndex);
 			}
 		}
 	}
@@ -149,7 +148,7 @@ public class CombManager {
 	
 	public void shutDownExecutionThreads()
 	{
-		workDispatcher.stopAllThreads(combs.get(0).getAgents().get(0));
+		workDispatcher.stopAllThreads(new FakeAgent());
 	}
 	
 	private void liveAgentsThreaded() throws InterruptedException

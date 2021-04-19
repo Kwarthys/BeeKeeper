@@ -2,10 +2,12 @@ package com.beekeeper.model.agent;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
+import com.beekeeper.controller.logger.MyLogger;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
@@ -17,6 +19,8 @@ import com.beekeeper.parameters.ModelParameters;
 
 public abstract class WorkingAgent extends EmitterAgent
 {
+	private static DecimalFormat df = new DecimalFormat("#.####");
+	
 	protected ArrayList<Task> taskList = new ArrayList<>();
 	protected abstract void fillTaskList();
 
@@ -193,6 +197,12 @@ public abstract class WorkingAgent extends EmitterAgent
 	 * For now only the queen implements this and can lay eggs. In the future they might all brood
 	 */
 	protected void layEgg() {};
+	
+	@Override
+	public void logTurn(MyLogger logger, int turnIndex)
+	{
+		logger.log(String.valueOf(turnIndex), String.valueOf(getID()), getTaskName(), df.format(getPhysio()), df.format(getEO()), String.valueOf(getRealAge()), df.format(getTotalExchangedAmount()));
+	}
 
 	public void live()
 	{		
@@ -294,12 +304,26 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 
-		//If action is over, remove it
-		if(currentAction.isOver()) // TODO NullPointer right here
+		try 
 		{
-			//System.out.println("Action done");
-			currentAction = null;
+			
+			//If action is over, remove it
+			if(currentAction.isOver()) // TODO Explosive rare NullPointer right here
+			{
+				//System.out.println("Action done");
+				currentAction = null;
+			}
+			
+			
 		}
+		catch(Exception e)
+		{
+			System.out.println("currentTask: " + currentTask + " chooseNewTask: " + chooseNewTask(s).taskName);			
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
+		
 
 
 		if(cooperativeInteractor != null)
@@ -375,6 +399,12 @@ public abstract class WorkingAgent extends EmitterAgent
 				taskScore = currentScore;
 			}
 		}
+		
+		if(todo==null)
+		{
+			System.out.println("WorkingAgent - FindATask() - couldn't find a task and returned null");
+		}
+		
 		return todo;
 	}
 

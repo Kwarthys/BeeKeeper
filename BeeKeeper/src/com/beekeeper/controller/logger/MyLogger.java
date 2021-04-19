@@ -12,7 +12,9 @@ public class MyLogger
 	
 	public MyLogger()
 	{
-		writer = new WriterThread(getParam());
+		String params = getParam();
+		writer = new WriterThread(params);
+		System.out.println("Created log file " + params);
 	}
 	
 	public MyLogger(int beeID)
