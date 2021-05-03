@@ -20,6 +20,16 @@ public abstract class Action implements TaskNode {
 	}
 
 	public abstract void execute();
+	
+	public void setDurationTimeStep(double duration)
+	{
+		this.totalTimeSteps = Math.max(duration, 1);
+	}
+	
+	public int getDuration()
+	{
+		return (int)totalTimeSteps;
+	}
 
 	@Override
 	public abstract boolean check();

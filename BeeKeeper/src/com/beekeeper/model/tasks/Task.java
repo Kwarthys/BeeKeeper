@@ -41,6 +41,10 @@ public abstract class Task
 	public Action search()
 	{
 		Action a = rootActivity.search();
+		if(a==null)
+		{
+			System.err.println(taskName + " no task node available");
+		}
 		return a;
 	}
 }

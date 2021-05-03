@@ -5,12 +5,40 @@ import com.beekeeper.model.agent.AgentType;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.stimuli.Stimulus;
 import com.beekeeper.model.stimuli.manager.StimuliManagerServices;
+import com.beekeeper.model.tasks.beetasks.EggTask;
 import com.beekeeper.model.tasks.beetasks.LarvaTask;
+import com.beekeeper.model.tasks.beetasks.NympheaTask;
 import com.beekeeper.parameters.ModelParameters;
 
 public class BroodBee extends WorkingAgent
-{
+{	
+	public static enum LarvalState{ Egg, Larva, Nymphea, None};
+	
+	@Override
+	public LarvalState getLarvalState()
+	{
+		if(!ModelParameters.LARVA_CAN_HATCH)
+		{
+			return LarvalState.Larva;
+		}
+		
+		if(age < ModelParameters.larvaEggUntilAge)
+		{
+			return LarvalState.Egg;
+		}
+		else if(age < ModelParameters.larvaLarvaUntilAge)
+		{
+			return LarvalState.Larva;
+		}
+		else
+		{
+			return LarvalState.Nymphea;
+		}
+	}
+	
 	private int cantBeFed = 0;
+	
+	private boolean requireFood = false;
 	
 	public BroodBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, boolean randomInit) {
 		super(stimuliManagerServices, controllerServices, randomInit);
@@ -31,19 +59,31 @@ public class BroodBee extends WorkingAgent
 	{
 		if(randomInit)
 		{
-			age = (int) (Math.random() * ModelParameters.timestepLarvaPop);			
+			double state = Math.random();
+			if(state < .33)
+			{
+				age = (int) (Math.random() * ModelParameters.larvaEggUntilAge);
+			}
+			else if(state < .66)
+			{
+				age = ModelParameters.larvaEggUntilAge + (int) (Math.random() * (ModelParameters.larvaLarvaUntilAge-ModelParameters.larvaEggUntilAge));
+			}
+			else
+			{
+				age = ModelParameters.larvaLarvaUntilAge + (int) (Math.random() * (ModelParameters.larvaNympheaUntilAge - ModelParameters.larvaLarvaUntilAge));				
+			}
 		}
 		else
 		{
 			age = 0;
 		}
 		
-		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.EO_EQUILIBRIUM);
+		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);
 	}
 	
 	@Override
 	public boolean isHungry() {
-		return this.getEnergy() < 0.8 && cantBeFed == 0;
+		return this.getEnergy() < 0.8 && cantBeFed == 0 && requireFood;
 	}
 	
 	@Override
@@ -58,6 +98,8 @@ public class BroodBee extends WorkingAgent
 	protected void fillTaskList() 
 	{
 		this.taskList.add(new LarvaTask(ownServices));
+		this.taskList.add(new NympheaTask(ownServices));
+		this.taskList.add(new EggTask(ownServices));
 	}
 
 	@Override
@@ -69,7 +111,21 @@ public class BroodBee extends WorkingAgent
 		}
 		
 		//if(getID() == 0)System.out.println(getStringName() + " " + getEnergy() + " - " + ModelParameters.LARVAE_HUNGER_INCREMENT + " + " + ModelParameters.LARVAE_FEEDING_INCREMENT);
-		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);
+		//this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);//Moved in larva task
+		
+		if(getLarvalState() == LarvalState.Larva)
+		{
+			requireFood = true;
+		}
+		else
+		{
+			requireFood = false;
+		}
+		
+		if(!ModelParameters.LARVA_CAN_HATCH)
+		{
+			age--; //brood not aging : preventing them to hatch while keeping the brood diversity
+		}
 		
 		if(age > ModelParameters.timestepLarvaPop && ModelParameters.LARVA_CAN_HATCH)
 		{

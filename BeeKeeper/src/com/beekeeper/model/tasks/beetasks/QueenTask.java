@@ -13,6 +13,13 @@ public class QueenTask extends Task {
 	private boolean moved = false;
 	
 	public static final String queenTaskName = "QueenTask";
+	
+	private Action layEggAction;
+	
+	public void updateLayEggDuration(double duration)
+	{
+		layEggAction.setDurationTimeStep(duration);
+	}
 
 	public QueenTask(WorkingAgentServices agentServices) {
 		super(agentServices, queenTaskName);
@@ -20,7 +27,7 @@ public class QueenTask extends Task {
 		this.motivated = false;
 
 		//LAY EGG
-		this.rootActivity.addTaskNode(new Action(ModelParameters.LAYEGG_MEANDURATION, ModelParameters.QUEEN_TASKS_ENERGYCOSTS, agentServices) {
+		layEggAction = new Action(ModelParameters.LAYEGG_MEANDURATION, ModelParameters.QUEEN_TASKS_ENERGYCOSTS, agentServices) {
 			
 			@Override
 			public void execute() {
@@ -32,7 +39,8 @@ public class QueenTask extends Task {
 			public boolean check() {
 				return cellFound;
 			}
-		});
+		};
+		this.rootActivity.addTaskNode(layEggAction);
 
 		//INSPECT CELL
 		this.rootActivity.addTaskNode(new Action(1,ModelParameters.QUEEN_TASKS_ENERGYCOSTS, agentServices) {
@@ -67,7 +75,7 @@ public class QueenTask extends Task {
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return agentServices.getOvarianDev()/1.5;
+		return agentServices.getOvarianDev() > .99 ? ModelParameters.MAX_MOTIVATION : 0;
 	}
 
 }

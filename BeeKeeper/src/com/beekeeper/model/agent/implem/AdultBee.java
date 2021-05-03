@@ -19,15 +19,14 @@ public class AdultBee extends WorkingAgent
 {		
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
-		super(stimuliManagerServices, controllerServices, true);
-		this.type = AgentType.ADULT_BEE;
-		
-		this.currentTask = taskList.get(0);
+		this(stimuliManagerServices, controllerServices, true);
 	}
 
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, boolean randomInit)
 	{
 		super(stimuliManagerServices, controllerServices, randomInit);
+		this.type = AgentType.ADULT_BEE;
+		this.currentTask = taskList.get(0);
 	}
 
 	@Override
@@ -37,6 +36,7 @@ public class AdultBee extends WorkingAgent
 		{			
 			hjTiter = ModelParameters.getStartingBeeHJTiter();//Math.random() * Math.random() * Math.random();
 			age = ModelParameters.getAgeFromStartingHJ(hjTiter);
+			activeAge = age;
 		}
 		else
 		{
@@ -61,11 +61,17 @@ public class AdultBee extends WorkingAgent
 	@Override
 	protected void advanceMetabolism()
 	{		
+		boolean debug = false;//Math.random() > .99;
+		
+		if(debug && getTaskName() == ForagerTask.foragingTaskName)System.out.println(getID() + " Inside? " + isInside());
+		
 		if(currentTask != null)
 		{
 			if(currentTask.taskName == ForagerTask.foragingTaskName && ModelParameters.FORAGERS_DIE_SOONER)
 			{
 				activeAge += ModelParameters.foragingAgePenalty;
+				
+				if(debug)System.out.println("ageForagePenalty " + ModelParameters.maxTimestepAge + " - " + activeAge);
 			}
 			else
 			{
@@ -76,7 +82,7 @@ public class AdultBee extends WorkingAgent
 		if(activeAge > ModelParameters.maxTimestepAge)
 		{
 			alive = false; //death from old age
-			//System.out.println("DEATH FROM OLD AGE at " + age + " s.");
+			//System.out.println("DEATH FROM OLD AGE at " + (int)(age / ModelParameters.DAY) + " days.");
 		}
 		
 		if(isInside())

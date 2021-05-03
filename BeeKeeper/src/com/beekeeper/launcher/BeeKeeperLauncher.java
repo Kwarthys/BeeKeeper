@@ -72,7 +72,7 @@ public class BeeKeeperLauncher
 		mc.start();
 		long progTime = (System.nanoTime() - start)/1000000;
 		long simuTime = (long) (ModelParameters.SIMU_LENGTH / ModelParameters.secondToTimeStepCoef);
-		System.out.println("Prog took " + progTime + "ms to simulate " + simuTime + "s (x" + simuTime*1000.0/progTime + "). " + (expeID+1));
+		System.out.println("Prog took " + progTime + "ms to simulate " + simuTime + "s (x" + simuTime*1000.0/progTime + ") " + (expeID+1) +".\n");
 	}
 	
 	public static void startMultipleExpeMode()
@@ -83,7 +83,7 @@ public class BeeKeeperLauncher
 		//ModelParameters.NB_BEE_LOGGING = 24;
 		
 		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;
-		ModelParameters.SIMU_LENGTH = 40 * ModelParameters.DAY;
+		ModelParameters.SIMU_LENGTH = 30 * ModelParameters.DAY;
 		ModelParameters.NUMBER_BEES = 500;
 		ModelParameters.NUMBER_LARVAE = 500;
 		ModelParameters.NUMBER_FRAMES = 1;
@@ -91,37 +91,38 @@ public class BeeKeeperLauncher
 		ModelParameters.LARVA_CAN_HATCH = true;
 		ModelParameters.FORAGERS_DIE_SOONER = true;
 		ModelParameters.SPAWN_A_QUEEN = true;
-		ModelParameters.COLONY_TARGET_SIZE = 800;
 		
 		
 		//10000 - 5000 - 8 - 10D : Prog took 24711954ms to simulate 864000s (x34.96283620469672).
 		//500 - 700 - 8 - 10D : Prog took 1713176ms to simulate 864000s (x504.326467333187).
+		//500 - 500 - 1 - 70D : Prog took 10558079ms to simulate 6048000s (x572.8314781505234).
 		
 		
 		//StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
-		int[] nb = {200,600,1200};
+		int[] nb = {250,500,1000};
+		int[] c = {1,10,20};
 		//double[] c = {1/2.0,3,5,10,50,100,200,500,1000};
 
-		ModelParameters.startMode = StartMode.NewBorn;
-		ModelParameters.COLONY_TARGET_SIZE = 2000;
-		for(int j = 0; j < 3; ++j)
+		ModelParameters.startMode = StartMode.Random20;
+		ModelParameters.queenAgeBeforeLaying = 0;
+		for(int j = 1; j < 3; ++j)
 		{
-			ModelParameters.NUMBER_LARVAE = nb[j];
-
+			ModelParameters.LARVA_EO_EMISSION_COEF = c[j];
 			for(int i = 0; i < 3; ++i)
 			{
-				ModelParameters.NUMBER_BEES = nb[i];
+				ModelParameters.NUMBER_LARVAE = nb[i];
 				startExpeAndMonitorTime(i + 3*j);	
 			}
 		}
-/*
-		ModelParameters.COLONY_TARGET_SIZE = 2000;
 
-		ModelParameters.startMode = StartMode.NewBorn;
-		for(int i = 0; i < 3 ; ++i)
+/*
+		ModelParameters.queenAgeBeforeLaying = 0;
+		ModelParameters.NUMBER_LARVAE = 0;
+		
+		ModelParameters.startMode = StartMode.Old;
+		for(int i = 0; i < 9 ; ++i)
 		{
-			ModelParameters.NUMBER_BEES = nb[i];
-			ModelParameters.NUMBER_LARVAE = nb[3-i];
+			ModelParameters.LARVA_EO_EMISSION_COEF = i+10;
 			startExpeAndMonitorTime(i);
 		}
 */
@@ -134,10 +135,9 @@ public class BeeKeeperLauncher
 		*/
 
 /*
-		ModelParameters.startMode = StartMode.Random;
-		ModelParameters.COLONY_TARGET_SIZE = 200;
-		ModelParameters.NUMBER_LARVAE = 200;
-		startExpeAndMonitorTime(1);
+		ModelParameters.startMode = StartMode.Random80;
+		ModelParameters.queenAgeBeforeLaying = 0;
+		startExpeAndMonitorTime(3);
 */
 		Toolkit.getDefaultToolkit().beep();
 		System.out.println("All Expes Done");

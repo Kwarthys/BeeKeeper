@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import com.beekeeper.controller.AgentFactory;
 import com.beekeeper.controller.MainControllerServices;
@@ -85,6 +86,17 @@ public class CombManager {
 		}
 	};
 	
+	public ArrayList<Agent> getTotalCombPopulation()
+	{
+		ArrayList<Agent> a = new ArrayList<>();
+		for(Comb c : combs)
+		{
+			a.addAll(c.getAgents());
+		}
+		
+		return a;
+	}
+	
 	public void printCombPopulations()
 	{
 		System.out.println("\n" + getNumberOfAgents() + " agents:");
@@ -106,20 +118,31 @@ public class CombManager {
 		return n;
 	}
 	
-	public void logTurn(MyLogger logger, int turnIndex) throws InterruptedException
+	public void logTurn(MyLogger logger, int turnIndex, List<Agent> foragers) throws InterruptedException
 	{
-		for(int i = 0; i < combs.size(); i++)
+		for(Agent a : foragers)
 		{
-			for(Agent a : combs.get(i).getAgents())
+			if(a!=null)
 			{
 				a.logTurn(logger, turnIndex);
 			}
 		}
+		
+		for(int i = 0; i < combs.size(); i++)
+		{
+			for(Agent a : combs.get(i).getAgents())
+			{
+				if(a!=null)
+				{
+					a.logTurn(logger, turnIndex);
+				}
+			}
+		}
 	}
 	
-	public void liveAgents(boolean timeAccelerated) throws InterruptedException
+	public void liveAgents(boolean timeAccelerated, List<Agent> foragers) throws InterruptedException
 	{
-		liveAgentsThreaded();	
+		liveAgentsThreaded(foragers);	
 		
 		/*
 		if(!timeAccelerated)
@@ -151,7 +174,7 @@ public class CombManager {
 		workDispatcher.stopAllThreads(new FakeAgent());
 	}
 	
-	private void liveAgentsThreaded() throws InterruptedException
+	private void liveAgentsThreaded(List<Agent> foragers) throws InterruptedException
 	{
 		/******* OLD VERSION USING TERMINATING THREADS *******/
 		/*		 
@@ -197,6 +220,8 @@ public class CombManager {
 		/******* NEW VERSION USING PERSISTENT THREAD POLL *****/
 		
 		boolean debugWorkAllocation = false;
+
+		workDispatcher.getThatWorkDone(foragers);
 		
 		ArrayList<Agent> lastInsideCombList = new ArrayList<>();
 		
@@ -234,7 +259,7 @@ public class CombManager {
 			lastInsideCombList.clear();
 		}
 		
-		workDispatcher.waitForWorkToEnd();
+		workDispatcher.waitForWorkToEnd();		
 		if(debugWorkAllocation)System.out.println("TheEnd\n");
 	}
 	
@@ -245,6 +270,7 @@ public class CombManager {
 			a.hostCell.inside = null;
 			a.hostCell.content = CellContent.empty;
 			a.hostCell.notifyAgentLeft(a);
+			
 		}
 		else if(a.isInside())
 		{
@@ -431,6 +457,7 @@ public class CombManager {
 	
 	private float getLarvaCoef(int totalCombAmount, int combNumber)
 	{
+		/*
 		float middle = (totalCombAmount + 1) / 2.0f;
 		
 		float distance = Math.abs(combNumber * 1.0f - middle);
@@ -440,6 +467,9 @@ public class CombManager {
 		//System.out.println(combNumber + " / " + totalCombAmount + " mid:" + middle + " d:" + distance + " -> " + coef);
 		
 		return coef;
+		*/
+		System.out.println("Brood nice repartition disabled - CombManager - GetLarvaeCoef");
+		return 0.5f;
 	}
 
 	public void hitFrame(int frameIndex)
@@ -452,7 +482,7 @@ public class CombManager {
 		spreadAgentsAround(cb, frameIndex*2, frameIndex*2+1);
 	}
 
-	private void spreadAgentsAround(Comb c, int sourceA, int sourceB)
+	private void spreadAgentsAround(Comb c, int combSourceA, int combSourceB)
 	{
 		float dropRate = 0.95f;
 		
@@ -472,7 +502,7 @@ public class CombManager {
 				do
 				{
 					newCombId = (int)(Math.random() * combs.size());
-				}while(newCombId == sourceA || newCombId == sourceB);
+				}while(newCombId == combSourceA || newCombId == combSourceB);
 
 				it.remove();
 				

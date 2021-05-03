@@ -14,8 +14,8 @@ public class CombCell
 	public int x,y;
 	public int number;
 	
-	public Agent visiting = null;
-	public WorkingAgent inside = null;
+	public volatile Agent visiting = null;
+	public volatile WorkingAgent inside = null;
 	
 	public CellContent content = CellContent.empty;
 	

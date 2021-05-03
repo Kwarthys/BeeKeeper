@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.parameters.ModelParameters;
 
 public class StimuliMap
 {
 	//private int counter = (int)(Math.random()*1000);
 	
-	private MainControllerServices controllerServices;
+	//private MainControllerServices controllerServices;
 	
 	public int agentID;
 	
 	private double totalExchangedAmount = 0;
+	
+	private HashMap<Stimulus, Double> amounts = new HashMap<>();
 	
 	public void evaporateExchangedAmount()
 	{
@@ -27,12 +28,12 @@ public class StimuliMap
 		return totalExchangedAmount;
 	}
 	
+	/*
 	public void setControllerServices(MainControllerServices controllerServices)
 	{
 		this.controllerServices = controllerServices;
 	}
-	
-	private HashMap<Stimulus, Double> amounts = new HashMap<>();
+	*/
 	
 	public StimuliMap(StimuliMap toCopy)
 	{
@@ -147,6 +148,7 @@ public class StimuliMap
 			}
 		}
 		
+		/*
 		MainControllerServices controllerServices = null;
 		
 		if(map1.controllerServices != null)
@@ -157,14 +159,15 @@ public class StimuliMap
 		{
 			controllerServices = map2.controllerServices;
 		}
+		*/
 		
-		if(controllerServices!=null)
-		{
+		//if(controllerServices!=null)
+		//{
 			double exchangedAmount = Math.abs(map1.getAmount(Stimulus.EthyleOleate) - map2.getAmount(Stimulus.EthyleOleate))/2;
-			controllerServices.notifyAgentContact(map1.agentID, map2.agentID, exchangedAmount);
+			//controllerServices.notifyAgentContact(map1.agentID, map2.agentID, exchangedAmount);
 			map1.totalExchangedAmount += exchangedAmount;
 			map2.totalExchangedAmount += exchangedAmount;
-		}
+		//}
 		
 		for(Stimulus s : smells)
 		{

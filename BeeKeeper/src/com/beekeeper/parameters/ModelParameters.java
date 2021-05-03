@@ -49,10 +49,6 @@ public class ModelParameters
 	public static boolean LARVA_CAN_HATCH = true;
 	public static boolean FORAGERS_DIE_SOONER = true;
 	
-	/**
-	 * Adjust the queen's laying speed to maintain this number of larvae for the duration of the simulation
-	 */
-	public static int COLONY_TARGET_SIZE = 2000;
 	/*****************************/
 	
 
@@ -67,6 +63,13 @@ public class ModelParameters
 	public static int foragingAgePenalty = 25;
 	public static int maxTimestepAge;
 	public static int timestepLarvaPop;
+
+	public static int larvaEggUntilAge;
+	public static int larvaLarvaUntilAge;
+	public static int larvaNympheaUntilAge;
+	
+	public static int queenAgeBeforeLaying = 28 * DAY;
+	public static double QUEEN_OVARDEV_INCREMENT;
 	
 	/**
 	 * Total agent population should not be higher than that. This is used for the capacity of different buffers
@@ -95,6 +98,10 @@ public class ModelParameters
 	public static double LARVAE_FEEDING_QUANTITY;
 
 	public static double LARVA_EO_TIMELY_EMMISION;
+	public static double QUEEN_EO_TIMELY_EMMISION;
+	public static double EGG_EO_TIMELY_EMMISION;
+	public static double larvaEOtoQueenEOCoef = 2;
+	public static double larvaEOtoEggEOCoef = 2;
 	
 	public static final double MOTIVATION_STEP = 0.01; //ACCELERATION ? maybe not
 	
@@ -129,7 +136,7 @@ public class ModelParameters
 	public static double HJ_INCREMENT; //1.851e-6
 	
 	//public static double EOEmissionCoef = 0.000000004; //REVERSED WITH HJRed
-	//public static double EOEmissionCoef = 0.01; //TODO CHANGED TO 0.02
+	//public static double EOEmissionCoef = 0.01; //CHANGED TO 0.02
 	//public static double EOEmissionCoef = 0.02;
 	//public static double EOEmissionCoef = ((1-StimulusFactory.getEvapRate(Stimulus.EthyleOleate)) * EO_EQUILIBRIUM) / HJ_EQUILIBRIUM; //0.015
 	public static double getEOEvapAtEOEQ()
@@ -160,7 +167,7 @@ public class ModelParameters
 		return reduction;
 	}
 	
-	public static double LARVA_EO_EMISSION_COEF = 2; //Found experimentally
+	public static double LARVA_EO_EMISSION_COEF = 4; //Found experimentally
 	
 	/**
 	 * Re calculate all the parameters given potentially new fundamental parameters
@@ -175,11 +182,21 @@ public class ModelParameters
 		
 		StimulusFactory.refreshDataBase();		
 		
-		LARVA_EO_TIMELY_EMMISION = getEOEvapAtEOEQ() * LARVA_EO_EMISSION_COEF;		
+		LARVA_EO_TIMELY_EMMISION = getEOEvapAtEOEQ() * LARVA_EO_EMISSION_COEF;	
+		QUEEN_EO_TIMELY_EMMISION = larvaEOtoQueenEOCoef * LARVA_EO_TIMELY_EMMISION;
+		EGG_EO_TIMELY_EMMISION = larvaEOtoEggEOCoef * LARVA_EO_TIMELY_EMMISION;
 		
 		//hjReduction = HJ_INCREMENT / EO_EQUILIBRIUM;
 		maxTimestepAge = (int) (/*1year*/ 364 * DAY / SIMU_ACCELERATION);
-		timestepLarvaPop = (int)(/*20days*/ 20 * DAY / SIMU_ACCELERATION);
+		
+		larvaEggUntilAge = 3 * DAY;
+		larvaLarvaUntilAge = larvaEggUntilAge + 6 * DAY;
+		larvaNympheaUntilAge = larvaLarvaUntilAge + 12 * DAY;
+		
+		//queenAgeBeforeLaying = 28 * DAY;
+		QUEEN_OVARDEV_INCREMENT = MAX_MOTIVATION / queenAgeBeforeLaying;
+		
+		timestepLarvaPop = larvaNympheaUntilAge;//(int)(/*21days*/ 21 * DAY / SIMU_ACCELERATION);
 		HUNGER_INCREMENT = 1.0 / (13 * HOUR) * SIMU_ACCELERATION;
 		
 		LARVA_FEEDING_MEANDURATION = 70 * SECOND * SIMU_ACCELERATION;; //Biology of Honey bee p97.
@@ -196,19 +213,45 @@ public class ModelParameters
 		FORAGING_TIME = Math.max(20 * MINUTE / SIMU_ACCELERATION, 20);
 		FORAGING_ENERGYCOST = 0.3 / FORAGING_TIME;
 		
-		LAYEGG_MEANDURATION = timestepLarvaPop / COLONY_TARGET_SIZE;
+		colonyMajoredEstimatedMaxSize = 65000;//3 * (COLONY_TARGET_SIZE + NUMBER_BEES + NUMBER_LARVAE);
 		
-		colonyMajoredEstimatedMaxSize = 3 * (COLONY_TARGET_SIZE + NUMBER_BEES + NUMBER_LARVAE);
-		
-		/* want it to be tired after an hour */
+		/* wantED it to be tired after an hour */
 		QUEEN_TASKS_ENERGYCOSTS = 0;//1.0/HOUR * SIMU_ACCELERATION;
 
-		RESTTASK_RESTORATION = 1.0/(20*MINUTE) * SIMU_ACCELERATION;
+		RESTTASK_RESTORATION = 1.0/(2 * HOUR) / SIMU_ACCELERATION;
 		
 		//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim EQUILIBRIUM at 5 days //////to compensate EO effects?
 		HJ_INCREMENT = HJ_EQUILIBRIUM / (5 * DAY) * SIMU_ACCELERATION; //1.851e-6
 	}
 	
+	public static double queenSpeedBySizeCoef = 1;
+	
+	public static double getQueenSpeedFromColonySize(int colonySize)
+	{
+		boolean debugSpeed = false;
+		if(Math.random() > .99 && debugSpeed)
+		{
+			StringBuffer sb = new StringBuffer();
+			sb.append("pause : ");
+			sb.append(timestepLarvaPop / queenSpeedBySizeCoef / colonySize);
+			sb.append(" targeting ");
+			sb.append(colonySize);
+			sb.append(".");
+			/*
+			for(int i = 1; i < 5; i++)
+			{
+				sb.append(" ");
+				sb.append(200*i);
+				sb.append(":");
+				sb.append(getQueenSpeedFromColonySize(200*i));				
+			}
+			*/
+			sb.append(".\n");
+			System.out.println(sb.toString());
+		}
+		return timestepLarvaPop / queenSpeedBySizeCoef / colonySize;
+	}
+
 	
 	/*** SIMULATION (STARTING) CONDITIONS ***/
 	

@@ -27,6 +27,20 @@ def getListFromExpeDict(task, dict):
 		theList.append(dict[timestep][task]);
 
 	return theList;
+	
+	
+#dataPerBees[beeID][index]["HJ"]
+#dataPerBees[beeID][index]["EO"]
+def getTimeStepsLivedByBee(dict, beeIndex):
+	convertInDays = True;
+	theList = [];
+	for timestep in dict[beeIndex]:
+		v = timestep;
+		if(convertInDays):
+			timestep /= 60*60*24
+		theList.append(timestep);
+
+	return theList;
 
 def getTimeStepsListFromExpeDict(dict):
 	convertInDays = True;
@@ -39,12 +53,30 @@ def getTimeStepsListFromExpeDict(dict):
 
 	return theList;
 	
+def smoothExpe(smoothIntensity, dic, key):
+	theKeys = list(dic.keys())
+	for i in range(0, len(theKeys)):
+		startSmooth = i - (int)(smooth/2);
+		if(startSmooth < 0):
+			startSmooth = 0;
+		endSmooth = startSmooth+smooth			
+		if(endSmooth >= len(theKeys)):
+			endSmooth = len(theKeys)-1;
+		value = 0;
+		#print("start " + str(startSmooth))
+		#print("end " + str(endSmooth) + " " + str(len(theKeys)))
+		for s in range(startSmooth, endSmooth):
+			value += dic[theKeys[s]][key] / (endSmooth-startSmooth)
+		dic[theKeys[i]][key] = value;
+	
 #PROGRAM
 
 linesEntry = int(input("ColumnNumber "));
 rowsEntry = int(input("RowNumber "));
 printBeesEntry = input("printBees ");
+smoothEntry = int(input("Smooth Strength "));
 
+smooth = 0;
 displayLINES = 1
 displayROWS = 1
 printManyBees = True;
@@ -58,9 +90,13 @@ if(rowsEntry > 0 and rowsEntry < 10):
 if(printBeesEntry == "False" or printBeesEntry == "false" or printBeesEntry == "0"):
 	printManyBees = False;
 	
+if(smoothEntry > 1):
+	smooth = smoothEntry
 
 
-
+allBroodTag = "Brood"
+nympheaTask = "NympheaTask"
+eggTask = "EggTask"
 larvaTask = "LarvaTask";
 nurseTask = "FeedLarvae";
 foragerTask = "Foraging";
@@ -100,7 +136,7 @@ for f in files:
 	#A_Classic_NewBorn_1000_0_518400_HJInc1.8518518518518519E-6
 	#fileImportantName = fileTags[1] + " " + fileTags[2] + " " + fileTags[3] + " " + fileTags[6];	
 	
-	fileImportantName = fileTags[0] + ": " + fileTags[2] + " " + fileTags[4] + "larvae."
+	fileImportantName = fileTags[0] + ": " + fileTags[2] + " " + fileTags[3] + "adults " + fileTags[4] + "larvae."
 	
 	#fileImportantName = fileTags[0] + ": Acc" + fileTags[6]
 	#fileImportantName = fileTags[0] + ": " + fileTags[7]
@@ -142,6 +178,8 @@ for f in files:
 					#push changes
 					if(prevIndex != -1):
 						parsedExpe[prevIndex][larvaTask] = larvaeCount;
+						parsedExpe[prevIndex][eggTask] = eggCount;
+						parsedExpe[prevIndex][nympheaTask] = nympheaCount;
 						parsedExpe[prevIndex][nurseTask] = nurseCount;
 						parsedExpe[prevIndex][foragerTask] = foragerCount;
 						parsedExpe[prevIndex][giveFoodTask] = giveFoodCount;
@@ -150,6 +188,7 @@ for f in files:
 						parsedExpe[prevIndex][meanEOKey] = meanEO / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 						parsedExpe[prevIndex][meanHJKey] = meanHJ / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 						parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + parsedExpe[prevIndex][otherTask];
+						parsedExpe[prevIndex][allBroodTag] = eggCount + nympheaCount + larvaeCount;
 						
 						#parsedExpe[INDEX][BeeIndex] ["HJ"] / ["EO"]
 					#newTimeStep, reset counters
@@ -157,6 +196,8 @@ for f in files:
 					nurseCount = 0
 					otherCount = 0
 					larvaeCount = 0
+					nympheaCount = 0
+					eggCount = 0
 					giveFoodCount = 0
 					askFoodCount = 0
 					meanHJ = 0.0
@@ -167,7 +208,11 @@ for f in files:
 				task = row[2];
 				beeID = row[1];
 				if(task == larvaTask):
-					larvaeCount +=1;
+					larvaeCount += 1;
+				elif (task == nympheaTask):
+					nympheaCount += 1;
+				elif (task == eggTask):
+					eggCount += 1;
 				else:
 					meanHJ += float(row[3]);
 					meanEO += float(row[4]);
@@ -192,6 +237,8 @@ for f in files:
 			
 	if(prevIndex != -1):
 		parsedExpe[prevIndex][larvaTask] = larvaeCount;
+		parsedExpe[prevIndex][eggTask] = eggCount;
+		parsedExpe[prevIndex][nympheaTask] = nympheaCount;
 		parsedExpe[prevIndex][nurseTask] = nurseCount;
 		parsedExpe[prevIndex][foragerTask] = foragerCount;
 		parsedExpe[prevIndex][giveFoodTask] = giveFoodCount;
@@ -200,6 +247,7 @@ for f in files:
 		parsedExpe[prevIndex][meanEOKey] = meanEO / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 		parsedExpe[prevIndex][meanHJKey] = meanHJ / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 		parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + parsedExpe[prevIndex][otherTask];
+		parsedExpe[prevIndex][allBroodTag] = eggCount + nympheaCount + larvaeCount;
 		
 	allDataPerBees[fileImportantName] = dataPerBees
 	
@@ -207,6 +255,13 @@ for f in files:
 	
 	print("")
 	
+	if(smooth > 1):
+		#def smoothExpe(smoothIntensity, dic, key):
+		smoothExpe(smooth, parsedExpe, foragerTask);
+		smoothExpe(smooth, parsedExpe, otherTask);
+		smoothExpe(smooth, parsedExpe, larvaTask);
+		smoothExpe(smooth, parsedExpe, nurseTask);
+			
 	#print(parsedExpe)
 	#print("\n")
 	
@@ -230,10 +285,13 @@ for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	#         row, col
 	plt.subplot(displayROWS,displayLINES, index, title=key);
+	
+	plt.axhline(y=0, color="k", linestyle = ":")
+	
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label=nurseTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label=foragerTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(otherTask, expe), label=otherTask);
-	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(larvaTask, expe), label=larvaTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(allBroodTag, expe), label=allBroodTag);
 	
 	#print(getListFromExpeDict("Total", expe))
 	#print("\n")
@@ -243,15 +301,18 @@ for key in allParsedExpes:
 	
 	index += 1
 #plt.show()
-
-
 plt.savefig("Tasks.png");
+
+
 index = 1;
 plt.figure(1, figsize=(25,15))
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	
 	plt.subplot(displayROWS,displayLINES, index, title=key);
+	
+	plt.axhline(y=0, color="k", linestyle = ":")
+	
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanHJKey, expe), label=meanHJKey);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(meanEOKey, expe), label=meanEOKey);	
 	
@@ -261,6 +322,31 @@ for key in allParsedExpes:
 		
 #plt.show()		
 plt.savefig("HJ.png");
+
+
+plt.figure(2, figsize=(25,15))
+index = 1;
+for key in allParsedExpes:
+	expe = allParsedExpes[key];
+	#         row, col
+	plt.subplot(displayROWS,displayLINES, index, title=key);
+	
+	plt.axhline(y=0, color="k", linestyle = ":")
+	
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(eggTask, expe), label=eggTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(larvaTask, expe), label=larvaTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nympheaTask, expe), label=nympheaTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(allBroodTag, expe), label=allBroodTag);
+	
+	#print(getListFromExpeDict("Total", expe))
+	#print("\n")
+	
+	if(index == 1):
+		plt.legend()
+	
+	index += 1
+#plt.show()
+plt.savefig("Brood.png");
 
 if printManyBees:
 	
@@ -281,8 +367,9 @@ if printManyBees:
 		for beeIndex in beesIndexes:
 		
 			ax = plt.subplot(4,10, index, title=key[0] + " Bee" + beeIndex);
-			plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("HJ", allDataPerBees[key][beeIndex]), label="HJ");
-			plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("EO", allDataPerBees[key][beeIndex]), label="EO");
+			plt.plot(getTimeStepsLivedByBee(allDataPerBees[key], beeIndex), getListFromExpeDict("HJ", allDataPerBees[key][beeIndex]), label="HJ");			
+			plt.plot(getTimeStepsLivedByBee(allDataPerBees[key], beeIndex), getListFromExpeDict("EO", allDataPerBees[key][beeIndex]), label="EO");
+			
 			ax.set_ylim(ymin=0)
 		
 			if(index == 1):

@@ -9,7 +9,7 @@ import com.beekeeper.parameters.ModelParameters;
 
 public class ForagerTask extends Task {
 	
-	private boolean back = false;
+	private volatile boolean back = false;
 	private int c = 0;
 
 	//private int trackedIdsUp = 1000;
@@ -19,7 +19,9 @@ public class ForagerTask extends Task {
 
 	public ForagerTask(WorkingAgentServices agentServices)
 	{
-		super(agentServices, foragingTaskName);		
+		super(agentServices, foragingTaskName);	
+		
+		this.motivated = true;
 		
 		//Wandering inHive
 		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
@@ -28,14 +30,19 @@ public class ForagerTask extends Task {
 				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " Wandering");
 				if(!agentServices.tryMoveUp())
 				{
-					//agentServices.dropMotivation();
+					agentServices.dropMotivation();
+				}
+				
+				if(c < 2)
+				{
+					agentServices.killMotivation();
 				}
 				c--;
 			}
 			
 			@Override
 			public boolean check() {
-				return back && agentServices.isInside() && c > 0;//35
+				return back && agentServices.isInside() && c > 0;
 			}
 		});
 		
@@ -43,7 +50,7 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
 			@Override
 			public void execute() {
-				/*boolean entered = */agentServices.enterHive();
+				agentServices.tryEnterHive();
 				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " Entering - " + entered);
 				c = (int) (Math.random() * 20 + 10);
 			}
@@ -60,6 +67,7 @@ public class ForagerTask extends Task {
 			public void execute() {
 				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " go forage");
 				back = true;
+				agentServices.resetMotivation();
 			}
 			
 			@Override
@@ -72,17 +80,10 @@ public class ForagerTask extends Task {
 		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {
 			@Override
 			public void execute() {
-				ForagerTask.this.motivated = false;
 				back = false;
 				if(!agentServices.tryMoveDown(true))
 				{
 					agentServices.dropMotivation();
-				}
-				
-				if(!agentServices.isInside())
-				{
-					agentServices.resetMotivation();
-					ForagerTask.this.motivated = true;
 				}
 				
 				//if(agentServices.getID() < trackedIdsUp && agentServices.getID() > trackedIdsDown)System.out.println(agentServices.getID() + " MovingOut out?-" + agentServices.isInside());
@@ -98,7 +99,22 @@ public class ForagerTask extends Task {
 	@Override
 	public double compute(StimuliMap smap) {
 		this.threshold = 1-(agentServices.getHJTiter()*0.7);
-		return this.thresholdSigmoid(agentServices.getHJTiter() < 0.5 ? 0 : smap.getAmount(Stimulus.Energy) > 0.7 ? 0.5 : 0);
+		
+		double s = 0;
+		
+		if(agentServices.getHJTiter() < 0.5)
+		{
+			s = 0;
+		}
+		else
+		{
+			s = smap.getAmount(Stimulus.Energy) - ModelParameters.FORAGING_ENERGYCOST;
+		}
+		
+		
+		//s = agentServices.getHJTiter() < 0.5 ? 0 : smap.getAmount(Stimulus.Energy) > 0.7 ? 0.5 : 0;
+		
+		return this.thresholdSigmoid(s);
 	}
 
 }

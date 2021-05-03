@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GraphAnchorsManager : MonoBehaviour
 {
-    public List<Transform> anchors;
+    public List<Transform> itemAnchors;
 
     public Transform playerAnchor;
 
@@ -45,7 +45,7 @@ public class GraphAnchorsManager : MonoBehaviour
 
         if(keyPadPressed == 0)
         {
-            if(selectedAnchor == null)selectedAnchor = anchors[0];
+            if(selectedAnchor == null)selectedAnchor = itemAnchors[0];
             rotAtStart = selectedAnchor.root.rotation;
             anchorStartRot = selectedAnchor.rotation;
             timeAtStart = Time.realtimeSinceStartup;
@@ -54,9 +54,9 @@ public class GraphAnchorsManager : MonoBehaviour
 
             moving = true;
         }
-        else if(keyPadPressed != -1 && anchors.Count >= keyPadPressed)
+        else if(keyPadPressed != -1 && itemAnchors.Count >= keyPadPressed)
         {
-            selectedAnchor = anchors[keyPadPressed-1];
+            selectedAnchor = itemAnchors[keyPadPressed-1];
             rotAtStart = selectedAnchor.root.rotation;
             anchorStartRot = selectedAnchor.rotation;
             timeAtStart = Time.realtimeSinceStartup;

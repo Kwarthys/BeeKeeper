@@ -66,7 +66,7 @@ public class Comb
 
 				if(a.hostCell == null || b.hostCell == null)
 				{
-					System.out.println("Contact");
+					System.out.println("NullContact");
 					if(b.hostCell == null)
 					{
 						System.out.println(a.getStringName() + " on " + a.getCombId() + " cell" + a.hostCell.number);
@@ -76,10 +76,15 @@ public class Comb
 					{
 						System.out.println(a.getStringName() + " on null");
 						System.out.println(b.getStringName() + " on " + b.getCombId() + " cell" + b.hostCell.number);	
-					}					
+					}	
+					
+					System.out.println("ERR - TrafficJam with a null hostcell - Comb's services - AskMoveToCell : Ignoring before fixing (ifneeded)");
+				}
+				else
+				{
+					jamManager.registerSwapDemand(a.hostCell.number, b.hostCell.number);					
 				}
 				
-				jamManager.registerSwapDemand(a.hostCell.number, b.hostCell.number);
 				//System.out.println(a.getStringName() + " wants swap with " + b.getStringName());
 				
 				return false;
@@ -135,11 +140,14 @@ public class Comb
 			
 			if(cell2.visiting == null || cell1.visiting == null)
 			{
-				System.out.println("SwapError on " + cellIndexSwap1 + " and " + cellIndexSwap2 + " on comb " + ID);
+				System.out.println("SwapError on " + cellIndexSwap1 + " and " + cellIndexSwap2 + " on comb " + ID + ". patched, will fix ifneeded");
+			}
+			else
+			{
+				cell1.visiting.hostCell = cell1;
+				cell2.visiting.hostCell = cell2;//TODO NULL HERE				
 			}
 			
-			cell1.visiting.hostCell = cell1;
-			cell2.visiting.hostCell = cell2;
 			
 			//System.out.println("SWAP");
 		}

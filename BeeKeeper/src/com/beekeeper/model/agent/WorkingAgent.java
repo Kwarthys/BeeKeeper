@@ -3,11 +3,14 @@ package com.beekeeper.model.agent;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.controller.logger.MyLogger;
+import com.beekeeper.model.agent.implem.BroodBee.LarvalState;
 import com.beekeeper.model.comb.cell.CombCell;
 import com.beekeeper.model.stimuli.StimuliMap;
 import com.beekeeper.model.stimuli.Stimulus;
@@ -19,7 +22,16 @@ import com.beekeeper.parameters.ModelParameters;
 
 public abstract class WorkingAgent extends EmitterAgent
 {
-	private static DecimalFormat df = new DecimalFormat("#.####");
+	private static DecimalFormat df = getDF();
+	
+	private static DecimalFormat getDF()
+	{
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
+		otherSymbols.setDecimalSeparator('.');
+		DecimalFormat f = new DecimalFormat("#.####", otherSymbols);
+		
+		return f;
+	}
 	
 	protected ArrayList<Task> taskList = new ArrayList<>();
 	protected abstract void fillTaskList();
@@ -30,6 +42,7 @@ public abstract class WorkingAgent extends EmitterAgent
 
 	protected Task currentTask = null;
 	protected Action currentAction = null;
+	protected Task lastTask = null;
 
 	protected WorkingAgent cooperativeInteractor = null;
 	
@@ -128,8 +141,8 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		@Override
-		public boolean enterHive() {
-			return WorkingAgent.this.enterHive();
+		public void tryEnterHive() {
+			WorkingAgent.this.askEnterHive();
 		}
 
 		@Override
@@ -172,7 +185,17 @@ public abstract class WorkingAgent extends EmitterAgent
 		public double getOvarianDev() {
 			return ovarianDev;
 		}
+
+		@Override
+		public LarvalState getLarvalState() {
+			return WorkingAgent.this.getLarvalState();
+		}
 	};
+	
+	public LarvalState getLarvalState()
+	{
+		return LarvalState.None;
+	}
 
 	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
@@ -183,7 +206,7 @@ public abstract class WorkingAgent extends EmitterAgent
 	{
 		super(stimuliManagerServices);
 		this.controllerServices = controllerServices;
-		this.bodySmell.setControllerServices(controllerServices);
+		//this.bodySmell.setControllerServices(controllerServices);
 		fillTaskList();
 
 		setEnergy(Math.random()*0.5+0.5);
@@ -201,6 +224,11 @@ public abstract class WorkingAgent extends EmitterAgent
 	@Override
 	public void logTurn(MyLogger logger, int turnIndex)
 	{
+		if(!alive)
+		{
+			//System.out.println("Trying to log a ded agent.");
+			return;
+		}
 		logger.log(String.valueOf(turnIndex), String.valueOf(getID()), getTaskName(), df.format(getPhysio()), df.format(getEO()), String.valueOf(getRealAge()), df.format(getTotalExchangedAmount()));
 	}
 
@@ -219,7 +247,15 @@ public abstract class WorkingAgent extends EmitterAgent
 		if(alive == false || getEnergy() == 0)
 		{
 			alive = false;
-			controllerServices.notifyDeath(this);
+			controllerServices.notifyDeath(this);			
+			
+			if(getLarvalState() == LarvalState.None && getEnergy() == 0)
+			{
+				//System.out.println("Just died of starvation : " + getLarvalState() + " at " + age + "/" + ModelParameters.larvaLarvaUntilAge);
+				System.out.print("x");
+			}	
+				
+			
 			return;
 		}
 
@@ -244,9 +280,18 @@ public abstract class WorkingAgent extends EmitterAgent
 
 
 		//System.out.println(ID + " looking for a new task ? " + (currentAction == null));
+		/*
+		if(lastTask!=null)
+		{
+			System.out.println(ID + " " + lastTask.taskName + " E" + getEnergy());
+			//System.out.println("cost = " + ModelParameters.FORAGING_ENERGYCOST + " * " + ModelParameters.FORAGING_TIME + " = " + ModelParameters.FORAGING_ENERGYCOST * ModelParameters.FORAGING_TIME);
+		}
+		*/
 
 		if(currentAction == null)
 		{
+			lastTask = currentTask;
+			
 			if(isInside())
 			{				
 				if(debugtime)
@@ -304,11 +349,16 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 
+		
 		try 
-		{
-			
+		{			
+			if(currentAction == null)
+			{
+				//This should not happen, but is happening once every billion timestep
+				System.err.println("Null Action after running it - Working Agent - Live | lastTask: " + lastTask.taskName);
+			}
 			//If action is over, remove it
-			if(currentAction.isOver()) // TODO Explosive rare NullPointer right here
+			else if(currentAction.isOver())
 			{
 				//System.out.println("Action done");
 				currentAction = null;
@@ -427,31 +477,34 @@ public abstract class WorkingAgent extends EmitterAgent
 		return currentTask;
 	}
 
-	protected boolean enterHive()
+	protected void askEnterHive()
 	{
 		if(isInside())
 		{
 			System.err.println("Already inside, can't reenter");
-			return true;
+			return;
 		}
 
+		controllerServices.askLanding(this);
+		
+		/*
 		hostCell = controllerServices.askLandingZone();
 		if(hostCell != null)
 		{
 			hostCell.notifyLanding(this);
-			controllerServices.notifyLanding(this);
 			return true;
 		}
 		else
 		{
 			return false;
 		}
+		*/
 	}
 
 	protected boolean tryMoveTo(ArrayList<Integer> cells)
 	{
 		int r = (int) (Math.random() * cells.size());
-		return hostCell.askMoveToCell(this, cells.get(r));		
+		return hostCell.askMoveToCell(this, cells.get(r));
 	}
 
 	protected boolean tryMoveUp()
@@ -471,12 +524,19 @@ public abstract class WorkingAgent extends EmitterAgent
 	
 	protected boolean tryMoveDown(boolean goOut)
 	{
+		if(!isInside())
+		{
+			System.err.println("Outside agent asked to move inside in " + currentTask.taskName);
+			return false;
+		}
+		
 		ArrayList<Integer> cells = hostCell.getDownCells();
 		if(cells.size() == 0)
 		{
 			//We are at the bottom !
 			if(goOut)
 			{
+				//System.out.println(ID + " liftoff from " + hostCell);
 				controllerServices.notifyLiftoff(this);
 				hostCell.freeCell();
 				this.hostCell = null;

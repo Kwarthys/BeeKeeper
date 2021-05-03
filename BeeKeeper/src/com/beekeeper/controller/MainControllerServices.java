@@ -2,7 +2,6 @@ package com.beekeeper.controller;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentStateSnapshot;
@@ -24,9 +23,9 @@ public interface MainControllerServices
 	
 	public void notifyDeath(Agent a);
 
-	public void notifyAgentContact(int id1, int id2, double amount);
-	public HashMap<Integer, Double> getAgentContacts();
-	public void freeLockAgentContacts();
+	//public void notifyAgentContact(int id1, int id2, double amount);
+	//public HashMap<Integer, Double> getAgentContacts();
+	//public void freeLockAgentContacts();
 	
 	public void switchFrames(int index1, int index2);
 	public void reverseFrame(int index);
@@ -44,6 +43,7 @@ public interface MainControllerServices
 	public ArrayList<Integer> getTheDead();
 	
 	public ArrayList<AgentStateSnapshot> getAllAdults();
+	public int getAllAdultsCount();
 	
 	public void setNumberOfSecondsToGoFast(int seconds);
 	
@@ -52,7 +52,7 @@ public interface MainControllerServices
 	public void spawnBeeAt(int combID, Point position);
 
 	public void notifyLiftoff(Agent agent);
-	public void notifyLanding(Agent agent);
+	public void askLanding(Agent agent);
 	
 	/**
 	 * Blocking call that will be released when next timestep is finished. Will not work if multiple client are requesting

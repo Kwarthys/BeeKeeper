@@ -143,6 +143,8 @@ public class AgentFactory
 		
 		host.setCellAgentContent(cell.x, cell.y, larvae);
 		
+		typesOfIndex.put(larvae.getID(), AgentType.BROOD_BEE);
+		
 		allAgents.add(larvae);
 	}
 

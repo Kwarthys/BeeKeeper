@@ -3,8 +3,6 @@ package com.beekeeper.controller;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +15,7 @@ import com.beekeeper.ihm.TaskGrapher;
 import com.beekeeper.model.agent.Agent;
 import com.beekeeper.model.agent.AgentStateSnapshot;
 import com.beekeeper.model.agent.AgentType;
+import com.beekeeper.model.agent.EmitterAgent;
 import com.beekeeper.model.agent.WorkingAgent;
 import com.beekeeper.model.comb.Comb;
 import com.beekeeper.model.comb.CombManager;
@@ -45,7 +44,10 @@ public class MainController
 	private List<Agent> foragers = Collections.synchronizedList(new ArrayList<Agent>());
 	private ArrayList<Integer> foragersIDS = new ArrayList<>();  //shortcut to avoid thread collapse
 	private MyLockedList<Integer> deadAdults = new MyLockedList<>();
-	private ArrayList<Agent> newLandings = new ArrayList<>();
+
+	private List<Agent> newLandings = Collections.synchronizedList(new ArrayList<Agent>());;	 
+	private List<Agent> newLiftOffs = Collections.synchronizedList(new ArrayList<Agent>());;	
+	private List<Agent> newDeds = Collections.synchronizedList(new ArrayList<Agent>());;
 
 	//private int simuStep = 0;
 
@@ -55,8 +57,8 @@ public class MainController
 
 	private volatile int turnIndex = -1;
 
-	private HashMap<Integer, Double> contactsQuantitiesByIndex = new HashMap<>();
-	private boolean contactsLocked = false;
+	//private HashMap<Integer, Double> contactsQuantitiesByIndex = new HashMap<>();
+	//private boolean contactsLocked = false;
 
 	private volatile boolean restartAsked = false;
 
@@ -65,6 +67,9 @@ public class MainController
 	private boolean rebaseKeepForagers = false;
 
 	private volatile boolean timeStepOver = false;
+	
+	private int lastAllAdultsCount = 1000;
+	private boolean refreshAllAdultCount = true;
 
 	private MainControllerServices controlServices = new MainControllerServices() {
 
@@ -106,7 +111,18 @@ public class MainController
 			return null;
 		}
 
-		public synchronized void notifyDeath(Agent a) {
+		public void notifyDeath(Agent a) {
+			
+			combManager.notifyDead(a);
+			agentFactory.allAgents.remove(a);	
+			
+			synchronized (newDeds) {
+				if(!newDeds.contains(a))
+				{
+					newDeds.add(a);					
+				}
+			}
+			/*
 			combManager.notifyDead(a);
 			agentFactory.allAgents.remove(a);
 
@@ -114,9 +130,11 @@ public class MainController
 			{
 				deadAdults.waitAndPost(a.getID());				
 			}
-
+			*/
+			/*
 			while(contactsLocked) {}; //Might be a problem to actively wait for lock. Should be ok tho.
 			contactsQuantitiesByIndex.remove(a.getID());
+			*/
 		}
 
 		@Override
@@ -158,7 +176,7 @@ public class MainController
 		}
 
 		@Override
-		public synchronized ArrayList<Integer> getTheDead() {
+		public ArrayList<Integer> getTheDead() {
 			return deadAdults.waitGetFullCopyAndEmpty();
 		}
 
@@ -196,6 +214,7 @@ public class MainController
 			MainController.this.setNbOfTimeStepToGoFast((int) (seconds * ModelParameters.secondToTimeStepCoef));			
 		}
 
+		/*
 		@Override
 		public void notifyAgentContact(int id1, int id2, double amount) {
 			//System.out.println("contact " + id1 + " " + id2 + " -> " + amount);
@@ -205,7 +224,9 @@ public class MainController
 			//boolean add = contactBlockingQueue.add(s);
 			//System.out.println(id1 + "-" + id2 + " exchanged " + amount + " : " + add);
 		}
+		*/
 
+		/*
 		@Override
 		public HashMap<Integer, Double> getAgentContacts() {
 			contactsLocked = true;
@@ -216,7 +237,8 @@ public class MainController
 		public void freeLockAgentContacts() {
 			contactsLocked = false;
 		}
-
+		*/
+		
 		@Override
 		public boolean isFastForward() {
 			return MainController.this.timeStepPauseToIgnore != 0 || ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP == 0;
@@ -230,21 +252,30 @@ public class MainController
 		@Override
 		public /*synchronized*/ void notifyLiftoff(Agent agent)
 		{
-			synchronized (foragers) {
-				foragers.add(agent);
-				foragersIDS.add(agent.getID());
+			synchronized (newLiftOffs)
+			{				
+				newLiftOffs.add(agent);
 			}
+			
+			//synchronized (foragers) {
+			//	foragers.add(agent);
+			//	foragersIDS.add(agent.getID());
+			//}
 		}
 
 		@Override
-		public synchronized void notifyLanding(Agent agent) {
+		public /*synchronized*/ void askLanding(Agent agent) {
 			//foragers.remove(agent);
-			newLandings.add(agent);
-			int index = foragersIDS.indexOf(agent.getID());
-			if(index != -1)
+			synchronized (newLandings)
 			{
-				foragersIDS.remove(index);				
+				newLandings.add(agent);
 			}
+			//moved to mainloop
+			//int index = foragersIDS.indexOf(agent.getID());
+			//if(index != -1)
+			//{
+			//	foragersIDS.remove(index);				
+			//}
 		}
 
 		@Override
@@ -265,6 +296,12 @@ public class MainController
 			rebaseData = frameIds;
 			rebaseAsked = true;	
 			rebaseKeepForagers = keepForagers;
+		}
+
+		@Override
+		public int getAllAdultsCount() {
+			refreshAllAdultCount = true;
+			return lastAllAdultsCount;
 		}
 	};
 
@@ -319,18 +356,19 @@ public class MainController
 		this.combManager.shutDownExecutionThreads();
 
 		try {
-			System.out.println("Waiting");
+			//System.out.println("Waiting");
 			if(ModelParameters.LOGGING)this.logger.getThread().join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		System.out.println("expe done");
+		//System.out.println("expe done");
 
 		return restart;
 	}
 
-	private synchronized void registerContactFor(int agentIndex, double quantity)
+	/*
+	private void registerContactFor(int agentIndex, double quantity)
 	{
 		if(contactsLocked)
 		{
@@ -348,11 +386,18 @@ public class MainController
 			}
 			else
 			{
-				//TODO rare nullPointerException here, added the SYNCHRONIZED to check
-				contactsQuantitiesByIndex.put(agentIndex, contactsQuantitiesByIndex.get(agentIndex) + quantity);
+				if(contactsQuantitiesByIndex.get(agentIndex)==null)
+				{
+					System.out.println("quantity inside contactsQuantitiesByIndex is null - MainController - registerContactFor");
+				}
+				
+				double newValue = contactsQuantitiesByIndex.get(agentIndex) + quantity;
+				//TODO rare nullPointerException here, added the SYNCHRONIZED to check, and removed it
+				contactsQuantitiesByIndex.put(agentIndex, newValue); // 2
 			}
 		}
 	}
+	*/
 
 	private void setNbOfTimeStepToGoFast(int number)
 	{
@@ -400,6 +445,45 @@ public class MainController
 		logger.log(turnIndex, beeID, beeTaskName, beePhysio);
 	}
 	 */
+	
+	private void updateAllAgentCount()
+	{
+		int count = 0;
+		
+		for(Agent a : combManager.getTotalCombPopulation())
+		{
+			if(a != null) //can happen if agent died recently, i guess
+			{
+				if(a.getBeeType() == AgentType.ADULT_BEE || a.getBeeType() == AgentType.QUEEN)
+				{
+					count++;
+				}
+			}
+		}
+		
+		count += foragers.size();
+		
+		
+		/**** Dunno why but foragers are not included in agentFactory.allAgents ****/ 
+		/*
+		for(Agent a : agentFactory.allAgents)
+		{
+			if(a != null) //can happen if agent died recently, i guess
+			{
+				if(a.getBeeType() == AgentType.ADULT_BEE || a.getBeeType() == AgentType.QUEEN)
+				{
+					count++;
+				}
+				else
+				{
+					otherCount++;
+				}
+			}
+		}
+		*/		
+		
+		lastAllAdultsCount = count;
+	}
 
 	private boolean programLoop()
 	{		
@@ -416,7 +500,7 @@ public class MainController
 		logTurnInterval = Math.max(logTurnInterval, 1); //can't be lower than 1 or that % will explode
 
 		turnIndex = 0;
-		int displayBar = 70;
+		int displayBar = 100;
 
 		System.out.print("|");
 		for(int i = 1; i < displayBar-1; ++i)
@@ -432,7 +516,7 @@ public class MainController
 			long startLoopTime = System.nanoTime();
 
 			//System.out.println("turn " + turnIndex + "services:" + getServices() + " | " + agentFactory.allAgents.size() + " agents.");
-			//System.out.println("turn " + turnIndex);
+			//System.out.println("\n\nturn " + turnIndex);
 
 			if(turnIndex%(int)(ModelParameters.SIMU_LENGTH/displayBar) == 0)
 			{
@@ -449,11 +533,11 @@ public class MainController
 			}
 			 */
 			try {
-				combManager.liveAgents(timeStepPauseToIgnore != 0);
+				combManager.liveAgents(timeStepPauseToIgnore != 0, foragers);
 
-				if(turnIndex%logTurnInterval == 0 && ModelParameters.LOGGING)
+				if(turnIndex%logTurnInterval == 1 && ModelParameters.LOGGING)
 				{
-					combManager.logTurn(logger, turnIndex);
+					combManager.logTurn(logger, turnIndex, foragers);
 					//System.out.println("Logging " + turnIndex + "/" + ModelParameters.SIMU_LENGTH);
 				}
 
@@ -470,6 +554,70 @@ public class MainController
 
 			//System.out.println("Starting forager turn " + turnIndex + " total agents " + agentFactory.allAgents.size() + " (" + foragers.size() + ") " + System.nanoTime());
 
+			/**** NEW FORAGER MANAGEMENT ****/
+			boolean debugLandings = false;
+			
+			Iterator<Agent> foragerIterator = newLandings.iterator();
+			StringBuffer sb = new StringBuffer();
+			if(debugLandings)sb.append("Landings :");
+			while(foragerIterator.hasNext())
+			{
+				Agent a = foragerIterator.next();
+				
+				CombCell cell = controlServices.askLandingZone();
+				if(cell != null)
+				{
+					//Successfully inside
+					a.hostCell = cell;
+					cell.notifyLanding((EmitterAgent)a);
+
+					if(debugLandings)
+					{
+						sb.append(" ");
+						sb.append(a.getID());
+						sb.append("(");
+						sb.append(cell.number);
+						sb.append(")");
+					}
+					
+					foragers.remove(a);				
+					foragersIDS.remove(new Integer(a.getID()));
+				}
+				else
+				{
+					System.out.println(a.getID() + " Couldn't land.");
+					//couldn't enter, will check next turn
+				}
+			}
+			if(debugLandings && newLandings.size() > 0)System.out.println(sb.toString());
+			newLandings.clear();
+
+			foragerIterator = newLiftOffs.iterator();
+			while(foragerIterator.hasNext())
+			{
+				Agent a = foragerIterator.next();
+				foragers.add(a);
+				foragersIDS.add(a.getID());
+				
+				foragerIterator.remove();
+			}
+			
+			if(turnIndex % 1000 == 0)
+			{
+				//Clean dead foragers
+				foragerIterator = foragers.iterator();
+				while(foragerIterator.hasNext())
+				{
+					Agent a = foragerIterator.next();
+					if(!a.alive)
+					{
+						foragerIterator.remove();
+						//System.out.println("removed ded forager " + a.getID());
+					}
+				}
+			}
+			/**** OLD FORAGER MANAGEMENT ****/
+			/*
 			synchronized (foragers)
 			{
 				Iterator<Agent> foragersIT = foragers.iterator();
@@ -523,6 +671,7 @@ public class MainController
 
 
 			}
+			*/
 			//System.out.println("Finished forager turn " + turnIndex + " total agents " + agentFactory.allAgents.size() + " (" + foragers.size() + ")");
 
 			if(DEBUGTIME)System.out.println("AllAgent lived at t+" + (System.nanoTime() - startLoopTime)/1000000 + "ms.");
@@ -579,7 +728,25 @@ public class MainController
 					}
 				}
 			}
+			
+			if(refreshAllAdultCount)
+			{
+				updateAllAgentCount();
+				refreshAllAdultCount = false;
+			}
+			
+			Iterator<Agent> dedIterator = newDeds.iterator();
+			while(dedIterator.hasNext())
+			{
+				Agent a = dedIterator.next();
 
+				if(a.getBeeType() != AgentType.BROOD_BEE && !deadAdults.contains(a.getID()))
+				{
+					deadAdults.waitAndPost(a.getID());
+				}
+				
+				dedIterator.remove();
+			}
 
 			timeStepOver = true;
 

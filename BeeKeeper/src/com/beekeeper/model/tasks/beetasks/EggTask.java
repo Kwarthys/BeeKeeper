@@ -8,19 +8,18 @@ import com.beekeeper.model.tasks.Action;
 import com.beekeeper.model.tasks.Task;
 import com.beekeeper.parameters.ModelParameters;
 
-public class LarvaTask extends Task {
+public class EggTask extends Task {
 	
-	public static final String larvaTaskName = "LarvaTask";
+	public static String EggTaskName = "EggTask";
 
-	public LarvaTask(WorkingAgentServices agentServices)
-	{
-		super(agentServices, larvaTaskName);
-
-		this.rootActivity.addTaskNode(new Action(1, ModelParameters.LARVAE_HUNGER_INCREMENT, agentServices) {
+	public EggTask(WorkingAgentServices agentServices) {
+		super(agentServices, EggTaskName);
+		
+		this.rootActivity.addTaskNode(new Action(1, 0, agentServices) {
 			
 			@Override
 			public void execute() {
-				agentServices.emit(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);
+				agentServices.emit(Stimulus.EthyleOleate, ModelParameters.EGG_EO_TIMELY_EMMISION);
 			}
 			
 			@Override
@@ -32,7 +31,7 @@ public class LarvaTask extends Task {
 
 	@Override
 	public double compute(StimuliMap smap) {
-		return agentServices.getLarvalState() == LarvalState.Larva ? 1 : 0;
+		return agentServices.getLarvalState() == LarvalState.Egg ? 1 : 0; 
 	}
 
 }

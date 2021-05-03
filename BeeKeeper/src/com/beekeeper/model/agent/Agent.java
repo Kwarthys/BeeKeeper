@@ -55,8 +55,8 @@ public abstract class Agent
 	
 	public boolean alive = true;
 	
-	public CombCell hostCell;
-	public boolean isInside() {return hostCell!=null;}
+	public volatile CombCell hostCell;
+	public boolean isInside() {return this.hostCell!=null;}
 	
 	protected int lastVisitedCellNumber = -1;
 	

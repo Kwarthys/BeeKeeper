@@ -7,7 +7,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.beekeeper.controller.MainControllerServices;
 import com.beekeeper.model.agent.Agent;
@@ -92,6 +91,7 @@ public class UDPClientHandler implements Runnable {
 			}
 		}, 3,1,true));
 		
+		/*
 		functions.add(new NetBalancer(new NetBalancerCallBack() {
 			
 			@Override
@@ -103,6 +103,7 @@ public class UDPClientHandler implements Runnable {
 				}
 			}
 		}, 3,2, false));
+		*/
 	}
 
 	@Override
@@ -237,8 +238,12 @@ public class UDPClientHandler implements Runnable {
 				combBuffer.append(" ");
 				combBuffer.append(((int)(snap.jhAmount * 100)) / 100.0);
 				combBuffer.append(" ");
+				combBuffer.append(format.format(snap.exchangedPheromones));
+				combBuffer.append(" ");
 				combBuffer.append(snap.taskName);
 			}
+			
+			System.err.println("/!\\ - MERGED SEND STATS AND SEND CONTACTS COMMAND");
 
 			lastLoopIndex = iagent;
 			//System.out.println("lastLoopIndex " + lastLoopIndex + " " + agents.size() + " " + maxAgentCount);
@@ -250,13 +255,14 @@ public class UDPClientHandler implements Runnable {
 		}
 	}
 
+	/* MOVED IN AGENTSTATES
 	private void sendAgentContacts(DatagramSocket udpServer) throws IOException
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("CONTACTS -1");
 
+		
 		//long nano = System.nanoTime();
-
 		HashMap<Integer, Double> contactsQtt = services.getAgentContacts();
 
 		for(Integer key : contactsQtt.keySet())
@@ -280,8 +286,13 @@ public class UDPClientHandler implements Runnable {
 
 		//map has been locked for less than 2ms
 		services.freeLockAgentContacts();
-
 		//System.out.println("Map got locked for " + (float)((System.nanoTime() - nano)/1000)/1000 + "ms.");
+		
+		
+		
+		
+		
+		
 
 		byte[] data = sb.toString().getBytes();
 		//System.out.println("Sending data:" + data.length + " || " + sb.toString());
@@ -289,7 +300,9 @@ public class UDPClientHandler implements Runnable {
 		udpServer.send(p);
 
 	}
-
+	*/
+	
+	
 	private void sendFramesContent(DatagramSocket udpServer) throws IOException
 	{
 		ArrayList<Comb> combs = services.getCombs();

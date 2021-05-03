@@ -20,7 +20,7 @@ public class RestTask extends Task
 			@Override
 			public void execute() {
 				//if(agentServices.getID() == 900)System.out.println("Resting: e" + agentServices.getEnergy());
-				if(Math.random() > 0.99)
+				if(Math.random() > 0.95)
 				{
 					agentServices.randomMove();
 				}

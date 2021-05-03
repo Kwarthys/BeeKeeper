@@ -1,6 +1,7 @@
 package com.beekeeper.controller.threadedexecution;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.beekeeper.model.agent.Agent;
 
@@ -28,7 +29,7 @@ public class WorkDispatcher {
 	}
 	
 	private PersistentExecutorThread createAndStartANewThread()
-	{
+	{		
 		PersistentExecutorThread t = new PersistentExecutorThread(threads.size());
 		
 		Thread nt = new Thread(t);		
@@ -40,7 +41,7 @@ public class WorkDispatcher {
 		return t;
 	}
 	
-	public void getThatWorkDone(ArrayList<Agent> agents)
+	public void getThatWorkDone(List<Agent> agents)
 	{
 		boolean jobStarted = false;
 		
@@ -63,10 +64,14 @@ public class WorkDispatcher {
 	public void waitForWorkToEnd()
 	{
 		boolean debugThreads = false;
-		boolean allDone = false;		
+		boolean allDone = false;	
+		
+		int count = 0;
 		
 		while(!allDone)
 		{
+			count++;
+			
 			allDone = true;
 			
 			for(PersistentExecutorThread t : threads)
@@ -97,7 +102,7 @@ public class WorkDispatcher {
 		
 		if(debugThreads)
 		{
-			System.out.println("Wait is over");			
+			System.out.println("Wait is over after " + count);			
 		}
 	}
 }
