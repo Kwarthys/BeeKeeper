@@ -1,6 +1,9 @@
 \documentclass[11pt,a4paper]{report}
 \usepackage{graphicx}
 
+\usepackage{caption}
+\usepackage{subcaption}
+
 
 \begin{document}
 	\begin{titlepage}
@@ -174,9 +177,79 @@ Orga Abeille - Visu Interagir avec - Simuler - Modeliser - (pk existant pas bon)
 	\section{Description de l'implémentation}
 		L'implémentation du modèle de prise de décision décris dans la partie d'avant, et modèle biologique de l'abeille adulte avec le systeme a seuil.
 	\section{Calibration}
+	
+	\subsection{Effets des Phéromones}
+	
+	La répartition des tâches au sein de la colonie, en particulier le nourrissage et le butinage, dépendent majoritairement de mécanisme d'hormone et de phéromone. Comme nous l'avons vu plus tôt, nous nous intéressons ici au bras de fer entre l'Hormone Juvénile (HJ) et l'Ethyle Oléate (EO), comme décrit Figure \ref{HJEODynamics}.
+	
+	Paramétrer cette dynamique a été un processus complexe : Notre grande simplification du modèle, et surtout des différentes phéromones nous détache, pour cette partie, de la réalité biologique. Nous avons donc émis des hypothèse, fixé des paramètre arbitrairement, dans le but de retrouver d'autres "macro-paramètres" émergents. Les deux points clé de cette paramétrisation sont 1. La quantité relative d'EO émise par rapport à l'HJ, et 2. La force des effets de l'HJ et de l'EO. De plus, la paramétrisation s'articule autour de deux points d'équilibre : l'Equilibre en EO ($EO_{Eq}$), qui représente le moment où un agent a suffisament d'EO pour parfaitement compenser son vieillissement, et donc son émission d'HJ. L'autre point d'équilibre, cette fois a l'HJ ($HJ_{Eq}$), représente le moment où un agent la bonne quantité d'HJ pour parfaitement compenser l'évaporation d'EO, et donc maintenir ce niveau.
+	
+	\subsubsection{Hypothèses et décisions arbitraires}
+	Etant loin de la biologie, les quantités absolue des différentes substances n'étaient lié en rien a la réalité, nous avons donc pu choisir arbitrairement les quantités et points d'équilibres. Nous avons donc décider de fixer la quantité d'HJ dans $[0;1]$, et $HJ_{Eq} = 0.8$. De son côté, la quantité d'EO est simplement comprise dans $[0;\infty[$, et avec $EO_{Eq} = 1$. 
+	
+	Ainsi, un agent abeille adulte avec un taux d'HJ supérieur à $HJ_{Eq}$ va émettre plus d'EO qu'il ne s'en évapore sur lui. Un agent avec un taux d'EO inférieur à $EO_{Eq}$ va éliminer moins d'HJ qu'il n'en émet, et va donc vieillir.
+	
+	\paragraph{}
+	Nous faisons ici l'hypothèse que la réduction d'HJ par l'EO se fait seulement avec une fonction prenant en compte la quantité d'EO. De même pour l'émission d'EO en fonction de la quantité d'HJ qui ne se fait que via une fonction fonction de la quantité d'HJ de l'agent concerné. Nous posons aussi que ces fonctions ont la forme $x^n$, avec $n$ un paramètre fixé expérimentalement (on en parlera juste après) et $x$ la différence entre le taux courant et la valeur d'équilibre donnée plus tôt.
+	
+	\paragraph{}
+	Les deux effets énoncés précédemment sont imbriqués dans une boucle de rétroaction. Les quantités absolues de ces éléments ne sont donc pas pertinente, en revanche, les écarts entre ces deux produits provoquent la dynamique que nous recherchons. Nous avons ainsi décidé, pour simplifier le paramétrage, d'en fixer l'un et de chercher le deuxième. Nous avons donc fixé l'émission d'EO en fonction de l'HJ à une fonction linéaire :
+	
+	\begin{equation}
+		EO_{em} = (HJ - HJ_{Eq}) * EO_{Evap}
+	\end{equation}
+
+Avec $EO_{Evap}$ la quantité d'EO qui s'évapore lorsque l'on considère une quantité d'EO égale à $EO_{Eq}$. Nous retrouvons donc la fonction sous la forme $s=x^n$ décrite plus tôt, avec $n = 1$ et $x$ l'écart d'HJ à l'équilibre facteur de $EO_{Evap}$.
+	
+	
+	\subsubsection{Effets et Émissions}	
+	Après avoir fixé ces paramètres, nous devons nous atteler à trouver la bonne combinaison d'intensité des effets des substances, ainsi que la quantité a laquelle on veut les émettre. Pour l'HJ, il suffit de prendre le point de transistion, nous avons choisi 0.5, et de le diviser par la quantité de pas de temps minimum qu'il faut pour l'atteindre. Nous pouvons décider de la majorer légèrement afin de prendre en compte l'effet de l'EO, ralentissant très légèrement le vieillissement en faible quantité. Ce ralentissement est cependant très faible pour un agent isolé, ainsi nous n'avons pas gardé l'option de la majoration.
+	
+	Ainsi, nous avons la quantité d'HJ émise par chaque agent à chaque pas de temps, que nous appellerons désormais $HJ_{Incr}$. L'EO présente sur chaque agent viendra éliminer une partie de son HJ, combattant ainsi indirectement cet $HJ_{Incr}$, dont nous pouvons désormais nous servir comme référence. Nous voulons qu'a $EO_{Eq}$, la réduction d'HJ $HJ_{red}$ soit égale à $HJ_{Incr}$, pour compenser parfaitement le vieillissement de l'agent. Nous pouvons donc écrire :
+	
+	\begin{equation}
+		 HJ_{red} = (EO - EO_{Eq})^n * HJ_{Incr}
+	\end{equation}
+	
+	Avec $n$ un coefficient dont nous allons nous servir pour modeler l'intensité de l'effet de réduction d'HJ. Avec $n=1$ (Figure \ref{eoLinear}), notre fonction est linéaire, nous nous servirons de cette fonction comme base de comparaison. Lorsque $n>1$, on obtient une fonction quadratique (Figure \ref{eoSqrt}). L'effet rajeunissant de l'EO est diminué avant $EO_{Eq}$ et amplifié après. Nous obtenons donc un vieillissement ainsi qu'un rajeunissement plus rapide. L'effet de l'EO est amplifié lorsque $n$ augmente. Enfin, avec $n < 1$, on obtient une fonction racine (Figure \ref{eoSqrt}). De la même manière, avec une racine, l'intensité des effets de l'EO est réduite.
+	
+	Pour illustrer, nous pouvons aussi imaginer que l'abeille vieilli naturellement rapidement. Mais, cet état d'équilibre est altéré par l'EO, nous pouvons donc visualiser ceci comme l'abeille étant attachée par un ressort à ce point d'équilibre. La rigidité de ce ressort peut alors être interprété comme la puissance de l'EO, proportionnelle à n. Plus n est grand, plus l'abeille sera tirée vers ce point d'équilibre, qu'elle soit avant ou après.
+	
+	Nous n'avons pas trouvé de moyen de fixer mathématiquement n, il a donc été trouvé expérimentalement, nous y viendrons dans la partie suivante, concernant la calibration.
+	
+	\begin{figure}
+	\centering
+	
+	\begin{subfigure}{\textwidth}
+	\includegraphics[width=\textwidth]{Pictures/Figures/EOEffectsLINEAR.png}
+	\caption{Réduction d'HJ \textbf{linéaire} (exposant $= 1$) par l'abeille en fonction de la quantité d'EO qu'elle possède. Lorsque $EO = EO_{Eq}$, la réduction compense parfaitement le vieillissement naturel de l'agent : $HJ_{Red} = HJ_{Incr}$. A gauche les flèches indiquent la force de réduction de l'EO, a droite elles indiquent la vitesse de vieillissement (en rouge lorsque l'agent vieilli, en bleu lorsqu'il rajeuni).}
+	\label{eoLinear}
+	\end{subfigure}
+	
+	\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{Pictures/Figures/EOEffectsSquared.png}
+	\caption{Lorsque la fonction de réduction est \textbf{quadratique} (exposant $> 1$) plutôt que linéaire (Fig \ref{eoLinear}), on observe à gauche que l'EO a moins de puissance avant $EO_{Eq}$, et beaucoup plus après. A droite, on voit donc que le vieillissement ainsi que le rajeunissement (quand $EO > EO_{Eq}$) sont plus intenses.}
+	\label{eoSquared}
+	\end{subfigure}
+	
+	\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{Pictures/Figures/EOEffectsSQRT.png}
+	\caption{Lorsque la fonction de réduction est \textbf{une racine} (exposant $< 1$) plutôt que linéaire (Fig \ref{eoLinear}), on observe à gauche que l'EO a plus de puissance avant $EO_{Eq}$, et beaucoup moins après. A droite, on voit donc que le vieillissement ($EO < EO_{Eq}$) ainsi que le rajeunissement ($EO > EO_{Eq}$) sont plus doux.}
+	\label{eoSqrt}	
+	\end{subfigure}
+	
+	\label{eoAll}
+	\end{figure}
+	
+	
+	
+	
+	
 		\subsection{Calibration rapide - Accélération}
 			Dans sa version PAAMS avec la biologie accélérée
-			Obtenir des résultats dans trop de temps de simulation. Le but était de vérifier la répartition des taches a l'aide du modèle, pas encore de chercher une validité biologique.
+			Obtenir des résultats qualitatif. Le but était de vérifier la répartition des taches a l'aide du modèle, pas encore de chercher une validité biologique.
 		\subsection{Calibration biologique - Données directes et indirectes}
 			En ajustant les paramètres connus grâce à la biologie, comme les durées de vie ou la durée et fréquence des nourrissements par exemple.
 			Paramétristaion des paramètres indirects, ou émergents, comme par exemple le fameux "UNE nourrice s'occupe de DEUX larves", qui n'est codé nul part mais qu'on doit retrouver.

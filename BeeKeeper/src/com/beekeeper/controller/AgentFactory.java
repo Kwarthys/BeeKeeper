@@ -64,7 +64,7 @@ public class AgentFactory
 				point = MyUtils.getPointInRule(rule);
 				x = (int)point.x;
 				y = (int)point.y;
-				if(++fails % 10000000 == 0)
+				if(++fails % 100000 == 0)
 				{
 					System.err.println("AgentFactory - spawnBroodCells : WARNING can't find suitable point after " + fails + " attempts.");
 				}

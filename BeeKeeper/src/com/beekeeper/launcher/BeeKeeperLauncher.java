@@ -83,7 +83,7 @@ public class BeeKeeperLauncher
 		//ModelParameters.NB_BEE_LOGGING = 24;
 		
 		ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0;
-		ModelParameters.SIMU_LENGTH = 30 * ModelParameters.DAY;
+		ModelParameters.SIMU_LENGTH = 80 * ModelParameters.DAY;
 		ModelParameters.NUMBER_BEES = 500;
 		ModelParameters.NUMBER_LARVAE = 500;
 		ModelParameters.NUMBER_FRAMES = 1;
@@ -91,53 +91,56 @@ public class BeeKeeperLauncher
 		ModelParameters.LARVA_CAN_HATCH = true;
 		ModelParameters.FORAGERS_DIE_SOONER = true;
 		ModelParameters.SPAWN_A_QUEEN = true;
-		
+
+		ModelParameters.LARVA_EO_EMISSION_COEF = 2;		
+		ModelParameters.EOEmissionPower = 0.33;		
 		
 		//10000 - 5000 - 8 - 10D : Prog took 24711954ms to simulate 864000s (x34.96283620469672).
 		//500 - 700 - 8 - 10D : Prog took 1713176ms to simulate 864000s (x504.326467333187).
 		//500 - 500 - 1 - 70D : Prog took 10558079ms to simulate 6048000s (x572.8314781505234).
 		
 		
-		//StartMode[] mode = {StartMode.Random20, StartMode.Random, StartMode.Random80};
-		int[] nb = {250,500,1000};
-		int[] c = {1,10,20};
+		//StartMode[] mode = {StartMode.Old, StartMode.Random, StartMode.NewBorn};
+		//int[] nb = {350,500,650};
+		//int[] c = {17,20,25};
 		//double[] c = {1/2.0,3,5,10,50,100,200,500,1000};
-
-		ModelParameters.startMode = StartMode.Random20;
+/*
+		ModelParameters.startMode = StartMode.Random80;
 		ModelParameters.queenAgeBeforeLaying = 0;
-		for(int j = 1; j < 3; ++j)
+		for(int j = 0; j < 3; ++j)
 		{
 			ModelParameters.LARVA_EO_EMISSION_COEF = c[j];
-			for(int i = 0; i < 3; ++i)
+			for(int i = 0; i < 2; ++i)
 			{
 				ModelParameters.NUMBER_LARVAE = nb[i];
-				startExpeAndMonitorTime(i + 3*j);	
+				startExpeAndMonitorTime(i + 2*j);	
 			}
 		}
-
+*/
 /*
-		ModelParameters.queenAgeBeforeLaying = 0;
-		ModelParameters.NUMBER_LARVAE = 0;
+		ModelParameters.queenAgeBeforeLaying = 20 * ModelParameters.DAY;
 		
-		ModelParameters.startMode = StartMode.Old;
-		for(int i = 0; i < 9 ; ++i)
+		for(int i = 0; i < 3 ; ++i)
 		{
-			ModelParameters.LARVA_EO_EMISSION_COEF = i+10;
+			ModelParameters.startMode = mode[i];
+			//ModelParameters.NUMBER_LARVAE = nb[i];
 			startExpeAndMonitorTime(i);
 		}
 */
-		/*
-		ModelParameters.startMode = StartMode.Random80;
-		while(true)
-		{
-			startExpeAndMonitorTime(new MainController());
-		}
-		*/
+		
+		ModelParameters.startMode = StartMode.NewBorn;
+		ModelParameters.queenAgeBeforeLaying = 17 * ModelParameters.DAY;
+		startExpeAndMonitorTime(3);
+		ModelParameters.queenAgeBeforeLaying = 28 * ModelParameters.DAY;
+		startExpeAndMonitorTime(4);
+		
 
 /*
-		ModelParameters.startMode = StartMode.Random80;
-		ModelParameters.queenAgeBeforeLaying = 0;
-		startExpeAndMonitorTime(3);
+		ModelParameters.startMode = StartMode.Old;
+		//ModelParameters.queenAgeBeforeLaying = 0;
+		ModelParameters.NUMBER_BEES = 40;
+		ModelParameters.NUMBER_LARVAE = 0;
+		startExpeAndMonitorTime(23);
 */
 		Toolkit.getDefaultToolkit().beep();
 		System.out.println("All Expes Done");

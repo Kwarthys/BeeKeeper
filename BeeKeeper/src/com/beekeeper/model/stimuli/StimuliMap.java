@@ -74,7 +74,11 @@ public class StimuliMap
 			if(amount != 0)
 			{
 				//System.out.print(smell + " " + amount + " x " + StimulusFactory.getEvapRate(smell));
+				//double oldAmount = amount;
 				amount *= StimulusFactory.getEvapRate(smell);
+				
+				//System.out.println(oldAmount + " Evaporated " + (oldAmount - amount) + " eoevapeq " + ModelParameters.getEOEvapAtEOEQ());
+				
 				if(amount < ModelParameters.SMELL_THRESHOLD)
 				{
 					amount = 0.0;

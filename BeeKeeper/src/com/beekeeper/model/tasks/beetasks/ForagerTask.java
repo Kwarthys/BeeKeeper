@@ -108,7 +108,13 @@ public class ForagerTask extends Task {
 		}
 		else
 		{
-			s = smap.getAmount(Stimulus.Energy) - ModelParameters.FORAGING_ENERGYCOST;
+			//little function
+			double cost = ModelParameters.FORAGING_ENERGYCOST * ModelParameters.FORAGING_TIME;
+			double a = - 1 / (cost - 1);
+			double b = 1 - a * 1;
+			s = Math.max(0, smap.getAmount(Stimulus.Energy) * a + b);
+			
+			//System.out.println("ForagerTask -- cost: " + cost + " score : f(" + smap.getAmount(Stimulus.Energy) + ")= " + s + " -> " + this.thresholdSigmoid(s));
 		}
 		
 		

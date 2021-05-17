@@ -31,24 +31,29 @@
 \contentsline {section}{\numberline {4.1}Description du modèle adapté}{14}{}%
 \contentsline {section}{\numberline {4.2}Description de l'implémentation}{14}{}%
 \contentsline {section}{\numberline {4.3}Calibration}{14}{}%
-\contentsline {subsection}{\numberline {4.3.1}Calibration rapide - Accélération}{14}{}%
-\contentsline {subsection}{\numberline {4.3.2}Calibration biologique - Données directes et indirectes}{14}{}%
-\contentsline {chapter}{\numberline {5}Evaluation de l'Implémentation de la Simulation de Colonie d'Abeilles}{16}{}%
-\contentsline {section}{\numberline {5.1}Hypothèses et Expérimentations}{16}{}%
-\contentsline {section}{\numberline {5.2}Resultats}{16}{}%
-\contentsline {section}{\numberline {5.3}Interprétation et Perspectives d'Améliorations}{16}{}%
-\contentsline {chapter}{\numberline {6}Etat de l'art: Simulation Multi-Agents et Environnements Immersifs}{17}{}%
-\contentsline {section}{\numberline {6.1}SMA : Recréer et comprendre des systemes complexes existants par l'interaction}{17}{}%
-\contentsline {section}{\numberline {6.2}Manipuler et observer ces systèmes complexes}{17}{}%
-\contentsline {section}{\numberline {6.3}DataViz}{17}{}%
-\contentsline {section}{\numberline {6.4}Interaction / visu immersive pour comprendre}{17}{}%
-\contentsline {section}{\numberline {6.5}Interaction tangible}{17}{}%
-\contentsline {chapter}{\numberline {7}Proposition visu interaction}{19}{}%
-\contentsline {section}{\numberline {7.1}Interaction Immersive avec Manettes}{19}{}%
-\contentsline {section}{\numberline {7.2}Interaction Immersice ET tangible}{19}{}%
-\contentsline {section}{\numberline {7.3}Visualisation : Graph3D sur l'état interne de la colonie}{19}{}%
-\contentsline {section}{\numberline {7.4}Résultats/Évaluation Visualisation Interactive proposée}{19}{}%
-\contentsline {chapter}{\numberline {8}Conclusions}{20}{}%
-\contentsline {section}{\numberline {8.1}Discussions}{20}{}%
-\contentsline {section}{\numberline {8.2}Perspectives}{20}{}%
-\contentsline {section}{\numberline {8.3}Conclusion}{20}{}%
+\contentsline {subsection}{\numberline {4.3.1}Effets des Phéromones}{14}{}%
+\contentsline {subsubsection}{Hypothèses et décisions arbitraires}{15}{}%
+\contentsline {paragraph}{}{15}{}%
+\contentsline {paragraph}{}{15}{}%
+\contentsline {subsubsection}{Effets et Émissions}{16}{}%
+\contentsline {subsection}{\numberline {4.3.2}Calibration rapide - Accélération}{16}{}%
+\contentsline {subsection}{\numberline {4.3.3}Calibration biologique - Données directes et indirectes}{18}{}%
+\contentsline {chapter}{\numberline {5}Evaluation de l'Implémentation de la Simulation de Colonie d'Abeilles}{19}{}%
+\contentsline {section}{\numberline {5.1}Hypothèses et Expérimentations}{19}{}%
+\contentsline {section}{\numberline {5.2}Resultats}{19}{}%
+\contentsline {section}{\numberline {5.3}Interprétation et Perspectives d'Améliorations}{19}{}%
+\contentsline {chapter}{\numberline {6}Etat de l'art: Simulation Multi-Agents et Environnements Immersifs}{20}{}%
+\contentsline {section}{\numberline {6.1}SMA : Recréer et comprendre des systemes complexes existants par l'interaction}{20}{}%
+\contentsline {section}{\numberline {6.2}Manipuler et observer ces systèmes complexes}{20}{}%
+\contentsline {section}{\numberline {6.3}DataViz}{20}{}%
+\contentsline {section}{\numberline {6.4}Interaction / visu immersive pour comprendre}{20}{}%
+\contentsline {section}{\numberline {6.5}Interaction tangible}{20}{}%
+\contentsline {chapter}{\numberline {7}Proposition visu interaction}{22}{}%
+\contentsline {section}{\numberline {7.1}Interaction Immersive avec Manettes}{22}{}%
+\contentsline {section}{\numberline {7.2}Interaction Immersice ET tangible}{22}{}%
+\contentsline {section}{\numberline {7.3}Visualisation : Graph3D sur l'état interne de la colonie}{22}{}%
+\contentsline {section}{\numberline {7.4}Résultats/Évaluation Visualisation Interactive proposée}{22}{}%
+\contentsline {chapter}{\numberline {8}Conclusions}{23}{}%
+\contentsline {section}{\numberline {8.1}Discussions}{23}{}%
+\contentsline {section}{\numberline {8.2}Perspectives}{23}{}%
+\contentsline {section}{\numberline {8.3}Conclusion}{23}{}%

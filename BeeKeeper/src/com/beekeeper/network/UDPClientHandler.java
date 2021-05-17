@@ -326,15 +326,15 @@ public class UDPClientHandler implements Runnable {
 					int contentCode = getCodeForContent(c.getCell(i).content);
 					combBuffer.append(contentCode);
 
-					short nextData;
+					int nextData;
 
 					if(c.getCell(i).content == CellContent.brood)
 					{
-						nextData = 150; //As old
+						nextData = (int)((float)((c.getCell(i).inside.getRealAge() / ModelParameters.timestepLarvaPop)) * 255);
 					}
 					else
 					{
-						nextData = 10; //As full
+						nextData = 10; //As near empty
 					}
 					combBuffer.append(" ");
 					combBuffer.append(nextData);

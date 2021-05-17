@@ -54,7 +54,7 @@ public class AskFoodTask extends Task {
 		});
 		
 		//RandomMove
-		this.rootActivity.addTaskNode(new Action(1,0.001,agentServices) {			
+		this.rootActivity.addTaskNode(new Action(1,0,agentServices) {			
 			@Override
 			public void execute() {
 				//if(agentServices.getID() == 1000)System.out.println(agentServices.getID() + " RandomMove");

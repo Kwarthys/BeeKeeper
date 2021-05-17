@@ -202,19 +202,19 @@ public abstract class WorkingAgent extends EmitterAgent
 		this(stimuliManagerServices, controllerServices, true);
 	}
 	
-	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, boolean randomInit)
+	public WorkingAgent(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices, boolean isRandomInit)
 	{
 		super(stimuliManagerServices);
 		this.controllerServices = controllerServices;
 		//this.bodySmell.setControllerServices(controllerServices);
 		fillTaskList();
 
-		setEnergy(Math.random()*0.5+0.5);
-		hunger = Math.random() * 0.7;
-		initPhysiology(randomInit);
+		setEnergy(Math.random()*.5 + .5);
+		hunger = Math.random() * 0.2;
+		initPhysiology(isRandomInit);
 	}
 	
-	protected abstract void initPhysiology(boolean randomInit);
+	protected abstract void initPhysiology(boolean isRandomInit);
 
 	/**
 	 * For now only the queen implements this and can lay eggs. In the future they might all brood
@@ -382,15 +382,13 @@ public abstract class WorkingAgent extends EmitterAgent
 		}
 
 		
-		advanceMetabolism();
 		this.bodySmell.evaporate();
+		advanceMetabolism();
 		
 		if(debugtime)
 		{
 			System.out.println("fully lived at t+" + (System.nanoTime() - startlive)/1000 + "us.");
 		}
-		
-		this.bodySmell.evaporate();
 	}
 
 	protected abstract void advanceMetabolism();

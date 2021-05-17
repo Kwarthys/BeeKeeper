@@ -34,11 +34,16 @@ def getListFromExpeDict(task, dict):
 def getTimeStepsLivedByBee(dict, beeIndex):
 	convertInDays = True;
 	theList = [];
+	offset = -1;
 	for timestep in dict[beeIndex]:
 		v = timestep;
 		if(convertInDays):
-			timestep /= 60*60*24
-		theList.append(timestep);
+			v /= 60*60*24;
+		
+		if(offset == -1):
+			offset = v;
+		
+		theList.append(v-offset);
 
 	return theList;
 
@@ -71,6 +76,40 @@ def smoothExpe(smoothIntensity, dic, key):
 	
 #PROGRAM
 
+
+allBroodTag = "Brood"
+nympheaTask = "NympheaTask"
+eggTask = "EggTask"
+larvaTask = "LarvaTask";
+nurseTask = "FeedLarvae";
+foragerTask = "Foraging";
+giveFoodTask = "GiveFood";
+askFoodTask = "AskingFood";
+otherTask = "Other";
+meanHJKey = "MeanHJ";
+meanEOKey = "MeanEO"
+keys = ["FeedLarvae","Foraging", "Other"];
+
+#folderName = "expeDivOK";
+folderName = "expe";
+path = '../' + folderName + '/';
+
+
+files = []
+# r=root, d=directories, f = files
+exclude = set(["bees", "beesTest"]);
+for r, dirs, f in os.walk(path):
+	dirs[:] = [d for d in dirs if d not in exclude]
+	for file in f:
+		if '.csv' in file:
+			files.append(os.path.join(r, file))
+fileIndex = 1
+
+allParsedExpes = {}
+allDataPerBees = {}
+
+print("Found " + str(len(files)) + " files.")
+
 linesEntry = int(input("ColumnNumber "));
 rowsEntry = int(input("RowNumber "));
 printBeesEntry = input("printBees ");
@@ -93,50 +132,19 @@ if(printBeesEntry == "False" or printBeesEntry == "false" or printBeesEntry == "
 if(smoothEntry > 1):
 	smooth = smoothEntry
 
-
-allBroodTag = "Brood"
-nympheaTask = "NympheaTask"
-eggTask = "EggTask"
-larvaTask = "LarvaTask";
-nurseTask = "FeedLarvae";
-foragerTask = "Foraging";
-giveFoodTask = "GiveFood";
-askFoodTask = "AskingFood";
-otherTask = "Other";
-meanHJKey = "MeanHJ";
-meanEOKey = "MeanEO"
-keys = ["FeedLarvae","Foraging", "Other"];
-
-folderName = "expe";
-path = '../' + folderName + '/';
-
-
-files = []
-# r=root, d=directories, f = files
-exclude = set(["bees", "beesTest"]);
-for r, dirs, f in os.walk(path):
-	dirs[:] = [d for d in dirs if d not in exclude]
-	for file in f:
-		if '.csv' in file:
-			files.append(os.path.join(r, file))
-fileIndex = 1
-
-allParsedExpes = {}
-allDataPerBees = {}
-
 #parsing
 for f in files:
 	print(str(fileIndex) + "/" + str(len(files)) + " " + f);
 	fileIndex += 1
 	fileName = f;
-	fileTags = f.split("expe/")[1]
+	fileTags = f.split(folderName+"/")[1]
 	fileTags = fileTags.split(".csv")[0]
 	fileTags = fileTags.split("_");
 	
 	#A_Classic_NewBorn_1000_0_518400_HJInc1.8518518518518519E-6
 	#fileImportantName = fileTags[1] + " " + fileTags[2] + " " + fileTags[3] + " " + fileTags[6];	
 	
-	fileImportantName = fileTags[0] + ": " + fileTags[2] + " " + fileTags[3] + "adults " + fileTags[4] + "larvae."
+	fileImportantName = fileTags[0] + ": starter " + fileTags[2] + " - " + fileTags[3] + " Adults & " + fileTags[4] + " Larvae"# | " + fileTags[7]
 	
 	#fileImportantName = fileTags[0] + ": Acc" + fileTags[6]
 	#fileImportantName = fileTags[0] + ": " + fileTags[7]
@@ -177,7 +185,7 @@ for f in files:
 				if(prevIndex != index):
 					#push changes
 					if(prevIndex != -1):
-						parsedExpe[prevIndex][larvaTask] = larvaeCount;
+						parsedExpe[prevIndex][larvaTask] = larvaCount;
 						parsedExpe[prevIndex][eggTask] = eggCount;
 						parsedExpe[prevIndex][nympheaTask] = nympheaCount;
 						parsedExpe[prevIndex][nurseTask] = nurseCount;
@@ -188,14 +196,14 @@ for f in files:
 						parsedExpe[prevIndex][meanEOKey] = meanEO / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 						parsedExpe[prevIndex][meanHJKey] = meanHJ / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 						parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + parsedExpe[prevIndex][otherTask];
-						parsedExpe[prevIndex][allBroodTag] = eggCount + nympheaCount + larvaeCount;
+						parsedExpe[prevIndex][allBroodTag] = eggCount + nympheaCount + larvaCount;
 						
 						#parsedExpe[INDEX][BeeIndex] ["HJ"] / ["EO"]
 					#newTimeStep, reset counters
 					foragerCount = 0
 					nurseCount = 0
 					otherCount = 0
-					larvaeCount = 0
+					larvaCount = 0
 					nympheaCount = 0
 					eggCount = 0
 					giveFoodCount = 0
@@ -208,7 +216,7 @@ for f in files:
 				task = row[2];
 				beeID = row[1];
 				if(task == larvaTask):
-					larvaeCount += 1;
+					larvaCount += 1;
 				elif (task == nympheaTask):
 					nympheaCount += 1;
 				elif (task == eggTask):
@@ -236,7 +244,7 @@ for f in files:
 			line_count+=1;
 			
 	if(prevIndex != -1):
-		parsedExpe[prevIndex][larvaTask] = larvaeCount;
+		parsedExpe[prevIndex][larvaTask] = larvaCount;
 		parsedExpe[prevIndex][eggTask] = eggCount;
 		parsedExpe[prevIndex][nympheaTask] = nympheaCount;
 		parsedExpe[prevIndex][nurseTask] = nurseCount;
@@ -247,7 +255,7 @@ for f in files:
 		parsedExpe[prevIndex][meanEOKey] = meanEO / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 		parsedExpe[prevIndex][meanHJKey] = meanHJ / (parsedExpe[prevIndex][otherTask] + foragerCount + nurseCount);
 		parsedExpe[prevIndex]["Total"] = nurseCount + foragerCount + parsedExpe[prevIndex][otherTask];
-		parsedExpe[prevIndex][allBroodTag] = eggCount + nympheaCount + larvaeCount;
+		parsedExpe[prevIndex][allBroodTag] = eggCount + nympheaCount + larvaCount;
 		
 	allDataPerBees[fileImportantName] = dataPerBees
 	
@@ -260,7 +268,11 @@ for f in files:
 		smoothExpe(smooth, parsedExpe, foragerTask);
 		smoothExpe(smooth, parsedExpe, otherTask);
 		smoothExpe(smooth, parsedExpe, larvaTask);
+		smoothExpe(smooth, parsedExpe, eggTask);
+		smoothExpe(smooth, parsedExpe, nympheaTask);
 		smoothExpe(smooth, parsedExpe, nurseTask);
+		smoothExpe(smooth, parsedExpe, allBroodTag);
+		smoothExpe(smooth, parsedExpe, "Total");
 			
 	#print(parsedExpe)
 	#print("\n")
@@ -278,8 +290,10 @@ for f in files:
 #print(allParsedExpes)	
 #plt.show()
 
+figureNumber = 0
 
-plt.figure(0, figsize=(25,15))
+
+plt.figure(figureNumber, figsize=(25,15))
 index = 1;
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
@@ -287,11 +301,15 @@ for key in allParsedExpes:
 	plt.subplot(displayROWS,displayLINES, index, title=key);
 	
 	plt.axhline(y=0, color="k", linestyle = ":")
+	plt.axhline(y=1000, color="k", linestyle = ":")
 	
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label=nurseTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label=foragerTask);
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(giveFoodTask, expe), label=giveFoodTask);
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(askFoodTask, expe), label=askFoodTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(otherTask, expe), label=otherTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(allBroodTag, expe), label=allBroodTag);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("Total", expe), label="Total", linestyle=":");
 	
 	#print(getListFromExpeDict("Total", expe))
 	#print("\n")
@@ -304,8 +322,39 @@ for key in allParsedExpes:
 plt.savefig("Tasks.png");
 
 
+figureNumber+=1
+plt.figure(figureNumber, figsize=(25,15))
 index = 1;
-plt.figure(1, figsize=(25,15))
+for key in allParsedExpes:
+	expe = allParsedExpes[key];
+	#         row, col
+	plt.subplot(displayROWS,displayLINES, index, title=key);
+	
+	plt.axhline(y=0, color="k", linestyle = ":")
+	plt.axhline(y=1000, color="k", linestyle = ":")
+	
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label=nurseTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label="Butineuses");
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(giveFoodTask, expe), label=giveFoodTask);
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(askFoodTask, expe), label=askFoodTask);
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(otherTask, expe), label=otherTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(allBroodTag, expe), label="Couvain");
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("Total", expe), label="AdultesTotaux", linestyle="--");
+	
+	#print(getListFromExpeDict("Total", expe))
+	#print("\n")
+	
+	if(index == 1):
+		plt.legend()
+	
+	index += 1
+#plt.show()
+plt.savefig("TasksAPI.png");
+
+
+index = 1;
+figureNumber += 1
+plt.figure(figureNumber, figsize=(25,15))
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
 	
@@ -323,8 +372,8 @@ for key in allParsedExpes:
 #plt.show()		
 plt.savefig("HJ.png");
 
-
-plt.figure(2, figsize=(25,15))
+figureNumber += 1
+plt.figure(figureNumber, figsize=(25,15))
 index = 1;
 for key in allParsedExpes:
 	expe = allParsedExpes[key];
@@ -336,7 +385,7 @@ for key in allParsedExpes:
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(eggTask, expe), label=eggTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(larvaTask, expe), label=larvaTask);
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nympheaTask, expe), label=nympheaTask);
-	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(allBroodTag, expe), label=allBroodTag);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(allBroodTag, expe), label=allBroodTag, linestyle=":");
 	
 	#print(getListFromExpeDict("Total", expe))
 	#print("\n")
@@ -357,7 +406,8 @@ if printManyBees:
 
 		print(key);
 		
-		plt.figure(2, figsize=(25,15))
+		figureNumber+=1
+		plt.figure(figureNumber, figsize=(25,15))
 
 		expe = allParsedExpes[key];
 		#get list of random beesIndex
@@ -366,11 +416,11 @@ if printManyBees:
 		index = 1
 		for beeIndex in beesIndexes:
 		
-			ax = plt.subplot(4,10, index, title=key[0] + " Bee" + beeIndex);
-			plt.plot(getTimeStepsLivedByBee(allDataPerBees[key], beeIndex), getListFromExpeDict("HJ", allDataPerBees[key][beeIndex]), label="HJ");			
+			ax = plt.subplot(4,10, index, title=key[0] + " Bee" + beeIndex);			
 			plt.plot(getTimeStepsLivedByBee(allDataPerBees[key], beeIndex), getListFromExpeDict("EO", allDataPerBees[key][beeIndex]), label="EO");
+			plt.plot(getTimeStepsLivedByBee(allDataPerBees[key], beeIndex), getListFromExpeDict("HJ", allDataPerBees[key][beeIndex]), label="HJ");
 			
-			ax.set_ylim(ymin=0)
+			ax.set_ylim(ymin=0, ymax=2)
 		
 			if(index == 1):
 				plt.legend()

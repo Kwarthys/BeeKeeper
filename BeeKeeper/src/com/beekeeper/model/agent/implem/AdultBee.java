@@ -17,6 +17,8 @@ import com.beekeeper.utils.MyUtils;
 
 public class AdultBee extends WorkingAgent
 {		
+	private double hjGeneticsCoef = 0;
+	
 	public AdultBee(StimuliManagerServices stimuliManagerServices, MainControllerServices controllerServices)
 	{
 		this(stimuliManagerServices, controllerServices, true);
@@ -27,6 +29,8 @@ public class AdultBee extends WorkingAgent
 		super(stimuliManagerServices, controllerServices, randomInit);
 		this.type = AgentType.ADULT_BEE;
 		this.currentTask = taskList.get(0);
+		
+		this.hjGeneticsCoef = 1 - Math.random() * ModelParameters.beesHJGeneticsVariation; // 1 - [0 ; variation]
 	}
 
 	@Override
@@ -103,7 +107,7 @@ public class AdultBee extends WorkingAgent
 		
 		if(!ModelParameters.BYPASS_PHYSIOLOGY)
 		{
-			hjTiter += ModelParameters.HJ_INCREMENT;
+			hjTiter += ModelParameters.HJ_INCREMENT * hjGeneticsCoef;
 			
 			
 			hjTiter -= ModelParameters.getHJModifiedByEthyleOleate(this.lastPercievedMap.getAmount(Stimulus.EthyleOleate));
@@ -114,7 +118,7 @@ public class AdultBee extends WorkingAgent
 		
 		receivingFood = false;		
 		
-		maxHungerFelt = Math.max(maxHungerFelt, lastPercievedMap.getAmount(Stimulus.AskFood));
+		//maxHungerFelt = Math.max(maxHungerFelt, lastPercievedMap.getAmount(Stimulus.AskFood));
 		
 		//if(getID() == 1000)
 		//{

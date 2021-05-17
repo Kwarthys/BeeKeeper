@@ -63,12 +63,14 @@ public class ModelParameters
 	public static int foragingAgePenalty = 25;
 	public static int maxTimestepAge;
 	public static int timestepLarvaPop;
+	
+	public static double beesHJGeneticsVariation = 0.1; //10%
 
 	public static int larvaEggUntilAge;
 	public static int larvaLarvaUntilAge;
 	public static int larvaNympheaUntilAge;
 	
-	public static int queenAgeBeforeLaying = 28 * DAY;
+	public static int queenAgeBeforeLaying = 20 * DAY;
 	public static double QUEEN_OVARDEV_INCREMENT;
 	
 	/**
@@ -105,7 +107,7 @@ public class ModelParameters
 	
 	public static final double MOTIVATION_STEP = 0.01; //ACCELERATION ? maybe not
 	
-	public static final double SMELL_THRESHOLD = 0.0001;
+	public static final double SMELL_THRESHOLD = 0.000001;
 
 	public static final double MAX_MOTIVATION = 0.9;
 	
@@ -146,6 +148,8 @@ public class ModelParameters
 
 	public static final double getEthyleOleateEmitedByHJ(double hjTiter)
 	{
+		//System.out.println("EVAP " + getEOEvapAtEOEQ() + " emits " + Math.pow((hjTiter/HJ_EQUILIBRIUM),5) * getEOEvapAtEOEQ() + " at " + hjTiter);
+		//System.out.println(hjTiter/HJ_EQUILIBRIUM + " at " + hjTiter);
 		return Math.pow((hjTiter/HJ_EQUILIBRIUM),1) * getEOEvapAtEOEQ();// * SIMU_ACCELERATION;
 		
 		//return hjTiter * 0.000000004 * SIMU_ACCELERATION; //Calculated with google sheet to match biological observation : https://docs.google.com/spreadsheets/d/1G8Npmpj3zvKJWzIT85aO0ulNe2J9UrzrpwM7wehnqgA/edit?usp=sharing
@@ -160,14 +164,14 @@ public class ModelParameters
 	
 	public static final double getHJModifiedByEthyleOleate(double ethyleOleateAmount)
 	{
-		double reduction = Math.pow((ethyleOleateAmount / EO_EQUILIBRIUM),EOEmissionPower) * HJ_INCREMENT;// * SIMU_ACCELERATION;//Changing
+		double reduction = Math.pow((ethyleOleateAmount / EO_EQUILIBRIUM),EOEmissionPower) * HJ_INCREMENT;
 		
 		//double reduction = ethyleOleateAmount * 0.01 * SIMU_ACCELERATION;  //Calculated with google sheet to match biological observation, see link above
 		//System.out.println("EthyleOleate at " + ethyleOleateAmount + ", HJ down by " + reduction);
 		return reduction;
 	}
 	
-	public static double LARVA_EO_EMISSION_COEF = 4; //Found experimentally
+	public static double LARVA_EO_EMISSION_COEF = 10; //Found experimentally
 	
 	/**
 	 * Re calculate all the parameters given potentially new fundamental parameters
@@ -211,16 +215,18 @@ public class ModelParameters
 		LARVAE_FEEDING_QUANTITY = LARVAE_HUNGER_INCREMENT * 35 * MINUTE;// / SIMU_ACCELERATION;
 		
 		FORAGING_TIME = Math.max(20 * MINUTE / SIMU_ACCELERATION, 20);
+		
+		// 30% of the foraging TIME
 		FORAGING_ENERGYCOST = 0.3 / FORAGING_TIME;
+
+		RESTTASK_RESTORATION = FORAGING_ENERGYCOST; //50% coef stay at home
 		
 		colonyMajoredEstimatedMaxSize = 65000;//3 * (COLONY_TARGET_SIZE + NUMBER_BEES + NUMBER_LARVAE);
 		
 		/* wantED it to be tired after an hour */
 		QUEEN_TASKS_ENERGYCOSTS = 0;//1.0/HOUR * SIMU_ACCELERATION;
-
-		RESTTASK_RESTORATION = 1.0/(2 * HOUR) / SIMU_ACCELERATION;
 		
-		//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim EQUILIBRIUM at 5 days //////to compensate EO effects?
+		//Le Comte : isolated bee go forage at 5 day old -> 430 000s, we aim EQUILIBRIUM at 5 days //////compensate EO effects?
 		HJ_INCREMENT = HJ_EQUILIBRIUM / (5 * DAY) * SIMU_ACCELERATION; //1.851e-6
 	}
 	

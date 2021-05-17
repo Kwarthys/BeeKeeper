@@ -12,7 +12,8 @@ public class EggTask extends Task {
 	
 	public static String EggTaskName = "EggTask";
 
-	public EggTask(WorkingAgentServices agentServices) {
+	public EggTask(WorkingAgentServices agentServices)
+	{
 		super(agentServices, EggTaskName);
 		
 		this.rootActivity.addTaskNode(new Action(1, 0, agentServices) {

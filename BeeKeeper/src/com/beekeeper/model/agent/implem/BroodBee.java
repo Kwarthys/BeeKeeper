@@ -16,12 +16,7 @@ public class BroodBee extends WorkingAgent
 	
 	@Override
 	public LarvalState getLarvalState()
-	{
-		if(!ModelParameters.LARVA_CAN_HATCH)
-		{
-			return LarvalState.Larva;
-		}
-		
+	{		
 		if(age < ModelParameters.larvaEggUntilAge)
 		{
 			return LarvalState.Egg;
@@ -60,11 +55,11 @@ public class BroodBee extends WorkingAgent
 		if(randomInit)
 		{
 			double state = Math.random();
-			if(state < .33)
+			if(state < .34)
 			{
 				age = (int) (Math.random() * ModelParameters.larvaEggUntilAge);
 			}
-			else if(state < .66)
+			else if(state < .67)
 			{
 				age = ModelParameters.larvaEggUntilAge + (int) (Math.random() * (ModelParameters.larvaLarvaUntilAge-ModelParameters.larvaEggUntilAge));
 			}
@@ -77,6 +72,7 @@ public class BroodBee extends WorkingAgent
 		{
 			age = 0;
 		}
+		
 		
 		this.bodySmell.addAmount(Stimulus.EthyleOleate, ModelParameters.LARVA_EO_TIMELY_EMMISION);
 	}
@@ -127,7 +123,7 @@ public class BroodBee extends WorkingAgent
 			age--; //brood not aging : preventing them to hatch while keeping the brood diversity
 		}
 		
-		if(age > ModelParameters.timestepLarvaPop && ModelParameters.LARVA_CAN_HATCH)
+		if(age > ModelParameters.timestepLarvaPop)// && ModelParameters.LARVA_CAN_HATCH)
 		{
 			//larva old enough to become a bee
 			if(hostCell.visiting == null)
