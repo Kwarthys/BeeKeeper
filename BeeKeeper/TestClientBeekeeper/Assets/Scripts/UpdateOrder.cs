@@ -40,6 +40,7 @@ public class UpdateOrder
     }
 }
 
+/*
 public class UpdateContactOrder
 {
     public List<int> ids;
@@ -51,6 +52,7 @@ public class UpdateContactOrder
         this.amounts = amounts;
     }
 }
+*/
 
 public class UpdateContentOrder
 {
@@ -75,15 +77,17 @@ public class UpdateStatus
     public List<float> jhAmounts;
     public List<string> taskNames;
     public List<int> ages;
+    public List<float> phExchanged;
 
     public int timeStep;
 
-    public UpdateStatus(int timeStep, List<int> ids, List<float> JHAmounts, List<string> taskName, List<int> ages)
+    public UpdateStatus(int timeStep, List<int> ids, List<float> JHAmounts, List<string> taskName, List<int> ages, List<float> phExchanged)
     {
         this.ids = ids;
         this.jhAmounts = JHAmounts;
         this.taskNames = taskName;
         this.ages = ages;
+        this.phExchanged = phExchanged;
 
         this.timeStep = timeStep;
     }

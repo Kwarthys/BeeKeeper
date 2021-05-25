@@ -242,8 +242,6 @@ public class UDPClientHandler implements Runnable {
 				combBuffer.append(" ");
 				combBuffer.append(snap.taskName);
 			}
-			
-			System.err.println("/!\\ - MERGED SEND STATS AND SEND CONTACTS COMMAND");
 
 			lastLoopIndex = iagent;
 			//System.out.println("lastLoopIndex " + lastLoopIndex + " " + agents.size() + " " + maxAgentCount);
@@ -330,11 +328,11 @@ public class UDPClientHandler implements Runnable {
 
 					if(c.getCell(i).content == CellContent.brood)
 					{
-						nextData = (int)((float)((c.getCell(i).inside.getRealAge() / ModelParameters.timestepLarvaPop)) * 255);
+						nextData = (int)((float)((c.getCell(i).inside.getRealAge() * 1.0 / ModelParameters.timestepLarvaPop)) * 255);
 					}
 					else
 					{
-						nextData = 10; //As near empty
+						nextData = 200; //As near full
 					}
 					combBuffer.append(" ");
 					combBuffer.append(nextData);

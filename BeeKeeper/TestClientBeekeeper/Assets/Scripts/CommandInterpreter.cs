@@ -77,18 +77,21 @@ public class CommandInterpreter : MonoBehaviour
                 List<int> ages = new List<int>();
                 List<float> jhAmounts = new List<float>();
                 List<string> taskNames = new List<string>();
+                List<float> amountsExchanged = new List<float>();
 
-                for (int i = 0; i < data.Length; i+=4)
+                for (int i = 0; i < data.Length; i+=5)
                 {
                     ids.Add(int.Parse(data[i]));
                     ages.Add(int.Parse(data[i + 1]));
                     jhAmounts.Add(float.Parse(data[i + 2], CultureInfo.InvariantCulture));
-                    taskNames.Add(data[i + 3]);
+                    amountsExchanged.Add(float.Parse(data[i + 3]/*, CultureInfo.InvariantCulture*/));
+                    taskNames.Add(data[i + 4]);
                 }
                 model.registerNewTimeStep(int.Parse(command.param));
-                model.registerStatusUpdate(new UpdateStatus(int.Parse(command.param),  ids, jhAmounts, taskNames, ages));
+                model.registerStatusUpdate(new UpdateStatus(int.Parse(command.param),  ids, jhAmounts, taskNames, ages, amountsExchanged));
                 break;
 
+                /*
             case "CONTACTS":
                 ids = new List<int>();
                 List<float> amounts = new List<float>();
@@ -103,6 +106,7 @@ public class CommandInterpreter : MonoBehaviour
                 model.registerContactUpdate(new UpdateContactOrder(ids, amounts));
 
                 break;
+                */
 
             case "DEATHS":
                 ids = new List<int>();

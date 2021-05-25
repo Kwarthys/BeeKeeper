@@ -21,7 +21,7 @@ public class HiveModel : MonoBehaviour
 
     private MyLockedList<UpdateOrder> agentOrders = new MyLockedList<UpdateOrder>();
     private MyLockedList<UpdateContentOrder> incContentOrders = new MyLockedList<UpdateContentOrder>();
-    private MyLockedList<UpdateContactOrder> contactOrders = new MyLockedList<UpdateContactOrder>();
+    //private MyLockedList<UpdateContactOrder> contactOrders = new MyLockedList<UpdateContactOrder>();
     private MyLockedList<UpdateStatus> statusOrders = new MyLockedList<UpdateStatus>();
     private MyLockedList<List<int>> deadOrder = new MyLockedList<List<int>>();
 
@@ -42,7 +42,7 @@ public class HiveModel : MonoBehaviour
 
         updateAgents();
         updateContent();
-        updateContacts();
+        //updateContacts();
         updateStatus();
         updateDeaths();
 
@@ -171,6 +171,38 @@ public class HiveModel : MonoBehaviour
         {
             for (int i = 0; i < order.ids.Count; ++i)
             {
+                if (!theAgents.ContainsKey(order.ids[i]))
+                {
+                    BeeAgent a = new BeeAgent();
+                    a.id = order.ids[i];
+                    a.pos = Vector3.zero;
+
+                    //a.pointID = idManager.getNextFreeIndex();
+                    //a.pointID = frameManager.getPointIDForPos(a.pos);
+                    a.pointID = -2;
+                    //Code to notify this is an uncomplete agent
+
+                    theAgents.Add(a.id, a);
+                }
+
+                theAgents[order.ids[i]].age = order.ages[i];
+                theAgents[order.ids[i]].JH = order.jhAmounts[i];
+
+                if (order.taskNames[i] == "QueenTask")
+                {
+                    theAgents[order.ids[i]].isQueen = true;
+                }
+            }
+        }
+    }
+    
+    /*
+    public void updateStatus()
+    {
+        while (statusOrders.tryReadFifo(out UpdateStatus order) && initAskedForUpdate == 0)
+        {
+            for (int i = 0; i < order.ids.Count; ++i)
+            {
                 if(theAgents.ContainsKey(order.ids[i]))
                 {
                     theAgents[order.ids[i]].age = order.ages[i];
@@ -211,7 +243,7 @@ public class HiveModel : MonoBehaviour
             }
         }
     }
-
+    */
     public void updateDeaths()
     {
         while(deadOrder.tryReadFifo(out List<int> deadIds) && initAskedForUpdate == 0)
@@ -234,10 +266,12 @@ public class HiveModel : MonoBehaviour
         }
     }
 
+    /*
     public void registerContactUpdate(UpdateContactOrder order)
     {
         contactOrders.waitAndPost(order);
     }
+    */
 
     public void registerStatusUpdate(UpdateStatus update)
     {
@@ -300,7 +334,7 @@ public class HiveModel : MonoBehaviour
         theAgents.Clear();
         //Debug.Log("theAgents.Count " + theAgents.Count);
         statusOrders.Clear();
-        contactOrders.Clear();
+        //contactOrders.Clear();
         agentOrders.Clear();
         incContentOrders.Clear();
 

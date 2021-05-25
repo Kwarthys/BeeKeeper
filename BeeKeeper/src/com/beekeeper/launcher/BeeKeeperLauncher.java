@@ -16,8 +16,8 @@ public class BeeKeeperLauncher
 		//long start = System.nanoTime();
 
 
-		//startNetworkMode();
-		startMultipleExpeMode();
+		startNetworkMode();
+		//startMultipleExpeMode();
 
 		//long progTime = (System.nanoTime() - start)/1000000000;
 		//long simuTime = (long) (ModelParameters.SIMU_LENGTH / ModelParameters.secondToTimeStepCoef);
@@ -32,18 +32,21 @@ public class BeeKeeperLauncher
 		MainController mc;
 		
 		//ModelParameters.UI_ENABLED = false;
-		ModelParameters.SIMU_LENGTH = 50 * ModelParameters.DAY;
-		ModelParameters.NUMBER_BEES = 1000;
-		ModelParameters.NUMBER_LARVAE = 1000;//750;
-		ModelParameters.NUMBER_FRAMES = 2; //MAX IS 8
+		ModelParameters.SIMU_LENGTH = 80 * ModelParameters.DAY;
+		ModelParameters.NUMBER_BEES = 500*3;
+		ModelParameters.NUMBER_LARVAE = 500*3;//750;
+		ModelParameters.NUMBER_FRAMES = 3; //MAX IS 8
 		ModelParameters.LARVA_CAN_HATCH = false;
 		ModelParameters.FORAGERS_DIE_SOONER = false;
 		ModelParameters.startMode = StartMode.Random80;
 		
 		//ModelParameters.SIMULATION_SLEEP_BY_TIMESTEP = 0; // always max speed
+		
+		int expeID = 0;
 
 		do
 		{
+			setExpeCharId(expeID++);
 			IDManager.resetIDCounter();
 			mc = new MainController();
 			nm.registerControllerServices(mc.getServices());
@@ -52,17 +55,22 @@ public class BeeKeeperLauncher
 		nm.closing();
 	}
 	
-	private static void startExpeAndMonitorTime(int expeID)
+	private static void setExpeCharId(int expeID)
 	{
 		int charNumberA = 65;
-		
+	
 		int charnumber = charNumberA + expeID;
 		if(charnumber > 90)
 		{
 			charnumber += 6;
 		}
 		
-		ModelParameters.identifier = (char)charnumber;
+		ModelParameters.identifier = (char)charnumber;	
+	}
+	
+	private static void startExpeAndMonitorTime(int expeID)
+	{
+		setExpeCharId(expeID);
 		
 		MainController mc = new MainController();
 		

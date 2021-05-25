@@ -3601,7 +3601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a37e246404fe9438922495dfd5dffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anchors:
+  itemAnchors:
   - {fileID: 1491196627}
   - {fileID: 1345530931}
   - {fileID: 5466113}

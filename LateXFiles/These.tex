@@ -34,6 +34,8 @@
 	\end{titlepage}
 	
 \tableofcontents
+
+\listoffigures
 	
 \chapter{Introduction}
 Orga Abeille - Visu Interagir avec - Simuler - Modeliser - (pk existant pas bon)proposition Modele motivation (orga++) - Eval Ccl (motivation mieux) - Enfin intéragir et visu\\
@@ -76,19 +78,13 @@ Orga Abeille - Visu Interagir avec - Simuler - Modeliser - (pk existant pas bon)
 			
 			Les GH permettent aux abeilles s'occupant du couvain de transformer le pollen et le nectar en une substance riche destinée aux larves. Elles permettent aussi aux butineuses de traiter chimiquement le nectar, le rendant utilisable pour les nourrices, transformable en miel et même consommable directement par les autres adultes. Or, ces deux comportements sont incompatibles, les GH subissent une modification physiologique pour effectuer l'une ou l'autre de ces fonctions.
 			
-			\begin{figure}
-			\centering
-			\includegraphics[width=\textwidth]{Pictures/Figures/ImplemDynamics.png}
-			\caption{Modélisation simplifiée des effets physiologues résponsables de l'auto-organisation.}
-			\label{HJEODynamics}
-			\end{figure}
-			
 			\paragraph{}
 			La Corpora Allata permet aux adultes de sécréter une hormone appelée Hormone Juvénile(HJ). Cette hormone est retrouvée en grande quantité chez les butineuses, et en faible quantité chez les nourrices. Une hypothèse répandue est de considérer que la HJ sécrétée par la Corpora Allata permet d'altérer le fonctionnement des GH, dictant ainsi leur utilité pour les nourrices ou les butineuse. Typicalement, la transition de nourrice à butineuse se fait en une vingtaine de jours : La colonie suit ce qu'on appelle le Polyéthisme d'Âge, les adultes ayant le même âge réalisent les mêmes activités. Or, il a été montré que ce polyéthisme est souple, et que dans les bonnes conditions, une abeille peut aller butiner dès ses 5 jours, au lieu de la vingtaine habituelle.
 			
-			C'est probablement l'œuvre d'une phéromone, émise par toute la colonie, l'Ethyle Oléate (EO). Émise majoritairement par le couvain, elle est aussi émise en grande quantité par la reine, et en quantité réduite par les butineuses. Cette phéromone altère le fonctionnement de la Corpora Allata, et réduit la sécrétion de HJ des abeilles. Ainsi, les adultes tendent toutes à aller butiner rapidement, mais sont retenues "nourrices" par cette EO émise par le couvain et les butineuses. Cette rétroaction permet de réguler le nombre de nourrice et de butineuses au sein de la colonie : Lorsqu'il y a beaucoup de couvain, très peu d'adultes vont partir butiner, et certaines butineuses peuvent même redevenir des nourrices. Lorsque les butineuses meurent de vieillesse, elles freinent moins le développement des nourrices, et certaines pourront partir butiner. Ces différentes intéractions ont été synthétisées Figure \ref{HJEODynamics}.
+			Ce mécanisme a été lié à une phéromone, émise par toute la colonie, l'Ethyle Oléate (EO). Retrouvée majoritairement sur le couvain et la reine, elle est aussi retrouvée chez les butineuses. Lorsque cette phéromone est injectée en grande quantité a des abeilles adultes, il a été montré que celles-ci arrêtent le butinage et voient leur taux d'HJ diminuer.
 			
-			L'Ethyle Oléate n'est pas une phéromone volatile, elle est majoritairement transmise par contact, principalement lors d'échange de nourriture et de nettoyage mutuel : lorsqu'une abeille en nettoie une autre, ou lorsqu'une nourrice nettoie une larve. Elle serait aussi transmissible sur de courtes distances par évaporation, mais nous avons décidé d'ignorer cet mécanisme pour l'instant.
+			L'Ethyle Oléate n'est pas une phéromone volatile, elle est majoritairement transmise par contact, principalement lors d'échange de nourriture et de nettoyage mutuel : lorsqu'une abeille en nettoie une autre, ou lorsqu'une nourrice nettoie une larve. Elle serait aussi transmissible sur de courtes distances par évaporation, mais nous avons décidé d'ignorer ce mécanisme pour l'instant.
+			
 			
 			\paragraph{}
 			Dans le cas classique du polyéthisme d'âge, les jeunes abeilles sont nourrices, et les plus âgées sont butineuses. Mais, comme nous venons de le voir, cet âge est souple : Une nourrice peut accélérer sont vieillissement, et une butineuse peut même l'inverser. C'est pour ceci que nous parlerons ici d'âge physiologique, opposé à l'âge réel. Une abeille avec un faible âge physiologique possède les GH nécessaires aux nourrices, et les âgées physiologiques possèdent les GH et les muscles nécessaires au vol et au butinage. 
@@ -130,7 +126,7 @@ Orga Abeille - Visu Interagir avec - Simuler - Modeliser - (pk existant pas bon)
 			\begin{figure}
 			\centering
 			\includegraphics[width=\textwidth]{Pictures/Figures/ModelisationTache.png}
-			\caption{Modélisation d'une tâche.}
+			\caption{Modélisation d'une tâche à l'aide d'une subsomption hiérarchique.}
 			\label{ModelisationTache}
 			\end{figure}
 		\paragraph{}
@@ -159,17 +155,47 @@ Orga Abeille - Visu Interagir avec - Simuler - Modeliser - (pk existant pas bon)
 			Nous venons alors ajouter aux Actions définies plus tôt le fait de pouvoir être "Démotivante". Lors de l'exécution d'une action "Démotivante", un agent va baisser sa motivation interne d'un montant défini. Le but est d'augmenter les chances qu'il abandonne cette tâche au profit d'une autre, lors du processus de sélection que nous allons détailler plus tard. L'action de déplacement aléatoire du robot que nous venons de citer est un bon exemple d'Action démotivante. Nous pouvons alors augmenter notre concept de tâche, en disant qu'une tâche est "motivée" lorsqu'elle contient au moins une action démotivante.
 	
 	\section{Définir un Agent}
-		Définition d'un agent
+	
+	\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{Pictures/Figures/ModelisationExecution.png}
+	\caption[Sélection et exécution des tâches par chaque Agent, à chaque pas de temps.]{Sélection et exécution des tâches par chaque Agent, à chaque pas de temps. Si l'action en cours est terminée, l'agent va sélectionner une nouvelle tâche, en extraire l'action à réaliser puis l'exécuter.}
+	\label{agentExec}
+	\end{figure}		
+	
+	
+		À l'aide de ces définitions nous pouvons désormais décrire nos agents. Un agent est situé dans l'environnement, possède une série de senseurs internes et externes (comme la faim et l'odorat), et contient aussi une liste de tâche qu'il sera peut-être amené a réaliser au court de sa vie. Lors d'une sélection de tâche, l'agent pourra confronter ses perceptions courantes aux différents seuils et conditions de l'algorithme de sélection de tâche, afin de savoir quelles actions effectuer.
+		
+		Parmi les perceptions internes de l'agent, nous trouvons une variable de motivation interne, servant aussi à la sélection de tâche. Associer une valeur de motivation à chaque tâche aurait aussi été possible et nous pouvons en trouver des équivalence dans d'autres travaux, nous avons donc décider de tenter l'expérience avec une valeur transversale à toute les taches, liée à l'agent lui même.
+		
+		\paragraph{}
+		Un agent peut aussi présenter des variations individuelles, un léger \textit{offset} que nous pouvons utiliser pour ajuster légèrement les seuils de ses différentes tâches, en plus des conditions internes et externes, afin de créer une population d'agent plus ou moins homogène. Via ses tâches, l'agent possède des seuils variables qui lui sont propres : deux agents avec les mêmes tâches présentent le plus souvent des seuils différents.
 		
 	\section*{Conclusion}
-		\subsection{Récapitulatif de notre proposition de modèle de prise de décision}
+		\subsection*{Récapitulatif de notre proposition de modèle de prise de décision}
 		Récapitulatif, exemple et conclusion sur le modèle en entier.
 		L'exemple avancé dans l'article PAAMS pourrait être poussé un peu grâce au travail du stagiaire et à des nouveaux trucs que j'ai compris pendant la paramétrisation complexe du bousin.
 		
-		\subsection{Utilisation en Swarm Robotics}
+		\subsection*{Utilisation en Swarm Robotics}
 			Les systèmes multi-agents sont souvents utilisés dans la mise en place d'essaims de robots, "Swarm Robotics". Ces essaims consistent en une grande quantité (dizaines) de robots simples, amenés à exécuter des tâches complexes. A l'image de la capacité de fourragement des fourmis est souvent utilisée comme cas d'application, nous avons donc construit notre exemple dans ce contexte. Un ensemble de robots va devoir ramener des ressources à leur base commune. Les ressources sont éparpillées dans l'environnement et doivent être traitées par un robot avant d'être déplacées jusqu'à la base. En plus de cette activité de collecte, les robots vont devoir assurer une surveillance de la base, en patrouillant autour.
 
 \chapter{Modélisation et Implémentation pour la Colonie d'Abeilles}
+	\section{Modélisation de la Colonie d'Abeilles}
+		\subsection{Modélisation de l'Abeille Adulte}
+
+
+		Ainsi, les adultes tendent toutes à aller butiner rapidement, mais sont retenues "nourrices" par cette EO émise par le couvain et les butineuses. Cette rétroaction permet de réguler le nombre de nourrice et de butineuses au sein de la colonie : Lorsqu'il y a beaucoup de couvain, très peu d'adultes vont partir butiner, et certaines butineuses peuvent même redevenir des nourrices. Lorsque les butineuses meurent de vieillesse, elles freinent moins le développement des nourrices, et certaines pourront partir butiner. Ces différentes interactions ont été synthétisées Figure \ref{HJEODynamics}.
+		
+			
+			\begin{figure}
+			\centering
+			\includegraphics[width=\textwidth]{Pictures/Figures/ImplemDynamics.png}
+			\caption{Modélisation simplifiée des effets physiologues résponsables de l'auto-organisation.}
+			\label{HJEODynamics}
+			\end{figure}
+		
+		
+		\subsection{Modélisation du Couvain}
 	\section{Description du modèle adapté}
 		Application du modèle théorique à notre simulation de colonie d'abeilles virtuelle.
 		Simplification gigantesque de la biologie de l'abeille, ainsi que des différentes tâches au sein de la colonie.
@@ -197,18 +223,20 @@ Orga Abeille - Visu Interagir avec - Simuler - Modeliser - (pk existant pas bon)
 	
 	\begin{equation}
 		EO_{em} = (HJ - HJ_{Eq}) * EO_{Evap}
+	\label{eoEM}
 	\end{equation}
 
 Avec $EO_{Evap}$ la quantité d'EO qui s'évapore lorsque l'on considère une quantité d'EO égale à $EO_{Eq}$. Nous retrouvons donc la fonction sous la forme $s=x^n$ décrite plus tôt, avec $n = 1$ et $x$ l'écart d'HJ à l'équilibre facteur de $EO_{Evap}$.
 	
 	
-	\subsubsection{Effets et Émissions}	
+	\subsubsection{Intensités des effets}	
 	Après avoir fixé ces paramètres, nous devons nous atteler à trouver la bonne combinaison d'intensité des effets des substances, ainsi que la quantité a laquelle on veut les émettre. Pour l'HJ, il suffit de prendre le point de transistion, nous avons choisi 0.5, et de le diviser par la quantité de pas de temps minimum qu'il faut pour l'atteindre. Nous pouvons décider de la majorer légèrement afin de prendre en compte l'effet de l'EO, ralentissant très légèrement le vieillissement en faible quantité. Ce ralentissement est cependant très faible pour un agent isolé, ainsi nous n'avons pas gardé l'option de la majoration.
 	
 	Ainsi, nous avons la quantité d'HJ émise par chaque agent à chaque pas de temps, que nous appellerons désormais $HJ_{Incr}$. L'EO présente sur chaque agent viendra éliminer une partie de son HJ, combattant ainsi indirectement cet $HJ_{Incr}$, dont nous pouvons désormais nous servir comme référence. Nous voulons qu'a $EO_{Eq}$, la réduction d'HJ $HJ_{red}$ soit égale à $HJ_{Incr}$, pour compenser parfaitement le vieillissement de l'agent. Nous pouvons donc écrire :
 	
 	\begin{equation}
 		 HJ_{red} = (EO - EO_{Eq})^n * HJ_{Incr}
+	\label{hjRED}
 	\end{equation}
 	
 	Avec $n$ un coefficient dont nous allons nous servir pour modeler l'intensité de l'effet de réduction d'HJ. Avec $n=1$ (Figure \ref{eoLinear}), notre fonction est linéaire, nous nous servirons de cette fonction comme base de comparaison. Lorsque $n>1$, on obtient une fonction quadratique (Figure \ref{eoSqrt}). L'effet rajeunissant de l'EO est diminué avant $EO_{Eq}$ et amplifié après. Nous obtenons donc un vieillissement ainsi qu'un rajeunissement plus rapide. L'effet de l'EO est amplifié lorsque $n$ augmente. Enfin, avec $n < 1$, on obtient une fonction racine (Figure \ref{eoSqrt}). De la même manière, avec une racine, l'intensité des effets de l'EO est réduite.
@@ -240,19 +268,35 @@ Avec $EO_{Evap}$ la quantité d'EO qui s'évapore lorsque l'on considère une qu
 	\label{eoSqrt}	
 	\end{subfigure}
 	
+	\caption{Différents degré de fonctions pour ajuster l'intensité des effets de l'EO.}	
 	\label{eoAll}
 	\end{figure}
 	
 	
 	
+	\subsubsection{Quantités Émises par les Larves}
+	Un autre point clé de ce modèle est la capacité des larves à influer directement la physionomie des adultes, en contraignant certain à rester nourrice. Il faut donc  que ces larves en émettent la bonne quantité : Trop peu et il n'y aura pas assez de nourrices pour s'occuper du couvain, trop et il n'y aura plus assez de butineuse à la récolte de nourriture.
+	
+	La quantité d'EO émise par chaque larve est donc importante, car elle est censée permettre à l'abeille de rester jeune, et même de rajeunir. Nous avons donc commencé par placer cette émission à $EO_{Evap}$ (Voir eq. \ref{eoEM}). De plus, les contacts étant assez bref, l'émission d'EO des larves doit permettre à une nourrice sollicitée de rester jeune malgré quelques temps de trajets. Ce dernier point porte une incertitude liée a l'émergence de ce comportement, la répartition des larves, les temps de trajets etc. Nous avons donc décidé de placer l'émission des larves à $k * EO_{Evap}$, avec k un coefficient que nous allons trouver expérimentalement, qui sera forcément supérieur à 1.
+	
+	\subsubsection{Objectifs de calibration}
+	Nous saurons que le coefficient $k$ de l'émission d'EO des larves est juste lorsque, peu importe la quantité de larves, la proportion de nourrice par rapport aux butineuses sera globalement constante. Avec une émission trop importante, augmenter le nombre de larve va drastiquement augmenter le ratio de nourrices. Par exemple lors d'un essai, nous obtenions un ratio de 1 butineuse pour 1 nourrice avec 500 larves, mais presque 100\% de nourrice pour 1000 larves. A l'inverse, lorsque trop peu de nourrices sont captées par le couvain, ce coefficient doit être augmenté.
+	
+	Ensuite, il arrive qu'il faille diminuer la quantité d'EO émise par les larves, alors qu'elle est déjà trop faible pour un petit nombre de larves (ou vice versa). C'est ici le signal que l'intensité des effets de l'EO sur les adultes est à ajuster, en variant l'exposant de l'équation donnant $HJ_{Red}$ (Eq \ref{hjRED}). Ainsi, lorsque 500 larves maintiennent un ratio nourrices/butineuses correct mais faible, mais que 1000 retiennent trop de nourrice, c'est que l'EO a trop d'effet, il faut alors abaisser l'exposant de $HJ_{Red}$. 
+	
+	Nous avons gardé un exposant entier lorsqu'il est supérieur à 1, et de la forme $1/x$ (avec $x$ entier) pour un exposant inférieur à 1.
 	
 	
-		\subsection{Calibration rapide - Accélération}
-			Dans sa version PAAMS avec la biologie accélérée
-			Obtenir des résultats qualitatif. Le but était de vérifier la répartition des taches a l'aide du modèle, pas encore de chercher une validité biologique.
-		\subsection{Calibration biologique - Données directes et indirectes}
+	Ce mécanisme par échange de phéromones est à la base de ce que nous cherchons à démontrer ici, et est profondément émergent, car dépendant des interactions entre tous nos agents, ce qui explique notre recours ici à un paramétrage expérimental.
+	
+	
+		\subsection{Calibration Expérimentale}
 			En ajustant les paramètres connus grâce à la biologie, comme les durées de vie ou la durée et fréquence des nourrissements par exemple.
-			Paramétristaion des paramètres indirects, ou émergents, comme par exemple le fameux "UNE nourrice s'occupe de DEUX larves", qui n'est codé nul part mais qu'on doit retrouver.
+			Paramétrisation des paramètres indirects, ou émergents, comme par exemple le fameux "UNE nourrice s'occupe de DEUX larves", qui n'est codé nul part mais qu'on doit retrouver.
+	
+		\subsubsection{Calibration rapide - Accélération}
+			Dans sa version PAAMS avec la biologie accélérée
+			Obtenir des résultats qualitatif. Le but était de vérifier la répartition des taches a l'aide du modèle, pas encore de chercher une validité
 			
 	\section*{Conclusion}
 	

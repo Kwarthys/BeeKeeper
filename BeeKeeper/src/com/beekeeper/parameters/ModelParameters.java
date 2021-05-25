@@ -160,7 +160,7 @@ public class ModelParameters
 	//public static double hjReduction = 0.0000000023;
 	//public static double hjReduction = HJ_INCREMENT / EO_EQUILIBRIUM; //EO alteration compensates HJ timely emission at EO_Equilibrium EO Amount
 	
-	public static double EOEmissionPower = 0.5;
+	public static double EOEmissionPower = 1.0/3.0;
 	
 	public static final double getHJModifiedByEthyleOleate(double ethyleOleateAmount)
 	{
@@ -171,7 +171,7 @@ public class ModelParameters
 		return reduction;
 	}
 	
-	public static double LARVA_EO_EMISSION_COEF = 10; //Found experimentally
+	public static double LARVA_EO_EMISSION_COEF = 2; //Found experimentally
 	
 	/**
 	 * Re calculate all the parameters given potentially new fundamental parameters
