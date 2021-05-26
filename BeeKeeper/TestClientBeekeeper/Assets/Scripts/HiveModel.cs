@@ -187,6 +187,7 @@ public class HiveModel : MonoBehaviour
 
                 theAgents[order.ids[i]].age = order.ages[i];
                 theAgents[order.ids[i]].JH = order.jhAmounts[i];
+                theAgents[order.ids[i]].amountExchanged = order.phExchanged[i];
 
                 if (order.taskNames[i] == "QueenTask")
                 {

@@ -23,6 +23,8 @@ public class FrameSelectorBehaviour : MonoBehaviour
     public float trackGlitchLowerLimit = 1500;
     public float realHitLowerLimit = 100;
 
+    public bool detectFrameHit = true;
+
     private bool checkInput()
     {
         return myInput.getTriggerPress(VRInteractionProfileManager.FRAME_PROFILE);
@@ -87,7 +89,7 @@ public class FrameSelectorBehaviour : MonoBehaviour
         {
             positionner.notifyFrameHandled(pickedUp);
 
-            if(checkIfHit())
+            if(checkIfHit() && detectFrameHit)
             {
                 //Hit frame
                 sender?.hitFrame(pickedUp.frameID);
