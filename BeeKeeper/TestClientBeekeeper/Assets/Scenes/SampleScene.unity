@@ -5499,6 +5499,31 @@ PrefabInstance:
       propertyPath: model
       value: 
       objectReference: {fileID: 1877870041}
+    - target: {fileID: 8758525370810241577, guid: e7f924d32d1367e4c91ac1da5755b14d,
+        type: 3}
+      propertyPath: zLogarithmicScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758525370810241577, guid: e7f924d32d1367e4c91ac1da5755b14d,
+        type: 3}
+      propertyPath: yRelative
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758525370810241577, guid: e7f924d32d1367e4c91ac1da5755b14d,
+        type: 3}
+      propertyPath: xRelative
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758525370810241577, guid: e7f924d32d1367e4c91ac1da5755b14d,
+        type: 3}
+      propertyPath: maxValues.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758525370810241577, guid: e7f924d32d1367e4c91ac1da5755b14d,
+        type: 3}
+      propertyPath: zRelative
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8758525370810241578, guid: e7f924d32d1367e4c91ac1da5755b14d,
         type: 3}
       propertyPath: m_LocalPosition.x

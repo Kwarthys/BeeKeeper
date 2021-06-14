@@ -10,6 +10,12 @@ public class ContactGrapherRetriever : MonoBehaviour
     public Vector3 dimension;
     public Vector3 maxValues;
 
+    public bool xRelative = false;
+    public bool yRelative = false;
+    public bool zRelative = false;
+
+    public bool zLogarithmicScale = false;
+
     public PointCloudReferencer pointCloud;
 
     public float refreshRate = 1;
@@ -17,6 +23,25 @@ public class ContactGrapherRetriever : MonoBehaviour
     private float lastRefresh = -10;
 
     private Dictionary<int, int> idToPointID = new Dictionary<int, int>();
+
+    private void Start()
+    {
+        if(zLogarithmicScale)
+        {
+            maxValues.z = Mathf.Log10(maxValues.z + 1);
+        }
+    }
+
+    /**** EXPERIMENTAL ****/
+    private void clearGraph()
+    {
+        foreach(KeyValuePair<int, int> entry in idToPointID)
+        {
+            pointCloud.freeIndex(entry.Value);
+        }
+        idToPointID.Clear();
+    }
+    /*********************/
 
     void Update()
     {
@@ -62,14 +87,27 @@ public class ContactGrapherRetriever : MonoBehaviour
 
     public Vector3 transformPoint(Vector3 point)
     {
-        maxValues.x = Mathf.Max(maxValues.x, point.x);
-        maxValues.y = Mathf.Max(maxValues.y, point.y);
-        maxValues.z = Mathf.Max(maxValues.z, point.z);
+        if(point.z > 0)
+            Debug.Log(point.z);
+
+        if (zLogarithmicScale)
+        {
+            point.z = Mathf.Log10(point.z + 1);
+        }
+
+        if (xRelative)
+            maxValues.x = Mathf.Max(maxValues.x, point.x);
+        if(yRelative)
+            maxValues.y = Mathf.Max(maxValues.y, point.y);
+        if(zRelative)
+            maxValues.z = Mathf.Max(maxValues.z, point.z);
+
 
         Vector3 transformedPos = new Vector3();
         transformedPos.x = (point.x / maxValues.x) * dimension.x/* - transform.position.x*/;
         transformedPos.y = (point.y / maxValues.y) * dimension.y/* - transform.position.y*/;
         transformedPos.z = (point.z / maxValues.z) * dimension.z/* - transform.position.z*/;
+
         return transformedPos;
     }
 

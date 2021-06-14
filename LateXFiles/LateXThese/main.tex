@@ -1,0 +1,94 @@
+% Ce fichier main.tex est le fichier principal \`{a} partir duquel tout est g\'{e}n\'{e}r\'{e}
+% This file is the main file where the final document is generated
+\documentclass{these-dbl}
+
+% Remplir les metadonnees du pdf
+% Fill the pdf metadata
+\hypersetup{
+%    pdfauthor   = {XYZ},
+%    pdftitle    = {Th\`{e}se de doctorat de XYZ},
+%    pdfsubject  = {Th\`{e}se de doctorat de XYZ},
+%    pdfkeywords = {mots-cl\'{e}s},
+}
+
+\geometry{vmargin=4.0cm}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Spécifier vos fichiers de bibliographie
+% Specify you bibliography files here
+\usepackage[backend=biber, style=numeric]{biblatex}
+\addbibresource{./biblio/bib.bib}
+
+\begin{document}
+
+% Page de garde avec commande \maketitle
+% Front cover calling \maketitle
+\input{./Couverture-these/pagedegarde}
+
+% Sélectionner la langue du contenu suivant cette ligne
+% Select the content language following this line
+\selectlanguage{french}
+
+% Inclusion du chapitre remerciement
+% Input acknowledgement chapter
+\clearemptydoublepage
+\input{./Acknowledgement/acknowledgement}
+
+% Ne pas oublier cette commande qui g\'{e}n\`{e}re la page de couverture avant
+% This command will generate the front cover
+\frontmatter
+\clearemptydoublepage
+\renewcommand{\contentsname}{Table of Contents}
+\tableofcontents %sommaire %table of content
+%\shorttableofcontents{Sommaire}{0}
+\listoffigures
+
+\clearemptydoublepage
+\input{./Introduction/introduction}
+
+\clearemptydoublepage
+\mainmatter
+\input{./Chapitre1/chapitre1}
+
+\clearemptydoublepage
+\input{./Chapitre2/chapitre2}
+
+\clearemptydoublepage
+\input{./Chapitre3/chapitre3}
+
+\clearemptydoublepage
+\input{./Chapitre4/chapitre4}
+
+\clearemptydoublepage
+\input{./Chapitre5/chapitre5}
+
+\clearemptydoublepage
+\input{./Chapitre6/chapitre6}
+
+\clearemptydoublepage
+\backmatter
+\input{./Conclusion/conclusion}
+
+% Chapitre pour la bibliographie
+% Bibliography chapter
+\clearemptydoublepage
+\phantomsection % To have a correct link in the table of contents
+\addcontentsline{toc}{chapter}{Bibliography}
+
+% nocite: Pour citer la totalit\'{e} des r\'{e}f\'{e}rences contenues dans le fichier biblio
+% nocite: In order to cite all the references included biblio
+%\nocite{*}
+\printbibliography
+%\printbibliography[heading=primary,keyword=primary]
+%\newpage
+%\nocite{*}
+%\printbibliography[heading=secondary,keyword=secondary]
+
+\clearemptydoublepage
+% Pour avoir la quatrième de couverture sur une page paire
+% To have the back cover on an even page
+\cleartoevenpage[\thispagestyle{empty}]
+\input{./Couverture-these/resume}
+
+\end{document}

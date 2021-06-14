@@ -1,0 +1,72 @@
+\chapter{État de l'Art: Insectes Sociaux et Simulation Multi-Agents}
+	\section{Complexité et Colonie d'abeilles, Biologie et Système complexe}
+			Synthèse des connaissances, notamment de notre visite à Avignon et ses 43 degrés à l'ombre.\\
+		\subsection{Complexité}
+		\subsection{Auto-Organisation de la Colonie}
+			Afin d'assurer le bon fonctionnement et l'épanouissement de la colonie, chaque individu la composant doit effectuer un certain nombre de tâche lorsqu'elle sont nécessaire. Contrairement à nous, ces individus ne disposent d'aucun contrôle central. Personne pour surveiller la température et prévenir une équipe que pendant un certain temps ils seraient en charge de la réguler. Pas de chef pour donner des ordres.
+			
+			Ainsi, c'est chaque individu qui doit en quelques sortes, tout surveiller, et être prêt a adapter son activité en fonction de ses perceptions. Pour reprendre l'exemple de la température, lorsqu'un individu décide qu'il fait un peu trop chaud, il va alors commencer à refroidir ses alentours. Dans le cas des abeilles ce rafraichissement peut être réalisé soit en allant battre des ailes à l'entrée de la colonie afin de créer un courant d'air, soit en vaporisant de l'eau à l'intérieur, pour directement abaisser la température. 		
+			
+			
+			\subsubsection{Différentes Régulations}
+			\begin{itemize}
+				\item Thermo-Régulation basées sur la perception locale de température et sur les différences entre individus.
+				\item Sélection des meilleurs sources de nourritures par les butineuses lors du recrutement.
+				\item Régulation de l'âge du premier butinage en fonction des demandes du couvain.
+			\end{itemize}
+
+			\paragraph{}			
+			Un des points clés de cette organisation est que chaque individu à des "tolérances" légèrement différentes. Une diversité qui provient notamment du fait que même si les abeilles ont en général toutes la même mère, elles n'ont pas toute le même père, on parle de "demie sœur". En effet, lors de son unique vol nuptial, la future reine s'accouple avec des dizaines de mâles (qui meurent et tombent au sol juste après). Cette grande diversité génétique et les seuils de tolérances différents apportent une plus grande stabilité, tant dans les activités des abeilles que dans les paramètres contrôlés. Il a en effet été montré que l'exceptionnelle capacité des abeilles à maintenir la température à 36°C au niveau du couvain\footnote{très sensible, une variation d'un degré peut condamner le couvain et mettre la colonie en péril} est en partie du au fait que certaines abeilles vont commencer a refroidir la ruche assez tôt, alors que d'autres ne le feront que lorsque la température est déjà trop élevée. A l'extrême, certaine abeilles refroidissent la ruche en même temps que d'autres plus frileuses la réchauffe. Cet affrontement qui peu paraitre contre productif permet en réalité à la température d'être extrêmement stable, malgré les variations parfois conséquente de la température extérieure.
+			
+			\subsubsection{Sélection des meilleures sources de nectar}
+			Lors de la collecte du nectar, les butineuses sont très sélectives et préfère de très loin les hautes teneurs en sucres. La colonie utilise donc un système de recrutement, presque de recommandation, afin d'allouer ses effectifs de butineuses de manière optimale et dynamique, préférant les sources proches et sucrées aux sources éloignées et peu sucrées.
+			
+			Ce mécanisme de recrutement se compose de trois étapes. Certaine butineuses plus téméraires, vont spontanément quitter la ruche sans destination, dans le seul but de trouver une nouvelle source de nectar. Ces butineuses sont appelées des "scouts", ou des "éclaireurs". Une fois sur une source de nectar, il est temps d'en juger la qualité, c'est la deuxième étape. L'abeille va récolter le nectar, et estimer sa teneur en sucre. Si cette teneur lui convient, elle va rentrer à la colonie et commencer la troisième étape, le point clé, le recrutement.
+			
+			Une fois rentrée, l'abeille recruteuse va se mettre à danser la désormais célèbre "Waggle Dance", en forme de 8. Cette danse à un objectif double. Le premier : communiquer la position de la source par rapport au soleil, pour permettre aux autres de la retrouver. Le second est plus indirect : Plus la source est sucrée, plus l'abeille va danser longtemps, et même répéter la danse dans plusieurs endroits de la ruche. Une danse plus longue offre plus de temps à d'autres abeilles de venir la suivre et apprendre la position de cette nouvelle source. Ainsi, plus la source est sucrée, plus la recruteuse va communiquer la position à de nombreuses butineuses.
+			
+			Une fois recrutée, les nouvelles butineuses vont se rendre a la source et répéter le processus : Collecter, juger, rentrer et recruter. La encore, la diversité est clé, des abeilles moins portée communication vont passer moins de temps à recruter, afin de maximiser le temps de butinage, il y a des dizaines de milliers de bouches a nourrir tout de même ! De plus, certaine butineuses sont moins difficiles que d'autres, elles vont donc communiquer des sources de faibles qualités et y maintenir un faible contingent. Ce contingent alors moins utile dans l'immédiat sert de surveillance, car les teneurs en sucres des différents nectars peuvent fortement varier selon les saisons mais aussi pendant les périodes de la journées. Une source de faible qualité peut alors devenir une source extrêmement intéressante en quelques heures. Le groupe alors déjà présent peut observer ce changement et déjà danser dans toutes la colonies pour avertir les autres, gagnant ainsi un temps précieux de re-découverte de la source mais aussi le temps d'amorcer une réponses conséquentes. Gagner du temps sur une réaction exponentielle est toujours extrêmement précieux.
+		\subsection{Pheromones et Physiologie}
+			Afin d'obtenir cette auto-organisation, la colonie s'appuie sur différents mécanismes incluant de nombreuses boucles de rétro-actions. Des perceptions directes des différents individus permettent d'effectuer une partie de cette organisation, comme la température ou la concentration en sucre de leur nourriture. Mais la colonie s'appuie aussi sur des mécanismes indirects, physiologiques, qui prennent places grâce à différentes hormones et phéromones. Nous étudions ici en détail l'importance physiologique des glandes hypopharyngiennes (GH) et de la Corpora Allata. Voici un modèle simplifié des connaissances biologiques que nous avons à l'heure actuelle.
+			
+			Les GH permettent aux abeilles s'occupant du couvain de transformer le pollen et le nectar en une substance riche destinée aux larves. Elles permettent aussi aux butineuses de traiter chimiquement le nectar, le rendant utilisable pour les nourrices, transformable en miel et même consommable directement par les autres adultes. Or, ces deux comportements sont incompatibles, les GH subissent une modification physiologique pour effectuer l'une ou l'autre de ces fonctions.
+			
+			\paragraph{}
+			La Corpora Allata permet aux adultes de sécréter une hormone appelée Hormone Juvénile(HJ). Cette hormone est retrouvée en grande quantité chez les butineuses, et en faible quantité chez les nourrices. Une hypothèse répandue est de considérer que la HJ sécrétée par la Corpora Allata permet d'altérer le fonctionnement des GH, dictant ainsi leur utilité pour les nourrices ou les butineuse. Typicalement, la transition de nourrice à butineuse se fait en une vingtaine de jours : La colonie suit ce qu'on appelle le Polyéthisme d'Âge, les adultes ayant le même âge réalisent les mêmes activités. Or, il a été montré que ce polyéthisme est souple, et que dans les bonnes conditions, une abeille peut aller butiner dès ses 5 jours, au lieu de la vingtaine habituelle.
+			
+			Ce mécanisme a été lié à une phéromone, émise par toute la colonie, l'Ethyle Oléate (EO). Retrouvée majoritairement sur le couvain et la reine, elle est aussi retrouvée chez les butineuses. Lorsque cette phéromone est injectée en grande quantité a des abeilles adultes, il a été montré que celles-ci arrêtent le butinage et voient leur taux d'HJ diminuer.
+			
+			L'Ethyle Oléate n'est pas une phéromone volatile, elle est majoritairement transmise par contact, principalement lors d'échange de nourriture et de nettoyage mutuel : lorsqu'une abeille en nettoie une autre, ou lorsqu'une nourrice nettoie une larve. Elle serait aussi transmissible sur de courtes distances par évaporation, mais nous avons décidé d'ignorer ce mécanisme pour l'instant.
+			
+			
+			\paragraph{}
+			Dans le cas classique du polyéthisme d'âge, les jeunes abeilles sont nourrices, et les plus âgées sont butineuses. Mais, comme nous venons de le voir, cet âge est souple : Une nourrice peut accélérer sont vieillissement, et une butineuse peut même l'inverser. C'est pour ceci que nous parlerons ici d'âge physiologique, opposé à l'âge réel. Une abeille avec un faible âge physiologique possède les GH nécessaires aux nourrices, et les âgées physiologiques possèdent les GH et les muscles nécessaires au vol et au butinage. 
+			
+		\paragraph{}
+		Mécanismes de l'auto organisation
+			Rôles et fonctions physiologiques associées.\\
+			Différents rôles de différentes phéromones.\\
+			Modélisation estimée hypothèse : \\
+			Cas classique de la vie d'une abeille.\\
+			Quels changements provoquent quelles réactions dans le métabolisme de l'abeille, et donc dans la répartition du travail.
+	\section{Modèles existants de répartition des tâches}
+	Etat de l'art de l'article PAAMS
+		\subsection{Foraging For Work}
+		\subsection{Modèles à Seuils}
+		
+		
+		Ces fonctions sigmoïdes prennent le plus souvent la forme :
+			
+\begin{equation}
+	Score = \frac{x^n}{x^n + \theta^n}
+\end{equation}	
+Avec $x$ le stimulus d'entrée, $n$ le degré de linéarité, placé a $n=2$ dans la littérature, et $\theta$ le seuil, aussi apellé biais, de la sigmoïde. Vous trouverez Figure \ref{sigmoids} différentes sigmoides mettant en valeur l'impact du paramètre $\theta$. Le seuil sert en quelques sortes de point d'ancrage, lorsque le seuil est strictement équivalent au stimulus d'entrée, alors la valeur du résultat est exactement 0,5.
+		
+		\begin{figure}
+		\centering
+		\includegraphics[width=0.5\textwidth]{./Pictures/Figures/sigmoids.png}
+		\caption{L'influence du paramètre téta ($\theta$) sur la forme des sigmoides.}
+		\label{sigmoids}
+		\end{figure}
+			
+	\section*{Conclusion}

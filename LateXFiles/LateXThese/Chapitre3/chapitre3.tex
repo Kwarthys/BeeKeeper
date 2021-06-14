@@ -1,0 +1,202 @@
+\chapter{Modélisation et Implémentation pour la Colonie d'Abeilles}
+
+	Nous allons désormais voir ensemble l'implémentation du modèle que nous venons de décrire, appliqué au cas qui nous intéresse ici : La colonie d'abeilles. Pour une première itération, nos abeilles auront pour objectif de correctement se répartir le travail entre deux tâches principales : Nourrir le couvain et Butiner. Nous allons commencer par discuter de notre simulateur et de son architecture logicielle, puis du modèle physiologique de l'abeille adulte et du couvain, tiré de la biologie mais fortement simplifié. Nous verrons ensuite comment nous avons intégré le modèle de répartition des tâches décrit dans le chapitre précédent. Nous finirons par discuter de la calibration de ce système complexe, au plus proche de la biologie, tout en tenant en compte les différentes hypothèses et simplifications de notre modèle.
+	
+	\section{Description du Simulateur}
+		\subsection{Architecture Logicielle}
+			Pour réaliser ce simulateur, nous avions en tête quelques points clés. Cette thèse s'inscrit dans un projet plus grand, l'idée était donc de produire un simulateur propre, qui serai simple d'entretien et facile à améliorer et complexifier par la suite. De plus, notre bonne maitrise du langage Java, ainsi qu'un compromis entre confort d'écriture et performances nous a poussé à utiliser ce langage. Pour nous aider à mettre en place cette notion floue de propreté du code, nous avons utilisé une bonne quantité d'Interfaces Java, permettant de découpler des grande parties du codes, facilitant l'implémentation de modifications. Nous avons, le plus possible, pensé l'architecture en compostants indépendants échangeant le moins d'informations possibles.
+			
+			Le simulateur, en bon projet orienté objet, est pensé en couche d'abstraction successive. Au plus haut niveau, nous trouvons le lanceur, le célèbre "\textit{main}", qui se charge des simulations. Présentant deux modes, "Interactions" et "Barrage de simulations", il prépare différent composants logiciels. Dans le mode "Interactions", il prépare le composant réseau qui servira à envoyer et recevoir les informations de l'application interactive, composant qui n'est pas instancié dans le mode "Barage de simulations". Le lanceur instancie ensuite un \textit{MainController}, un contrôleur principal, et lui partage le compostant réseau. Le contrôleur principal se charge de gérer une simulation. Désormais nous trouvons deux comportements différents pour les modes, en "Barrage de Simulations", les simulations s'enchainent à pleine vitesse, souvent en changeant des paramètres. En mode "Interactions", lorsque la simulation est arrêtée, soit le programme s'arrête soit la même est relancée, selon ce qui à été décidé par l'utilisateur.
+			
+			Le contrôleur principal représente une simulation, une colonie d'abeilles. Il se charge d'instancier correctement les différents composants d'une simulation, et du bon déroulement de l'ensemble. Il compte les pas de temps, ce qui lui permet d'envoyer un signal aux agents via un autre composant de vivre un pas de temps ou lorsqu'il est temps de "logger". Via une interface, il offre un grand nombre de services très haut niveau à différents composants, notamment au \textit{CombManager}, le manager des cadres, qu'il instancie avec les bons paramètres. Le CombManager se charge d'instancier le bon nombre de faces de cadres, qui seront associées par deux en cadres, puis instancie les agents initiaux et les répartis sur ces cadres, via un autre composant, l'\textit{AgentFacotry}, qui simplifie la création d'agents.
+			
+			Chaque face de cadre possède une liste de cellules, qui elles même possèdent quelques attributs principaux : leur numéro et leur position x et y sur le cadre ($numéro = y * largeur + x$), ainsi qu'une place "visite" pour un agent qui serait au dessus de la cellule, et une case "contenu", pour un agent à l'intérieur de la cellule ou de la nourriture, ou même rien, pour une cellule vide. Chaque face de cadre possède une liste contenant tout les agents que contiennent ces cellules. Cette liste agit comme un raccourcis, et permet de ne pas avoir à interroger toutes les cellules à chaque fois qu'on veut accéder aux agents. Le CombManager possède aussi une liste d'agents, ceux qui n'appartiennent à aucun cadres, la liste de tout les agents à l'extérieur de la ruche, les butineuses.
+			
+			Le CombManager est aussi responsable de la création, mise à jours, et bonne association des \textit{StimuliManager}, les managers de propagation des différents stimulus dans l'environnement. Chaque cadre a deux faces, et sont placés côte à côte. Ainsi, les faces se faisant face partagent le même StimuliManager. Lorsque les cadres sont déplacés, de nouveau StimuliManager temporaires doivent être créés pendant le déplacement, puis lorsqu'ils sont reposés dans la ruche, le CombManager se charge de refaire les bonnes associations.
+			
+			Un StimuliManager est une grille de la même taille qu'un cadre, dont chaque case possède plusieurs flottant, représentant les intensités des différents stimulus présent sur le cadre. Sa mise à jours utilise une méthode de double buffering : la grille est lue et une deuxième est remplie avec les nouvelles valeurs. Une fois la lecture terminée, la deuxième grille prend la place de la première. Pour propager les stimulus, nous utilisons une fonction proche d'un flou en traitement d'image : chaque pixel devient une moyenne de lui même de tout ses voisins. Différents paramètres de Stimulus nous permettent d'obtenir des comportement de propagation et d'évaporation différents.
+			
+			\subsection{Architecture des Agents}
+			Avec les mêmes objectifs en tête, lisibilité et facilité d'ajouts, nos agents ont été pensés en niveau d'abstraction imbriqués. Au plus haut niveau nous trouvons la classe abstraite "Agent", qui regroupe l'âge, la position, l'énergie, la faim, une fonction abstraite "live()", ainsi que des fonctions de déplacement simples, comme le mouvement aléatoire. Nous définissons ensuite la classe "EmitterAgent", ou Agent Émetteur, qui hérite d'Agent et ajoute les interactions avec un StimuliManager, permettant d'émettre, ressentir des stimulus dans l'environnement. Enfin, héritant d'EmitterAgent, nous trouvons la classe "WorkingAgent", ou Agent Travailleur, qui implémente enfin "live()", avec la sélection de tâches. La fonction "live()" se déroule en quelques étapes. D'abord on vérifie si l'agent est toujours en vie, ensuite nous mettons à jours ses perceptions. L'algorithme de séléction et exécution des tâches est alors appliqué, puis une fonction abstraite est appelée, fonction permettant de faire avancer le métabolisme de l'agent, et qui est implémenté différemment par nos différentes implémentations de WorkingAgent.
+			
+			Ainsi, dans les plus hautes couches d'abstraction, les différents composants ont des références "Agent", ce qui améliore la simplicité d'ajout du programme. Nous avons 3 classes implémentant WorkingAgent, les classes d'abeille Adulte, de couvain, et une pour la reine. Chacune de ces implémentations ajoute différentes tâches à sa liste de tâches, et implémente la fonction d'avancée du métabolisme.
+			
+			\begin{figure}
+			\centering
+			\includegraphics[width=\textwidth]{./Pictures/Figures/ArchiLogicielle.png}
+			\caption{Diagramme de classe esquissant l'architecture logicielle du simulateur.}
+			\label{ArchiLogicielle}
+			\end{figure}
+			
+			\subsection{Pas de temps et Multi-Thread}
+			Afin d'accélerer nos simulations pour d'itérer plus confortablement dessus, nous avons mis en place un systême de multi-thread. Chaque duo de faces de cadres se faisant face, ainsi que le groupe des butineuses, vivent en concurrence, car ces différents ensembles n'interagissent pas entre eux. Pour ceci nous avons créé une classe WorkDispatcher, qui s'occupe de gérer un groupe de thread, de répartir le travail sur ses différents thread, d'en ajouter si nécessaire et de surveiller le moment où tous ont terminé leur travail. A chaque pas de temps, sur signal du contrôleur principal, le manager des cadres récupère et combine si nécessaire les différents groupes d'agents a faire vivre ensemble. Il envoi alors ces ensembles au WorkDispatcher qui redirige la liste sur un thread disponible. Chaque thread va alors appeler la fonction "live()" de chacun des agents et passer au suivant.
+			
+			Pour le cas particulier des butineuses rentrant dans la ruche, ou en sortant, deux listes synchronisées spéciales ont été ajoutées au niveau du CombManager. Une liste contenant toutes les abeilles qui sont sortie de la ruche sur ce pas de temps, et une liste contenant celles qui sont rentrée. Les butineuses et les abeilles des cadres ne vivant pas sur les même threads, une abeille rentrante ne peux pas être ajoutée directement au cadre. Ce n'est qu'après avoir fait vivre tout le monde, que le CombManager se charge de faire les transferts, déplaçant les abeilles sortantes vers la liste des butineuses, et les abeilles entrante vers un cadre libre aléatoire.
+			
+			\subsection{Architecture des Tâches}
+			Nos tâches sont décrites en subsomption hiérarchique dans le modèle, nous les avons donc implémenté de la sorte dans le simulateur. Au sommet de la hiérarchie nous trouvons la classe "Tâche", associant un seuil, un nom de tâche, différents paramètres et une activité racine. Une Tâche est une classe abstraite : toute classe que nous voudrons instancier devra implémenter la fonction qui permet de calculer son score.
+			
+			La classe "TaskNode", ou Nœud de Tâche, est une interface très simple contenant deux fonctions : "search" (recherche) et "check" (vérifier). Elles nous permettent de mettre en place le fonctionnement de subsomption. La fonction Check représente la condition de chacun des blocs de notre subsomption, condition booléenne, chaque Nœud devra l'implémenter. Ensuite, la fonction Search, la principale, diffère selon les nœuds. La classe TaskNode est implémentée par deux classes, Activité et Action, respectant notre modèle vu plus tôt. Vous trouverez Figure \ref{ArchiTask} un diagramme de classe de cette architecture. La fonction Search renvoi toujours une action, et permet d'interroger récursivement toutes la subsomption hiérarchique. La fonction Search de la classe Action renvoi l'instance d'Action sur laquelle elle est appelée. En revanche, une Activité est un peu plus complexe. Une activité possède une liste de TaskNode, permettant la mise en place de la subsomption hiérarchique. Dans la fonction Search, l'Activité va interroger un par un (dans l'ordre) la fonction Check de tous ses noeuds. Si l'un deux valide son Check, l'activité appelle alors le Search du noeud validé.
+			
+			\begin{figure}
+			\centering
+			\includegraphics[width=0.8\textwidth]{./Pictures/Figures/ArchiTask.png}
+			\caption{Diagramme de classe de l'architecture logicielle de Tâche.}
+			\label{ArchiTask}
+			\end{figure}
+			
+			Ainsi, afin de récupérer l'action à effectuer d'une Tache, il suffit d'appeler Search sur l'activité racine de la Tâche. Récursivement, on va descendre dans la subsomption dans les blocs aux conditions validés. Dès qu'une action est trouvée, sa fonction Search la renvoi, est elle est remontée dans toutes les fonctions Search appelées précédemment, jusqu'à ressortir au niveau du tout premier Search que nous avons appelée sur l'activité racine de la tâche. L'Action est prête à être exécutée.
+			
+			
+			\paragraph{}
+			Ainsi lors d'un pas de temps, le contrôleur principal demande au manager des cadres de faire vivre tous les agents. Ce-dernier parcours alors toutes ses faces de cadres et récupère tout leurs agents, afin de les envoyer aux gestionnaire de thread pour une exécution parallèle. Une fois tous les agents mis à jours, les agents entrant et sortant de la ruche sont transférés. Si le contrôleur principal a demandé à "log" le tour, alors une nouvelle mécanique s'enclenche. Le manageur des cadres récupèrent à nouveau la liste de tout les agents, et leur demande de décrire en une ligne leur état : ID, tâche, énergie, HJ et EO. A cette ligne est ajoutée au début le numéro du pas de temps transmis par le contrôleur. Toutes ces lignes sont alors envoyée au "Logger", qui les transfère sur un autre thread afin d'êtres écrites sur un fichier, permettant une trace de la simulation, pour utilisation ultérieur en analyse de résultat. Vous trouverez Figure \ref{ArchiLogicielle} un diagramme de classe reprenant ce que nous venons de voir dans cette section.
+
+	\section{Modélisation de la Colonie d'Abeilles}
+		\subsection{Modélisation de l'Abeille Adulte}
+		
+		Dans notre colonie virtuelle, les adultes tendent toutes à aller butiner rapidement, grace à l'Hormone Juvénile (HJ) qu'elles sécrètent, mais sont retenues "nourrices" par l'Ethyle Oléate(EO) émise par le couvain et les butineuses, qui "détruit" une part de leur HJ. Cette rétroaction permet de réguler le nombre de nourrice et de butineuses au sein de la colonie : Lorsqu'il y a beaucoup de couvain, très peu d'adultes vont partir butiner, car le couvain va injecter de grande quantité d'EO dans les agents de la colonie, et certaines butineuses peuvent même redevenir des nourrices. Lorsque les butineuses meurent de vieillesse, elles freinent moins le développement des nourrices, et certaines pourront partir butiner. Ces différentes interactions ont été synthétisées Figure \ref{HJEODynamics}. Dans les colonies réelles, les butineuses échangent très régulièrement des phéromones avec les receveuses, qui sont chargée de délester les butineuses de leur cargaison pour aller les stocker dans un endroit adapté dans la ruche. Nous posons une hypothèse ici, qui est que les receveuses sont le principal vecteur de l'effet rajeunissant des butineuses sur les nourrices. Or, comme nous ne les simulons pas dans cette itération du modèle, nous nous attendons a ne presque pas observer ce mécanisme.
+		
+		L'Hormone Juvénile (HJ) représente donc directement la physiologie de l'abeille adulte, ce que nous appellons l'âge physiologique en référence en polyéthisme d'âge que nous observons dans les colonies réelles. Une abeille avec très peu d'HJ ($HJ < 0.5$), sera capable de nourrir le couvain mais incapable butiner. À l'inverse, une abeille avec un fort taux d'HJ ($HJ > 0.5$), sera capable de butiner mais incapable de nourrir le couvain. On parle donc de nourrices lorsque nous considérons les abeilles physiologiquement jeune, et de butineuses pour les abeilles physiologiquement âgées. Nous avons ajouté un paramètre à nos abeilles, leur développement ovarien, toujours nul sauf la reine pour qui il vaut 1. Cette variable n'est pas utilisé dans cette itération de l'implémentation, mais aurais permis de simuler les ouvrières pondeuses que nous retrouvons dans la réalité, lorsque les phéromones de la reine ne parviennent plus a certaines ouvrière en périphérie de la colonie et que ces dernières commencent à pondre.
+		
+		Dans nos lectures, nous avons pu apprendre que les abeilles d'hiver pouvait vivre jusqu'à une année entière, mais que les butineuses meurent en une trentaine de jours, avec en moyenne les dix derniers jours passés a butiner. Les biologistes pensent que le vol est une activité très épuisante, et qu'il est possible qu'il réduise fortement l'espérance de vie des butineuses. Nous avons donc implémenté ce mécanisme pour les morts de vieillesses de nos agents. Ils meurent en une année, mais subissent une pénalité lorsqu'ils butinent. Ainsi, un agent qui butine voit son âge effectif augmenter trente fois plus vite qu'un agent à l'intérieur de la colonie.
+		
+		Nos abeilles sont placés sur le cadre, savent que la sortie s'effectue par le bas (et savent aller vers le bas). Le travail de butinage est laissé très simple, le fourragement ne faisant pas partie de nos priorités ici. Les butineuses sortent de la ruche, attendent pendant un nombre donné de pas de temps puis rentrent à nouveau dans la ruche, sur un cadre aléatoire possédant une case disponible au niveau de sa ligne la plus basse.
+		
+			
+			\begin{figure}
+			\centering
+			\includegraphics[width=\textwidth]{Pictures/Figures/ImplemDynamics.png}
+			\caption[Notre modélisation de la physiologie de l'abeille adulte.]{Modélisation simplifiée des effets physiologues résponsables de l'auto-organisation.}
+			\label{HJEODynamics}
+			\end{figure}
+		
+		
+		\subsection{Modélisation du Couvain}
+		
+			Nous avons modéliser les trois étapes majeures de la vie du couvain : Oeuf, larve et nymphe. Seule la larve requiert de la nourriture, les deux autres étapes n'ont pas besoin de nourrice pour se dérouler correctement. La nymphe n'émet aucune phéromones, la cellule étant fermée et l'EO que nous avons modélisé étant transmise par contact. La larve émet de l'EO en permanence, nous avons aussi fait le choix de faire émettre ces phéromones par les oeufs aussi. Plusieurs aspects ont motivés ce choix, que nous n'avons pas pu confirmer ou infirmer en biologie : L'oeuf est pondu par la reine qui émet des phéromones très puissante, elle en transmet donc surement à l'oeuf pendant la ponte. De plus, n'ayant pas simulé les receveuses, le mécanisme de rajeunissement des nourrices par les butineuses est minoré, l'oeuf permet donc de compenser légèrement ce biais. L'oeuf ayant une durée de vie très courte, seulement 3 jours sur les 21 totaux, il est tout à fait possible que cette émission n'ai quasiment aucun effets.
+		
+	\subsection{Tâches et Auto-Organisation}
+		Le but de notre simulation est de retrouver une équilibre dans le partage des tâches entre ces deux tâches clés : Butiner et Nourrir le couvain. Ces deux tâches présentent pas de stimulus délencheur direct comme nous avons pu en discuter dans le chapitre précédent. Nous avons donc recourt à une motivation source pour ces deux tâches, que nous plaçons arbitrairement à $0.5$. Cette motivation source est abaissée à 0 lorsque l'abeille n'est pas physiologiquement apte a réaliser la tâche, et si l'abeille n'as pas suffisamment d'énergie pour survivre le vol aller-retour. Ensuite, nous utilisons la HJ de chaque agent pour ajuster le seuil de chacune de ces deux tâches. Moins une abeille a d'HJ, plus elle aura de chance de sélectionner la tâche de nourrice, et plus une abeille aura d'HJ, plus elle aura de chance de sélectionner la tâche de butineuse. Le débatement des seuils a été ajusté pour empêcher le score de la tâche de dépasser $0.8$ : L'intervalle $[0.8 ; 1]$ est réservé aux tâches prioritaires, que nous allons maintenant décrire. En effet, si nos agents doivent se répartir deux tâches principales, ce ne sont pas les seules, nous avons ajouté des tâches d'entretiens : Se reposer, donner à manger, demander à manger. La tâche de repos est prioritaire, si l'énergie d'un agent devient négative, il meurt\footnote{Dans cette implémentation, un agent ne peut pas mourir de faim. La nourriture n'étant modélisée que dans sa forme la plus simple, la mort de faim n'a que peu d'intérêts et apporterait beaucoup de contraintes.}. Le couvain possède aussi trois tâches, une pour chacune de ses étapes de développement, et la reine possède une tâche en plus lui permettant de pondre. Vous trouverez Table \ref{tableTasks} un récapitulatif de toutes les tâches implémentées.
+		
+		\begin{table}
+        \centering
+        \caption{Les différentes tâches que nos agents peuvent exécuter.}
+        \begin{tabular}{|l|l|}
+            \hline
+            Nom de tâche & Calcul du score\\
+            \hline
+            \hline
+            \multicolumn{2}{|l|}{Tâches d'entretien}\\
+            \hline
+            Se reposer & 1-Energie [0;1]\\
+            Demander à manger & Faim [0;0.8] \\
+            Donner à manger & Stimulus de demande détecté [0;0.8] \\
+            Déplacement aléatoire & 0.2 (tâche par défaut) \\
+            \hline
+            \hline
+            \multicolumn{2}{|l|}{Tâches Principales}\\
+            \hline
+            Butiner & 0 si $HJ<0.5$, sinon Sigmoïde seuil : 1-JH déplacé dans [0.3;1] \\
+            Nourrir le couvain & 0 si $HJ>0.5$, sinon Sigmoïde seuil : JH déplacé dans [0.3;1] \\
+            \hline
+            \hline
+            \multicolumn{2}{|l|}{Tâches du couvain et de la reine}\\
+            \hline
+            Tâche d'oeuf & 1 si âge d'oeuf, 0 sinon (le couvain n'a pas besoin de repos)\\
+            Tâche de larve & 1 si âge de larve, 0 sinon\\
+            Tâche de nymphe & 1 si âge de nymphe, 0 sinon \\
+            Pondre & 0.8 si développement ovarien, 0 sinon\\
+            \hline
+            
+        \end{tabular}
+        \label{tableTasks}
+    \end{table}
+    
+	\section{Calibration des Phéromones}
+	
+	La répartition des tâches au sein de la colonie, en particulier le nourrissage et le butinage, dépendent majoritairement de mécanisme d'hormone et de phéromone. Comme nous l'avons vu plus tôt, nous nous intéressons ici au bras de fer entre l'Hormone Juvénile (HJ) et l'Ethyle Oléate (EO), comme décrit Figure \ref{HJEODynamics}.
+	
+	Paramétrer cette dynamique a été un processus complexe : Notre grande simplification du modèle, et surtout des différentes phéromones nous détache, pour cette partie, de la réalité biologique. Nous avons donc émis des hypothèse, fixé des paramètre arbitrairement, dans le but de retrouver d'autres "macro-paramètres" émergents. Les deux points clé de cette paramétrisation sont 1. La quantité relative d'EO émise par rapport à l'HJ, et 2. La force des effets de l'HJ et de l'EO. De plus, la paramétrisation s'articule autour de deux points d'équilibre : l'Equilibre en EO ($EO_{Eq}$), qui représente le moment où un agent a suffisament d'EO pour parfaitement compenser son vieillissement, et donc son émission d'HJ. L'autre point d'équilibre, cette fois a l'HJ ($HJ_{Eq}$), représente le moment où un agent la bonne quantité d'HJ pour parfaitement compenser l'évaporation d'EO, et donc maintenir ce niveau.
+	
+	\subsection{Hypothèses et décisions arbitraires}
+	Etant loin de la biologie, les quantités absolue des différentes substances n'étaient lié en rien a la réalité, nous avons donc pu choisir arbitrairement les quantités et points d'équilibres. Nous avons donc décider de fixer la quantité d'HJ dans $[0;1]$, et $HJ_{Eq} = 0.8$. De son côté, la quantité d'EO est simplement comprise dans $[0;\infty[$, et avec $EO_{Eq} = 1$. 
+	
+	Ainsi, un agent abeille adulte avec un taux d'HJ supérieur à $HJ_{Eq}$ va émettre plus d'EO qu'il ne s'en évapore sur lui, et va rajeunir. Un agent avec un taux d'EO inférieur à $EO_{Eq}$ va éliminer moins d'HJ qu'il n'en émet, et va donc vieillir.
+	
+	\paragraph{}
+	Nous faisons ici l'hypothèse que la réduction d'HJ par l'EO se fait seulement avec une fonction prenant en compte la quantité d'EO. De même pour l'émission d'EO en fonction de la quantité d'HJ qui ne se fait que via une fonction dépendante de la quantité d'HJ de l'agent concerné. Nous posons aussi que ces fonctions ont la forme $x^n$, avec $n$ un paramètre fixé expérimentalement (on en parlera juste après) et $x$ la différence entre le taux courant et la valeur d'équilibre donnée plus tôt.
+	
+	Les deux effets énoncés précédemment sont imbriqués dans une boucle de rétroaction. Les quantités absolues de ces éléments ne sont donc pas pertinente, en revanche, les écarts entre ces deux produits provoquent la dynamique que nous recherchons. Nous avons ainsi décidé, pour simplifier le paramétrage, d'en fixer l'un et de chercher le deuxième. Nous avons donc fixé l'émission d'EO en fonction de l'HJ à une fonction linéaire :
+	
+	\begin{equation}
+		EO_{em} = (HJ - HJ_{Eq}) * EO_{Evap}
+	\label{eoEM}
+	\end{equation}
+
+Avec $EO_{Evap}$ la quantité d'EO qui s'évapore lorsque l'on considère une quantité d'EO égale à $EO_{Eq}$. Nous retrouvons donc la fonction sous la forme $s=x^n$ décrite plus tôt, avec $n = 1$ et $x$ l'écart d'HJ à l'équilibre facteur de $EO_{Evap}$.
+	
+	
+	\subsection{Intensités des effets}	
+	Après avoir fixé ces paramètres, nous devons nous atteler à trouver la bonne combinaison d'intensité des effets des substances, ainsi que la quantité a laquelle on veut les émettre. Pour l'HJ, il suffit de prendre le point de transistion, nous avons choisi 0.5, et de le diviser par la quantité de pas de temps minimum qu'il faut pour l'atteindre. Nous pouvons décider de la majorer légèrement afin de prendre en compte l'effet de l'EO, ralentissant très légèrement le vieillissement en faible quantité. Ce ralentissement est cependant très faible pour un agent isolé, ainsi nous n'avons pas gardé l'option de la majoration.
+	
+	Ainsi, nous avons la quantité d'HJ émise par chaque agent à chaque pas de temps, que nous appellerons désormais $HJ_{Incr}$. L'EO présente sur chaque agent viendra éliminer une partie de son HJ, combattant ainsi indirectement cet $HJ_{Incr}$, dont nous pouvons désormais nous servir comme référence. Nous voulons qu'a $EO_{Eq}$, la réduction d'HJ $HJ_{red}$ soit égale à $HJ_{Incr}$, pour compenser parfaitement le vieillissement de l'agent. Nous pouvons donc écrire :
+	
+	\begin{equation}
+		 HJ_{red} = (EO - EO_{Eq})^n * HJ_{Incr}
+	\label{hjRED}
+	\end{equation}
+	
+	Avec $n$ un coefficient dont nous allons nous servir pour modeler l'intensité de l'effet de réduction d'HJ. Avec $n=1$ (Figure \ref{eoLinear}), notre fonction est linéaire, nous nous servirons de cette fonction comme base de comparaison. Lorsque $n>1$, on obtient une fonction quadratique (Figure \ref{eoSqrt}). L'effet rajeunissant de l'EO est diminué avant $EO_{Eq}$ et amplifié après. Nous obtenons donc un vieillissement ainsi qu'un rajeunissement plus rapide. L'effet de l'EO est amplifié lorsque $n$ augmente. Enfin, avec $n < 1$, on obtient une fonction racine (Figure \ref{eoSqrt}). De la même manière, avec une racine, l'intensité des effets de l'EO est réduite.
+	
+	Pour illustrer, nous pouvons aussi imaginer que l'abeille vieilli naturellement rapidement. Mais, cet état d'équilibre est altéré par l'EO, nous pouvons donc visualiser ceci comme l'abeille étant attachée par un ressort à ce point d'équilibre. La rigidité de ce ressort peut alors être interprété comme la puissance de l'EO, proportionnelle à n. Plus n est grand, plus l'abeille sera tirée vers ce point d'équilibre, qu'elle soit avant ou après.
+	
+	Nous n'avons pas trouvé de moyen de fixer mathématiquement n, il a donc été trouvé expérimentalement, nous y viendrons dans la partie suivante, concernant la calibration.
+	
+	\begin{figure}
+	\centering
+	
+	\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[width=.9\textwidth]{Pictures/Figures/EOEffectsLINEAR.png}
+	\caption{Réduction d'HJ \textbf{linéaire} (exposant $= 1$) par l'abeille en fonction de la quantité d'EO qu'elle possède. Lorsque $EO = EO_{Eq}$, la réduction compense parfaitement le vieillissement naturel de l'agent : $HJ_{Red} = HJ_{Incr}$.}
+	\label{eoLinear}
+	\end{subfigure}
+	
+	\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[width=.9\textwidth]{Pictures/Figures/EOEffectsSquared.png}
+	\caption{Lorsque la fonction de réduction est \textbf{quadratique} (exposant $> 1$) plutôt que linéaire (Fig \ref{eoLinear}), on observe à gauche que l'EO a moins de puissance avant $EO_{Eq}$, et beaucoup plus après. A droite, on voit donc que le vieillissement ainsi que le rajeunissement (quand $EO > EO_{Eq}$) sont plus intenses.}
+	\label{eoSquared}
+	\end{subfigure}
+	
+	\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[width=.9\textwidth]{Pictures/Figures/EOEffectsSQRT.png}
+	\caption{Lorsque la fonction de réduction est \textbf{une racine} (exposant $< 1$) plutôt que linéaire (Fig \ref{eoLinear}), on observe à gauche que l'EO a plus de puissance avant $EO_{Eq}$, et beaucoup moins après. A droite, on voit donc que le vieillissement ($EO < EO_{Eq}$) ainsi que le rajeunissement ($EO > EO_{Eq}$) sont plus doux.}
+	\label{eoSqrt}	
+	\end{subfigure}
+	
+	\caption[Différents degrés de fonctions pour ajuster l'intensité des effets de l'Ethyle Oléate sur les abeilles adultes.]{Différents degrés de fonctions pour ajuster l'intensité des effets de l'Ethyle Oléate sur les abeilles adultes. Pour toutes les figures, à gauche les flèches indiquent la force de réduction de l'EO, a droite elles indiquent la vitesse de vieillissement (en rouge lorsque l'agent vieilli, en bleu lorsqu'il rajeuni).}	
+	\label{eoAll}
+	\end{figure}
+	
+	
+	
+	\subsection{Quantités Émises par les Larves}
+	Un autre point clé de ce modèle est la capacité des larves à influer directement la physionomie des adultes, en contraignant certain à rester nourrice. Il faut donc  que ces larves en émettent la bonne quantité : Trop peu et il n'y aura pas assez de nourrices pour s'occuper du couvain, trop et il n'y aura plus assez de butineuse à la récolte de nourriture.
+	
+	La quantité d'EO émise par chaque larve est donc importante, car elle est censée permettre à l'abeille de rester jeune, et même de rajeunir. Nous avons donc commencé par placer cette émission à $EO_{Evap}$ (Voir eq. \ref{eoEM}). De plus, les contacts étant assez bref, l'émission d'EO des larves doit permettre à une nourrice sollicitée de rester jeune malgré quelques temps de trajets. Ce dernier point porte une incertitude liée a l'émergence de ce comportement, la répartition des larves, les temps de trajets etc. Nous avons donc décidé de placer l'émission des larves à $k * EO_{Evap}$, avec k un coefficient que nous allons trouver expérimentalement, qui sera forcément supérieur à 1.
+	
+	\subsection{Objectifs de calibration}
+	Nous saurons que le coefficient $k$ de l'émission d'EO des larves est juste lorsque, peu importe la quantité de larves, la proportion de nourrice par rapport aux butineuses sera globalement constante. Avec une émission trop importante, augmenter le nombre de larve va drastiquement augmenter le ratio de nourrices. Par exemple lors d'un essai, nous obtenions un ratio de 1 butineuse pour 1 nourrice avec 500 larves, mais presque 100\% de nourrice pour 1000 larves. A l'inverse, lorsque trop peu de nourrices sont captées par le couvain, ce coefficient doit être augmenté.
+	
+	Ensuite, il arrive qu'il faille diminuer la quantité d'EO émise par les larves, alors qu'elle est déjà trop faible pour un petit nombre de larves (ou vice versa). C'est ici le signal que l'intensité des effets de l'EO sur les adultes est à ajuster, en variant l'exposant de l'équation donnant $HJ_{Red}$ (Eq \ref{hjRED}). Ainsi, lorsque 500 larves maintiennent un ratio nourrices/butineuses correct mais faible, mais que 1000 retiennent trop de nourrice, c'est que l'EO a trop d'effet, il faut alors abaisser l'exposant de $HJ_{Red}$. 
+	
+	Nous avons gardé un exposant entier lorsqu'il est supérieur à 1, et de la forme $1/x$ (avec $x$ entier) pour un exposant inférieur à 1.
+	
+	
+	Ce mécanisme par échange de phéromones est à la base de ce que nous cherchons à démontrer ici, et est profondément émergent, car dépendant des interactions entre tous nos agents, ce qui explique notre recours ici à un paramétrage expérimental. En ajustant les paramètres connus grâce à la biologie, comme les durées de vie ou la durée et fréquence des nourrissements par exemple.
+			Paramétrisation des paramètres indirects, ou émergents, macro, comme par exemple l'observation des biologistes : "une nourrice s'occupe d'environ deux larves", qui n'est codé nul part mais que nous devons retrouver.
+			
+	\section*{Conclusion}
+	

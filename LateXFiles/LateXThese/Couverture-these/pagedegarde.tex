@@ -1,0 +1,87 @@
+% La page de garde est en français
+% The front cover is in French
+\selectlanguage{french}
+
+% Inclure les infos de chaque établissement
+% Include each institution data
+\input{./Couverture-these/liste-ecoles-etablissements.tex}
+
+% Inclure infos de l'école doctorale
+% Include doctoral school data
+% (3M ALL BS DSP EDGE EGAAL ELICC MathSTIC SML SPI STT)
+\ecoledoctorale{MathSTIC}
+
+% Inclure infos de l'établissement
+% Include institution data
+\etablissement{UBO}
+
+%Inscrivez ici votre sp\'{e}cialit\'{e} (voir liste des sp\'{e}cialit\'{e}s sur le site de votre \'{e}cole doctorale)
+%Indicate the domain (see list of domains in your ecole doctorale)
+\spec{Informatique}
+
+%Attention : le pr\'{e}nom doit être en minuscules (Jean) et le NOM en majuscules (BRITTEF) 
+%Attention : the first name in small letters and the name in Capital letters 
+\author{Thomas ALVES}
+
+% Donner le titre complet de la th\`{e}se, \'{e}ventuellement le sous titre, si n\'{e}cessaire sur plusieurs lignes 
+%Give the complete title of the thesis, if necessary on several lines
+\title{Visualisation et Interactions avec une Colonie d'Abeilles Virtuelle}
+\lesoustitre{Simulation, complexit\'{e} et pédagogie}
+
+%Indiquer la date et le lieu de soutenance de la th\`{e}se 
+%indicates the date and the place of the defense 
+\date{« date »}
+\lieu{Brest}
+
+%Indiquer le nom du (ou des) laboratoire (s) dans le(s)quel(s) le travail de th\`{e}se a \'{e}t\'{e} effectu\'{e}, indiquer aussi si souhait\'{e} le nom de la (les) facult\'{e}(s) (UFR, \'{e}cole(s), Institut(s), Centre(s)...), son (leurs) adresse(s)... 
+%Indicates the name (or names) of research laboratories where the work has been done as well as (if desired) the names of faculties (UFR, Schools, institution...
+\uniterecherche{Lab-STICC CNRS UMR 6285}
+
+%Indiquer le Numero de th\`{e}se, si cela est opportun, ou laisser vide pour faire disparaitre cet ligne de la couverture
+%Indicate the number of the thesis if there is one. otherwise leave empty so the line disappeurs on the cover
+\numthese{« si pertinent »} % \numthese{}
+
+%Indiquer le Pr\'{e}nom en minuscules et le Nom en majuscules, le titre de la personne et l’\'{e}tablissement dans lequel il effectue sa recherche  
+%Indicates the first name on small letters and the Names on capital letters, the person's title and the institution where he/she belongs to.
+%Exemples :  Examples :
+%%%- Professeur, Universit\'{e} d’Angers 
+%%%- Chercheur, CNRS, \'{e}cole Centrale de Nantes 
+%%%-  Professeur d’universit\'{e} – Praticien Hospitalier, Universit\'{e} Paris V  
+%%%-  Maitre de conf\'{e}rences, Oniris 
+%%%- Charg\'{e} de recherche, INSERM, HDR, Universit\'{e} de Tours  
+ %S’il n’y a pas de co-direction, faire disparaitre cet item de la couverture  
+ %In there is no co-director, remove the item from the cover
+\jury{
+{\normalTwelve \textbf{Rapporteurs avant soutenance :}}\\ \newline
+\footnotesizeTwelve
+\begin{tabular}{@{}ll}
+Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+\end{tabular}
+
+\vspace{\baselineskip}
+{\normalTwelve \textbf{Composition du Jury :}}\\
+{\fontsize{9.5}{11}\selectfont {\textcolor{red}{\textit{Attention, en cas d’absence d’un des membres du Jury le jour de la soutenance, la composition du jury doit être revue pour s’assurer qu’elle est conforme et devra être répercutée sur la couverture de thèse}}}}\\ \newline
+\footnotesizeTwelve
+\begin{tabular}{@{}lll}
+
+Pr\'{e}sident :        & Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \textit{(à préciser après la soutenance)} \\
+Examinateurs :         & Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+                       & Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+                       & Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+                       & Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+Dir. de th\`{e}se :    & Vincent RODIN & Professeur d'université, Université de Bretagne Occidentale \\
+Co-dir. de th\`{e}se : & Thierry DUVAL & Professeur, IMT Atlantique \\
+\end{tabular}
+
+\vspace{\baselineskip}
+{\normalTwelve \textbf{Invit\'{e}(s) :}}\\ \newline
+\footnotesizeTwelve
+\begin{tabular}{@{}ll}
+Pr\'{e}nom NOM & Fonction et \'{e}tablissement d'exercice \\
+\end{tabular}
+}
+
+
+\maketitle

@@ -26,3 +26,17 @@ hs_err_pid*
 #custom
 *.csv
 *.png
+*.jpg
+*.svg
+
+#LateX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.lof
+*.log
+*.out
+*.run.xml
+*.gz
+*.toc

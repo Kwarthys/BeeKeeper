@@ -90,8 +90,8 @@ meanHJKey = "MeanHJ";
 meanEOKey = "MeanEO"
 keys = ["FeedLarvae","Foraging", "Other"];
 
-#folderName = "expeDivOK";
-folderName = "expe";
+folderName = "expeDivOK";
+#folderName = "expe";
 path = '../' + folderName + '/';
 
 
@@ -110,14 +110,29 @@ allDataPerBees = {}
 
 print("Found " + str(len(files)) + " files.")
 
-linesEntry = int(input("ColumnNumber "));
-rowsEntry = int(input("RowNumber "));
+linesEntry = input("ColumnNumber ");
+rowsEntry = input("RowNumber ");
 printBeesEntry = input("printBees ");
-smoothEntry = int(input("Smooth Strength "));
+smoothEntry = input("Smooth Strength ");
+
+if(linesEntry != ""):
+	linesEntry = int(linesEntry)
+else:
+	linesEntry = 0
+	
+if(rowsEntry != ""):
+	rowsEntry = int(rowsEntry)
+else:
+	rowsEntry = 0
+	
+if(smoothEntry != ""):
+	smoothEntry = int(smoothEntry)
+else:
+	smoothEntry = 0
 
 smooth = 0;
-displayLINES = 1
-displayROWS = 1
+displayLINES = 3
+displayROWS = 2
 printManyBees = True;
 
 if(linesEntry > 0 and linesEntry < 10):
@@ -126,7 +141,7 @@ if(linesEntry > 0 and linesEntry < 10):
 if(rowsEntry > 0 and rowsEntry < 10):
 	displayROWS = rowsEntry	
 
-if(printBeesEntry == "False" or printBeesEntry == "false" or printBeesEntry == "0"):
+if(printBeesEntry == "False" or printBeesEntry == "false" or printBeesEntry == "0" or printBeesEntry == ""):
 	printManyBees = False;
 	
 if(smoothEntry > 1):
@@ -189,7 +204,7 @@ for f in files:
 						parsedExpe[prevIndex][eggTask] = eggCount;
 						parsedExpe[prevIndex][nympheaTask] = nympheaCount;
 						parsedExpe[prevIndex][nurseTask] = nurseCount;
-						parsedExpe[prevIndex][foragerTask] = foragerCount;
+						parsedExpe[prevIndex][foragerTask] = foragerCount + otherCount;
 						parsedExpe[prevIndex][giveFoodTask] = giveFoodCount;
 						parsedExpe[prevIndex][askFoodTask] = askFoodCount;
 						parsedExpe[prevIndex][otherTask] = otherCount + giveFoodCount + askFoodCount;
@@ -331,9 +346,9 @@ for key in allParsedExpes:
 	plt.subplot(displayROWS,displayLINES, index, title=key);
 	
 	plt.axhline(y=0, color="k", linestyle = ":")
-	plt.axhline(y=1000, color="k", linestyle = ":")
+	#plt.axhline(y=1000, color="k", linestyle = ":")
 	
-	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label=nurseTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label="Nourrices");
 	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label="Butineuses");
 	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(giveFoodTask, expe), label=giveFoodTask);
 	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(askFoodTask, expe), label=askFoodTask);
@@ -350,6 +365,45 @@ for key in allParsedExpes:
 	index += 1
 #plt.show()
 plt.savefig("TasksAPI.png");
+
+vlines = [0,11,22,27,43,58]
+titles = ["","",""]
+titles[1] = "T0+22 : Tout le couvain a émergé, la reine commence à pondre\nT0+27 : Pic de mortalité chez les butineuses.\nT0+43 : Premières pontes de la nouvelle reine commencent à émerger."
+titles[0] = "Retrouvez la période entre T0+11 et T0+20 : selon vous que se passe-t-il et pourquoi ?"
+titles[2] = "Retrouvez la période entre T0+11 et T0+20, ainsi que les jours autour de T0+58 :\nselon vous que se passe-t-il et pourquoi ?"
+
+index = 0
+for key in allParsedExpes:
+	expe = allParsedExpes[key];
+	figureNumber+=1
+	plt.figure(figureNumber, figsize=(12,7))
+	#plt.suptitle(titles[index])
+	
+	plt.axhline(y=0, color="k", linestyle = ":")
+	
+	for x in vlines:
+		plt.vlines(x,0,1100, linestyle = ":")
+		plt.text(x-2, -40, "T0+" + str(x))
+	
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(nurseTask, expe), label="Nourrices");
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(foragerTask, expe), label="Butineuses");
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(giveFoodTask, expe), label=giveFoodTask);
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(askFoodTask, expe), label=askFoodTask);
+	#plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(otherTask, expe), label=otherTask);
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict(allBroodTag, expe), label="Couvain");
+	plt.plot(getTimeStepsListFromExpeDict(expe), getListFromExpeDict("Total", expe), label="AdultesTotaux", linestyle="--");
+	
+	plt.xlabel("Jours")
+	plt.ylabel("Populations")
+	
+	#print(getListFromExpeDict("Total", expe))
+	#print("\n")
+	
+	plt.legend()
+	
+	plt.savefig("TasksAPI_" + key[0] + ".png", bbox_inches='tight');
+	
+	index += 1
 
 
 index = 1;
