@@ -24,7 +24,7 @@ public class UDPClientHandler implements Runnable {
 
 	private InetAddress inetAddress;
 	//private DatagramSocket udpServer;
-	private static final int maxAgentCount = 10000;
+	private static final int maxAgentCount = 3000;
 	private static final int sendRate = 100;
 	
 	private ArrayList<NetBalancer> functions = new ArrayList<>();
@@ -210,7 +210,7 @@ public class UDPClientHandler implements Runnable {
 
 	private void sendAdultStates(DatagramSocket udpServer) throws IOException
 	{
-		int maxAgentCount = 2000;
+		int maxAgentCount = 1000;
 
 		ArrayList<AgentStateSnapshot> agents = services.getAllAdults();
 

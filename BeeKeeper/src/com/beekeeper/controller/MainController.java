@@ -53,7 +53,7 @@ public class MainController
 
 	private boolean closed;
 
-	private int timeStepPauseToIgnore = 0;
+	private int timeStepPauseToIgnore = 100000;//TODO SET BACK UP TO 0 : this was for demo sake
 
 	private volatile int turnIndex = -1;
 
