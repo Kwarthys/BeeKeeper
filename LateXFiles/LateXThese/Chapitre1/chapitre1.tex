@@ -50,25 +50,43 @@
 			Modélisation estimée hypothèse : \\
 			Cas classique de la vie d'une abeille.\\
 			Quels changements provoquent quelles réactions dans le métabolisme de l'abeille, et donc dans la répartition du travail.
+			
+			
+			
 	\section{Modèles existants de répartition des tâches}
-	Etat de l'art de l'article PAAMS
-		\subsection{Foraging For Work}
+	La division du travail se produit lorsque les agents doivent décider quelle tâche exécuter dans un environnement partagé. Les sociétés d'individus (ou d'agents) doivent trouver des moyens de répartir efficacement leur main-d'œuvre entre les tâches nécessaires pour survivre et s'étendre. En informatique, le contrôle décentralisé inspiré par les insectes sociaux a été étudié pendant des années et s'est avéré efficace dans de nombreuses applications. Dans cette section, nous allons passer en revue ce qui a été fait dans le domaine des modèles de répartition des tâches.
+	
+	
+		\subsection{Foraging For Work  \cite{franks_foraging_1994}}
+        Dans ce modèle, les différentes tâches que les agents doivent accomplir sont spatialement dispersées en zones. Les agents, en recherche active de travail, tentent d'exécuter la tâche associée à leur zone ou se déplacent de manière aléatoire. Ainsi, les zones surpeuplées "poussent" les agents vers les zones voisines offrant du travail, ce qui entraîne une division du travail. Lorsque de nouveaux agents apparaissent dans une zone spécifique et que les agents les plus âgés meurent à un certain âge, ce modèle assez simple recréé le polyéthisme d'âges : les agents du même âge effectuent globalement les mêmes tâches. Les agents nouveau-nés prennent les offres de travail dans leur zone, repoussant ainsi les agents plus âgés. En suivant des règles simples, un agent peut se rediriger dans d'autres zones s'il ne trouve pas de travail à faire dans sa zone actuelle. Pour que ce modèle fonctionne, les agents doivent avoir la capacité d'évaluer la nécessité de réaliser chaque tâche. Ce pré-requis,  ajoutée à l'hypothèse que les tâches sont dispersées dans des zones, font que ce modèle n'est pas adapté à la problématique, et doit être affiné. Il s'agit toutefois d'un bon point de départ : il peut en effet reproduire une partie du polyéthisme d'âge observé dans la colonie d'abeilles. En effet, une des hypothèses sur la migration des nourrices vers le rôle de butineuse est qu'elle est provoquée par l'émergence de nouvelle nourrices au centre de zones de couvain, repoussant ainsi les nourrices plus âgées.
+        
+        
 		\subsection{Modèles à Seuils}
 		\label{subsectionRTM}
-		
-		
-		Ces fonctions sigmoïdes prennent le plus souvent la forme :
+		\subsubsection{FTM: "Fixed Threshold Model" \cite{bonabeau_natural_1999}}
+        Chaque tâche a un score, représentant sa priorité. Un agent s'engage puis exécute la tâche ayant la priorité la plus élevée. Le FTM est basé sur quelques hypothèses fondatrices, dont voici la première : chaque tâche doit être associée à un stimulus. Le score de chaque tâche est calculé à partir de l'intensité du stimulus associé perçu par l'agent, généralement à l'aide d'une fonction sigmoïde. Soit $T$ la tâche évaluée par l'agent, $F(T)$ le score de la tâche $T$ et $x_T$ le stimulus associé (simple ou complexe) perçu par l'agent. Ces fonctions sigmoïdes prennent alors la forme :
 			
 \begin{equation}
-	Score = \frac{x^n}{x^n + \theta^n}
+\label{equationSigmoid}
+	F(T) = \frac{x_T^n}{x_T^n + \Theta_T^n}
 \end{equation}	
-Avec $x$ le stimulus d'entrée, $n$ le degré de linéarité, placé a $n=2$ dans la littérature, et $\theta$ le seuil, aussi apellé biais, de la sigmoïde. Vous trouverez Figure \ref{sigmoids} différentes sigmoides mettant en valeur l'impact du paramètre $\theta$. Le seuil sert en quelque sorte de point d'ancrage, lorsque le seuil est strictement équivalent au stimulus d'entrée, alors la valeur du résultat est exactement 0,5.
+ Avec $n$ un entier pour la non-linéarité de la fonction (généralement $n=2$ \cite{schmickl_taskselsim_2008}) et $\Theta_T$ le seuil de la tâche, aussi appelé biais, de la sigmoïde. Vous trouverez Figure \ref{sigmoids} différentes sigmoïdes mettant en valeur l'impact du paramètre $\Theta_T$. Le seuil sert en quelque sorte de point d'ancrage : lorsque le seuil est strictement équivalent au stimulus d'entrée, alors la valeur du résultat est exactement 0,5. Ce biais est utilisé pour modifier la perception des agents : avec un biais très faible, les agents sont très sensibles au stimulus associé et s'engagent dans la tâche plus tôt que les agents avec un biais plus élevé \cite{dornhaus_task_nodate}. 
+        
+        Largement utilisés pour modéliser et piloter des simulations d'insectes sociaux, les modèles à seuils reposent fortement sur l'association entre tâches et stimulus. Voici les autres hypothèses fondatrices : ils supposent également que l'exécution d'une tâche diminue le stimulus qui lui est associé, et que ne pas exécuter une tâche augmente son stimulus associé. Dans le cas contraire, les agents exécuteraient constamment cette tâche, ou du moins même jusqu'à ce qu'elle ne soit plus prioritaire. Le stimulus doit être une représentation de la priorité de la tâche qui lui est associée. 
 		
 		\begin{figure}
 		\centering
 		\includegraphics[width=0.5\textwidth]{./Pictures/Figures/sigmoids.png}
-		\caption{L'influence du paramètre téta ($\theta$) sur la forme des sigmoides.}
+		\caption{L'influence du paramètre téta ($\Theta$) sur la forme des sigmoides.}
 		\label{sigmoids}
 		\end{figure}
+		
+		Chaque tâche a également une probabilité d'interruption aléatoire évaluée à chaque pas de temps. Un agent peut avoir, par exemple, $0.5\%$ de chances d'interrompre sa tâche en cours \cite{schmickl_analysing_2008}. Lorsque c'est le cas, l'agent recherche une nouvelle tâche en utilisant les scores de chaque tâche et choisit celle au score le plus élevé. Cette interruption totalement aléatoire se repose sur les hypothèses fondatrice des modèles à seuils.
+        
+        \subsubsection{RTM : "Response Threshold Model", Renforcement du biais}
+        Sur la base du FTM et de l'équation \ref{equationSigmoid}, différents travaux des années 90 \cite{theraulaz_response_1998,carbonell_multi-agent_1994} ont proposé de mettre en place des mécanismes de renforcement de la valeur $\Theta$, en modifiant la sensibilité des agents pendant l'exécution, formant ainsi efficacement des spécialistes. Cette mise à niveau du FTM est plus généralement appelée "Response Threshold Model" (RTM).
+        
 			
 	\section*{Conclusion}
+	Le modèle "Foraging For Work" nous intéresse car il permet de simuler un cas intéressant de la colonie, la migration des nourrices vers le butinage. En revanche, il ne nous permettra pas de simuler l'ensemble de la colonie. C'est pour ceci que nous nous tournons vers les modèles à seuils, les "RTM". Ils présentent trois hypothèses fondatrices pour fonctionner : chaque tâche doit être associée à un stimulus déclencheur, l'exécution de la tâche viens réduire l'intensité de son stimulus associé, qui augmente lorsque la tâche n'est pas (ou pas assez) exécutée par les agents.
+	D'après nos connaissances sur l'abeille, nous trouvons des tâches qu'elles réalisent qui ne respectent pas ces deux conditions : pas de stimulus direct pour pousser au butinage (sauf quelques cas précis) ou à l'alimentation du couvain. Nous nous intéressons donc ici aux situations dans lesquelles ces hypothèses ne sont pas vraies. Nous décrivons dans le chapitre suivant notre modèle fondé sur un RTM et agrémenté d'un mécanisme supplémentaire basé sur la motivation interne pour gérer ces tâches ne respectant pas les hypothèses. Nous allons aussi devoir nous passer de l'interruption aléatoire proposée par ces modèles, qui ne fait sens que lorsque les deux hypothèses sont valides.
