@@ -243,5 +243,29 @@ Avec $EO_{Evap}$ la quantité d'EO qui s'évapore lorsque l'on considère une qu
 	Ce mécanisme par échange de phéromones est à la base de ce que nous cherchons à démontrer ici, et est profondément émergent, car dépendant des interactions entre tous nos agents, ce qui explique notre recours ici à un paramétrage expérimental. La méthodologie et les résultats de la calibration seront présentés et discutés dans le chapitre suivant.
 			
 	\section*{Conclusion}
-		Dans ce chapitre nous avons discuté de l'architecture logicielle du simulateur qui fait tourner notre première itération du modèle. Nous agents à l'intérieur de la colonie doivent se répartir deux tâches automatiquement, "Nourrir les larves" et "Butiner". Plusieurs couches d'abstraction nous offrent une grande modularité dans le développement, et l'utilisation de plusieurs thread d'exécution permet d'accélérer la simulation, nous permettant d'itérer plus confortablement sur le modèle. Ensuite l'implémentation concrète du modèle de sélection et d'interruption de tâche ainsi que celle du modèle physiologiue de l'abeille adultes décrient plus tôt permettent à nous agents de s'organiser. Dans le chapitre suivant nous allons pouvoir nous intéresser à cette auto-organisation, comment la mesurer, est-elle satisfaisante. Nous parlerons aussi de calibration expérimentale, amenée par le caractère émergent de beaucoup de paramètres à retrouver, nous venant d'observation de colonies réelles.
+		Dans ce chapitre nous avons discuté de l'architecture logicielle du simulateur qui fait tourner notre première itération du modèle. Nous agents à l'intérieur de la colonie doivent se répartir deux tâches automatiquement, "Nourrir les larves" et "Butiner". Plusieurs couches d'abstraction nous offrent une grande modularité dans le développement, et l'utilisation de plusieurs \textit{thread} d'exécution permet d'accélérer la simulation, nous permettant d'itérer plus confortablement sur le modèle. Nous avons ensuite décrit l'implémentation concrète du modèle de sélection et d'interruption de tâche, à partir de ce que nous avons pu construire au chapitre précédent : les seuils pour la physiologie de l'agent, modéliser les tâches en Activité ainsi qu'en Action, parfois démotivante etc. Nous avons aussi décrit l'implémentation du modèle physiologique simplifié de l'abeille adultes, ses glandes, hormones, phéromones et leurs influences mutuelles et sur le comportement de nos agents. Après calibration de certains paramètres émergents difficile à pré-calculer ou à estimer, nos agents devraient être capable de se répartir le travail sans contrôle central, et de manière dynamique, en s'adaptant aux changements d'environnement et de populations. Dans le chapitre suivant nous allons pouvoir nous intéresser à cette auto-organisation, comment la mesurer, est-elle satisfaisante ? Nous parlerons aussi de calibration expérimentale, amenée par le caractère émergent de beaucoup de paramètres à retrouver nous venant d'observation de colonies réelles.
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	
