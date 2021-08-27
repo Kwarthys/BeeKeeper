@@ -8,7 +8,7 @@
 			
 			Le simulateur est pensé en couches d'abstraction successives. Au plus haut niveau, nous trouvons le lanceur, la classe \textit{BeekeeperLauncher}, le célèbre "\textit{main}", qui se charge des simulations. Il présente deux modes :
 	\begin{itemize}
-		\item Interactions : Ce mode permet de lancer une simulation et prends en compte les interactions de l'utilisateur (via le réseau) pour altérer le comportement de la simulation, et renvoie une importante quantité de donnée par ce même réseau.
+		\item Interactions : ce mode permet de lancer une simulation et prends en compte les interactions de l'utilisateur (via le réseau) pour altérer le comportement de la simulation, et renvoie une importante quantité de donnée par ce même réseau.
 		\item Barrage de Simulations : mode permettant de lancer un grand nombre de simulations à la suite, sans interactions possibles. Ce mode sert principalement pour calibrer certains paramètres.
 	\end{itemize}				
 			
@@ -50,7 +50,7 @@
 			V0_{t+1} = p * ((1-a) * V0_t + \sum_{n=1}^{N} Vn_t * \frac{a}{N})
 			\end{equation}
 			
-			avec $V0_t$ la cellule évaluée à l'instant $t$, $Vn$ ses voisines et $N$ le nombre total de voisines. Nous utilisons aussi $a$ et $p$ deux paramètres de stimulus: la propagation dans l'espace $a$ (volatilité) et dans le temps $p$ (évaporation/amortissement). Ces paramètres nous permettent d'obtenir des comportements variés partageant les mêmes mécanismes. La figure \ref{flou} illustre cette équation sous la forme d'un filtre. Les valeurs d'évaporations sont alors utilisées sous la forme "par pas de temps". Pour mieux les contrôler, nous utilisons l'équation suivante pour les exprimer en demie-vie (durée après laquelle le stimulus aura perdu la moitié de son intensité), notion plus courante en biologie, puis les convertir en valeurs "par pas de temps" utilisables par l'algorithme :
+			avec $V0_t$ la cellule évaluée à l'instant $t$, $Vn$ ses voisines et $N$ le nombre total de voisines. Nous utilisons aussi $a$ et $p$ deux paramètres de stimulus : la propagation dans l'espace $a$ (volatilité) et dans le temps $p$ (évaporation/amortissement). Ces paramètres nous permettent d'obtenir des comportements variés partageant les mêmes mécanismes. La figure \ref{flou} illustre cette équation sous la forme d'un filtre. Les valeurs d'évaporations sont alors utilisées sous la forme "par pas de temps". Pour mieux les contrôler, nous utilisons l'équation suivante pour les exprimer en demie-vie (durée après laquelle le stimulus aura perdu la moitié de son intensité), notion plus courante en biologie, puis les convertir en valeurs "par pas de temps" utilisables par l'algorithme :
 			
 			\begin{equation}
 			k = \exp(\frac{-ln(2) * C}{\lambda})
