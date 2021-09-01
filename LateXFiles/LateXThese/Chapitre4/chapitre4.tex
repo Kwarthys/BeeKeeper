@@ -1,49 +1,86 @@
 \chapter{Evaluation de l'Implémentation de la Simulation de Colonie d'Abeilles}
 \label{ChapitreEvalSMA}
-	Après avoir modélisé puis construit notre modèle multi-agents et son simulateur, il est désormais temps d'en observer, interpréter puis valider (ou non) les résultats qu'il nous donne. Nous allons donc définir ce que nous attendons de ce modèle et de sa calibration. Nous discuterons ensuite des résultats obtenus puis les interpréterons, afin d'en sortir notamment des perspectives d'améliorations.
+	Après avoir modélisé puis construit notre modèle multi-agents et son simulateur, il est désormais temps d'en observer et d'interpréter les résultats qu'il nous donne, afin de valider (ou non) le modèle. Nous allons donc définir ce que nous attendons de ce modèle et de sa calibration. Nous discuterons ensuite des résultats obtenus puis les interpréterons, afin d'en sortir notamment des perspectives d'améliorations.
 	
-	\section{Hypothèses et Calibration}
-		\subsection{Hypothèses de Validation}
-			Nous avons mis en place deux grandes familles de vérifications, afin de cerner le problème sous plusieurs approches. La première approche vise à vérifier les capacités d'auto-organisation de notre modèle, elle consiste donc en plusieurs simulations aux paramètres identiques mais dont nous avons fait varier la situation initiale. La seconde approche vise à vérifier si notre modèle de la colonie arrive à reproduire le comportement de colonies réelles. Afin de mieux préciser cette deuxième vérification, pour l'instant très large, nous nous sommes concentrés sur un cas particulier de la vie d'une colonie : l'adaptation de la colonie suite à une division. une division est une opération apicole qui consiste à séparer une colonie dont la population a dépassé un certain seuil, afin de créer deux colonies. L'apiculteur doit alors faire de son mieux pour bien répartir les différentes populations sur les deux colonies. Les deux nouvelles colonies ainsi crées doivent alors faire face à un changement rapide d'environnement, et donc s'auto-organiser, afin de survivre à cette épreuve.
+	
+	\section{Modèles et Calibration}
+		\subsection{Deux Modèles}
+			\subsubsection{Modèle à Environnement Constant}
+			Pour une première itération du modèle de la colonie, nous l'avons simplifié afin d'obtenir un environnement stable, mettant mieux en valeur l'auto-organisation du système. Ainsi, le cycle de vie n'est pas simulé : aucune naissance (et donc, pas de reine pour pondre), aucune émergence (larves devenant adultes), aucune mort de vieillesse. En revanche, les larves manquant de nourritures meurent de faim. Nous pouvions ainsi conserver un nombre d'ouvrières et de larves constant, faisant de ce fait mieux ressortir les différents ratio de population. Nous avons ainsi accéléré les phénomènes physiologiques (entre x4000 et x6000) de nos agents afin d'obtenir des résultats rapides. Cette accélération apporte des biais, car elle place les phénomènes court-termes sur la même échelle temporelle que les effets long-termes. Nous tolérons toutefois ces biais dans cette première itération, nous concentrant sur la répartition automatique des tâches. 
+			
+			Calibrer ce modèle consiste à observer un point d'équilibre dans les populations d'ouvrières, entre le nombre de butineuses et de nourrices, au bout d'un certain nombre de pas de temps. Ce point d'équilibre doit dépendre du nombre de larves présentes dans la colonie. Nous parlons alors de "ratio d'ouvrières par larve". Nous avons discuté en détail de cette calibration dans la Section \ref{subsectionObjectifCalibration}.
+			
+			Par la suite ce modèle "à environnement constant" est appelé "modèle simplifié", pour des raisons de lisibilités.
+			
+			Lors de la calibration du modèle simplifié, nous n'avions pas formulé tous les paramètres de la même manière que pour le modèle actuel. C'est le recul offert par cette première itération qui nous a permis d'obtenir la modélisation plus claire que nous proposons dans ces travaux. La calibration concernait tout de même les même points clés, quantité et effets des phéromones.
+			
+			
+			\subsubsection{Modèle à Cycle de Vie}
+			À la suite du modèle à environnement constant, nous avons itéré dessus afin de faire un pas vers la fidélité de la simulation par rapport à la réalité. L'accélération physiologique à été retirée, nous demandant par la même occasion des simulations bien plus longues (les simulations du modèle simplifié sont de l'ordre de quelques milliers de pas de temps, celles de ce modèle sont de l'ordre du million de pas de temps).
+			
+			Comme son nom l'indique, nous y avons aussi ajouté un "cycle de vie". Ainsi, une reine pond des oeufs, ces oeufs deviennent des larves, puis des nymphes, et enfin des ouvrières. Ces ouvrières vont ensuite mourir de vieillesse, plus ou moins vite selon leurs activités. C'est ce modèle qui est décrit en détail dans le Chapitre 3.
+			Par la suite ce modèle "à cycle de vie" est appelé "modèle complet", pour des raisons de lisibilités. "Complet" est ici à prendre au sens de "l'ensemble de notre proposition", opposé au modèle simplifié, et pas au sens d'un modèle complet d'une colonie d'abeilles. Ce-dernier est un objectif très long-terme d'une grande complexité, un grand édifice dont notre modèle "complet" ne représente qu'une pierre.
+			
+			Après une bonne quantité d'itérations sur le modèle complet, nous avons fini par positionner le coefficient $n$ de l'intensité des phéromones à $n = \frac{1}{3}$ (équation \ref{hjRED}), et le coefficient $k$ de la quantité de phéromones émises par les agents du couvain à $k=2$ (section \ref{subsesctionPHLarves}). Ces paramètres ont été ajustés pour une simulation démarrant avec 500 larves, 500 abeilles et une reine, sur deux faces de cadres. Nous avons réalisés quelques essais nous faisant penser que la calibration reste valide en changeant le nombre d'agents en présence ainsi que leur répartition spatiale, mais la question est vaste et pas si facilement répondue, plus de travaux devront donc être réalisés dans ce sens.
+		
+		Nous allons pouvoir désormais aborder nos résultats, sous la forme de courbes générées à partir de fichiers eux-mêmes générés pendant chaque simulation. 
+		
+		
+		
+	\section{Hypothèses et Expérimentations}
+		\subsection{Hypothèses}
+			Nous avons mis en place deux grandes familles de vérifications, afin de cerner le problème sous plusieurs approches. La première approche vise à vérifier les capacités d'auto-organisation de notre modèle, elle consiste donc en plusieurs simulations aux paramètres identiques mais dont nous avons fait varier la situation initiale. La seconde approche vise à vérifier si notre modèle de la colonie arrive à reproduire le comportement de colonies réelles. Afin de mieux préciser cette deuxième vérification, pour l'instant très large, nous nous sommes concentrés sur un cas particulier de la vie d'une colonie : l'adaptation de la colonie suite à une division. Une division est une opération apicole qui consiste à séparer une colonie dont la population a dépassé un certain seuil, afin de créer deux colonies. L'apiculteur doit alors faire de son mieux pour bien répartir les différentes populations sur les deux colonies. Les deux nouvelles colonies ainsi créées doivent alors faire face à un changement rapide d'environnement, et donc s'auto-organiser, afin de survivre à cette épreuve.
 			
 			Nous avons donc deux hypothèses principales :
 			\begin{itemize}
-				\item \textbf{H1} : notre modèle de colonie d'abeilles virtuelle est capable d'auto-organisation.
-				\item \textbf{H2} : notre modèle est capable d'approcher les dynamiques de populations observées dans les colonies d'abeilles réelles.
+				\item \textbf{H1, Auto-Organisation} : notre modèle de colonie d'abeilles virtuelle permet l'auto-organisation des agents parmi les tâches de butinage et de soin au couvain.
+				\item \textbf{H2, Fidélité} : notre modèle est capable d'approcher les dynamiques de populations et de répartition des tâches observées dans les colonies d'abeilles réelles après une division.
 			\end{itemize}
 			
-			Afin de valider \textbf{H1} nous avons simplifié le modèle de la colonie, afin d'obtenir un environnement plus stable, mettant mieux en valeur l'adaptation de nos agents. Ainsi, le cycle de vie n'était pas simulé : aucune naissance (et donc, pas de reine pour pondre), aucune émergence (larves devenant adultes), aucune mort de vieillesse. En revanche, les larves manquant de nourritures meurent de faim. Nous pouvions ainsi conserver un nombre d'ouvrières et de larves constant, faisant de ce fait mieux ressortir les différents ratio de population. Dans cette validation, la proximité avec la biologie de l'abeille n'est pas nécessaire, nous avons ainsi largement accéléré les phénomènes physiologiques de nos agents, ainsi que réduit le nombre d'agents pendant les simulations. Ceci nous a permis d'itérer plus confortablement. Valider \textbf{H1} consiste alors à observer un point d'équilibre dans les populations d'ouvrières, entre le nombre de butineuses et de nourrices. Il faut aussi que ce point d'équilibre dépende du nombre de larves présentes dans la colonie. Nous parlons alors de "ratio d'ouvrières par larve". Nous avons donc mis en place 5 scénario :
+		Le modèle simplifié ne sera confronté qu'à la première hypothèse. En effet, entre l'accélération métabolique et l'absence de cycle de vie, il ne valide pas \textbf{H2} \textit{de facto}. Le modèle complet sera quant à lui confronté aux deux hypothèses.
+			
+		\subsection{Discussion sur la Calibration}
+		
+		Notre objectif de calibration, comme détaillé plus tôt, est de retrouver une répartition de nos agents entre le butinage et le soin au couvain qui dépende directement des besoins du couvain. On désire obtenir un ratio "nourrices par larve" constant. On remarque alors que l'objectif de la calibration est déjà, \textit{in fine}, de valider \textbf{H1}. Le modèle est donc calibré pour répondre à l'hypothèse initiale, ce qui peut poser problème. La question peut être vue différemment : nous essayons de voir si l'espace offert par l'ensemble des paramètres du modèle nous permet d'atteindre une calibration pour laquelle le modèle réponds à l'hypothèse. Ce qui pose d'ailleurs d'autres soucis d'ordres pratiques : pendant la calibration, si nous n'arrivons pas a obtenir les résultats que nous souhaitons, est-ce parce que le modèle ne permet pas de les atteindre ou n'est-il seulement pas correctement calibré ?
+		
+		Un modèle absurde loin de la réalité peut parfaitement être calibré pour valider une hypothèse donnée, car la calibration apporte un biais. C'est pour limiter ce biais que nous avons mis en place une deuxième hypothèse de réalisme, afin de limiter les calibrations "absurdes". Cette deuxième hypothèse limite l'apparition de paramètres absurdes en fixant beaucoup de paramètres directement depuis la littérature sur la biologie de l'abeille.
+			
+	\subsection{Différents Scénarios}
+			
+			Afin de valider \textbf{H1} dans le cadre du modèle simplifié nous avons mis en place 5 scénarios :
 			\begin{itemize}
-				\item \textbf{Scénario 1.1} : répartition initiale aléatoire des âges avec 150 abeilles adultes et 150 larves.
-				\item \textbf{Scénario 1.2} : 150 adultes et 150 larves mais toutes les abeilles adultes commencent très jeunes.
-				\item \textbf{Scénario 1.3} : 150 adultes et 150 larves, mais toutes les abeilles adultes commencent âgées.
+				\item \textbf{Scénario 1.1} : répartition initiale aléatoire des âges avec 150 agents adultes et 150 larves.
+				\item \textbf{Scénario 1.2} : 150 adultes et 150 larves mais tous les agents adultes commencent très jeunes.
+				\item \textbf{Scénario 1.3} : 150 adultes et 150 larves, mais tous les agents adultes commencent âgés.
 				\item \textbf{Scénario 1.4} : répartition initiale aléatoire des âges avec 150 adultes et 50 larves.
 				\item \textbf{Scénario 1.5} : répartition initiale aléatoire des âges avec 150 adultes et 300 larves.
 			\end{itemize}
 			
-			Afin de valider \textbf{H2}, nous avons mis en place une expérimentation dont nous parlerons bien plus tard dans la Section \ref{sectionExpe}, dont une partie est dédiée à cette hypothèse. Nous avons montré des graphiques de populations de nos simulations à des apiculteurs de différents niveaux. Ils ont ensuite été invités à noter les évolutions de populations de 1 à 5, si elles étaient ou non, selon eux, cohérentes avec ce qu'ils auraient attendu d'une colonie réelle. Notre modèle est alors dans sa dernière version, avec cycle de vie et calibration au plus proche de la biologie. Comme énoncé plus tôt, les scénario présentés aux apiculteurs correspondaient à des colonies sortant tout juste de division, sans reine pondeuse\footnote{En réalité la reine est présente dans la simulation, mais n'est autorisée à pondre qu'après avoir attendu un certain temps, correspondant au temps avant ponte d'une reine réelle après une division.} mais avec réserve de couvain. Nous avons ensuite pu faire varier la répartition des âges de la population de la nouvelle colonie. Nous en avons ainsi fait 4 scénario :
-				\begin{itemize}
+			\paragraph{}
+			
+			Afin de valider \textbf{H1} et \textbf{H2} pour le modèle complet nous avons mis en place 4 scénarios :			
+			\begin{itemize}
 					\item \textbf{Scénario 2.1} : répartition initiale avec seulement des abeilles adultes très jeunes.
 					\item \textbf{Scénario 2.2} : répartition initiale avec 50\% d'abeilles adultes jeunes, et 50\% d'abeilles adultes âgées.
 					\item \textbf{Scénario 2.3} : répartition initiale avec 100\% d'abeilles adultes âgées.
 					\item \textbf{Scénario 2.4} : répartition initiale avec 50\% d'abeilles adultes jeunes, et 50\% d'abeilles adulte âgées. La reine commence à pondre 30 jours après la division, au lieu de 21.
-				\end{itemize}
-				
-				Tous ces scénario démarrent avec 500 adultes et 500  agents couvains, répartis uniformément en œuf, larves, et nymphes.  Le délai avant la ponte de la nouvelle reine a été choisi pour être dans la tranche basse des âges observés en réalité, afin de rester réaliste tout en proposant un cas favorable, pour aider la survie de la colonie. Pour des raisons de temps de passage seulement les deux premiers ont été intégrés dans l'expérimentation. En effet, ces deux scénario présentent le plus d'intérêts : le troisième est très court et conduit à la perte de la colonie, et le quatrième n'est qu'une légère modification du second mais entrainant lui aussi la perte de la colonie. L'auto-organisation est donc beaucoup moins visible.
-				
-			De plus, il est classique dans la réalité d'obtenir une colonie avec une immense majorité de très jeunes adultes. En effet, si la nouvelle colonie est déposée proche ( < 1km ) de son ancien placement, alors les butineuses retourneront à leur emplacement initial. Nous nous retrouvons ainsi avec une colonie uniquement composée de nourrices, n'ayant pas encore réalisé leur vol d'orientation. Si la nouvelle ruche est placée loin de sa position initiale avant division, alors les butineuses resteront dans cette nouvelle ruche.
-				
-
-		\subsection{Calibration}
-		La calibration du modèle pour les expériences visant à valider \textbf{H1} a été plus rapide et plus simple que la calibration du modèle complet, car nous ne cherchions pas à obtenir de résultat proche de la biologie, mais seulement retrouver l'auto-organisation. La méthode a tout de même été plus ou moins la même. En bon système complexe, nous avons à notre disposition une grande quantité de paramètres s'influant mutuellement de manières émergentes. Les deux principaux points de la calibration concernaient les phéromones émises par nos agents, ainsi que leurs effets sur ces mêmes agents. Notre objectif de calibration, comme détaillé plus tôt section \ref{subsectionObjectifCalibration}, est de retrouver un équilibre des proportions entre les populations de couvain et de nourrices, avec le reste de la population se plaçant en butineuses. On remarque alors que l'objectif de la calibration est déjà, au final, de valider \textbf{H1}, le modèle est alors calibré pour répondre à l'hypothèse initiale. La question est en réalité légèrement différente : nous essayons de voir si l'espace offert par l'ensemble des paramètres du modèle nous permet d'atteindre une calibration pour laquelle le modèle réponds à l'hypothèse. Ce qui pose d'ailleurs d'autres soucis d'ordres pratiques : pendant la calibration, si nous n'arrivons pas a obtenir les résultats que nous souhaitons, est-ce parce que le modèle ne permet pas de les atteindre ou n'est-il seulement pas correctement calibré ?
-		
-		Après une bonne quantité d'itérations sur le modèle complet, nous avons fini par positionner le coefficient $n$ de l'intensité des phéromones à $n = \frac{1}{3}$ (équation \ref{hjRED}), et le coefficient $k$ de la quantité de phéromones émises par les agents du couvain à $k=2$ (section \ref{subsesctionPHLarves}). Ces paramètres ont été ajustés pour une simulation démarrant avec 500 larves, 500 abeilles et une reine, sur deux faces de cadres. Nous avons réalisés quelques essais nous faisant penser que la calibration reste valide en changeant le nombre d'agents en présence ainsi que leur répartition spatiale, mais la question est vaste et pas si facilement répondue, plus de travaux devront donc être réalisés dans ce sens.
-		
-		Nous allons pouvoir désormais aborder nos résultats, sous la forme de courbes générées à partir de fichiers eux-mêmes générés pendant chaque simulation. 
-		
+			\end{itemize}
 			
+			Ces scénarios correspondaient à des colonies sortant tout juste de division, sans reine pondeuse\footnote{En réalité la reine est présente dans la simulation, mais n'est autorisée à pondre qu'après avoir attendu un certain temps.} et avec une réserve de couvain. La reine pond par défaut au bout de 21 jours de simulation, sauf dans le scénario 2.4 où elle pond après 30 jours. Le délai de 21 jours a été choisi pour être dans la tranche basse des âges observés en réalité, entre 17 et 30 jours, afin de rester réaliste tout en proposant un cas favorable. Tous les scénario prennent place avec une réserve de couvain de 500 agents, répartis uniformément entre les stades d'œufs, de larves et de nymphes. Il est classique dans la réalité d'obtenir une colonie avec une immense majorité de très jeunes adultes (comme le scénario 2.1). En effet, si la nouvelle colonie est déposée proche (< 1km) de son ancien placement, alors les butineuses retourneront à leur emplacement initial. Nous nous retrouvons ainsi avec une colonie uniquement composée de nourrices, n'ayant pas encore réalisé leur vol d'orientation. Si la nouvelle ruche est placée loin de sa position initiale avant division, alors les butineuses resteront dans cette nouvelle ruche. De cette manière il est possible d'obtenir une colonie avec une majorité de butineuses (scénario 2.3), mais l'opération ne présente aucun intérêt pour l'apiculteur : la colonie n'a que peu de chance de survivre.
+			
+			De plus, nous avons mis en place une expérimentation que nous détaillerons dans la Section \ref{sectionExpe}, en partie dédiée à ces hypothèses. Nous avons montré des graphiques de populations de nos simulations à des apiculteurs de différents niveaux. Ils ont été invités à noter les évolutions de populations de 1 à 5, si elles étaient ou non, selon eux, cohérentes avec ce qu'ils auraient attendu d'une colonie réelle. Pour des raisons de temps de passage seulement les deux premiers ont été intégrés dans l'expérimentation. En effet, ces deux scénario présentent le plus d'intérêts : le troisième est très court et conduit à la perte de la colonie, et le quatrième n'est qu'une légère modification du second mais entrainant lui aussi la perte de la colonie. L'auto-organisation est donc beaucoup moins visible.
+				
 			
 	\section{Résultats}
+	
+	\subsection{Modèle à environnement constant}
+	
+	L'expérience du modèle à environnement constant, réalisée principalement pour vérifier la validité d'\textbf{H1}, comporte les cinq scénarios détaillés plus tôt. Les répartitions du travail de chaque scénario sont décrits Figure \ref{envConstant}, chacun ayant été joué cinq fois les écarts-types sont aussi présents sur cette figure, où nous observons :
+	
+	\begin{itemize}	
+		\item \textbf{Scénario 1.1} (S1-\textit{Random\_150\_150}) : répartition initiale uniforme des physiologies et ratio adultes/larves de 1. Au lancement de la simulation, 50\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. Nous observons ici une convergence en quelques milliers de pas de temps vers 60\% d'agents effectuant un travail de nourrice, et donc environ 40\% de butineuses.
+		
+		\item \textbf{Scénario 1.2} (S2-\textit{NewBorn\_150\_150}) : répartition initiale des physiologies avec uniquement de jeunes adultes et ratio adultes/larves de 1. Au lancement de la simulation, 100\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. Nous observons ici la même convergence en quelques milliers de pas de temps vers ce même équilibre, 60\% de nourrices.
 	
 	\begin{figure}
 	\centering
@@ -51,43 +88,22 @@
 	\caption[Proportions de nourrices pour les 5 scénario visant à valider \textbf{H1}.]{Proportions de nourrices pour les 5 scénario visant à valider \textbf{H1}. Chaque scénario a été simulé 5 fois, les écarts-types sont visibles en barres verticales sur chacune des courbes.}
 	\label{envConstant}
 	\end{figure}
-	
-	\subsection{Modèle à environnement constant}
-	
-	Le modèle à environnement constant, réalisé principalement pour vérifier la validité d'\textbf{H1}, comporte cinq scénario détaillés plus tôt. Les résultats de ces scénario sont décrits Figure \ref{envConstant}, chacun ayant été joué cinq fois, ainsi les écarts-types sont aussi présent sur la figure, on y observe :
-	
-	\begin{itemize}
-		\item \textbf{Scénario 1.1 (S1)} : répartition initiale uniforme des physiologies et ratio adultes/larves de 1. Au lancement de la simulation, 50\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. Nous observons ici une convergence en quelques milliers de pas de temps vers 60\% d'agents effectuant un travail de nourrice, et donc environ 40\% de butineuses.
 		
-		\item \textbf{Scénario 1.2 (S2)} : répartition initiale des physiologies avec uniquement de jeunes adultes et ratio adultes/larves de 1. Au lancement de la simulation, 100\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. Nous observons ici la même convergence en quelques milliers de pas de temps vers ce même équilibre, 60\% de nourrices.
+		\item \textbf{Scénario 1.3} (S3-\textit{Old\_150\_150}) : répartition initiale uniforme des physiologies et ratio adultes/larves de 1. Au lancement de la simulation, 0\% des adultes de la colonie sont des nourrices, toutes sont butineuses, du fait de notre initialisation. Nous observons à nouveau un équilibre à 60\% de nourrices en un peu plus de 2000 pas de temps.
 		
-		\item \textbf{Scénario 1.3 (S3)} : répartition initiale uniforme des physiologies et ratio adultes/larves de 1. Au lancement de la simulation, 0\% des adultes de la colonie sont des nourrices, toutes sont butineuses, du fait de notre initialisation. Nous observons à nouveau un équilibre à 60\% de nourrices en un peu plus de 2000 pas de temps.
+		\item \textbf{Scénario 1.4} (S4-\textit{Random\_150\_50}) : répartition initiale uniforme des physiologies et ratio adultes/larves de 3 pour 1. Au lancement de la simulation, 50\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. Nous observons cette fois-ci un équilibre en un peu plus de 2000 pas de temps, mais à environ 20\% de nourrices.
 		
-		\item \textbf{Scénario 1.4 (S4)} : répartition initiale uniforme des physiologies et ratio adultes/larves de 1 pour 3. Au lancement de la simulation, 50\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. Nous observons cette fois-ci un équilibre en un peu plus de 2000 pas de temps, mais à environ 20\% de nourrices.
-		
-		\item \textbf{Scénario 1.5 (S5)} : répartition initiale uniforme des physiologies et ratio adultes/larves de 2 pour 1. Au lancement de la simulation, 50\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. L'équilibre est atteint un peu avant 2000 pas de temps, mais se situe cette fois aux alentours de 85\% de nourrices.		
+		\item \textbf{Scénario 1.5} (S5-\textit{Random\_150\_300}) : répartition initiale uniforme des physiologies et ratio adultes/larves de 1 pour 2. Au lancement de la simulation, 50\% des adultes de la colonie sont des nourrices, du fait de notre initialisation. L'équilibre est atteint un peu avant 2000 pas de temps, mais se situe cette fois aux alentours de 85\% de nourrices.		
 	\end{itemize}
 	
-	Le Tableau \ref{TabEnvConstant} reprend ces différents résultats de manière plus concise. Vous y trouverez, pour chaque scénario, le ratio adultes/larves ainsi que l'équilibre de répartition de travail atteint, donné en proportion de nourrices dans la population d'adultes de la colonie virtuelle.
-	
-	\begin{table}
-		\centering
-		\begin{tabular}{l|l|l|l}
-    	Scénario & Population Initiale & Ratio Adultes par Larve & Équilibre \\
-   		\hline
-   		1.1 & uniforme & 1 pour 1 & 60\% \\
-   		1.2 & jeune & 1 pour 1 & 60\% \\
-   		1.3 & âgée & 1 pour 1 & 60\% \\
-   		1.4 & uniforme & 1 pour 3 & 20\% \\
-   		1.5 & uniforme & 2 pour 1 & 85\% \\
-		\end{tabular}	
-		\caption{Récapitulatif des différents scénario, leurs ratio adultes par larves ainsi que leur valeur finale d'équilibre, en proportion de nourrices dans la population d'adultes de la colonie virtuelle.}	
-   		\label{TabEnvConstant}
-	\end{table}	
-	
-	Avant d'interpréter ces résultats, nous allons consulter ceux du modèle complet vis à vis d'\textbf{H1}, mais aussi de \textbf{H2}.
+	Nous allons désormais consulter les résultats du modèle complet vis à vis d'\textbf{H1}, mais aussi de \textbf{H2}.
 	
 	\subsection{Modèle Complet, Division et Cycle de vie}
+	
+	
+	Les Figures \ref{sc1}, \ref{sc2}, \ref{sc3} et \ref{sc4} présentent graphiquement respectivement les résultats des scénario 2.1, 2.2, 2.3 et 2.4. Sous la forme de différentes courbes de populations au court du temps, ces figures nous renseignent sur la vie de nos colonies virtuelles juste après une division. Quelques indicateurs de temps ont été placés afin d'en faciliter la lecture : T0 indique le début de la simulation, le moment ou la division vient d'être réalisée. Par exemple, T0+11 indique le 11ème jour après la division. Nous y observons les populations de nourrices, de butineuses, mais aussi de couvain ainsi que la population totale des adultes de la colonie, soit la somme des populations de nourrices et de butineuses. Dans ces simulations, des agents naissent et meurent régulièrement, ce qui rend la validation de \textbf{H1} moins triviale : le ratio adultes par larves n'est pas constant. Voici nos résultats :
+		
+		\textbf{Scénario 2.1} (Figure \ref{sc1}) : répartition initiale des physiologies avec uniquement de très jeunes abeilles adultes, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). Par ordre chronologique, nous observons à T0+11 un important changement dans la répartition du travail, où le nombre de nourrices chute drastiquement au profit du nombre de butineuses. La quantité de couvain n'a de cesse de chuter jusqu'à T0+21 où il atteint zéro. La population totale cesse alors de croitre. À T0+22, la reine commence sa ponte, le couvain repart à la hausse, mais le nombre de nourrices continue de chuter. Nous observons ensuite une chute de la population totale : les butineuses commencent à mourir de vieillesse. En effet, la reine vient seulement de recommencer à pondre. La population repart à la hausse à T0+43, lorsque les premières pontes de la reine émergent enfin, venant renforcer le faible contingent de nourrices. Enfin, à T0+58, nous observons à nouveau un transfert de répartition du travail : la population de nourrices qui croit alors très rapidement, va voir nombre de ses agents partir butiner. La population de nourrices se stabilise ensuite jusqu'à la fin de la simulation, 80 jours après la division, alors que le couvain augmente en permanence. À la fin de la simulation, la colonie compte 534 nourrices pour 1410 adultes au total, et 1102 agents du couvain, ce qui fait environ 315 larves\footnote{\label{footCalculLarves} Dans le cas d'un couvain homogène, la larve ne représentant que 6 jours des 21 jours de l'œuf à l'émergence, nous estimons la population de larves à $\frac{6}{21}$ de la population totale du couvain. Les œufs et nymphes ne nous intéressent pas ici, car ils ne requirent pas de soin de la part des nourrices}. Nous obtenons ainsi environ 38\% de nourrices par rapport au nombre total d'adultes, pour un ratio ouvrières par larve d'environ 4,47 et un ratio nourrices par larve de 1.70.
 	
 	\begin{figure}
 	\centering
@@ -95,6 +111,8 @@
 	\caption{Les différentes populations de la colonie après la division du Scénario 2.1.}
 	\label{sc1}
 	\end{figure}
+		
+		\textbf{Scénario 2.2} (Figure \ref{sc2}) : répartition initiale des physiologies uniforme, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). Nous observons une population constante de nourrices, aidée par les émergences du couvain, et une population de butineuses croissante. La population de nourrices décrit alors un pic à T0+22, au moment où les dernières nymphes émergent et alors que la reine commence à pondre. À T0+27, les butineuses déjà présentes au début de la simulation meurent déjà de vieillesse. La progression suit ensuite de très près la chronologie du scénario précédent, avec une population globale légèrement plus faible. À la fin de la simulation, la colonie compte 473 nourrices pour 1182 adultes au total, et 890 agents du couvain, ce qui fait environ 254 larves\footnote{Voir la note de pied de page \ref{footCalculLarves}}. Nous obtenons ainsi environ 40\% de nourrices par rapport au nombre total d'adultes, pour un ratio ouvrières par larve d'environ 4,65 et un ratio nourrices par larve de 1.86.
 	
 	\begin{figure}
 	\centering
@@ -102,13 +120,26 @@
 	\caption{Les différentes populations de la colonie après la division du Scénario 2.2.}
 	\label{sc2}
 	\end{figure}
-	
-	
-	Les Figures \ref{sc1} et \ref{sc2} présentent graphiquement respectivement les résultats des scénario 2.1 et 2.2. Sous la forme de différentes courbes de populations au court du temps, ces figures nous renseignent sur la vie de nos colonies virtuelles juste après une division. Quelques indicateurs de temps ont été placés afin d'en faciliter la lecture : T0 indique le début de la simulation, le moment ou la division vient d'être réalisée. Par exemple, T0+11 indique le 11ème jour après la division. Nous y observons les populations de nourrices, de butineuses, mais aussi de couvain ainsi que la population totale des adultes de la colonie, soit la somme des populations de nourrices et de butineuses. Dans ces simulations, des agents naissent et meurent régulièrement, ce qui rend la validation de \textbf{H1} moins triviale : le ratio adultes par larves n'est pas constant. Voici nos résultats :
 		
-		\textbf{Scénario 2.1} (Figure \ref{sc1}) : répartition initiale des physiologies avec uniquement de très jeunes abeilles adultes, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). Par ordre chronologique, nous observons à T0+11 un important changement dans la répartition du travail, où le nombre de nourrices chute drastiquement au profit du nombre de butineuses. La quantité de couvain n'a de cesse de chuter jusqu'a T0+21 où il atteint zéro. La population totale cesse alors de croitre. À T0+22, la reine commence sa ponte, le couvain repart à la hausse, mais le nombre de nourrices continue de chuter. Nous observons ensuite une chute de la population totale : les butineuses commencent à mourrir de vieillesse. En effet, la reine vient seulement de recommencer à pondre. La population repart à la hausse à T0+43, lorsque les premières pontes de la reine émergent enfin, venant renforcer le faible contingent de nourrices. Enfin, à T0+58, nous observons à nouveau un transfert de répartition du travail : la population de nourrices qui croit alors très rapidement, va voir nombre de ses agents partir butiner. La population de nourrices se stabilise ensuite jusqu'à la fin de la simulation, 80 jours après la division, alors que le couvain augmente en permanence.
+		\textbf{Scénario 2.3} (Figure \ref{sc3}) : répartition initiale des physiologies avec uniquement des adultes âgées, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). Nous observons entre T0+0 et T0+11 une population constante de butineuses, une croissance du nombre de nourrices liée à l'émergence des nymphes et une chute drastique du couvain. En l'absence de suffisamment de nourrice, les larves meurent de faim. Entre T0+11 et T0+22 nous observons une stabilisation du couvain, quelques oeufs devenus des larves suffisamment tard ont pu bénéficier des soins des premières nourrices à avoir émergé. Le nombre de nourrice baisse et le nombre de butineuses augmente : vu le nombre limité de larves, les nourrices deviennent des butineuses. À T0+22 nous observons que la reine a pu commencer a pondre, le couvain repart à la hausse. Malheureusement, à T0+27, les butineuses présentent lors de la division meurent de vieillesse. La reine qui adapte sa ponte en fonction de la population de la colonie pond alors au ralenti. Ensuite, la colonie semble entrer dans un cycle. Des nourrices émergent et s'occupent du couvain, mais celui-ci n'est pas assez conséquent et ne parviens pas à les retenir, les nourrices deviennent des butineuses. Les larves ayant bénéficié de soins émergent une dizaine de jours plus tard, et peuvent à nouveau s'occuper du couvain avant de devenir butineuses. La colonie ne semble pas se remettre de la division, la population globale diminue sur la durée de la simulation.
+	
+	\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{Pictures/Graphs/Scenario3.png}
+	\caption{Les différentes populations de la colonie après la division du Scénario 2.3.}
+	\label{sc3}
+	\end{figure}
 		
-		\textbf{Scénario 2.2} (Figure \ref{sc2}) : répartition initiale des physiologies uniforme, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). Nous observons une population constante de nourrices, aidée par les émergences du couvain, et une population de butineuses croissante. La population de nourrices décrit alors un pic à T0+22, au moment où les dernières nymphes émergent et alors que la reine commence à pondre. À T0+27, les butineuses déjà présentes au début de la simulation meurent déjà de vieillesse. La progression suit ensuite de très près la chronologie du scénario précédent, avec une population globale légèrement plus faible.
+		\textbf{Scénario 2.4} (Figure \ref{sc4}) : répartition initiale des physiologies uniforme, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). La simulation se compte jusqu'à T0+22 comme le scénario 2.1. En revanche, puisque la reine ne pond que plus tard, les nourrices continuent de transitionner vers la physiologie de butineuses, et il en reste très peu lorsque la reine pond enfin. Comme pour le scénario 2.1, les premières butineuses commencent alors à mourir de vieillesse, mais ne sont pas compensées par les naissances. La reine ponds alors de moins en moins car la population de la colonie chute. Le peu de nourrice restant ne parvient pas a maintenir le couvain en vie, la colonie est perdue peu après T0+60.
+	
+	\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{Pictures/Graphs/Scenario4.png}
+	\caption{Les différentes populations de la colonie après la division du Scénario 2.4.}
+	\label{sc4}
+	\end{figure}
+	
+	Nous avons ensuite pu présenter ces deux courbes à des apiculteurs au cours d'une journée d'expérimentations organisée entre l'UBO, l'IMT-Atlantique et le GDSA29. Le Tableau \ref{TabResCoherence} récapitule les réponses qu'ont donnés les participants à la question \textit{" L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ? "}, tour à tour pour les Figures \ref{sc1} et \ref{sc2}. "La façon dont la division a été réalisée" concerne les quantités de populations présentes dans la colonie après la division, et est un exercice auxquels les apiculteurs sont très sensibilisés : il en va de la survie de la colonie. Les deux scénario obtiennent alors la même note moyenne de 3.93 ainsi que la même médiane à 4, mais les écarts-types diffèrent, respectivement 0.77 et 1.06.
 	
 	
 	\begin{table}
@@ -123,39 +154,77 @@
 	\label{TabResCoherence}
 	\end{table}
 	
-	Nous avons ensuite pu présenter ces deux courbes à des apiculteurs au cours d'une journée d'expérimentations organisée entre l'UBO, l'IMT-Atlantique et le GDSA29. Le Tableau \ref{TabResCoherence} récapitule les réponses qu'ont donnés les participants à la question \textit{" L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ? "}, tour à tour pour les Figures \ref{sc1} et \ref{sc2}. "La façon dont la division a été réalisée" concerne les quantités de populations présentes dans la colonie après la division, et est un exercice auxquels les apiculteurs sont très sensibilisés : il en va de la survie de la colonie. Les deux scénario obtiennent alors la même note moyenne de 3.93 ainsi que la même médiane à 4, mais les écarts-types diffèrent, respectivement 0.77 et 1.06.
-	
 	
 	\section{Interprétations des Résultats}
 
 	Nous allons désormais comparer nos résultats à nos hypothèses, évaluer les écarts ainsi que les biais, et parler d'éventuelles perspectives d'améliorations.
 	
-		Nous nous intéressons ici à notre première hypothèse, sobrement appelée \textbf{H1}, que nous rappelons : 
-		
+	\subsection{Hypothèses et Modèle Simplifié}
+	
+	Le Tableau \ref{TabEnvConstant} reprend les résultats des scénario 1.1 à 1.5 de manière concise. Il présente, pour chaque scénario, le ratio adultes par larve ainsi que l'équilibre de répartition de travail atteint, donné en proportion de nourrices dans la population d'adultes de la colonie virtuelle.
+	
+	\begin{table}
+		\centering
+		\begin{tabular}{l|l|l|l}
+    	Scénario & Population Initiale & Ratio Adultes par Larve & Ratio Nourrices par Adultes \\
+   		\hline
+   		1.1 & uniforme & 1 pour 1 & 60\% \\
+   		1.2 & jeune & 1 pour 1 & 60\% \\
+   		1.3 & âgée & 1 pour 1 & 60\% \\
+   		1.4 & uniforme & 3 pour 1 & 20\% \\
+   		1.5 & uniforme & 1 pour 2 & 85\% \\
+		\end{tabular}	
+		\caption{Récapitulatif des différents scénarios, leurs ratio adultes par larves ainsi que le pourcentage de nourrices dans la population totale d'adultes.}	
+   		\label{TabEnvConstant}
+	\end{table}	
+	
+		Nous confrontons ici le modèle simplifié à notre première hypothèse, que nous rappelons :
+				
 		\textbf{H1} : notre modèle de colonie d'abeilles virtuelle est capable d'auto-organisation.
 		
-		Une première version du modèle, appelée version "à environnement constant" (car elle conserve les niveaux de populations sur toute la durée de la simulation) nous sert principalement à vérifier cette hypothèse. Ces cinq scénario, manipulant les conditions initiales ainsi que les rapports de populations, permettent de faire ressortir les capacités d'adaptation de notre modèle. Ainsi, comme récapitulé dans le Tableau \ref{TabEnvConstant}, on note que la répartition initiale de la physiologie de nos agents n'influe pas sur l'équilibre de la répartition des tâches entre eux. Le ratio adultes / larves en revanche semble être le facteur directeur de l'équilibre. Plus il y a de larves par agents adultes, plus ces derniers seront nombreux à effectuer un travail de nourrice. Ainsi, nous pouvons dire que notre modèle valide \textbf{H1} : nos agents se répartissent correctement les tâches selon les besoins de l'environnement, ici plus ou moins de larves.
+		Comme récapitulé dans le Tableau \ref{TabEnvConstant}, on note que la répartition initiale de la physiologie de nos agents pour chaque scénario n'influe pas sur l'équilibre de la répartition des tâches entre eux. Le ratio adultes / larves en revanche semble être le facteur directeur de l'équilibre. Plus il y a de larves par agents adultes, plus ces derniers seront nombreux à effectuer un travail de nourrice. Ainsi, nous pouvons dire que notre modèle valide \textbf{H1} : nos agents se répartissent correctement les tâches selon les besoins de l'environnement, ici plus ou moins de larves.
 		
-		\paragraph{}
-		Nous pouvons nous intéresser à ce qu'apporte les scénario 2.1 et 2.2 en ce qui concerne cette première hypothèse. En effet, la calibration "temps réel", sans les accélérations physiologiques présentent dans le modèle environnement constant, ainsi que le cycle de vie apportent des nouveautés. La répartition du travail est toujours visible, mais le cycle de décision des agents est plus long. En effet, une abeille nourrice décidant de devenir butineuse va devoir attendre quelques jours que ses glandes soient en état (attendre que son niveau d'HJ soit assez élevé). Ce délai influe sur la réactivité des agents, mais représente plus fidèlement la réalité. Les scénario 2.1 et 2.2 dans leurs figures respectives \ref{sc1} et \ref{sc2}, présentent tout deux à T0+22 des répartitions de populations identiques, avec environ 350 nourrices et 600 butineuses, alors que les conditions initiales sont différentes. Ceci est un pas vers la vérification d'\textbf{H1} sur le modèle complet. Les suites de ces deux scénario diffèrent car la reine ajuste sa vitesse de ponte en fonction de la population de la colonie, et que dans le scénario 2.2, les butineuses meurent beaucoup plus tôt, ralentissant plus rapidement la vitesse de ponte.
+		Ce modèle ne valide pas \textbf{H2}, car il présente trop de simplification : accélération des phénomènes physiologiques et l'absence de cycle de vie. Ces simplifications apportent de nombreux biais, mais cette première itération démontrant des capacités d'auto-organisation nous permet de construire le modèle complet, moins simplifié.
+	
+	\subsection{Hypothèses et Modèle Complet}		
 		
-		Il est toutefois étonnant de constater que les nourrices continuent de devenir butineuses entre T0+22 et T0+43, alors que la population du couvain augmente. Les premières larves ont besoin de soins aux alentours de T0+25 (après 3 jours en tant qu'œuf), il est donc très étonnant que la population de nourrices ne se stabilise pas. Une des raisons à laquelle nous pensons, et que nous avons déjà évoquée à plusieurs reprises dans ce manuscrit, est l'absence des receveuses. Les receveuses agissent comme un intermédiaire systématique entre les butineuses et les nourrices, permettant ainsi aux butineuses, plus âgées, de mieux ralentir la production d'HJ de leurs jeunes compatriotes. Sans cet effet, la proportion de nourrice par rapport aux butineuses peut être très faible, alors qu'en réalité, il n'est jamais observé de colonie avec si peu de nourrices.
+		Le Tableau \ref{TabComplet} reprend les résultats des scénario 2.1 à 2.4 de manière concise. Le tableau présente, pour chaque scénario, un rappel des conditions initiales, puis différents ratio mesurés à la fin de la simulation, à T0+80 : le pourcentage de nourrices dans la population d'adultes totale, le nombre d'ouvrières pour chaque larve et enfin le nombre de nourrices pour chaque larve. Les scénario 2.3 et 2.4 n'ont pas ces ratio car leurs cas font s'effondrer la colonie suite à la division.
+		\begin{table}
+		\centering
+		\begin{tabularx}{\textwidth}{l|p{2cm}|p{1.5cm}|X|X|X}
+    	& Population \newline Initiale & Délai Ponte & Ratio Nourrices Adultes & Ratio Ouvrières Larves & Ratio Nourrices Larves\\
+   		\hline
+   		2.1 & jeune & 20 jours & 38\% & 4,47 & 1,70 \\
+   		2.2 & uniforme & 20 jours & 40\% & 4,65 & 1,86 \\
+   		2.3 & âgée & 20 jours &-&-&-\\
+   		2.4 & jeune & 31 jours &-&-&-\\
+		\end{tabularx}	
+		\caption{Récapitulatif des scénarios 2.1 à 2.4, leurs conditions initiales et différents ratio mesurés à la fin de la simulation, à T0+80.}	
+   		\label{TabComplet}
+	\end{table}	
+		
+		
+		La répartition du travail est toujours visible, mais le cycle de décision des agents est plus long. En effet, une abeille nourrice décidant de devenir butineuse va devoir attendre quelques jours que ses glandes soient en état (attendre que son niveau d'HJ soit assez élevé). Ce délai influe sur la réactivité des agents, mais représente plus fidèlement la réalité. Les scénario 2.1, 2.2 et 2.4 dans leurs figures respectives \ref{sc1}, \ref{sc2} et \ref{sc4}, présentent à T0+22 des répartitions de populations identiques, avec environ 350 nourrices et 600 butineuses, alors que les conditions initiales sont différentes. Le scénario 2.3 voit beaucoup de larve mourir avant T0+22, ce qui explique que ces ratio soient différent des trois autres scénarios. Ceci est un pas vers la vérification d'\textbf{H1} sur le modèle complet. Les suites de ces deux scénario diffèrent car la reine ajuste sa vitesse de ponte en fonction de la population de la colonie, et que dans le scénario 2.2, les butineuses meurent beaucoup plus tôt, ralentissant plus rapidement la vitesse de ponte. En revanche, nous pouvons noter que les différents ratio à T0+80 présentés dans le Tableau \ref{TabComplet} sont relativement proches, malgré les conditions initiales différentes, ce qui est un pas de plus vers la validation de \textbf{H1}.
+		
+		Il est toutefois étonnant de constater pour les scénario 2.1 et 2.2 que les nourrices continuent de devenir butineuses entre T0+22 et T0+43, alors que la population du couvain augmente. Les premières larves ont besoin de soins aux alentours de T0+25 (après 3 jours en tant qu'œuf), il est donc très étonnant que la population de nourrices ne se stabilise pas. Une des raisons à laquelle nous pensons, et que nous avons déjà évoquée à plusieurs reprises dans ce manuscrit, est l'absence des receveuses. Les receveuses agissent comme un intermédiaire systématique entre les butineuses et les nourrices, permettant ainsi aux butineuses, plus âgées, de mieux ralentir la production d'HJ de leurs jeunes compatriotes. Sans cet effet, la proportion de nourrice par rapport aux butineuses peut être très faible, alors qu'en réalité, il n'est jamais observé de colonie avec si peu de nourrices. Dans ce cas les émissions de phéromones du le couvain, sans l'aide des receveuses, ne sont pas suffisantes pour retenir les nourrices.
 		
 
 		Nous allons désormais pouvoir nous intéresser à notre deuxième hypothèse, \textbf{H2}, qui énonce : 
 		
 		 \textbf{H2} : notre modèle est capable d'approcher les dynamiques de populations observés dans les colonies d'abeilles réelles.
 		 
-		 D'après les retours donnés par les apiculteurs, avec une médiane à 4 sur 5 lorsque nous leur avons demandé de juger de la cohérence des évolutions de populations comparés à leurs connaissances pratiques, nous pouvons dire qu'\textbf{H2} est validée. Pas parfaite, pour les quelques raisons que nous avons évoquées juste au dessus. Il nous a aussi été pointé que si les dynamiques semblent bonnes, les quantités ne sont pas du tout respectées. En effet, les colonies d'abeilles comptent régulièrement jusqu'à 50 000 individus, ce qui est bien loin de nos 1000 individus. Il sera donc intéressant, à l'avenir et maintenant que la dynamique est validée, d'essayer d'augmenter drastiquement le nombre d'individus, afin d'observer si la calibration ainsi que ses propriétés sont toujours valides ou si elles ne passent pas à l'échelle. La calibration ne fonctionne peut être qu'avec un nombre réduit d'agents. En effet, la répartition spatiale peut avoir un impact très important sur l'émergence des propriétés d'auto-organisation.
+		 D'après la littérature et les retours donnés par les apiculteurs, avec une médiane à 4 sur 5 lorsque nous leur avons demandé de juger de la cohérence des évolutions de populations comparés à leurs connaissances pratiques, nous pouvons dire qu'\textbf{H2} est validée. Pas parfaite, pour les quelques raisons que nous avons évoquées juste au dessus. Il nous a aussi été pointé que si les dynamiques semblent bonnes, les quantités ne sont pas du tout respectées. En effet, les colonies d'abeilles comptent régulièrement jusqu'à 50 000 individus, ce qui est bien loin de nos 1000 individus. Il sera donc intéressant, à l'avenir et maintenant que la dynamique est validée, d'essayer d'augmenter drastiquement le nombre d'individus, afin d'observer si la calibration ainsi que ses propriétés sont toujours valides ou si elles ne passent pas à l'échelle. La calibration ne fonctionne peut être qu'avec un nombre réduit d'agents. En effet, la répartition spatiale peut avoir un impact très important sur l'émergence des propriétés d'auto-organisation. 
 		 
-		 Lors de nos premiers essais préliminaires sur de très grand nombre d'agents, nous observions dans nos simulations un "embouteillage" d'abeilles, où les agents se bloquent tellement entre eux que leur navigation devient impossible. Il est peut être possible de régler ce soucis en gérant différemment les déplacements, mais il sera peut être nécessaire de changer d'approche quant à la spatialisation des agents dans la ruche et sur les cadres.
+		 Lors d'essais préliminaires sur de très grand nombre d'agents, nous observions dans nos simulations un "embouteillage" d'abeilles, où les agents se bloquent entre eux et leur navigation devient impossible. Il est peut être possible de régler ce soucis en gérant différemment les déplacements, mais il sera peut être nécessaire de changer d'approche quant à la spatialisation des agents dans la ruche et sur les cadres.
+		 
+		 De plus, il est intéressant de retrouver, pour nos deux scénario ne causant pas la perte de la colonie, le ratio "nourrices par larves" à 1,70 et 1,86, car la littérature nous donne une valeur d'environ 2.
 	
 	
 	\section{Perspectives d'Améliorations}
 	\label{sectionPerspectivesSMA}
 	
 	\subsection{Perspectives du Modèle de prise de décisions}
-	Après ces travaux sur le modèle de prise de décision présenté Chapitre 2, nous avons en tête quelques améliorations pour d'éventuelles nouvelles implémentations de celui-ci. La Figure \ref{ModelNow} illustre le modèle de prise de décision tel qu'il est décrit dans ce manuscrit : un stimulus, qu'il soit perçu ou artificiel (représentant la Motivation Source), sert à calculer un score pour sa Tâche par le biais d'une fonction sigmoïde et de son seuil. Ce dernier représente alors l'état physiologique/physique de l'agent. Enfin, la sélection se fait soit en prenant en compte le score de la tâche, soit, pour une Tâche Motivée précédemment exécutée, c'est le mécanisme d'interruption, représentant la Motivation Guide transversale à l'agent, qui est pris en compte. Ainsi la Tâche ayant le score final, score ou motivation, le plus élevé sera sélectionnée.
+	Après ces travaux sur le modèle de prise de décision présenté Chapitre 2, nous avons en tête quelques améliorations pour d'éventuelles nouvelles implémentations de celui-ci. La Figure \ref{ModelNow} illustre à nouveau le modèle de prise de décision tel qu'il est décrit dans le Chapitre 2 : un stimulus, qu'il soit perçu ou artificiel (donné par la Motivation Source), sert à calculer un score pour sa Tâche par le biais d'une fonction sigmoïde et de son seuil. Ce dernier représente alors l'état physiologique/physique de l'agent. Enfin, la sélection se fait soit en prenant en compte le score de la tâche, soit, pour une Tâche Motivée précédemment exécutée, c'est le mécanisme d'interruption, représentant la Motivation Guide transversale à l'agent, qui est pris en compte. Ainsi la Tâche ayant le score final, score ou motivation, le plus élevé sera sélectionnée.
 	
 	Ce que nous proposons pour une version améliorée est de se passer de ce mécanisme d'interruption tel qu'il est présenté, en fusionnant les deux types de motivations au niveau du stimulus artificiel. La Figure \ref{ModelNext} décrit ce nouveau fonctionnement : le calcul du score se fait soit via le stimulus perçu, soit, dans le cas de Tâche Motivée, via le produit des Motivations Source et Guide de la Tâche. L'agent perd alors sa motivation interne transversale à toutes les tâches, et voit ses Motivations Guides être liées à chaque Tâche Motivée. Ainsi, le score d'une tâche représente les deux motivations, et contient déjà l'information que notre mécanisme d'interruption apportait, car le stimulus est alors une image des deux motivations que nous avons décrites. Il est alors nécessaire d'intégrer le concept d'Actions Motivantes, qui, à l'inverse d'Actions Démotivantes, remontent la Motivation Guide d'une tâche à chaque exécution. Agissant un peu à la manière d'une récompense, les Actions Motivantes seront sélectionnées afin de concerner les Actions qu'un agent réalise lorsqu'il réussi sa Tâche. La Motivation Guide devra aussi remonter lentement au fil du temps même si la Tâche n'est pas sélectionnée, propriété que nous retrouvons classiquement dans les modèles à seuils, à propos de seuils s'ajustant au fil de la simulation. Il sera alors intéressant d'observer l'importance des paramètres de baisses et de hausses de la motivation dans la répartition du travail, et d'en modifier les dynamiques en utilisant par exemple des incréments constants ou pourquoi pas une fonction exponentielle accélérant la baisse ou la hausse selon la fréquence d'appel de ces changements. Nous pensons qu'avec la Motivation Guide liée à chaque tâche, chaque agent aura un comportement plus cohérent, en évitant d'osciller entre deux tâches, ce qui devrait par la même occasion augmenter son efficacité. Cette nouvelle itération du modèle permet une intégration plus naturelle des concepts de motivations dans les modèles à seuils : en ne jouant que sur un stimulus artificiel nous n'avons pas besoin de modifier le fonctionnement du modèle à seuils, là où la version actuelle nous demande d'y intégrer un nouveau mécanisme.
 	
@@ -180,8 +249,8 @@
 	\label{ModelsBeforeAfter}
 	\end{figure}
 	
-	\subsection{Perspectives de la Simulation Multi-Agents}
-	Il est possible d'enrichir le modèle de la colonie d'abeilles de beaucoup de manières différentes, afin de rapprocher nos résultats d'observations faites sur de réelles colonies. L'amélioration la plus prioritaire selon nous serait d'enrichir la simulation de la nourriture dans le modèle. La nourriture est pour l'instant ramenée par les butineuses, mais est aussi présente à l'intérieur de la colonie, dans quelques cellules de cadres agissant comme des sources infinies. Ainsi, nous avons pu nous intéresser pour l'instant à l'importance de sa distribution, plutôt qu'à sa collecte. Pour ceci, il sera nécessaire d'échelonner plus en détail les quantités de nourritures consommées par les larves et les adultes, mais aussi les quantités rapportées par les butineuses. Il sera aussi nécessaire d'ajouter les tâches de "receveuses" que nous avons décrit dans le Chapitre de Contexte, au début de ce manuscrit. De plus, ces tâches de receveuses recoupent une hypothèse que nous avons déjà énoncé dans ce manuscrit, qui est qu'elles sont les principales responsables de l'impact rajeunissant des abeilles plus âgées sur les jeunes adultes. Elles jouent en effet un rôle très important dans la propagation de phéromones dans la colonie, en faisant le pont entre les âges. De la même manière il serait intéressant d'intégrer un module gérant le butinage de manière plus poussée que la version minimaliste de cette itération. Nous pourrions alors observer les impacts qu'ont les changements de l'environnement extérieur de la ruche sur la répartition du travail à l'intérieur de celle-ci.
+	\subsection{Perspectives du Modèle Multi-Agents}
+	Il est possible d'enrichir le modèle de la colonie d'abeilles de beaucoup de manières différentes, afin de rapprocher nos résultats d'observations faites sur de réelles colonies. L'amélioration la plus prioritaire selon nous serait d'enrichir la simulation de la nourriture dans le modèle. La nourriture est pour l'instant ramenée par les butineuses, mais est aussi présente à l'intérieur de la colonie, dans quelques cellules de cadres agissant comme des sources infinies. Ainsi, nous avons pu nous intéresser pour l'instant à l'importance de sa distribution, plutôt qu'à sa collecte. Pour ceci, il sera nécessaire d'échelonner plus en détail les quantités de nourritures consommées par les larves et les adultes, mais aussi les quantités rapportées par les butineuses. Il sera aussi nécessaire d'ajouter les tâches de "receveuses" que nous avons décrit dans le Chapitre de Contexte, au début de ce manuscrit. De plus, ces tâches de receveuses recoupent une hypothèse que nous avons déjà énoncé plusieurs fois dans ce manuscrit, qui est qu'elles sont les principales responsables de l'impact rajeunissant des abeilles plus âgées sur les jeunes adultes. Elles jouent en effet un rôle très important dans la propagation de phéromones dans la colonie, en faisant le pont entre les âges. Elles sont aussi responsable de l'apparition de la forme circulaire de la zone de couvain, forme qu'il serait intéressant de retrouver \cite{camazine_self-organizing_1991}. De la même manière il serait intéressant d'intégrer un module gérant le butinage de manière plus poussée que la version minimaliste de cette itération. Nous pourrions alors observer les impacts qu'ont les changements de l'environnement extérieur de la ruche sur la répartition du travail à l'intérieur de celle-ci.
 	
 	Il serait aussi possible d'intégrer la gestion de la température, au fil des journées mais aussi des saisons, qui est un point clé de la colonie, dont nous avons aussi parlé dans le chapitre de Contexte. Nous pourrions alors intégrer la récolte d'eau par les butineuses, qui sert à la régulation de la température. De plus, les abeilles d'hiver présentent des caractéristiques très intéressantes qu'il serait intéressant de retrouver par la simulation. 
 	

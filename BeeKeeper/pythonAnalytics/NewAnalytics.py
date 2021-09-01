@@ -402,6 +402,7 @@ for key in allParsedExpes:
 	plt.legend()
 	
 	plt.savefig("TasksAPI_" + key[0] + ".png", bbox_inches='tight');
+	plt.show()
 	
 	index += 1
 
