@@ -159,7 +159,7 @@
 
 	Nous allons désormais comparer nos résultats à nos hypothèses, évaluer les écarts ainsi que les biais, et parler d'éventuelles perspectives d'améliorations.
 	
-	\subsection{Hypothèses et Modèle Simplifié}
+	\subsection{Résultats du Modèle Simplifié}
 	
 	Le Tableau \ref{TabEnvConstant} reprend les résultats des scénario 1.1 à 1.5 de manière concise. Il présente, pour chaque scénario, le ratio adultes par larve ainsi que l'équilibre de répartition de travail atteint, donné en proportion de nourrices dans la population d'adultes de la colonie virtuelle.
 	
@@ -186,7 +186,7 @@
 		
 		Ce modèle ne valide pas \textbf{H2}, car il présente trop de simplification : accélération des phénomènes physiologiques et l'absence de cycle de vie. Ces simplifications apportent de nombreux biais, mais cette première itération démontrant des capacités d'auto-organisation nous permet de construire le modèle complet, moins simplifié.
 	
-	\subsection{Hypothèses et Modèle Complet}		
+	\subsection{Résultats du Modèle Complet}		
 		
 		Le Tableau \ref{TabComplet} reprend les résultats des scénario 2.1 à 2.4 de manière concise. Le tableau présente, pour chaque scénario, un rappel des conditions initiales, puis différents ratio mesurés à la fin de la simulation, à T0+80 : le pourcentage de nourrices dans la population d'adultes totale, le nombre d'ouvrières pour chaque larve et enfin le nombre de nourrices pour chaque larve. Les scénario 2.3 et 2.4 n'ont pas ces ratio car leurs cas font s'effondrer la colonie suite à la division.
 		\begin{table}
@@ -209,8 +209,11 @@
 		Il est toutefois étonnant de constater pour les scénario 2.1 et 2.2 que les nourrices continuent de devenir butineuses entre T0+22 et T0+43, alors que la population du couvain augmente. Les premières larves ont besoin de soins aux alentours de T0+25 (après 3 jours en tant qu'œuf), il est donc très étonnant que la population de nourrices ne se stabilise pas. Une des raisons à laquelle nous pensons, et que nous avons déjà évoquée à plusieurs reprises dans ce manuscrit, est l'absence des receveuses. Les receveuses agissent comme un intermédiaire systématique entre les butineuses et les nourrices, permettant ainsi aux butineuses, plus âgées, de mieux ralentir la production d'HJ de leurs jeunes compatriotes. Sans cet effet, la proportion de nourrice par rapport aux butineuses peut être très faible, alors qu'en réalité, il n'est jamais observé de colonie avec si peu de nourrices. Dans ce cas les émissions de phéromones du le couvain, sans l'aide des receveuses, ne sont pas suffisantes pour retenir les nourrices
 		
 		 Dans la réalité, la perte de nombreuses butineuses lors d'une infection Nosema provoque la transition des nourrices vers le butinage. Ainsi, la colonie infectée n'a plus assez de nourrices et le couvain n'est plus correctement soigné \cite{hassanein_influence_1953, higes_how_2008}. Ce cas extrême montre l'importance critique de l'effet rajeunissant des butineuses sur les nourrices. Ainsi, notre modèle minimisant cet effet (du fait de la simplification de la nourriture et l'absence de receveuses) reproduit en quelques sorte le scénario de répartition des tâches nourrices-butineuses lors d'une attaque Nosema.	
+		 
+		 En revanche, le scénario 2.3 nous montre que notre modèle complet est incapable de faire rajeunir des butineuses en nourrices. Nous pensions que les émissions de phéromones du couvain, lorsqu'elles ne sont pas absorbées par des nourrices, suffiraient à provoquer un retour a la physiologie de nourrice de la part des butineuses. Ceci est en partie due à notre simplification du butinage. En effet, les butineuses partent butiner, puis se reposent quelques temps, puis repartent butiner : elles ne sont alors jamais en contact avec les phéromones du couvain sur de longues périodes. En réalité, une butineuse rentrant à la ruche et ne trouvant pas de receveuses va cesser de butiner, et ainsi augmenter son expositions aux phéromones de couvain. De plus, il a été montré dans la littérature biologique que les butineuses sont capables de redevenir des nourrices sans la présence de couvain, l'absence de nourrice suffit à provoquer cette réversion \cite{huang_regulation_1996}. Il est difficile de proposer une solution ici, beaucoup de travail reste à faire sur ce point en collaboration avec nos partenaires biologistes.
+		 La capacité du modèle simplifié à réaliser ces réversions est due au biais provoqué par l'accélération des phénomènes physiologiques.
 		
-
+	\paragraph{}
 		Nous allons désormais pouvoir nous intéresser à notre deuxième hypothèse, \textbf{H2}, qui énonce : 
 		
 		 \textbf{H2} : notre modèle est capable d'approcher les dynamiques de populations observés dans les colonies d'abeilles réelles.
@@ -255,6 +258,8 @@
 	
 	\subsection{Perspectives du Modèle Multi-Agents}
 	Il est possible d'enrichir le modèle de la colonie d'abeilles de beaucoup de manières différentes, afin de rapprocher nos résultats d'observations faites sur de réelles colonies. L'amélioration la plus prioritaire selon nous serait d'enrichir la simulation de la nourriture dans le modèle. La nourriture est pour l'instant ramenée par les butineuses, mais est aussi présente à l'intérieur de la colonie, dans quelques cellules de cadres agissant comme des sources infinies. Ainsi, nous avons pu nous intéresser pour l'instant à l'importance de sa distribution, plutôt qu'à sa collecte. Pour ceci, il sera nécessaire d'échelonner plus en détail les quantités de nourritures consommées par les larves et les adultes, mais aussi les quantités rapportées par les butineuses. Il sera aussi nécessaire d'ajouter les tâches de "receveuses" que nous avons décrit dans le Chapitre de Contexte, au début de ce manuscrit. De plus, ces tâches de receveuses recoupent une hypothèse que nous avons déjà énoncé plusieurs fois dans ce manuscrit, qui est qu'elles sont les principales responsables de l'impact rajeunissant des abeilles plus âgées sur les jeunes adultes. Elles jouent en effet un rôle très important dans la propagation de phéromones dans la colonie, en faisant le pont entre les âges. De plus, nous pourrions alors simuler une attaque de \textit{Nosema}, et retrouver ses impacts sur la colonie et son organisation. Les receveuses sont aussi responsables de l'apparition de la forme circulaire de la zone de couvain \cite{camazine_self-organizing_1991} qu'il serait intéressant de retrouver. De la même manière nous pourrions intégrer un module gérant le butinage de manière plus poussée que la version minimaliste de cette itération. Nous pourrions alors observer les impacts qu'ont les changements de l'environnement extérieur de la ruche sur la répartition du travail à l'intérieur de celle-ci.
+	
+	Parvenir à retrouver des butineuses capables de retrouver leur physiologie de nourrice lorsque la colonie en a besoin serait aussi un bon en avant pour le modèle de la physiologie de l'abeille. L'ajout des receveuses jouera surement un rôle dans ce mécanisme, car l'absence de ces dernières est sûrement un des points déclencheurs de cette réversion physiologique. Notre modèle de la physiologie de l'abeille, avec ses hormones et phéromones devra très probablement être complexifié. Il pourra contenir la "Vitellogenine" (Vg), que nous avons pour l'instant agrégée dans l'état des glandes hypopharyngiennes, car corrélées \cite{johnson_division_2010}. Ajouter cette nuance pourra nuancer le développement des abeilles, et peut-être permettre de retrouver le mécanisme de réversion.
 	
 	Il serait aussi possible d'intégrer la gestion de la température, au fil des journées mais aussi des saisons, qui est un point clé de la colonie, dont nous avons aussi parlé dans le chapitre de Contexte. Nous pourrions alors intégrer la récolte d'eau par les butineuses, qui sert à la régulation de la température. De plus, les abeilles d'hiver présentent des caractéristiques très intéressantes qu'il serait intéressant de retrouver par la simulation. 
 	
