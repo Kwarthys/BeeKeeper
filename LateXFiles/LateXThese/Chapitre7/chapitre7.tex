@@ -2,37 +2,41 @@
 
 	Dans ce chapitre nous décrivons le protocole expérimental que nous avons mis en place afin de réaliser une première évaluation de quelques unes de nos propositions.
 	
-	Pour des raisons de temps, de contraintes sanitaires et d'avancée des travaux, nous avons décidé de réaliser l'expérimentation sur une version "Environnement immersif et manettes", sans interacteurs tangibles et sans interactions directes avec la simulation. Cette version est décrite Section \ref{immersionSansTangibles}. Ces simplifications nous ont permis de déployer l'expérimentation sur un casque de réalité virtuelle autonome, nous libérant ainsi du besoin d'avoir des ordinateurs sur place, pour l'application interactive comme pour la simulation. L'absence d'interacteurs tangibles nous permet de nous passer des appareils de \textit{tracking} que nous utilisons, disponibles seulement aux locaux de l'IMT-Atlantique. Nous obtenons ainsi une expérience portable et facilement déployable.
+	Pour des raisons de temps, de contraintes sanitaires et d'avancée des travaux, nous avons décidé de réaliser l'expérimentation sur la version "Environnement immersif et manettes" de l'application interactive, sans interacteurs tangibles et sans interactions directes avec la simulation. Cette version est décrite Section \ref{immersionSansTangibles}. Ces simplifications nous ont permis de déployer l'expérimentation sur un casque de réalité virtuelle autonome, nous libérant ainsi du besoin d'avoir des ordinateurs sur place, pour l'application interactive comme pour la simulation. L'absence d'interacteurs tangibles nous permet de nous passer des appareils de \textit{tracking} que nous utilisons, disponibles seulement dans les locaux d'IMT-Atlantique. Nous obtenons ainsi une expérience portable et facilement déployable.
 	
-	En coopération avec le \textit{GDSA29}, quinze apiculteurs de cette association sont venus réaliser notre expérience et ont rempli un questionnaire. Nous décrivons tout ce protocole ainsi que le questionnaire dans ce chapitre, ainsi que les résultats, impressions et perspectives qui s'ouvrent à la suite de ces travaux.
+	En coopération avec le \textit{GDSA29}, quinze apiculteurs de cette association sont venus réaliser notre expérience et ont répondu à un questionnaire. Nous décrivons tout ce protocole et le questionnaire dans ce chapitre, ainsi que les résultats, impressions et perspectives qui s'ouvrent à la suite de ces travaux.
 
 	\section{Expérimentation Visualisation Interactive}
 		\label{sectionExpe}
 		
 		\subsection{Protocole Général}
 		\label{protocoleGeneral}
-		Pour rappel, nous avons mis en place une simulation de colonie d'abeilles à base d'agents, nous permettant d'interagir avec les abeilles par le biais d'actions apicoles. L'utilisateur agit sur les cadres virtuels de la colonie, impactant indirectement les abeilles, qui doivent s'ajuster aux changements de leur environnement. Nous avons monté une expérimentation préliminaire visant à évaluer l'intérêt pédagogique de cette simulation, dans le cadre de la formation d'apiculteurs. Nous nous sommes posé trois questions principales :
+		Dans le Chapitre 3 nous avons mis en place une simulation de colonie d'abeilles à base d'agents, nous permettant d'interagir avec les abeilles virtuelles par le biais d'actions apicoles. L'utilisateur agit sur les cadres virtuels de la colonie, impactant indirectement les agents, qui doivent s'ajuster aux changements de leur environnement. Nous avons monté une expérimentation préliminaire visant à évaluer l'intérêt pédagogique de cette simulation, à la fois dans le cadre de la formation d'apiculteurs et dans la transmission de connaissances sur les mécanismes de l'auto-organisation. Nous nous sommes posé trois questions principales :
 		\begin{enumerate}
 			\item Est-ce que la manipulation d'une ruche dans un environnement immersif présente un intérêt pédagogique pour l'apiculture ?
-			\item Est-ce que notre simulation est cohérente par rapport à ce que des apiculteurs observent sur le terrain ?
-			\item Est-ce que notre représentation de l'auto-organisation latente de la colonie est claire pour un apiculteur ?
+			\item Est-ce que les résultats de la simulation semblent cohérents pour des apiculteurs, par rapport à ce qu'ils observent sur le terrain ?
+			\item Est-ce que notre représentation de l'auto-organisation latente de la colonie est aide un apiculteur à en comprendre les mécanismes ?
 		\end{enumerate}
 
-    Pour répondre à la première question nous avons créé une première étape visant à inviter l'utilisateur (un apiculteur) à réaliser une division (mouvement apicole critique, dans le sens ou mal le faire va avoir un impact négatif significatif). À l'aide de manettes l'apiculteur va déplacer un à un la moitié des cadres d'une ruche, dans une deuxième ruche initialement vide à proximité. Nous invitons ensuite l'apiculteur à nous faire part de son avis sur l'intérêt pédagogique de cette manipulation.
-    Pour répondre à la deuxième question, et dans une deuxième partie de l'expérimentation, nous présentons à l'utilisateur deux graphiques représentant les différentes populations de la colonie en fonction du temps, après réalisation de deux divisions (variant les populations initiales). Sur la base de ces deux graphiques, nous invitons l'apiculteur à nous faire part de son avis sur la cohérence de nos résultats par rapport à ses connaissances. Cette partie de l'expérimentation est abordée et commentée dans le \textit{Chapitre 4}.
-    Pour répondre à la troisième question, nous avons mis en place un graphique en 3 dimensions, que nous appelons le \textit{Graph3D}, montrant l'état interne de chaque agent de la colonie, reflet de l'auto-organisation. L'âge physiologique, l'âge réel ainsi que la quantité de phéromones échangées ont chacun leur axe et permettent de placer chaque agent de la colonie, formant un nuage de points. Pour plus de lisibilité, l'axe d'âge physiologique est doublé d'un changement de couleur, chaque abeille sous le seuil de 0.5 est représentée par un cube rouge, et chaque abeille au dessus de ce seuil par un cube jaune. Dans un premier temps, nous invitons l'apiculteur à prendre connaissance du Graph3D pour se familiariser avec les notions qu'il présente. Avec le graphique 2D des populations comme appui, l'utilisateur essaye alors de retrouver des points clés de la division dans le Graph3D, afin de faire des liens avec des notions qui lui sont plus familières. Ensuite, dans une troisième partie, l'utilisateur est chargé de répondre à une question centrée sur l'auto-organisation grâce au Graph3D.
+    Le protocole expérimental à été divisé en trois étapes dans le but de répondre à chacune de ces questions.
+    
+    La première étape invite l'utilisateur (un apiculteur) à réaliser une division (mouvement apicole critique, dans le sens où mal le faire va avoir un impact négatif significatif). À l'aide de manettes l'apiculteur va déplacer un à un la moitié des cadres d'une ruche, dans une deuxième ruche initialement vide à proximité. Nous invitons ensuite l'apiculteur à nous faire part de son avis sur l'intérêt pédagogique de cette manipulation. Cette première partie d'une durée d'environ 15 minutes avait également pour but de familiariser l'utilisateur avec l'environnement immersif et ses interacteurs.
+    
+    Dans la deuxième partie de l'expérimentation, nous présentons à l'utilisateur deux graphiques représentant les différentes populations de la colonie en fonction du temps, après réalisation de deux divisions (variant les populations initiales). Sur la base de ces deux graphiques, nous invitons l'apiculteur à nous faire part de son avis sur la cohérence de nos résultats par rapport à ses connaissances. Cette partie de l'expérimentation est abordée et commentée dans le \textit{Chapitre 4}.
+    
+    La troisième partie présente un graphique en 3 dimensions présenté dans le Chapitre 6, que nous appelons le \textit{Graph3D}, montrant l'état interne de chaque agent de la colonie, reflet de l'auto-organisation. L'âge physiologique, l'âge réel ainsi que la quantité de phéromones échangées ont chacun leur axe et permettent de placer chaque agent de la colonie, formant un nuage de points mettant en valeur les mécanismes de l'auto-organisation. Pour plus de lisibilité, l'axe d'âge physiologique est doublé d'un changement de couleur, chaque agent sous le seuil de 0.5 est représenté par un cube rouge, et chaque agent au dessus de ce seuil est représenté par un cube jaune. Dans un premier temps, nous invitons l'apiculteur à prendre connaissance du Graph3D pour se familiariser avec les notions qu'il présente. Avec le graphique 2D des populations comme appui, l'utilisateur essaye alors de retrouver des points clés de la division dans le Graph3D, afin de faire des liens avec des notions qui lui sont plus familières. Ensuite, dans une troisième partie, l'utilisateur est chargé de répondre à une question centrée sur l'auto-organisation grâce au Graph3D.
 
 		
 		\subsection{Protocole Détaillé}
 		
-		L'expérimentation que nous avons mis en place se déroule ainsi en 4 étapes :
+		L'expérimentation que nous avons mise en place se déroule ainsi en 4 étapes :
 		\begin{itemize}
 			\item Étape 1 : Familiarisation et Interactions
 			\item Étape 2 : Tutoriel Graph3D
 			\item Étape 3 : Expérimentation Graph3D
 			\item Étape 4 : Questions Finales
 		\end{itemize}
-		Chacune de ces étapes comporte une ou plusieurs questions, et l'étape 3 ne contient que des questions. Ces questions se divisent en deux catégories, les questions fermées demandant une note de 1 à 5 (offrant ainsi une note neutre), et les questions ouvertes rédigées. Nous les détaillerons au fur et à mesure.
+		Chacune de ces étapes comporte une ou plusieurs questions, et l'étape 4 ne contient que des questions. Ces questions se divisent en deux catégories, les questions fermées demandant une note de 1 à 5 (offrant ainsi une note neutre), et les questions ouvertes rédigées. Nous les détaillerons au fur et à mesure.
 		
 		\subsubsection{Étape 1 : Familiarisation et Interactions}
 		Cette étape commence par une description des manettes et de leurs boutons à l'utilisateur. Nous laissons ensuite l'utilisateur réaliser une division en autonomie, à l'aide de ses manettes. L'application répète les explications que nous lui avons données avant, afin d'aider la prise en main des manettes. Les expérimentateurs répondent toutefois à toutes les questions de l'utilisateur, cette phase permet à ce dernier de se familiariser avec l'environnement immersif à son rythme.
@@ -42,20 +46,7 @@
 		Une fois que l'utilisateur estime avoir terminé sa division, il retire son casque de réalité virtuelle et répond à la première question : "\textit{Selon vous, réaliser cette manipulation en réalité virtuelle peut permettre à des apprenants de mieux appréhender les principes fondamentaux d'une division ? }". Cette question fermée nous permet d'évaluer l'intérêt pédagogique d'une telle manipulation en réalité virtuelle, selon l'avis subjectif des apiculteurs, et de répondre à la première de nos trois questions, énoncées Section \ref{protocoleGeneral}.
 		
 		\subsubsection{Étape 2 : Tutoriel Graph3D}
-		Cette étape a pour but de familiarises les apiculteurs avec le Graph3D, en leur permettant de faire le lien entre leurs connaissances de terrains et nos appellations et moyens de visualisations. Nous leur présentons le graphique \ref{sc1txt}, décrivant les évolutions des différentes populations de la colonie en fonction du temps, juste après une division jusque 80 jours après. Cette division contient 50\% de jeunes abeilles, et 50\% d'abeilles âgées. Dans ce graphique sont intégrés 6 jalons verticaux, nous permettant de placer des points de repères. Quatre d'entre eux sont décrits :
-		\begin{itemize}
-			\item Jalon T0+0 : permet de marquer le moment de la division, le début du graphique et de notre simulation.
-			\item Jalon T0+22 : l'ensemble du couvain a émergé, la reine commence à pondre.
-			\item Jalon T0+27 : premier pic de mortalité chez les butineuses présentent lors de la division.
-			\item Jalon T0+43 : émergence des premières pontes de la nouvelle reine.
-		\end{itemize}
-		Ces jalons sont dit "apicoles", car ils concernent des points auxquels les apiculteurs sont très sensibilisés. En leur donnant ces clés, nous leur permettont de faire le lien entre leurs connaissances et notre représentation en graphique.
-		
-		Ensuite, deux jalons sont laissés sans description, et ne serviront pas lors de cette étape, ce sont des jalons que nous avons appelés "organisation", concernant l'auto-organisation de la colonie. Nous souhaitons à terme que les apiculteurs puissent les identifier en utilisant les outils que nous leurs proposons. Les trois jalons d'auto-organisation sont les suivants :
-		\begin{itemize}
-			\item Jalon T0+11 : la population totale augmente, le couvain émerge mais le nombre de nourrices reste constant. Ainsi beaucoup de nourrices deviennent butineuses.
-			\item Jalon T0+58 : même remarque, de nombreuses nourrices deviennent butineuses.
-		\end{itemize}
+		Cette étape a pour but de familiariser les apiculteurs avec le Graph3D, en leur permettant de faire le lien entre leurs connaissances de terrains et nos appellations et moyens de visualisations. Nous leur présentons le graphique \ref{sc1txt}, décrivant les évolutions des différentes populations de la colonie en fonction du temps, juste après une division jusque 80 jours après.
 		
 		
 		\begin{figure}
@@ -79,62 +70,110 @@
 		\label{scsTxt}
 		\end{figure}
 		
-		Directement après la description du graphique, nous posons une question fermée à l'apiculteur : "\textit{L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ?}". Cette question nous permet de répondre à notre interrogation n°2 décrite Section \ref{protocoleGeneral}, et concerne la simulation de la colonie, et donc notre modélisation et paramétrisation.
+		Cette division contient 50\% de jeunes abeilles virtuelles, et 50\% d'agents âgées. Dans ce graphique sont intégrés 6 jalons verticaux, nous permettant de placer des points de repères. Quatre d'entre eux sont décrits :
+		\begin{itemize}
+			\item Jalon T0+0 : permet de marquer le moment de la division, le début du graphique et de notre simulation.
+			\item Jalon T0+22 : l'ensemble du couvain a émergé, la reine commence à pondre.
+			\item Jalon T0+27 : premier pic de mortalité chez les butineuses présentes lors de la division.
+			\item Jalon T0+43 : émergence des premières pontes de la nouvelle reine.
+		\end{itemize}
+		Ces jalons sont dits "apicoles" car ils concernent des points auxquels les apiculteurs sont très sensibilisés par leur travail et leur expérience. En leur donnant ces clés, nous leur permettons de faire le lien entre leurs connaissances et notre représentation en graphique.
+		
+		Ensuite, deux jalons sont laissés sans description, et ne serviront pas lors de cette étape, ce sont des jalons que nous avons appelés "organisation", concernant l'auto-organisation de la colonie. Nous souhaitons à terme que les apiculteurs puissent les identifier en utilisant les outils que nous leurs proposons. Les deux jalons d'auto-organisation sont les suivants :
+		\begin{itemize}
+			\item Jalon T0+11 : la population totale augmente, le couvain émerge mais le nombre de nourrices reste constant. Ainsi beaucoup de nourrices deviennent butineuses, car la population du couvain ne cesse de diminuer.
+			\item Jalon T0+58 : même remarque, de nombreuses nourrices deviennent butineuses, car la population d'adulte augmente alors plus rapidement que la population du couvain.
+		\end{itemize}
+		
+		Directement après la description du graphique, nous posons une question fermée à l'apiculteur : "\textit{L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ?}". Cette question nous permet de répondre à notre interrogation n°2 décrite Section \ref{protocoleGeneral}, et est décrite et discutée dans le Chapitre 4, concernant le modèle à base d'agents de la colonie d'abeilles.
 		
 		\paragraph{}
-		Le questionnaire enchaine ensuite avec un paragraphe décrivant la notion d'âge physiologique, afin d'introduire cette notion présente dans le Graph3D. Chaque apiculteur était ensuite invité à enfiler à nouveau son casque de réalité virtuelle afin de manipuler le Graph3D. Ils ont pour consigne d'essayer de retrouver les différents jalons visibles sur le graphique en deux dimensions, dans le Graph3D. Ils peuvent pour ceci naviguer dans le temps à l'aide d'un \textit{joystick} d'une des manettes. Le Graph3D étant une représentation à un instant t de la colonie, il affiche quel moment de la simulation il est actuellement en train de décrire. Nous pouvons ainsi lire sous celui-ci le jours vu sous le format "T0+X".
-		
-		Ainsi cette section de l'étape 2 permet à l'utilisateur de se familiariser avec les contrôles et notions du Graph3D. Rien ne lui est demandé pour l'instant, l'exercice commence à l'étape suivante. Dès que l'apiculteur estime avoir terminé de retrouver les jalons, et compris le fonctionnement du Graph3D, il repose son casque de réalité virtuelle, et passe à l'étape 3.
+		Le questionnaire enchaine ensuite avec un paragraphe décrivant la notion d'âge physiologique, afin d'introduire cette notion présente dans le Graph3D. Chaque apiculteur est ensuite invité à enfiler à nouveau son casque de réalité virtuelle afin de manipuler le Graph3D. Ils ont pour consigne d'essayer de retrouver les différents jalons visibles sur le graphique en deux dimensions, dans le Graph3D. Ils peuvent pour ceci naviguer dans le temps à l'aide d'un \textit{joystick} d'une des manettes. Le Graph3D étant une représentation à un instant t de la colonie, il affiche quel moment de la simulation il est actuellement en train de décrire. Nous pouvons ainsi lire sous celui-ci le jours vu sous le format "T0+X". Ainsi cette section de l'étape 2 permet à l'utilisateur de se familiariser avec les contrôles et notions du Graph3D. Rien ne lui est demandé pour l'instant, l'exercice commence à l'étape suivante. Dès que l'apiculteur estime avoir terminé de retrouver les jalons, et compris le fonctionnement du Graph3D, il repose son casque de réalité virtuelle, et passe à l'étape 3.
 		
 		\subsubsection{Étape 3 : Expérimentation du Graph3D}
-			Cette étape s'ouvre sur le graphique \ref{sc2txt}, représentant le même genre de division que pour l'étape 2, à ceci près que la division a été réalisée avec uniquement de jeunes abeilles. Un paragraphe explique les jalons "apicoles", qui sont proches de ceux du précédent graphique.
+			Cette étape s'ouvre sur le graphique \ref{sc2txt}, représentant le même genre de division que pour l'étape 2, à ceci près que la division a été réalisée avec uniquement de jeunes agents. Cette différence a un impact sur l'auto-organisation de la colonie par rapport au premier cas, visible sur le Graph3D. Un paragraphe explique les jalons "apicoles", qui sont proches de ceux du précédent graphique.
 			
-			Après cette description, nous posons la même question fermée sur la cohérence de nos simulation : "\textit{L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ?}".
+			Après cette description, nous posons la même question fermée sur la cohérence de nos résultats : "\textit{L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ?}".
 			
-			Juste après nous posons une question ouverte, s'intéressant aux jalons "organisation" que nous avons décrit ci-dessus : "\textit{Que peut-on dire des évolutions de populations entre T0+11 et T0+15 ? Même question pour T0+58 ? Que se passe-t-il, d'après-vous ?}". Nous attendons ici que les apiculteurs nous parlent d'auto-organisation, de nourrices devenant butineuses.
+			Afin de répondre à notre troisième interrogation sur l'aide apportée par le Graph3D sur la compréhension des mécanismes de l'auto-organisation, nous divisons cette étape en deux parties. Nous demandons à l'apiculteur de nous décrire, selon ses connaissances, l'auto-organisation qu'effectue la colonie, avant et après avoir consulté le Graph3D. Nous évaluons donc l'apport du Graph3D sur cette compréhension.
+			
+			Nous posons donc une question ouverte, s'intéressant aux jalons "organisation" que nous avons décrit ci-dessus : "\textit{Que peut-on dire des évolutions de populations entre T0+11 et T0+15 ? Même question pour T0+58 ? Que se passe-t-il, d'après-vous ?}". Nous attendons ici que les apiculteurs nous parlent d'auto-organisation, de nourrices devenant butineuses.
 			
 			Ensuite, nous posons presque la même question ouverte mais demandons aux apiculteurs d'y répondre après avoir consulté le Graph3D. Ils enfilent pour ceci le casque de réalité virtuelle pour la dernière fois, et manipulent le Graph3D à leur guise. Ils sont alors censés retrouver les jalons que nous leurs citons, et essayer de trouver de nouvelles informations, fournies par le Graph3D. Voici la question : "\textit{Avec le Graphique 3D, retrouvez ces périodes et essayez de préciser la réponse à la question précédente. Que remarque-t-on sur la répartition des nourrices ?}". Nous attendons ici une réponse décrivant l'importance des phéromones dans les transitions de nourrices à butineuses, dans l'auto-organisation. Une fois leur réponse trouvée, les utilisateurs enlèvent leur casque et répondent à la question. Ils passent ensuite à l'étape suivante, la dernière.
 			
 			\subsubsection{Étape 4 : Questions Finales}
 			Ici nous posons quatre questions fermées :
 			\begin{enumerate}
-				\item Comment noteriez-vous la lisibilité des graphiques 2D qui vous ont été présentés ? (De 1-"Incompréhensible" à 5-"Parfaitement lisible")
-				\item Comment noteriez-vous la lisibilité des graphiques 3D ? (De 1-"Incompréhensible" à 5-"Parfaitement lisible")
-				\item Comment évalueriez-vous votre compréhension des variations des différentes populations de la colonie avant cette expérience ? (De 1-"Inexistante" à 5-"Complète")
-				\item Comment évalueriez-vous votre compréhension des variations des différentes populations de la colonie après cette expérience ? (De 1-"Inexistante" à 5-"Complète")
+				\item 4.1 - Comment noteriez-vous la lisibilité des graphiques 2D qui vous ont été présentés ? (De 1-"Incompréhensible" à 5-"Parfaitement lisible")
+				\item 4.2 - Comment noteriez-vous la lisibilité des graphiques 3D ? (De 1-"Incompréhensible" à 5-"Parfaitement lisible")
+				\item 4.3 - Comment évalueriez-vous votre compréhension des variations des différentes populations de la colonie avant cette expérience ? (De 1-"Inexistante" à 5-"Complète")
+				\item 4.4 - Comment évalueriez-vous votre compréhension des variations des différentes populations de la colonie après cette expérience ? (De 1-"Inexistante" à 5-"Complète")
 			\end{enumerate}
 			
 			Les deux premières visent à évaluer subjectivement et succinctement l'acceptabilité de nos deux moyens de visualisations complémentaires, les graphiques deux et trois dimensions.
-			Les deux dernières fonctionnent ensemble, et permettent de retranscrire les différences ressenties de connaissance sur les sujets abordés, ici l'auto-organisation dont font preuve les abeilles. Nous essayons ici d'évaluer l'intérêt pédagogique d'une telle expérience, au niveau de la vulgarisation des phénomènes complexes régissant la colonie, plutôt que dans l'enseignement de l'apiculture.
+			Les questions 3 et 4 fonctionnent ensemble, et permettent de retranscrire les différences ressenties de connaissance sur les sujets abordés, ici l'auto-organisation dont font preuve les agents.
 		
 		
 		\subsection{Matériel et Organisation}
-		Afin de réaliser cette expérience, nous disposions d'une salle réservée par le \textit{GDSA29} et de trois casques de réalité virtuelle \textit{Oculus Quest} de l'IMT-Atlantique. Afin de surveiller ce que les apiculteurs voyaient dans leur caques, six smartphones ont été utilisés, trois comme point d'accès wifi et trois comme console d'observation.
+		Afin de réaliser cette expérience, nous disposions d'une salle réservée par le \textit{GDSA29} et de trois casques de réalité virtuelle \textit{Oculus Quest}. Afin de surveiller ce que les apiculteurs voyaient dans leur casques, six smartphones ont été utilisés, trois comme point d'accès wifi et trois comme console d'observation.
 		
-		Chaque casque était donc accompagné de deux téléphones, l'expérience fonctionnait ainsi en trois \textit{threads} indépendants. Le casque et le téléphone "console" étaient tout deux connectés au même smartphone point d'accès, afin de maximiser la bande passante. Le casque envoyait son contenu au smartphone relai, les expérimentateurs voyaient donc sur le téléphone console ce que les utilisateurs voyaient dans le casque. Ceci a été pratique pour palier et corriger divers problèmes informatiques et/ou de manipulations.
+		Chaque casque était donc accompagné de deux téléphones, l'expérience fonctionnait ainsi en trois \textit{threads} indépendants. Nous avons ainsi pu réaliser les 15 passages d'apiculteur en un après midi. Le casque et le téléphone "console" étaient tout deux connectés au même smartphone point d'accès, afin de maximiser la bande passante. Le casque envoyait son contenu au smartphone relais, les expérimentateurs voyaient donc sur le téléphone console ce que les utilisateurs voyaient dans le casque. Ceci a été pratique pour palier et corriger divers problèmes informatiques et/ou de manipulations, et pour répondre à certaines questions des participants.
 		
-		Chaque participant se voyait donner un questionnaire papier au début de son passage, servant de feuille de route, avec toutes les consignes, explications et questions. Entre chaque passage, les stylo pour remplir les questionnaires ainsi que les casques et manettes étaient désinfectés. 
-		
-		Un goûter offert par l'IMT-Atlantique était aussi proposé aux participants (et expérimentateurs!).
-		
+		Chaque participant avait un questionnaire papier, donné au début de son passage, servant de feuille de route, avec toutes les consignes, explications et questions. Entre chaque passage, les stylo pour remplir les questionnaires ainsi que les casques et manettes étaient désinfectés \footnote{Un goûter était offert par l'IMT-Atlantique, proposé aux participants (et expérimentateurs !) à l'issu de l'expérimentation.}. 		
 		
 		
 	\section{Résultats et Discussions}
-	Pour la première étape concernant l'intérêt pédagogique de la manipulation en environnement immersif, sur 15 notes de 1 à 5 nous obtenons une moyenne à 3.73 avec un écart type à 0.997.
-    Pour la deuxième et troisième étape, l'évaluation de la cohérence des résultats de nos deux simulations de division, chacune à obtenu une moyenne de 3.93 (toujours avec des notes entre 1 et 5), avec des écarts types de 0.77 pour la première et 1.06 pour la seconde. Ces résultats ont déjà été présentés et discutés dans le \textit{Chapitre 4}.
-    Dans la troisième étape, la moitié nous ont parlé d'auto-organisation en se basant sur le graphique en deux dimensions. Le Graph3D n'a en revanche permis à aucun utilisateur de nous donner la réponse que nous attendions sur l'auto-organisation et l'importance des phéromones. 
+	
+	\begin{table}
+	\centering
+	\begin{tabular}{|l|l|l|lllllllllllllll|}
+	\hline
+	\textbf{Questions} & \textbf{M} & \textbf{$\sigma$} & \multicolumn{15}{l}{\textbf{Notes Individuelles (1-5)}}\\
+	\hline
+	1 & 3.73 & 1.00          &2&3&2&5&5&3&5&3&4&4&4&5&3&4&4\\
+	\hline
+	4.1 & 4.20 & 0.91        &5&3&5&4&5&3&5&4&5&5&4&2&4&5&4\\
+	\hline
+	4.2 & 3.53 & 0.96        &3&3&2&4&5&4&5&3&5&3&4&2&4&3&3\\
+	\hline
+	4.3 & 3.47 & 1.09        &2&2&3&2&4&5&5&3&5&3&4&3&3&3&5\\
+	\hline
+	4.4 & 3.93 & 0.85        &5&2&3&4&5&5&4&4&4&4&4&4&3&3&5\\
+	\hline
+	(4.4 - 4.3) & 0.47 & 1.02&3&0&0&2&1&0&-1&1&-1&1&0&1&0&0&0\\
+	\hline
+	\end{tabular}
+	\caption{Résultats de l'expérimentation auprès de 15 apiculteurs concernant leur avis sur l'intérêt pédagogique d'une manipulation en réalité virtuelle (Q1), ainsi que les 4 questions finales (Q4).}
+	\label{TabResVR}
+	\end{table}	
+	
+	Pour la première étape concernant l'intérêt pédagogique de la manipulation en environnement immersif, sur 15 notes de 1 à 5 nous obtenons une moyenne à 3.73 avec un écart type à 0.997. Toutes les notes sont présentées dans le Tableau \ref{TabResVR}. Nous obtenons donc un résultat favorable, nous encourageant à continuer dans cette direction pédagogique.
+	
+    Pour la deuxième et troisième étape, l'évaluation de la cohérence des résultats de nos deux simulations de division, chacune à obtenu une moyenne de 3.93 (toujours avec des notes entre 1 et 5), avec des écarts types de 0.77 pour la première et 1.06 pour la seconde. Ces résultats ont déjà été présentés et discutés dans le \textit{Chapitre 4}, car ils concernent le modèle multi-agents.
+    
+    Dans la troisième étape, la moitié (7 sur 15) nous ont parlé d'auto-organisation en se basant sur le graphique en deux dimensions. Le Graph3D n'a en revanche permis à aucun utilisateur de nous donner la réponse que nous attendions sur l'auto-organisation et l'importance des phéromones. 
+Les apiculteurs s'intéressent peu aux phéromones, ce qui, couplé à l'utilisation d'un environnement immersif pour des non-initiés, peut expliquer cet échec du Graph3D dans la visualisation claire des mécanismes d'auto-organisation. De plus, de part leur activité les apiculteurs ont une vue de la colonie centrée population, là où nous leur proposons une visualisation centrée sur l'individu. C'est aussi pour cette raison que le graphique en deux dimensions, lui orienté population, a été si bien accueilli.
 
-Les apiculteurs s'intéressent extrêmement peu aux phéromones, ce qui, couplé à l'utilisation d'un environnement immersif pour des non-initiés, peut expliquer l'échec du Graph3D dans la visualisation claire des mécanismes d'auto-organisation.
-
-	Si nous reprenons nos trois questions énoncées Section \ref{protocoleGeneral}, nous pouvons répondre favorablement au deux premières, mais négativement pour la troisième.
+	Nous nous intéressons désormais aux quatre questions finales, dont vous retrouverez les différentes notes individuelles dans le Tableau \ref{TabResVR}. La question 4.1 nous montre que les apiculteurs ont bien aimé le graphique en deux dimensions, et étonnamment le Graph3D à reçu de bonnes notes de lisibilités malgré l'absence des réponses que nous attendions au niveau des mécanismes d'auto-organisation. Le Graph3D en lui même est donc jugé lisible, mais il ne met pas assez en valeur les mécanismes de l'auto-organisation. 
+	
+	Les notes données à la question 4 par chaque apiculteur à été soustraite à celle de leur question 3, afin d'observer les évolutions de compréhensions. Cette nouvelle série de valeur est visible sur la dernière ligne du Tableau \ref{TabResVR}, et nous indique une moyenne de 0.47 pour l'évolution de compréhension de l'auto-organisation grâce à l'expérimentation en général. 
+	Ainsi nous observons une majorité de 0, la compréhension ressentie est restée inchangée, et quelques notes positives indiquant l'impression de certain apiculteur d'avoir améliorer leurs compréhensions. Nous trouvons étonnamment deux valeurs négatives d'apiculteurs ayant l'impression de moins comprendre l'auto-organisation après avoir réalisé notre expérience, que nous avons soit embrouillés, soit introduits à un sujet complexe qu'ils ignoraient en partie \footnote{Peut-être trouvons nous ici une illustration de la citation supposée de Socrate : "\textit{je sais que ne sais rien}" ?} ?
+	
+	Si nous reprenons nos trois questions énoncées Section \ref{protocoleGeneral} : 
+		\begin{enumerate}
+			\item Est-ce que la manipulation d'une ruche dans un environnement immersif présente un intérêt pédagogique pour l'apiculture ?
+			\item Est-ce que les résultats de la simulation semblent cohérents pour des apiculteurs, par rapport à ce qu'ils observent sur le terrain ?
+			\item Est-ce que notre représentation de l'auto-organisation latente de la colonie est aide un apiculteur à en comprendre les mécanismes ?
+		\end{enumerate}	
+	 nous pouvons répondre favorablement au deux premières, mais négativement à la troisième.
 
 	
 	\section{Perspectives}
- 	De plus, nous tenons à préciser que cette expérience étant préliminaire, nous n'avions pas mis en place de détection d'erreur afin de détecter si l'utilisateur réalisait correctement sa division. Ainsi, une nouvelle itération de cette expérience avec ce mécanisme de vérification aura un intérêt encore plus important. Y ajouter le couplage à notre simulation pour observer les résultats des mouvements qu'a fait l'utilisateur est aussi une perspective, au pris d'une installation plus conséquente. Les résultats favorables que nous avons obtenus nous poussent dans tout les cas vers la réalisation d'une nouvelle itération de cette expérience.
+ 	Cette expérience étant préliminaire, nous n'avions pas mis en place de détection d'erreurs afin de détecter si l'utilisateur réalisait correctement sa division. Ainsi, une nouvelle itération de cette expérience avec ce mécanisme de vérification aura un intérêt plus prononcé. Y ajouter le couplage à notre simulation pour observer les résultats des mouvements qu'a fait l'utilisateur est aussi une perspective, au prix d'une installation plus conséquente. Les résultats favorables que nous avons obtenus nous poussent dans tout les cas vers la réalisation d'une nouvelle itération de cette expérience.
 
-Il est difficile de conclure sur l'intérêt général du Graph3D : une nouvelle expérimentation visant cette fois ci des biologistes de l'abeille pourrait être intéressante, étant eux-mêmes très sensibilisés aux notions de phéromones. Le Graph3D n'aura pas alors pour rôle d'expliquer la relation entre auto-organisation et phéromones, mais seulement permettre la visualisation de ces-derniers. Un autre moyen de visualisation serait peut être plus approprié, doublé d'un processus didactique, introduisant les concepts et présentant différents exemples. En effet, visualiser les relations entre âges et phéromones ne suffit sûrement pas pour expliquer ces relations.
+Il est difficile de conclure sur l'intérêt général du Graph3D : une nouvelle expérimentation visant cette fois ci des biologistes de l'abeille pourrait être intéressante, étant eux-mêmes très sensibilisés aux notions de phéromones. Le Graph3D n'aura pas alors pour rôle d'expliquer la relation entre auto-organisation et phéromones, mais seulement de permettre la visualisation de ces-derniers. Un autre moyen de visualisation serait peut être plus approprié, doublé d'un processus didactique, introduisant les concepts et présentant différents exemples. En effet, visualiser les relations entre âges et phéromones ne suffit sûrement pas pour expliquer ces relations.
 			
 	\section*{Conclusion}
-	Dans ce chapitre nous avons présenté l'expérimentation que nous avons mise en place en coopération avec le \textit{GDSA29} afin d'évaluer divers aspects de nos propositions. Afin d'obtenir un dispositif expérimental transportable, nous avons développé une nouvelle application interactive sur le casque de réalité virtuelle \textit{Oculus Qest}, autonome. Afin de nous passer du besoin de faire tourner la simulation en temps réel, et d'en attendre les résultats (notre temps d'expérimentation étant limité), nous avons permis à l'application de lire directement des fichiers de \textit{logs} de la simulation, au lieu de communiquer avec.
+	Dans ce chapitre nous avons présenté l'expérimentation que nous avons mise en place en coopération avec le \textit{GDSA29} afin d'évaluer divers aspects de nos propositions. Afin d'obtenir un dispositif expérimental transportable, nous avons développé une nouvelle application interactive sur le casque de réalité virtuelle \textit{Oculus Quest 2}, autonome. Afin de nous passer du besoin de faire tourner la simulation en temps réel, et d'en attendre les résultats (notre temps d'expérimentation étant limité), nous avons permis à l'application de lire directement des fichiers de \textit{logs} de la simulation, au lieu de communiquer cette dernière.
 	
-	Quinze apiculteurs du \textit{GDSA29} ont été invités à réaliser notre expérience, et ont pu réaliser divers actions en environnement immersif et répondre à quelques questions. Ils ont notamment pu réaliser une division en réalité virtuelle. Nous tirons de cette expérience que l'interaction en réalité virtuelle peut présenter un intérêt pédagogique. Ceci nous encourage à monter une expérience concernant nos interactions en réalité virtuelle utilisant l'interaction tangible. En revanche cette expérience nous montre que notre Graph3D ne permet pas d'expliquer, ou de vulgariser le rôle des phéromones dans l'auto-organisation de la colonie. Nous allons donc continuer de travailler sur le Graph3D en tant que moyen de visualisation, et étudier comme créer un outil de vulgarisation. Cet outil comportera surement quelques Graph3D afin de servir d'illustration, mais nous l'imaginons plus complexe, proche d'un "\textit{serious game}".
+	Quinze apiculteurs du \textit{GDSA29} ont été invités à réaliser notre expérience, et ont pu réaliser divers actions en environnement immersif et répondre à quelques questions. Ils ont notamment pu réaliser une division en réalité virtuelle. Nous tirons de cette expérience que l'interaction en réalité virtuelle peut présenter un intérêt pédagogique. Ceci nous encourage à monter une expérience concernant nos interactions en réalité virtuelle utilisant l'interaction tangible. En revanche cette expérience nous montre que notre Graph3D ne permet pas d'expliquer, ou de vulgariser le rôle des phéromones dans l'auto-organisation de la colonie. Nous allons donc continuer de travailler sur le Graph3D en tant que moyen de visualisation, et étudier comme créer un outil de vulgarisation. Cet outil comportera certainement quelques Graph3D afin de servir d'illustration, mais nous l'imaginons plus complexe, proche d'un "\textit{serious game}".
