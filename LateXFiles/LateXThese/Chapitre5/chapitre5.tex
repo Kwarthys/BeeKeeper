@@ -1,15 +1,10 @@
 \chapter{Etat de l'art: Simulation Multi-Agents et Environnements Immersifs}
 
 	Dans ce chapitre nous présentons différentes approches utilisées afin d'interagir avec des systèmes multi-agents, ainsi que différentes approches pour les en visualiser différentes propriétés. Nous étendons ensuite nos observations à l'interaction et la visualisation en ce qui concerne les environnement immersifs, où l'utilisateur est plongé au cœur de l'application, souvent grâce à un casque de réalité virtuelle.
+	
+\boitemagique{Sébastien Picault \cite{picault_simulation_2013}}{"\textit{Pour être un tant soit peu polyvalent et pouvoir en particulier être utilisé pour la production de jeux vidéo, de simulateurs de conduite, etc., un moteur de simulation doit être en mesure de gérer non seulement des simulations « classiques » n'impliquant que des agents logiciels, mais également des situations dans lesquelles certains agents ont une matérialité extérieure au système : c'est le cas par exemple quand on doit interagir avec des réseaux de capteurs, des robots ou encore pire, des humains.}"}	
 
 	\section{Visualiser et Interagir avec une Simulation Multi-Agents}
-		\subsection{Simuler un Système pour Améliorer notre Compréhension}
-		
-		Simuler un système permet de mieux en comprendre les différentes propriétés. Tel un dessinateur qui se voit obligé d'analyser la moindre forme de son modèle, la simulation (et/ou la modélisation) force l'auteur à se pencher sur le moindre de ses mécanismes. Le modèle, une fois mis en place, peut alors être confronté à la réalité, souvent bien plus complexe, plus subtile. Ensuite, cette modélisation est un excellent outil pour vulgariser les concepts qui ont du être assimilés, voire créés, pour la concevoir. La modélisation peut aussi permettre d'en manipuler les paramètres, afin d'anticiper le comportement de son homologue réel.
-		
-	\boitemagique{Jacques Tisseau, HDR 2001 \cite{tisseau_realite_2001}}{"\textit{Les fonctions d'un modèle sont multiples. Pour le modélisateur, le modèle permet d'imaginer, de concevoir, de prévoir et d’améliorer sa représentation du phénomène ou de l'idée qu'il cherche à modéliser. Le modèle devient un support de communication pour représenter, sensibiliser, expliquer ou enseigner les concepts concernés. A l'autre bout de la chaîne, le modèle aide l'utilisateur dans sa compréhension du phénomène (ou de l'idée) représenté(e); il peut également l'évaluer et l'expérimenter par simulation.}"}
-	
-	Le projet \textit{SIMBACA} s'inscrit dans l'ensemble de cette démarche, de la construction du modèle de la colonie à la vulgarisation aux apiculteurs, en passant par la production d'un outil pour les biologistes de l'abeille.
 		
 		
 		\subsection{Visualisation de Systèmes Multi-Agents}
@@ -18,18 +13,41 @@
 		
 		
 		\subsection{Interactions avec des Systèmes Multi-Agents}
-		Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilisation d'interacteurs tangibles.
-	Comment mieux comprendre un système complexe : Environnement immersif et interacteurs tangibles. Ruche, cadre et connaissances apicoles.
+		%Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilisation d'interacteurs tangibles.
+	%Comment mieux comprendre un système complexe : Environnement immersif et interacteurs tangibles. Ruche, cadre et connaissances apicoles.
 	
-	\subsubsection{Le Modèle Voyelles et Interactions Bas Niveau}
-		Ce modèle proposé par Y. Demazeau \cite{demazeau_interactions_1995} analyse les modèles multi-agents sous 4 points de vues : "\textbf{A}gents", "\textbf{E}nvironnement", "\textbf{I}nteractions" et "\textbf{O}rganisations" (AEIO). Là où ce modèle nous intéresse dans ce chapitre, c'est lorsque J.Tisseau propose d'y ajouter le "U" d'"\textbf{U}tilisateur" \cite{tisseau_realite_2001}, pour former "AEIOU". Dans cette définition, l'utilisateur intervient à souhait dans la simulation, en prenant le contrôle d'un agent, utilisant ses capacités motrices et surchargeant son module de décision. Les autres agents de la simulation réagissent alors à l'utilisateur comme s'il était toujours un agent tout à fait normal. 
-		L'utilisateur possède ainsi, à volonté, un "avatar" dans la simulation, interagissant tel un émissaire virtuel avec l'environnement, avec l'ensemble des autres agents et autres systèmes modélisés. Il interagit alors avec les agents de la simulation de manière "horizontale".
+	
+		Nous trouvons dans la littérature 4 grands principes d'interactions avec une simulation multi-agents \cite{kolling_human_2016} :
+		\begin{enumerate}
+			\item Modification de paramètres de la simulation ou de l'algorithme des agents
+			\item Contrôle du comportement général des agents
+			\item Contrôle indirect via modification de l'environnement
+			\item Prise de contrôle d'un agent afin d'influencer les autres
+		\end{enumerate}
 		
 		
-	\subsubsection{Jeux Vidéo et Interactions Haut Niveau}		
-		À un autre niveau, certain jeux vidéo de gestion proposent à leur manière un mode d'interaction avec un système multi-agents. Tel "\textit{Populous}", "\textit{Dwarf Fortress}" ou "\textit{Banished}", les "\textit{god games}" et certains jeux de gestions proposent des simulations complexes dont les agents et l'environnement ne sont pas directement contrôlables. L'utilisateur (ici le joueur) interagit avec la simulation à travers des ordres de hauts niveaux, que les agents vont interpréter puis réaliser en suivant leurs propres règles (d'où la dénomination "god game", le joueur agit comme le "dieu" de la simulation). Par exemple, le joueur peut demander la construction d'un certain bâtiment à un endroit précis. Les agents disponibles, s'il y en a, se mettront à la tâche, s'interrompant s'ils en ont besoin sans que le joueur ne puisse intervenir. L'utilisateur n'est alors pas \textit{dans} la simulation, il n'agit qu'en "guidant" les agents, plaçant des tâches dans une "pile", que les agents exécuterons à leur rythme. L'utilisateur interagit ainsi avec les agents de manières "verticales", il dirige, donne un but.
+	\subsubsection{Modification de Paramètres}
+	Les systèmes multi-agents reposent sur une grande quantité de paramètres, qu'il est donc possible de faire varier pour en observer les conséquences. Cependant, certains de ces paramètres ont un impact imprévisible sur le comportement du système en général, du fait de l'émergence de nombreuses propriétés de celui-ci \cite{couzin_collective_2002}. Il est donc difficile de proposer le comportement inverse : laisser l'utilisateur choisir un paramètre concernant des propriétés émergentes, puis retrouver quels paramètres individuels adapter pour retrouver la propriété demandée. Kira et Potter \cite{kira_exerting_2009} ont proposé une approche \textit{machine learning} pour réaliser cette fonction.
+	
+	Ce type d'interaction se réalise à un niveau très proche de l'implémentation de l'agent, nous parlerons donc ici d'interaction bas niveau.
 		
-		\subsubsection{Modification hors run}
+	\subsubsection{Contrôle du Comportement}
+	À l'inverse des interactions bas niveau, la sélection de comportement permet un contrôle très haut niveau. Ici, au lieu de changer un paramètre, l'utilisateur peut changer la manière d'opérer des agents qu'il sélectionne, changer leur algorithme, pour leur demander par exemple de suivre, d'éviter, ou encore de surveiller d'autres robots ou lieux \cite{coppin_controlling_2012}. Ceci implique que la simulation propose un ensemble de ces algorithmes que les agents soient capables de tous d'exécuter et que l'utilisateur connaissent les implications et fonctions de ces différents comportements sur les agents, ainsi que la répartition spatiales de ces derniers.
+	
+		
+		
+	\subsubsection{Modifications de l'Environnement}
+		Il est aussi possible d'interagir avec une grande quantité d'agents en influant sur leur environnement. Par exemple, Walter et al. \cite{walter_uav_2006} utilisent un champ de phéromones virtuelles pour diriger jusqu'à 50 000 drones sous-marins. Les phéromones permettent de facilement leur faire éviter une zone, ou à l'inverse les faire converger vers une zone définie. Nous trouvons aussi l'utilisation d'objets répulsifs placés dans l'environnement de robots agissant en essaim, afin d'indirectement contrôler la forme de ce dernier \cite{jung_multi-robot_2013}.	
+	
+		De la même manière, certain jeux vidéo de gestion proposent à leur manière un mode d'interaction avec un système multi-agents. Tel "\textit{Populous}", "\textit{Dwarf Fortress}" ou "\textit{Banished}", les "\textit{god games}" et certains jeux de gestions proposent des simulations complexes dont les agents ne sont pas directement contrôlables. L'utilisateur (ici le joueur) interagit avec la simulation à travers des ordres de hauts niveaux, que les agents vont interpréter puis réaliser en suivant leurs propres règles (d'où la dénomination "god game", le joueur agit comme le "dieu" de la simulation). Par exemple, le joueur peut demander la construction d'un certain bâtiment à un endroit précis. Les agents disponibles, s'il y en a, se mettront à la tâche, s'interrompant s'ils en ont besoin sans que le joueur ne puisse intervenir. 
+		
+		Nous plaçons ainsi ce type d'interaction en une manipulation de l'environnement des agents, mais il aurait aussi sa place, dans certains cas, dans la catégorie de contrôle du comportement.
+	
+	\subsubsection{Prise de Contrôle d'un Agent}
+		Ce type d'interaction se retrouve dans le modèle "Voyelles" proposé par Y. Demazeau \cite{demazeau_interactions_1995}. Celui-ci analyse les modèles multi-agents sous 4 points de vues : "\textbf{A}gents", "\textbf{E}nvironnement", "\textbf{I}nteractions" et "\textbf{O}rganisations" (AEIO). Là où ce modèle nous intéresse dans ce chapitre, c'est lorsque J.Tisseau propose d'y ajouter le "U" d'"\textbf{U}tilisateur" \cite{tisseau_realite_2001}, pour former "AEIOU". Dans cette définition, l'utilisateur intervient à souhait dans la simulation, en prenant le contrôle d'un agent, utilisant ses capacités motrices et surchargeant son module de décision. Les autres agents de la simulation réagissent alors à l'utilisateur comme s'il était toujours un agent tout à fait normal. 
+		L'utilisateur possède ainsi, à volonté, un "avatar" dans la simulation, interagissant tel un émissaire virtuel avec l'environnement, avec l'ensemble des autres agents (qui peuvent être des avatars d'autres utilisateurs) et autres systèmes modélisés. Il interagit alors avec les agents de la simulation de manière "horizontale". Par exemple, dans le serious game "FORMAT-STORE" \cite{mathieu_serious_2011}, le joueur prend le contrôle de l'agent "vendeur" qu'il contrôle avec clavier et souris, et interagit avec les autres agents "clients" de l'environnement, les étales et le magasin.
+		
+		À l'inverse, l'agent contrôlé peut avoir une grande influence sur le comportement de la simulation, dans le rôle de "\textit{leader}" des autres agents. Ainsi, l'utilisateur est capable de contrôler le comportement d'un grand nombre d'agents, en n'en contrôlant qu'un seul, ou quelques uns, comme les agents dits "\textit{stakeholders}" des travaux de Brown et al. \cite{brown_human-swarm_2014}.
 	
 	
 	\section{Visualisation et Interactions en Environnements Immersifs}	
@@ -42,7 +60,7 @@
 	
 	
 		
-		Les travaux connexes sur la visualisation des colonies d'abeilles visent principalement à aider les apiculteurs à prendre des décisions, en leur fournissant des informations sur les populations d'abeilles \cite{engelke_visual_2016, engelke_melissar_2016, nguyen_augmented_2017}. Par exemple, Engelke et. al. \cite{engelke_visual_2016} utilisent la réalité augmentée pour afficher des données provenant de plusieurs capteurs dans une série de ruches réelles et permettre à l'utilisateur de parcourir toutes les données de manière intuitive et immersive. Ces données sont collectées au niveau de la ruche (macro), comme la température et le poids. Ils sont ainsi capables de savoir dans quelle ruche se trouvent certaines abeilles et d'étudier la "dérive des abeilles" : lorsque les abeilles d'une colonie partent et rejoignent une autre colonie. Nous, en revanche, travaillons sur une colonie d'abeilles simulée et nous concentrons sur le "micro" monde, au niveau de l'abeille. Notre objectif n'est pas d'aider (directement) les apiculteurs à prendre des décisions, mais de leur permettre de visualiser et de comprendre les effets de leurs actions sur l'organisation de la colonie (virtuelle), à l'intérieur de la ruche.
+		Les travaux connexes sur la visualisation des colonies d'abeilles visent principalement à aider les apiculteurs à prendre des décisions, en leur fournissant des informations sur les populations d'abeilles \cite{engelke_visual_2016, engelke_melissar_2016, nguyen_augmented_2017}. Par exemple, Engelke et. al. \cite{engelke_visual_2016} utilisent la réalité augmentée pour afficher des données provenant de plusieurs capteurs dans une série de ruches réelles et permettre à l'utilisateur de parcourir toutes les données de manière intuitive et immersive. Ces données sont collectées au niveau de la ruche (macro), comme la température et le poids, puis sont affichées superposées aux ruches correspondantes en réalité augmentée, selon des graphiques et labels adaptés. Ils sont ainsi capables de savoir dans quelle ruche se trouvent certaines abeilles et d'étudier la "dérive des abeilles" : lorsque les abeilles d'une colonie partent et rejoignent une autre colonie.
 	
 	\subsubsection{Visualiser une Grande Quantité de Données}
 	
