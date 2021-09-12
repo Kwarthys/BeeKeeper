@@ -204,8 +204,17 @@
 	
 	Ce mode d'interaction est une des contributions principales de ces travaux. Afin de proposer des moyens d'interactions naturels avec la simulation multi-agents, nous proposons ici d'utiliser des interacteurs tangibles, dont nous avons décrit les avantages dans le Chapitre 5. L'utilisateur porte un casque de réalité virtuelle, l'immergeant dans l'environnement 3D.
 
-		\subsection{Le Cadre et la Ruche Traqués}
-		Nous plaçons dans l'environnement physique de l'utilisateur une ruche bien réelle, contenant un unique cadre spécial. Ce cadre et la ruche sont "traqués" : via quelques cibles infrarouges placées dessus (et une série de caméras \textit{OptiTrack} réparties dans la salle, dont les données sont traitées par un autre PC et communiquée à l'application via le réseau), leurs positions et rotations sont en permanence connues de l'ordinateur. Nous pouvons ainsi superposer la ruche virtuelle présente dans l'application interactive à la ruche physique, après de rapides calibrations. De la même manière, le cadre traqué possède une représentation virtuelle superposée, ce qui permet à l'utilisateur de saisir le cadre physique en ne voyant que le cadre virtuel. Ce cadre physique est facilement différentiable des cadres virtuels de la simulation dans l'environnement 3D : il est creux et blanc, là où les autres présentent des alvéoles et sont couleur bois. L'utilisateur a tout de même besoin d'une manette pour réaliser ses interactions, s'en passer fait partie de nos principales perspectives.
+		\subsection{Le Cadre et la Ruche Traqués}		
+		
+		\begin{figure}
+		\centering
+		\includegraphics[height=.28\textheight]{Pictures/trackedHiveAfar.JPG}
+		\includegraphics[height=.28\textheight]{Pictures/trackedHiveFrame.JPG}
+		\caption{Photographies de la ruche et du cadre traqués.}
+		\label{photoTracked}
+		\end{figure}	
+		
+		Nous plaçons dans l'environnement physique de l'utilisateur une ruche bien réelle, contenant un unique cadre spécial. Ce cadre et la ruche sont "traqués" : via quelques cibles infrarouges placées dessus (et une série de caméras \textit{OptiTrack} réparties dans la salle, dont les données sont traitées par un autre PC et communiquée à l'application via le réseau), leurs positions et rotations sont en permanence connues de l'ordinateur. La Figure \ref{photoTracked} présente deux photographies des objets traqués, dont nous pouvons voir les différentes cibles infrarouge. Nous pouvons ainsi superposer la ruche virtuelle présente dans l'application interactive à la ruche physique, après de rapides calibrations. De la même manière, le cadre traqué possède une représentation virtuelle superposée, ce qui permet à l'utilisateur de saisir le cadre physique en ne voyant que le cadre virtuel. Ce cadre physique est facilement différentiable des cadres virtuels de la simulation dans l'environnement 3D : il est creux et blanc, là où les autres présentent des alvéoles et sont couleur bois. L'utilisateur a tout de même besoin d'une manette pour réaliser ses interactions, s'en passer fait partie de nos principales perspectives.
 		
 		\subsection{La Manette}		
 		Afin de ne pas trop gêner l'utilisateur lors de ses manipulations, les différentes interactions se trouvent toutes sur une seule manette, permettant de tenir le cadre physique de l'autre main. Le nombre limité de boutons que propose la manette nous a poussé à mettre en place un système de modes, permettant de varier les effets des boutons. Cette méthode permet d'ajouter de nouveaux modes par la suite au besoin. 		
@@ -230,6 +239,8 @@
 		\end{figure}
 		
 		\subsection{Manipulation des Cadres}		
+		
+			
 		Afin de saisir un cadre, l'utilisateur vient superposer le cadre physique avec un des cadres virtuels présents dans la ruche. Ensuite, appuyer sur le bouton secondaire de la manette va venir plaquer le cadre virtuel ainsi sélectionné sur le cadre réel. L'utilisateur manipule désormais directement le cadre virtuel tiré de la simulation via son cadre physique. Il peut donc l'orienter facilement et l'observer de toute part de manière naturelle, comme nous le ferions avec n'importe quel objet bien réel. Un nouvel appui du bouton secondaire fera lâcher le cadre virtuel qui restera à flotter dans l'air. Si le cadre virtuel est lâché alors que le cadre manette est superposé à un emplacement vide dans la ruche, alors le cadre virtuel y est inséré et le serveur est prévenu.
 		
 		Pour réaliser une division, l'utilisateur a deux possibilités, matérialisées sur deux des quatre cadrans du bouton principal. La division consiste à séparer la ruche en deux, et se concentrer ensuite sur l'une de ces deux nouvelles colonies. Une fois que l'utilisateur à sorti une certaine quantité de cadres, il peut choisir de réaliser la division. Les cadres à l'intérieur de la ruche formeront une nouvelle colonie, ainsi que tous ceux qui sont à l'extérieur. L'utilisateur doit donc choisir quelle ruche il désire suivre, l'ancienne ou la nouvelle. La manette propose ainsi de "Jeter" les cadres présents dans la ruche initiale, ou de les "Garder" et de jeter les autres, comme illustré dans la Figure \ref{ManetteVR}. Le tableau \ref{tabTotalInterClient} récapitule les différents messages que le client envoi au serveur. Sa colonne "Tangible et Manette" décrit comment l'utilisateur déclenche ces envois dans le cas que nous décrivons ici.
