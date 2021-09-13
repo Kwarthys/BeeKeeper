@@ -75,6 +75,33 @@
 	
 	\subsection{Interactions en Environnements Immersifs}
 	
+	Fondateur dans le domaine, Bowman et al. \cite{bowman_introduction_2001} divisent les interactions utilisateurs en environnements virtuels en trois grande catégories:
+	\begin{itemize}
+		\item Navigation : comment l'utilisateur va se déplacer dans l'environnement
+		\item Sélection et Manipulation : comment l'utilisateur va manipuler certains objets, et comment va-t-il dire à l'environnement lequel (ou lesquels) il souhaite manipuler
+		\item Contrôle du système : comment l'utilisateur va altérer le déroulement même du système, de la simulation.
+	\end{itemize}
+	que nous allons rapidement aborder une par une.
+	
+	\subsubsection{Naviguer dans un Environnement Virtuel}
+		La navigation permet à l'utilisateur de changer son point de vue sur l'environnement, elle doit aussi renforcer son immersion et faciliter sa spatialisation dans l'espace virtuel. Mal gérée, la navigation risque de provoquer la cinétose selon la sensibilité de l'utilisateur, semblable au mal des transports. La navigation est elle même divisée en trois modes : exploration, recherche et manœuvre, demandant différents degrés de contrôles. Dans ces travaux, Bowman et al. décrivent cinq métaphores classiquement utilisées pour les déplacements, que nous allons aborder rapidement :
+		\begin{itemize}
+		\item \textbf{Déplacement physique} : les mouvements du corps de l'utilisateur sont utilisés pour déplacer la caméra de l'environnement virtuel. Ceci est possible lorsque l'espace physique dans lequel est présent l'utilisateur est assez grand, et présente alors les meilleurs conditions pour l'utilisateur \cite{cherep_spatial_2020}. Les auteurs mentionnent aussi l'utilisation possible de tapis roulant ou de vélo immobilisé, permettant à l'utilisateur de se déplacer physiquement tout en faisant du sur-place, limitant l'espace physique nécessaire.
+		\item \textbf{Déplacement "manuel"} : l'utilisateur vient saisir "l'air" l'environnant, et se tire dans sa direction, rappelant la métaphore d'une corde. Cette méthode fatigante est dite facile prendre en main.
+		\item \textbf{Conduite} : l'utilisateur indique une direction, souvent la direction de son regard ou la direction pointée par une de ses manettes, dictant la direction du mouvement. Les auteurs présentent cette méthode comme étant efficace et générique. 
+		\item \textbf{Sélection du point d'arrivée} : l'utilisateur indique le point auquel il souhaite se rendre et l'application se charge de l'y déplacer, en translation ou téléportation. Bowman et al. plébiscitaient à leur époque la translation plutôt que la téléportation, mais le déplacement de l'environnement sans déplacement du corps de l'utilisateur provoque la cinétose de celui-ci \cite{cherep_spatial_2020}.
+		\item \textbf{Planification d'itinéraire} : un peu à la manière du déplacement précédent, l'utilisateur défini différents points de passages pour sa trajectoire. Ici encore, les risques de cinétoses sont élevés.
+		\end{itemize}
+		
+	\subsubsection{Sélection et Manipulation}
+	Ce type d'interaction permet à l'utilisateur de sélectionner un objet à manipuler, et d'en altérer la position et rotation dans l'environnement. Deux grands types d'interactions se retrouvent dans cette catégorie. Le premier consiste à capter la position de la main de l'utilisateur et de la représenter virtuelle dans l'environnement, lui permettant de saisir les objets que sa main virtuelle "touche". La méthode "Go-Go" permet d'élargir la portée de l'utilisateur au delà de la taille de son bras : la longueur du bras virtuel de celui-ci devient non-linéaire par rapport à celle de son bras réel \cite{poupyrev_go-go_1996}, lui permettant d'atteindre des objets éloignés. L'autre méthode consiste en un rayon laser tiré depuis l'utilisateur, souvent sa main (donnée par l'orientation et la position de sa manette), qui vient sélectionner l'objet ainsi visé. 
+	
+	Ces méthodes permettent aussi de représenter le "clic" traditionnel des interfaces classiques sur des boutons d'interface 2D.
+	
+	\subsubsection{Contrôle du Système}
+	Ces contrôles permettent à l'utilisateur de modifier le fonctionnement de la simulation, ou de ses interactions, en sélectionnant le plus souvent des comportements prédéfinis. Ces interactions sont mises en places de manière similaires aux précédentes lorsque sont utilisés des menus tirés des interfaces 2D. Mais des commandes vocales, des commandes gestuelles ou l'utilisation d'outils réel dont la position a un sens permettent aussi de piloter ce genre d'interactions.
+	
+	
 	\subsubsection{Interacteurs Tangibles}
 	
 		\begin{figure}
