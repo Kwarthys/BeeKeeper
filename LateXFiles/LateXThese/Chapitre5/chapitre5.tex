@@ -9,8 +9,6 @@
 		
 		\subsection{Visualisation de Systèmes Multi-Agents}
 		
-		Louloudi et. al. \cite{louloudi_new_2012} ont proposé dans leurs travaux de séparer la partie simulation multi-agents de la partie visualisation de leur programme. Cette séparation offre de pouvoir faire tourner le modèle sans les contraintes de la visualisation (souvent le respect du temps réel) lorsque la visualisation n'est pas nécessaire. Ils proposent un composant logiciel "relai" entre la simulation et la visualisation agissant comme un convertisseur universel. Or, les granularité de temps et d'espaces peuvent varier fortement d'un modèle multi-agents à un autre, ainsi que le type même de données à transmettre, ce qui, couplé à un besoin de transmettre en retour des informations depuis l'application de visualisation vers le simulateur rendent cette notion de relai \textit{universel} bien difficile à mettre en place.
-		
 		
 		\subsection{Interactions avec des Systèmes Multi-Agents}
 		%Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilisation d'interacteurs tangibles.
@@ -45,7 +43,7 @@
 	
 	\subsubsection{Prise de Contrôle d'un Agent}
 		Ce type d'interaction se retrouve dans le modèle "Voyelles" proposé par Y. Demazeau \cite{demazeau_interactions_1995}. Celui-ci analyse les modèles multi-agents sous 4 points de vues : "\textbf{A}gents", "\textbf{E}nvironnement", "\textbf{I}nteractions" et "\textbf{O}rganisations" (AEIO). Là où ce modèle nous intéresse dans ce chapitre, c'est lorsque J.Tisseau propose d'y ajouter le "U" d'"\textbf{U}tilisateur" \cite{tisseau_realite_2001}, pour former "AEIOU". Dans cette définition, l'utilisateur intervient à souhait dans la simulation, en prenant le contrôle d'un agent, utilisant ses capacités motrices et surchargeant son module de décision. Les autres agents de la simulation réagissent alors à l'utilisateur comme s'il était toujours un agent tout à fait normal. 
-		L'utilisateur possède ainsi, à volonté, un "avatar" dans la simulation, interagissant tel un émissaire virtuel avec l'environnement, avec l'ensemble des autres agents (qui peuvent être des avatars d'autres utilisateurs) et autres systèmes modélisés. Il interagit alors avec les agents de la simulation de manière "horizontale". Par exemple, dans le serious game "FORMAT-STORE" \cite{mathieu_serious_2011}, le joueur prend le contrôle de l'agent "vendeur" qu'il contrôle avec clavier et souris, et interagit avec les autres agents "clients" de l'environnement, les étales et le magasin.
+		L'utilisateur possède ainsi, à volonté, un "avatar" dans la simulation, interagissant tel un émissaire virtuel avec l'environnement, avec l'ensemble des autres agents (qui peuvent être des avatars d'autres utilisateurs) et autres systèmes modélisés. Il interagit alors avec les agents de la simulation de manière "horizontale". Par exemple, dans le \textit{serious game} "FORMAT-STORE" \cite{mathieu_serious_2011}, le joueur prend le contrôle de l'agent "vendeur" qu'il contrôle avec clavier et souris, et interagit avec les autres agents "clients" de l'environnement, les étales et le magasin.
 		
 		À l'inverse, l'agent contrôlé peut avoir une grande influence sur le comportement de la simulation, dans le rôle de "\textit{leader}" des autres agents. Ainsi, l'utilisateur est capable de contrôler le comportement d'un grand nombre d'agents, en n'en contrôlant qu'un seul, ou quelques uns, comme les agents dits "\textit{stakeholders}" des travaux de Brown et al. \cite{brown_human-swarm_2014}.
 	
@@ -53,6 +51,8 @@
 	\section{Visualisation et Interactions en Environnements Immersifs}	
 	
 	Nous élargissons désormais nos recherches aux environnements immersifs en général, sans applications directes aux systèmes multi-agents. Ces travaux serviront de base à notre réflexion, couplée à ce que nous avons déjà vu concernant les interactions et visualisations avec des modèles multi-agents.
+		
+		Louloudi et. al. \cite{louloudi_new_2012} ont proposé dans leurs travaux de séparer la partie simulation multi-agents de la partie visualisation de leur programme. Cette séparation offre de pouvoir faire tourner le modèle sans les contraintes de la visualisation (souvent le respect du temps réel) lorsque la visualisation n'est pas nécessaire. Ils proposent un composant logiciel "relai" entre la simulation et la visualisation agissant comme un convertisseur universel. Or, les granularité de temps et d'espaces peuvent varier fortement d'un modèle multi-agents à un autre, ainsi que le type même de données à transmettre, ce qui, couplé à un besoin de transmettre en retour des informations depuis l'application de visualisation vers le simulateur rendent cette notion de relai \textit{universel} bien difficile à mettre en place.
 	
 	\subsection{Visualisation en Environnements Immersifs}
 	
@@ -93,24 +93,36 @@
 		\item \textbf{Planification d'itinéraire} : un peu à la manière du déplacement précédent, l'utilisateur défini différents points de passages pour sa trajectoire. Ici encore, les risques de cinétoses sont élevés.
 		\end{itemize}
 		
-	\subsubsection{Sélection et Manipulation}
+	\subsubsection{Sélection et Manipulation dans un Environnement Virtuel}
 	Ce type d'interaction permet à l'utilisateur de sélectionner un objet à manipuler, et d'en altérer la position et rotation dans l'environnement. Deux grands types d'interactions se retrouvent dans cette catégorie. Le premier consiste à capter la position de la main de l'utilisateur et de la représenter virtuelle dans l'environnement, lui permettant de saisir les objets que sa main virtuelle "touche". La méthode "Go-Go" permet d'élargir la portée de l'utilisateur au delà de la taille de son bras : la longueur du bras virtuel de celui-ci devient non-linéaire par rapport à celle de son bras réel \cite{poupyrev_go-go_1996}, lui permettant d'atteindre des objets éloignés. L'autre méthode consiste en un rayon laser tiré depuis l'utilisateur, souvent sa main (donnée par l'orientation et la position de sa manette), qui vient sélectionner l'objet ainsi visé. 
 	
-	Ces méthodes permettent aussi de représenter le "clic" traditionnel des interfaces classiques sur des boutons d'interface 2D.
+	Ces méthodes permettent aussi de représenter le "clic" traditionnel des interfaces classiques sur des boutons d'interface 2D, utilisables alors sur des interfaces 2D "flottantes" dans l'environnement virtuel.
 	
-	\subsubsection{Contrôle du Système}
+	\subsubsection{Contrôle du Système dans un Environnement Virtuel}
 	Ces contrôles permettent à l'utilisateur de modifier le fonctionnement de la simulation, ou de ses interactions, en sélectionnant le plus souvent des comportements prédéfinis. Ces interactions sont mises en places de manière similaires aux précédentes lorsque sont utilisés des menus tirés des interfaces 2D. Mais des commandes vocales, des commandes gestuelles ou l'utilisation d'outils réel dont la position a un sens permettent aussi de piloter ce genre d'interactions.
 	
 	
 	\subsubsection{Interacteurs Tangibles}
 	
 		\begin{figure}
-			\includegraphics[width=\textwidth]{Pictures/Figures/TUIISHII.JPG}
+			\centering
+			\includegraphics[width=.8\textwidth]{Pictures/Figures/TUIISHII.JPG}
 			\caption{Tiré des travaux de Ishii et al. \cite{ishii_tangible_1997}. Équivalences entre des interacteurs "WIMP" et leurs homologues tangibles.}
 			\label{TUIEx}
 		\end{figure}	
 	
-			Les "Interacteurs Tangibles" sont une volonté de sortir des interfaces classiques dites "WIMP", "\textit{Windows, Icon, Menu, Pointer}", pour aller vers des interacteurs physiques, que l'on manipule naturellement \cite{ishii_tangible_1997}, la Figure \ref{TUIEx} illustre quelques exemples. Dans ces travaux, Ihsii et al. \cite{ishii_tangible_1997} proposent notamment l'utilisation de tables interactives "metaDESK", capables de détecter et d'interpréter la sémantique d'objets posés sur sa surface. De la même manière, un tableau blanc pourrait reconnaitre des objets à sa surface. Ils proposent ensuite une "ambientROOM", littéralement "salle d'ambiance", où ils combinent l'utilisation d'une table interactive "cognitivement intensive" à des sensations périphériques pour convier des informations complémentaires. À ces fins, ils utilisent des sons, des déplacements d'air ou des lumières ambiantes.
+			D'abord théorisés sous le noms d'"interfaces saisissables" \cite{fitzmaurice_bricks_1995}, le concept est ensuite étendu et devient "interfaces tangibles". Les interfaces tangibles (TUI pour \textit{Tangible User Interface}) sont une volonté de sortir des interfaces classiques dites "WIMP", "\textit{Windows, Icon, Menu, Pointer}", pour aller vers des interacteurs physiques ayant une représentation et une sémantique numérique, que l'on manipule naturellement \cite{ishii_tangible_1997}, la Figure \ref{TUIEx} en illustre quelques exemples. Dans ces travaux, Ihsii et al. \cite{ishii_tangible_1997} proposent notamment l'utilisation de tables interactives "metaDESK", capables de détecter et d'interpréter la sémantique d'objets posés sur sa surface. De la même manière, un tableau blanc pourrait reconnaitre des objets à sa surface. Ils proposent ensuite une "ambientROOM", littéralement "salle d'ambiance", où ils combinent l'utilisation d'une table interactive "cognitivement intensive" à des sensations périphériques pour convier des informations complémentaires. À ces fins, ils utilisent des sons, des déplacements d'air ou des lumières ambiantes.
+			
+			\begin{figure}
+			\centering
+			\includegraphics[width=.8\textwidth]{Pictures/Figures/KnobSlider.JPG}
+			\caption{Tiré des travaux de Kim et al. \cite{kim_knobslider_2019}. Le "KnobSlider", un interacteur tangible capable de changer de forme afin de servir soit de bouton rotatif (C), soit de slider (A).}
+			\label{KnobSlider}
+		\end{figure}
+			
+			Leurs applications sont diverses, permettant par exemple une assistance pour la construction de requêtes complexes sur une base de donnée \cite{pereda_tui_2019}, ou une proposition de surfaces interactives permettant de jouer à un jeu de société "augmenté" \cite{villar_project_2018}. Plusieurs travaux s'intéressent à la forme de l'interacteur tangible, centrale dans la notion d'affordance, comme par exemple la proposition du "KnobSlider", un interacteur changeant de forme afin de proposer deux interactions, une interaction de bouton à tourner et une interaction de "slider" (bouton glissière), visibles sur la Figure \ref{KnobSlider} \cite{kim_knobslider_2019}. Dans la même recherche d'une forme modulable, des travaux proposent un interacteur à base de \textit{LEGO}, et donc complètement personalisable, afin de servir différents besoins, selon les applications ou les jeux \cite{arora_virtualbricks_2019}.
+				
+			Les TUI ont par la suite prouvé leurs capacités à faciliter l'immersion et l'apprentissage de ses utilisateurs \cite{zuckerman_tui_2013, fleck_marker-based_2015, cheng_affordances_2013}, et sont donc nombreux dans les applications pédagogiques. Par exemple, \textit{DEAPE Learn} propose une combinaison d'objets tangibles et de réalité augmentée afin d'illustrer et d'enseigner différents principes d'électromagnétisme, qui sont connus pour être abstrait et difficiles à comprendre pour les étudiants \cite{da_costa_realite_2019}. Une loupe augmentée est proposé dans des travaux visant à rapprocher les visiteurs de musées des différentes œuvres, en proposant des informations complémentaires aux objets que les utilisateurs regardent à travers \cite{damala_loupe_2016}. Un peu différemment, Veytizou et al. ont proposé d'utiliser une balance et des sphères de poids équivalents pour permettre à des enfants de répondre à une question de type "Likert", de 1 à 5 (ou 7). Les enfants sont connus pour donner des réponses très extrêmes à ces échelles, et l'utilisation de leur balance à réduit cette propension aux extrêmes tout en conservant des notes cohérentes \cite{veytizou_could_2018}.
 	
 	
 	
