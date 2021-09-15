@@ -1,11 +1,10 @@
-\chapter*{Contexte : Colonie d'abeilles, Biologie et Complexité}
-\addcontentsline{toc}{chapter}{Contexte : Colonie d'abeilles, Biologie et Complexité}
-\chaptermark{Contexte : Colonie d'abeilles, Biologie et Complexité}
+\chapter{Contexte : Colonie d'abeilles, Biologie et Complexité}
+\label{ChapitreContexte}
 	
 	Les insectes sociaux sont depuis longtemps étudiés pour leur capacité à se répartir dynamiquement le travail, sans l'aide d'un contrôle central. Ce chapitre présente tout d'abord les principales notions de complexité et détaille ensuite plusieurs exemples de phénomènes complexes que l'on peut retrouver dans la vie d'une colonie d'abeilles. Nous verrons dans le chapitre suivant quelques modèles Multi-Agents présents dans la littérature servant à modéliser ces systèmes.
 
 	
-		\subsubsection{Systèmes complexes}
+		\section{Systèmes Complexes}
 		
 			Il n'existe à ce jour pas de définition précise de ce qu'est un système complexe \cite{heylighen_complexity_2008}, du fait de l'étendue des domaines et cas d'applications concernés. En général, un système complexe peut être vu comme composé d'une multitude de composants (ou sous-systèmes) hétérogènes ne communiquant que très peu entre eux, formant un tout par leurs nombreuses interactions mutuelles. Un système complexe est un bon exemple de l'adage "Le tout vaut plus que la somme des parties" qui serait d'Aristote \cite{edmonds_what_1999}. Les notions de chaos, d'interactions locales et d'imprévisibilité sont souvent citées dans la littérature. Un système complexe ne peut pas être anticipé par le calcul, le seul moyen d'en connaitre l'état futur est de l'observer. 
 			Ceci est notamment lié à ses propriétés \textit{émergentes}. Dans la littérature, une propriété est dite émergente lorsqu'elle possède trois caractéristiques \cite{breckling_emergent_2005} :
@@ -14,6 +13,8 @@
 				\item Une propriété de haut niveau engendrée par les interactions entre sous-systèmes
 				\item Une propriété qui apparait à un niveau du système n'est pas déductible uniquement en observant les propriétés des sous-systèmes
 			\end{enumerate}
+			
+			\subsection{Émergence et Auto-Organisation}
 			
 			Nous parlons ainsi d'émergence lorsque des comportements apparaissent grâce à des interactions entre différents composants, et que ces comportements sont absents lorsque ces mêmes composants sont étudiés séparément. Les propriétés émergentes sont le plus souvent imprévisibles du point de vue de chaque sous-système, donnant ainsi cette propriété aux systèmes complexes. Toutes ces émergences de comportements génèrent un système qui peut être dit chaotique. 
 			Suivant les théories du chaos, ou "l'effet papillon", ces systèmes sont alors hautement imprévisibles et de légères variations de paramétrage ou de conditions initiales peuvent avoir de grandes conséquences sur le comportement global du système : "petit changement, grandes conséquences".
@@ -26,6 +27,8 @@
 			\caption{Boucles de rétroactions simplifiées du fonctionnement d'une bombe nucléaire à fission, ou bombe A (à gauche) et de l'équilibre hydrostatique du soleil (à droite).}{ Un lien bleu se terminant par une flèche indique un renforcement, par exemple, la Pression au centre du Soleil vient augmenter son Rayon. Un lien rouge se terminant par un cercle indique une réduction : la Gravité à tendance à réduire le Rayon du soleil, en appliquant une force constante de toute part.}
 			\label{retroActions}
 			\end{figure}
+			
+			\subsection{Boucles de Rétro-Action}
 		
 		Clés dans cette organisation, les interactions multiples entre les différentes composantes du système font le plus souvent apparaitre des boucles de rétroactions. Une boucle de rétroaction est un processus qui lie un effet à sa propre cause. En électronique, cela consiste à brancher la sortie d'un composant à l'une de ses entrées. Les boucles de rétroaction se présentent sous deux formes, les rétroactions positives et négatives. Les boucles de rétroactions positives consistent en des phénomènes de renforcement, d'accélération. Nous parlons alors dans le langage courant de "cercle vicieux ou vertueux". Une bombe nucléaire à fission fonctionne avec ce principe, une fission va en déclencher plusieurs autres, qui vont elles-mêmes en déclencher bien d'autres, sous une forme d'emballement exponentiel. La Figure \ref{retroActions} illustre cet exemple, montrant l'amplification constante de la réaction, où chaque fission va augmenter le nombre de fissions réalisées par la bombe, par le biais d'émission de neutrons. Sans autre mécanisme pour les réguler, ce sont des phénomènes très transitoires. Les autoroutes de fourmis, de leur côté, utilisent un mécanisme de renforcement pour marquer les pistes avec des phéromones. Les fourmis viennent déposer des phéromones sur leur route lorsqu'elles reviennent d'une source avec de la nourriutre. Ces phéromones attirent de nouvelles fourmis, qui vont alors remonter la piste et participer a la collecte de ressource. A leur retour, elles vont aussi déposer des phéromones, amplifiant rapidement l'attraction de ce chemin, le transformant rapidement en ce qui est surnommé une "autoroute". Ces phéromones s'évaporent, mais pour l'instant cette évaporation est largement compensé par les nouvelles applications de phéromones sur le chemin. En revanche, lorsque la source est épuisée, les phéromones ne sont plus renouvelées, l'évaporation n'est plus contre balancée, l'attraction du chemin diminue jusqu'à ne plus attirer aucune fourmis.
 		Les boucles de rétroaction négatives consistent en mécanismes régulateurs, stabilisant un système vers un équilibre. Nous pouvons en trouver de toutes sortes, sous bien des formes. Le soleil par exemple, voit sa forme maintenue par une boucle de rétroaction négative, à ce qui est appelé un équilibre hydrostatique \cite{haubold_analytic_1992} : lorsque son cœur réalise la fusion nucléaire, il crée une importante force en son centre, le faisant s'étendre. Le soleil gonfle alors et fait ainsi baisser la pression en son centre, le nombre de fusions est alors légèrement réduit. La force poussant le soleil à s'étendre est alors contrée par la gravité, le poussant de toute part vers son centre. Mais du même temps, la pression en son centre remonte, les fusions reprennent de plus belle et il gonfle à nouveau : le soleil danse légèrement autour de son point d'équilibre. La Figure \ref{retroActions} illustre ces interactions, et montre la rétroaction entre la pression et le rayon du soleil : augmenter la pression augmente le rayon du soleil, noté par une flèche bleue. Or, augmenter le rayon réduit la pression, noté par un lien rouge se terminant par un cercle.
@@ -41,7 +44,7 @@
 			
 
 	
-		\subsubsection{Abeilles et Systèmes complexes}	
+		\section{Abeilles et Systèmes complexes}	
 		\label{sectionBio}	
 			Une colonie classique d'abeilles domestiques \textit{Apis Melifera} héberge en moyenne quelques dizaines de milliers d'individus, 50 000 est un nombre qui revient souvent. Tous ces individus ont des besoins en nourritures et en eau, mais le couvain, regroupant tous les stades de vie de l'abeille avant sa phase adulte, demande un tout autre niveau d'attention : nourriture spéciale, température précise, cellules de cires propres etc. Tous ces besoins créent une chaine logistique impressionnante, que des apiculteurs observent depuis des milliers d'années \cite{oldroyd_domestication_2012}. En effet, les abeilles (et bien d'autres insectes sociaux) arrivent à survivre et même à s'épanouir sans aucun contrôle central, aucun individus spéciaux chargés du management ou de la surveillance des stocks. Au fil de sa vie, une abeille va endosser différents rôles au sein de cette chaine, que nous allons décrire \cite{winston_biology_1991, winston_role_1991, seeley_age_1991}. 
 			
@@ -69,7 +72,7 @@
 			
 			Nous allons désormais nous intéresser plus en détails à ces nombreux mécanismes de contrôle et à l'auto-organisation de la répartition des tâches qu'ils induisent au sein de la colonie.
 			
-		\subsubsection{Auto-Organisation de la Colonie}
+		\section{Auto-Organisation de la Colonie}
 			Afin d'assurer le bon fonctionnement et l'épanouissement de la colonie, chaque individu la composant doit effectuer un certain nombre de tâches lorsqu'elles sont nécessaires, et sans aucun contrôle central. Par exemple, la colonie ne compte pas d'individus dont la seule tâche est de surveiller la température et, au besoin, d'assigner une équipe à sa régulation pendant un certain temps. Chaque individu utilise ses perceptions locales, internes et/ou externes, pour savoir quel travail réaliser, ainsi nous parlons de l'auto-organisation de l'allocation du travail. Nous nous intéressons ici en particulier aux phénomènes complexes suivants et à leurs mécanismes d'auto-organisation (dont leurs boucles de rétroaction) :
 			
 			
@@ -79,7 +82,7 @@
 				\item La régulation de l'âge du premier butinage en fonction des demandes du couvain.
 			\end{itemize}
 
-			\subsubsection{Thermorégulation}	
+			\subsection{Thermorégulation}	
 			
 			Lorsqu'il fait légèrement trop chaud dans la ruche, nous trouvons des abeilles thermo-régulatrices : elles battent des ailes sur le couvain et/ou au niveau de la sortie de la ruche pour créer un courant d'air et rafraichir la ruche. Certaines vaporisent même de l'eau dans la ruche pour aider à faire chuter la température. Lorsqu'il fait froid, les abeilles se resserrent progressivement au dessus du couvain, afin de créer ce qui est appelé la "grappe" et tenir le couvain au chaud grâce à leurs corps. Si leur simple présence ne suffit plus, elles peuvent actionner certains de leurs muscles afin de générer un peu plus de chaleur, ce qui arrive pendant l'hiver, phase critique pour la colonie. Si la grappe est trop petite pour recouvrir l'ensemble de couvain alors une bonne partie de ce dernier, en périphérie, n'aura pas été protégé par les adultes et va mourir, on l'appelle alors le "couvain refroidi".
 					
@@ -87,7 +90,7 @@
 			
 			De cette manière, chaque individu mesure et juge localement la température actuelle autour de lui, et prend alors la décision de réchauffer, refroidir, ou réaliser d'autres devoirs. Sa position dans la ruche et sa sensibilité personnelle vont entrer en compte dans cette décision. Ainsi, par l'action autonome de chacun des individus, la température du couvain ne s'écarte jamais plus d'un degré de 35°C. La colonie a toujours un nombre optimal d'individus régulant la température, permettant de répondre parfaitement au besoin sans délaisser les autres tâches.
 			
-			\subsubsection{Sélection des meilleures sources de nectar}
+			\subsection{Sélection des meilleures sources de nectar}
 			
 			\begin{figure}
 			\centering
@@ -100,7 +103,7 @@
 	\begin{figure}
 	\centering
 	\includegraphics[width=0.45\textwidth]{Pictures/Graphs/SeeleyWaggles.JPG}
-	\caption[Tiré des travaux de T.D.Seeley \cite{seeley_wisdom_1995}. En abscisses la profitabilité de la source, et en ordonnées le nombre de 8 (de \textit{Waggle}) réalisé par chaque abeilles par danse après être rentrée à la ruche.]{Tiré des travaux de T.D.Seeley \cite{seeley_wisdom_1995}. En abscisses la profitabilité de la source, et en ordonnées le nombre de danses répétées par chaque abeille après être rentrée à la ruche. 7 butineuses ont été observées après avoir récolté du nectar sur une source contrôlée, leurs danses ont été enregistrées. Ils ont ensuite montré que le nombre de \textit{Waggle} et leur durée sont directement liés à la profitabilité de la source.}
+	\caption[Tiré des travaux de T.D.Seeley \cite{seeley_wisdom_1995}. En abscisses la profitabilité de la source, et en ordonnées le nombre de 8 (de \textit{Waggle}) réalisés par chaque abeilles par danse après être rentrée à la ruche.]{Tiré des travaux de T.D.Seeley \cite{seeley_wisdom_1995}. En abscisses la profitabilité de la source, et en ordonnées le nombre de danses répétées par chaque abeille après être rentrée à la ruche. 7 butineuses ont été observées après avoir récolté du nectar sur une source contrôlée, leurs danses ont été enregistrées. Ils ont ensuite montré que le nombre de \textit{Waggle} et leurs durées sont directement liés à la profitabilité de la source.}
 	\label{SeeleyWaggles}
 	\end{figure}
 			
@@ -126,7 +129,7 @@
 			
 			La diversité génétique fait ici effet de régulation, et permet d'ajuster le butinage en un savant équilibre entre exploration et exploitation. Il est certes important de ramener d'énorme quantité de nourriture à la colonie, mais avoir la totalité de ses effectifs sur une même source présente des risques. Les abeilles "scouts", ainsi que les abeilles dansant pour des sources moins profitables vont alors permettre de maintenir l'exploration et la découverte de nouvelles ressources à un niveau sécurisant, multipliant les opportunités. L'hétérogénéité est bien présente dans le système complexe qu'est la colonie d'abeilles, et bien utile.
 			
-		\subsubsection{Phéromones et Physiologie}
+		\subsection{Phéromones et Physiologie}
 			\label{subsubPhysio}
 			L'auto-organisation de la colonie ne se joue pas que dans les perceptions externes, la colonie s'appuie aussi sur des mécanismes indirects, long-termes, physiologiques, qui prennent place grâce à différentes hormones et phéromones.  Nous étudions ici en détail l'importance physiologique des glandes hypopharyngiennes (GH) et de la Corpora Allata, dont nous avons pu longuement parler avec nos partenaires biologistes. La Corpora Allata permet aux adultes de sécréter une hormone appelée Hormone Juvénile (HJ). Cette hormone est retrouvée en grande quantité chez les butineuses, et en faible quantité chez les nourrices \cite{le_conte_primer_2001}. Les GH permettent aux abeilles s'occupant du couvain de transformer le pollen et le nectar en une substance riche destinée aux larves. Elles permettent aussi aux butineuses de traiter chimiquement le nectar, le rendant utilisable pour les nourrices, transformable en miel et même consommable directement par les autres adultes. Or, ces deux comportements sont incompatibles, les GH subissent une modification physiologique pour effectuer l'une ou l'autre de ces fonctions. 
 			
@@ -152,7 +155,7 @@
 			
 			 L'Ethyle Oleate est retrouvée majoritairement sur le couvain et la reine, elle est aussi retrouvée chez les butineuses. Lorsque cette phéromone est injectée en grande quantité à des abeilles adultes, il a été montré que celles-ci arrêtent le butinage et voient leur taux d'HJ diminuer. L'Ethyle Oléate n'est pas une phéromone volatile, elle est majoritairement transmise par contact, principalement lors d'échange de nourriture et de nettoyage mutuel lorsqu'une abeille en nettoie une autre ou lorsqu'une nourrice nettoie une larve. Elle serait aussi transmissible sur de courtes distances par évaporation. On observe sur la Figure \ref{phMod} que l'EO favorise le développement des GH de nourrices, qui elles même réduisent et son altérées par l'HJ. Nous y observons aussi que l'EO ralenti le développement ovarien des ouvrières. Dans le cas classique du polyéthisme d'âge, les jeunes abeilles effectuent un travail de nourrice, et les plus âgées butinent. Mais, comme nous venons de le voir, une nourrice peut accélérer sont vieillissement, et une butineuse peut même l'inverser, afin de s'adapter aux besoins changeant de la colonie. C'est pour ceci que nous parlerons ici d'\textit{Age Physiologique}, opposé à l'âge réel. Une abeille avec un faible âge physiologique possède les GH nécessaires aux devoirs de nourrices, et les plus âgées physiologiquement possèdent les GH et les muscles nécessaires au vol, au butinage et surtout au traitement du nectar.
 			
-		\subsubsection{Différents Facteurs de Stress}
+		\subsection{Différents Facteurs de Stress}
 		Nous allons ici aborder quelques uns des aléas que peut rencontrer une colonie au cours de sa vie.
 		
 		Le parasite \textit{Varroa Destructor} est un acarien qui utilise les colonies d'abeilles pour se reproduire \cite{le_conte_varroa_2010}. La femelle Varroa se glisse dans une cellule de larve et se nourrit d'elle, l'affaiblissant considérablement. Alors que la larve devient une nymphe et que sa cellule est recouverte, la femelle Varroa pond et nourris ses petits. Lors de l'émergence, la nouvelle ouvrière, petite et fragile, ouvre sa cellule : les nouveaux varroa se répandent alors dans la colonie, à la recherche de nouvelles larves. Certains Varroa restent sur les adultes, continuant encore de les affaiblir. Les adultes affaiblis butine moins bien et ont des capacités de vols réduites. En plus de ce poids physique, ces acariens peuvent aussi amener avec eux des maladies/virus (parfois létaux), qu'ils répandent rapidement car ils changent souvent d'hôte, tout en réduisant les réponses immunitaires de ces derniers.
@@ -165,6 +168,6 @@
 		
 			
 			
-		\subsubsection{Conclusion}
+		\section*{Conclusion}
 			
 		Dans ce chapitre nous avons présenté le concept de système complexe. Nous avons ensuite pu décrire quelques parties du fonctionnement d'une colonie d'abeilles, et constater qu'il s'agissait bien d'un système complexe : régulation de la température, adaptation de la physiologie en fonction des besoins, allocation de travailleurs sur différentes sources de nourritures en fonction de leur profitabilité. Nous avons dans le même temps réalisé un rapide état de l'art sur les connaissances biologiques de ces insectes sociaux. Toute cette auto-organisation, sans aucun contrôle central, représente un grand intérêt de recherche, pour comprendre leurs méthodes, les reproduire et essayer d'en extraire les principes pour des applications scientifiques et technologiques. Le chapitre suivant présente les modèles d'allocation de tâches, et les principaux travaux qui les utilisent dans des simulations à base d'agents"
