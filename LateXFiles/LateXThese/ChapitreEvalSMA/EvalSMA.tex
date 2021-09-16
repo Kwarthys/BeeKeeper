@@ -139,21 +139,6 @@
 	\label{sc4}
 	\end{figure}
 	
-	Nous avons ensuite pu présenter ces deux courbes à des apiculteurs au cours d'une journée d'expérimentations organisée entre l'UBO, l'IMT-Atlantique et le GDSA29. Le Tableau \ref{TabResCoherence} récapitule les réponses qu'ont donnés les participants à la question \textit{" L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ? "}, tour à tour pour les Figures \ref{sc1} et \ref{sc2}. "La façon dont la division a été réalisée" concerne les quantités de populations présentes dans la colonie après la division, et est un exercice auxquels les apiculteurs sont très sensibilisés : il en va de la survie de la colonie. Les deux scénario obtiennent alors la même note moyenne de 3.93 ainsi que la même médiane à 4, mais les écarts-types diffèrent, respectivement 0.77 et 1.06.
-	
-	
-	\begin{table}
-	\centering
-	\begin{tabular}{l|l|l|lllllllllllllll}
-	Scénario & Moyennes & Ecarts-types & \multicolumn{15}{l}{Notes Individuelles (1-5)}\\
-	\hline
-	2.1 & 3.93 & 0.77 &4&3&3&4&4&2&5&4&4&4&4&5&4&5&4\\
-	2.2 & 3.93 & 1.06 &4&4&4&4&5&4&1&4&5&2&4&5&4&5&4\\	
-	\end{tabular}
-	\caption{Résultats de l'expérimentation auprès de quelques apiculteurs concernant la cohérence des variations de populations de nos simulations par rapports aux colonies réelles.}
-	\label{TabResCoherence}
-	\end{table}
-	
 	
 	\section{Interprétations des Résultats}
 
@@ -218,9 +203,9 @@
 		
 		 \textbf{H2} : notre modèle est capable d'approcher les dynamiques de populations observés dans les colonies d'abeilles réelles.
 		 
-		 D'après la littérature et les retours donnés par les apiculteurs, avec une médiane à 4 sur 5 lorsque nous leur avons demandé de juger de la cohérence des évolutions de populations comparés à leurs connaissances pratiques, nous pouvons dire qu'\textbf{H2} est validée. Pas parfaite, pour les quelques raisons que nous avons évoquées juste au dessus	 
+		 D'après la littérature nous pouvons dire qu'\textbf{H2} est en partie validée pour les quelques raisons que nous avons évoquées juste au dessus. 
 		 
-		 Il nous a aussi été pointé que si les dynamiques semblent bonnes, les quantités ne sont pas du tout respectées. En effet, les colonies d'abeilles comptent régulièrement jusqu'à 50 000 individus, ce qui est bien loin de nos 1000 individus. Il sera donc intéressant, à l'avenir et maintenant que la dynamique est validée, d'essayer d'augmenter drastiquement le nombre d'individus, afin d'observer si la calibration ainsi que ses propriétés sont toujours valides ou si elles ne passent pas à l'échelle. La calibration ne fonctionne peut être qu'avec un nombre réduit d'agents. En effet, la répartition spatiale peut avoir un impact très important sur l'émergence des propriétés d'auto-organisation. 
+		 Ensuite, si les dynamiques semblent bonnes, les quantités ne sont pas du tout respectées. En effet, les colonies d'abeilles comptent régulièrement plus de 50 000 individus, ce qui est bien loin de nos 1000 individus. Il sera donc intéressant, à l'avenir et maintenant que la dynamique est validée, d'essayer d'augmenter drastiquement le nombre d'individus, afin d'observer si la calibration ainsi que ses propriétés sont toujours valides ou si elles ne passent pas à l'échelle. La calibration ne fonctionne peut être qu'avec un nombre réduit d'agents. En effet, la répartition spatiale peut avoir un impact très important sur l'émergence des propriétés d'auto-organisation. 
 		 
 		 Lors d'essais préliminaires sur de très grand nombre d'agents, nous observions dans nos simulations un "embouteillage" d'abeilles, où les agents se bloquent entre eux et leur navigation devient impossible. Il est peut être possible de régler ce soucis en gérant différemment les déplacements, mais il sera peut être nécessaire de changer d'approche quant à la spatialisation des agents dans la ruche et sur les cadres.
 		 
@@ -266,9 +251,6 @@
 	Autre point qu'il serait intéressant d'aborder est l'ajout du parasite Varroa Destructor dans la simulation. Varroa est un acarien parasite qui s'attaque aux larves et nymphes et provoquent des malformations lorsque ces abeilles deviennent adultes, mettant ainsi en danger toute la colonie \cite{le_conte_varroa_2010}. Il serait donc particulièrement intéressant d'utiliser la simulation pour essayer de reproduire les attaques Varroa, pour éventuellement essayer de détecter des points clés dans les procédés, et en sortir des propositions pour aider les apiculteurs et biologistes dans leur lutte contre ce parasite particulièrement vorace.
 	
 	Couplé à un butinage plus poussé, nous pourrions de la même manière et pour les mêmes raisons ajouter dans l'environnement extérieur des facteurs de stress : variations brutales de température limitant le butinage, monocultures limitant la disponibilité de nectar et pollen, pesticides et bien d'autres.
-	
-	\paragraph{}
-	Dans tous les cas, étoffer la simulation pourra nous permettre de simuler plus de scénario différents, nous permettant de réitérer l'expérimentation où nous demandons l'avis d'apiculteurs sur des scénario plus variés, amenant donc à des résultats plus précis. Nous pourrions de la même manière proposer ces interprétations de résultats de simulation à des biologistes de l'abeille, dont l'attention se portera naturellement sur d'autres aspects de la colonie, apportant un regard complémentaire à celui des apiculteurs.
 	
 	
 			

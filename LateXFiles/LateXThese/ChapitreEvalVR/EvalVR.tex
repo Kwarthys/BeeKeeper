@@ -86,7 +86,7 @@
 			\item Jalon T0+58 : même remarque, de nombreuses nourrices deviennent butineuses, car la population d'adulte augmente alors plus rapidement que la population du couvain.
 		\end{itemize}
 		
-		Directement après la description du graphique, nous posons une question fermée à l'apiculteur : "\textit{L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ?}". Cette question nous permet de répondre à notre interrogation n°2 décrite Section \ref{protocoleGeneral}, et est décrite et discutée dans le \textit{Chapitre \ref{ChapitreEvalSMA}}, concernant le modèle à base d'agents de la colonie d'abeilles.
+		Directement après la description du graphique, nous posons une question fermée à l'apiculteur : "\textit{L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ?}". "\textit{La façon dont la division a été réalisée}" concerne les quantités de populations présentes dans la colonie après la division, et est un exercice auxquels les apiculteurs sont très sensibilisés : il en va de la survie de la colonie. Cette question nous permet de répondre à notre interrogation n°2 décrite Section \ref{protocoleGeneral}, concernant la cohérence de nos résultats de simulations par rapport à la réalité observée sur le terrain.
 		
 		\paragraph{}
 		Le questionnaire enchaine ensuite avec un paragraphe décrivant la notion d'âge physiologique, afin d'introduire cette notion présente dans le Graph3D. Chaque apiculteur est ensuite invité à enfiler à nouveau son casque de réalité virtuelle afin de manipuler le Graph3D. Ils ont pour consigne d'essayer de retrouver les différents jalons visibles sur le graphique en deux dimensions, dans le Graph3D. Ils peuvent pour ceci naviguer dans le temps à l'aide d'un \textit{joystick} d'une des manettes. Le Graph3D étant une représentation à un instant t de la colonie, il affiche quel moment de la simulation il est actuellement en train de décrire. Nous pouvons ainsi lire sous celui-ci le jours vu sous le format "T0+X". Ainsi cette section de l'étape 2 permet à l'utilisateur de se familiariser avec les contrôles et notions du Graph3D. Rien ne lui est demandé pour l'instant, l'exercice commence à l'étape suivante. Dès que l'apiculteur estime avoir terminé de retrouver les jalons, et compris le fonctionnement du Graph3D, il repose son casque de réalité virtuelle, et passe à l'étape 3.
@@ -111,7 +111,7 @@
 				\item 4.4 - Comment évalueriez-vous votre compréhension des variations des différentes populations de la colonie après cette expérience ? (De 1-"Inexistante" à 5-"Complète")
 			\end{enumerate}
 			
-			Les deux premières visent à évaluer subjectivement et succinctement l'acceptabilité \cite{tricot_utilite_2003} de nos deux moyens de visualisations complémentaires, les graphiques deux et trois dimensions.
+			Les deux premières visent à évaluer subjectivement et succinctement le ressenti des apiculteurs à propos de nos deux moyens de visualisations complémentaires, les graphiques deux et trois dimensions.
 			Les questions 3 et 4 fonctionnent ensemble, et permettent de retranscrire les différences ressenties de connaissance sur les sujets abordés, ici l'auto-organisation dont font preuve les agents.
 		
 		
@@ -124,6 +124,19 @@
 		
 		
 	\section{Résultats et Discussions}
+	
+	
+	\begin{table}
+	\centering
+	\begin{tabular}{l|l|l|lllllllllllllll}
+	Scénario & Moyennes & Ecarts-types & \multicolumn{15}{l}{Notes Individuelles (1-5)}\\
+	\hline
+	2.1 & 3.93 & 0.77 &4&3&3&4&4&2&5&4&4&4&4&5&4&5&4\\
+	2.2 & 3.93 & 1.06 &4&4&4&4&5&4&1&4&5&2&4&5&4&5&4\\	
+	\end{tabular}
+	\caption{Résultats de l'expérimentation auprès de quelques apiculteurs concernant la cohérence des variations de populations de nos simulations par rapports aux colonies réelles.}
+	\label{TabResCoherence}
+	\end{table}
 	
 	\begin{table}
 	\centering
@@ -150,7 +163,10 @@
 	
 	Pour la première étape concernant l'intérêt pédagogique de la manipulation en environnement immersif, sur 15 notes de 1 à 5 nous obtenons une moyenne à 3.73 avec un écart type à 0.997. Toutes les notes sont présentées dans le Tableau \ref{TabResVR}. Nous obtenons donc un résultat favorable, nous encourageant à continuer dans cette direction pédagogique.
 	
-    Pour la deuxième et troisième étape, l'évaluation de la cohérence des résultats de nos deux simulations de division, chacune à obtenu une moyenne de 3.93 (toujours avec des notes entre 1 et 5), avec des écarts types de 0.77 pour la première et 1.06 pour la seconde. Ces résultats ont déjà été présentés et discutés dans le \textit{Chapitre \ref{ChapitreEvalSMA}}, car ils concernent le modèle multi-agents.
+    
+	
+	Pour la deuxième et troisième étape, le Tableau \ref{TabResCoherence} récapitule les réponses qu'ont donnés les participants à la question \textit{"L'évolution de la population de la colonie vous semble-t-elle cohérente avec la façon dont la division a été réalisée ? "}, tour à tour pour les Figures \ref{sc1Txt} et \ref{sc2Txt}. Les deux scénario obtiennent alors la même note moyenne de 3.93 ainsi que la même médiane à 4, mais les écarts-types diffèrent, respectivement 0.77 et 1.06.
+	Pour la deuxième et troisième étape, l'évaluation de la cohérence des résultats de nos deux simulations de division, chacune à obtenu une moyenne de 3.93 (toujours avec des notes entre 1 et 5), avec des écarts types de 0.77 pour la première et 1.06 pour la seconde. Ces résultats ont déjà été présentés et discutés dans le \textit{Chapitre \ref{ChapitreEvalSMA}}, car ils concernent le modèle multi-agents.
     
     Dans la troisième étape, la moitié (7 sur 15) nous ont parlé d'auto-organisation en se basant sur le graphique en deux dimensions. Le Graph3D n'a en revanche permis à aucun utilisateur de nous donner la réponse que nous attendions sur l'auto-organisation et l'importance des phéromones. 
 Les apiculteurs s'intéressent peu aux phéromones, ce qui, couplé à l'utilisation d'un environnement immersif pour des non-initiés, peut expliquer cet échec du Graph3D dans la visualisation claire des mécanismes d'auto-organisation. De plus, de part leur activité les apiculteurs ont une vue de la colonie centrée population, là où nous leur proposons une visualisation centrée sur l'individu. C'est aussi pour cette raison que le graphique en deux dimensions, lui orienté population, a été si bien accueilli.
@@ -167,12 +183,33 @@ Les apiculteurs s'intéressent peu aux phéromones, ce qui, couplé à l'utilisa
 			\item Est-ce que notre représentation de l'auto-organisation latente de la colonie est aide un apiculteur à en comprendre les mécanismes ?
 		\end{enumerate}	
 	 nous pouvons répondre favorablement au deux premières, mais négativement à la troisième.
-
+	 
+	 
+		
+		\subsection{Utilité, Utilisabilité et Acceptabilité}
+		Dans la littérature, ces trois notions permettent d'affiner et de préciser les évaluations de différents aspects des interfaces pédagogiques proposées, leurs définitions peuvent varier légèrement, voici les définitions résumées tirées des travaux de Tricot et al. \cite{tricot_utilite_2003} :
+		\begin{itemize}
+			\item L'\textbf{Utilité} représente l'adéquation entre l'objectif d'apprentissage défini et l'apprentissage effectif. En une question : "L'interface permet-elle à l'utilisateur d'apprendre les concepts souhaités par les concepteurs/pédagogues ?"
+			\item L'\textbf{Utilisabilité} représente la facilité d'utilisation de l'interface, navigation, présentation des données et actions possibles, facilité d'apprentissage etc. En une question : "L'interface demande-t-elle beaucoup d'efforts pour réaliser la tâche demandée ?"
+			\item L'\textbf{Acceptabilité} représente la perception de l'utilisateur de l'utilité et de l'utilisabilité de l'interface, en y mêlant le contexte social et des connaissances et opinions \textit{a priori}. En une question : "Les utilisateurs déciderons/recommanderons-t-ils d'utiliser cette interface ?"
+		\end{itemize}
+		
+		Or, dans cette expérience préliminaire nous n'avons pas ciblé ces aspects précisément, évaluant indistinctement ces trois notions pour obtenir des retours rapides. Dans de prochaines expérimentations, ces points devront être évalués individuellement, afin d'obtenir des résultats plus précis, via des questionnaires subjectifs et des mesures quantitatives.
 	
 	\section{Perspectives}
- 	Cette expérience étant préliminaire, nous n'avions pas mis en place de détection d'erreurs afin de détecter si l'utilisateur réalisait correctement sa division. Ainsi, une nouvelle itération de cette expérience avec ce mécanisme de vérification aura un intérêt plus prononcé. Y ajouter le couplage à notre simulation pour observer les résultats des mouvements qu'a fait l'utilisateur est aussi une perspective, au prix d'une installation plus conséquente. Les résultats favorables que nous avons obtenus nous poussent dans tout les cas vers la réalisation d'une nouvelle itération de cette expérience.
+ 	Cette expérience étant préliminaire, nous n'avions pas mis en place de détection d'erreurs afin de détecter si l'utilisateur réalisait correctement sa division. Ainsi, une nouvelle itération de cette expérience avec ce mécanisme de vérification aura un intérêt plus prononcé. Y ajouter le couplage à notre simulation pour observer les résultats des mouvements qu'a fait l'utilisateur est aussi une perspective, au prix d'une installation plus conséquente. Les résultats favorables que nous avons obtenus nous poussent vers la réalisation d'une nouvelle itération de cette expérience.
+	
+	Étoffer et complexifier le modèle multi-agents ainsi que notre modélisation de l'abeille adulte pourra nous permettre de simuler plus de scénario différents, nous permettant de réitérer l'expérimentation où nous demandons l'avis d'apiculteurs sur des scénario plus variés, amenant donc à des résultats plus précis. Nous pourrions de la même manière proposer ces interprétations de résultats de simulation à des biologistes de l'abeille, dont l'attention se portera naturellement sur d'autres aspects de la colonie, apportant un regard complémentaire à celui des apiculteurs.
 
 Il est difficile de conclure sur l'intérêt général du Graph3D : une nouvelle expérimentation visant cette fois ci des biologistes de l'abeille pourrait être intéressante, étant eux-mêmes très sensibilisés aux notions de phéromones. Le Graph3D n'aura pas alors pour rôle d'expliquer la relation entre auto-organisation et phéromones, mais seulement de permettre la visualisation de ces-derniers. Un autre moyen de visualisation serait peut être plus approprié, doublé d'un processus didactique, introduisant les concepts et présentant différents exemples. En effet, visualiser les relations entre âges et phéromones ne suffit sûrement pas pour expliquer ces relations.
+
+	En revanche, pour ce qui est de la visualisation offerte par le Graph3D, il serait intéressant d'y intégrer directement le concept de "scénario classique" et de "scénario d'adaptation". En effet, une colonie suivant le polyéthisme d'âge suit une démographie et une organisation prévisible et caractéristique, qui se traduit par une forte proximité entre l'âge réel et l'âge physiologique. Lors d'une adaptation forte de la colonie, cette linéarité est brisée par les individus s'adaptant. Ainsi, nous pourrions faire apparaitre un "couloir" dans le Graph3D, représentant le volume occupé par les points dits "normaux", respectant le polyéthisme d'âge classique. Ainsi, les points en dehors seront une marque directe de l'auto-organisation, construite dans l'outil de visualisation. Ce couloir pourrait être visualisé de deux manières complémentaires :
+	\begin{enumerate}
+		\item Faire apparaitre directement le couloir sous la forme d'un cylindre ou d'un pavé semi-transparent. Les perspectives peuvent rendre cette visualisation moins précise : un point derrière la forme sera vu "à travers", et donc dedans. La deuxième visualisation permettra de palier à ceci, couplée à la manipulation du Graph3D par l'utilisateur, changeant son point de vue, et percevant ainsi mieux les profondeurs. La forme utilisé pourrait être cachée à souhait par l'utilisateur, afin de lui permettre de décharger l'outil de visualisation.
+		\item Mise en valeur des points hors du couloir. En effet, normalement représentés par des cubes, les points en dehors du couloir pourraient être alors représentés par des pyramides. De plus, nous pourrions encoder la distance au couloir avec un autre paramètre, comme par exemple faire tourner de plus en plus rapidement la pyramide sur elle-même lorsqu'elle s'éloigne.
+	\end{enumerate}
+	
+	Cet ajout ne permet en revanche pas de mettre en valeur les mécanismes de l'auto-organisation dans le cas classique, alors qu'ils sont bien présents. Il met en valeur les cas extrêmes d'auto-organisations, dont la colonie doit faire preuve notamment après une division.
 			
 	\section*{Conclusion}
 	Dans ce chapitre nous avons présenté l'expérimentation que nous avons mise en place en coopération avec le \textit{GDSA29} afin d'évaluer divers aspects de nos propositions. Afin d'obtenir un dispositif expérimental transportable, nous avons développé une nouvelle application interactive sur le casque de réalité virtuelle \textit{Oculus Quest 2}, autonome. Afin de nous passer du besoin de faire tourner la simulation en temps réel, et d'en attendre les résultats (notre temps d'expérimentation étant limité), nous avons permis à l'application de lire directement des fichiers de \textit{logs} de la simulation, au lieu de communiquer cette dernière.
