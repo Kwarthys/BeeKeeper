@@ -10,6 +10,34 @@
 		
 		\subsection{Visualisation de Simulations Multi-Agents}
 		
+		\subsubsection{Visualisation Micro-Macro}
+		Les simulations multi-agents proposent le plus souvent deux types de visualisation : une visualisation "macro", orientée population, et une visualisation "micro", orientée individu. Par exemple, la plateforme \textit{GAMA} \cite{taillandier_building_2019} propose différents niveaux de visualisations, permettant au concepteur du modèle multi-agents de créer ces différentes visualisations.
+		
+		Les visualisations orientées populations permettent en général d'observer les phénomènes émergents et/ou l'auto-organisation, là où les représentations micro, représentant souvent les agents eux mêmes ainsi que leur environnement, permettent d'observer la cohérence des comportements individuels par rapport aux attentes du concepteur.
+		
+		Ensuite nous voici au problème, la question, "quoi visualiser" ? Un système multi-agents est certes composés d'une multitude d'agents, mais ces agents, à l'aide d'interactions constantes multiples, génèrent un comportement complexe de plus haut niveau. Cette complexité, nous la retrouvons plus en général dans les systèmes complexes.
+		
+		\subsubsection{Visualisation de Systèmes Complexes}
+		
+		La visualisation de systèmes multi-agents nous ramène très rapidement aux problèmes de visualisation de systèmes complexes, dont ils font souvent partie. Pour illustrer cette problématique, Joël de Rosnay parle de "Macroscope" \cite{de_rosnay_macroscope_1975}. Nous disposons de télescopes pour observer l'infiniment loin, de microscope pour ce qui est infiniment petit, il propose donc la notion de macroscope pour ce qui est infiniment complexe. Cet outil de visualisation ne pourrait pas, contrairement aux autres outils cités, se contenter de zoomer sur une image déjà existante, mais devrait construire une image, ou plusieurs, afin de rendre compte des différents mécanismes complexes régissant l'ensemble du systèmes, à plusieurs échelles de taille, et de temps.
+		
+		Ainsi Hutzler dans ces travaux de thèse \cite{hutzler_du_2000} décompose se processus de macroscope en trois étape, qu'il décrit :
+		
+		"\textit{Pour ce faire, trois opérations sont nécessaires : \textbf{mesurer} le fonctionnement du système par un ensemble de données numériques, \textbf{filtrer et organiser} ces données, et enfin en \textbf{construire} une représentation sensible à destination de l'utilisateur.}" - Hutzler \cite{hutzler_du_2000}.
+
+	En effet la quantité de données brutes ne permet pas de simplement toutes les afficher, espérant qu'un observateur arrive à tirer du sens d'un flux continu de chiffres. Ainsi filtrer et traiter est essentiel, afin d'éliminer le bruit et de faire ressortir les propriétés intéressantes, que l'on souhaite transmettre à l'utilisateur.
+
+		
+		 Ces visualisations ont alors un intérêt au moins double. Elles permettent au concepteur de s'assurer que le modèle se comporte comme attendu, sans qu'un problème de conception, un "\textit{bug}", ne vienne troubler le système. Elles permettent aussi au concepteur de communiquer sur sa simulation, afin de partager ses résultats, de les confronter à des experts non-initiés à la simulation, ou encore dans un cadre pédagogique.
+
+		"\textit{Le scientifique a alors la responsabilité de traduire sous forme
+graphique le résultat de son travail, ce qui fait de lui, sinon un artiste, du moins un dessinateur.}" - Hutzler \cite{hutzler_du_2000}.
+
+	\paragraph{}
+	Ainsi, tout concepteur de système multi-agents complexes se voit en charge de concevoir avec lui un macroscope. Les différentes granularités présentées par différents systèmes, mais aussi la variété de données intéressantes à observer, très dépendante de l'usage même de ce macroscope, rendent sa systématisation impossible. Que l'outil s'adresse à un "concepteur", à un "opérateur", ou encore à un "spectateur", nous ressentons instinctivement que sa forme ne sera pas du tout la même. 
+	Si certaines propriétés émergentes sont directement observables, comme par exemple les autoroutes de fourmis, visibles dès que l'on observe l'emplacement individuel de ses sous-systèmes, bien d'autres sont par natures inobservables, comme par exemple le processus permettant aux fourmis de trouver le chemin le plus court pour former leur autoroute vers de la nourriture. Il faut alors construire des métaphores, des représentations, capables de traduire le comportement inobservable afin qu'un utilisateur puisse s'en construire une représentation mentale fidèle au modèle complexe observé.
+
+		"\textit{La construction d'un modèle cognitif pourra ainsi s'effectuer dans certains cas par la confrontation « directe » du sujet au système complexe, grâce à la médiation de son appareil sensori-moteur (essentiellement la vision, l'audition, le toucher, la proprioception). Mais cette construction s'effectuera également, dans d'autre cas, par la confrontation avec des représentations visuelles, sonores, langagières du monde, elles-mêmes élaborées pour mettre en évidence les parties d'un système et leurs interactions.}" - Hutzler \cite{hutzler_du_2000}.
 		
 		\subsection{Interactions avec des Systèmes Multi-Agents}
 		%Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilisation d'interacteurs tangibles.
@@ -29,6 +57,9 @@
 	Les systèmes multi-agents reposent sur une grande quantité de paramètres, qu'il est donc possible de faire varier pour en observer les conséquences. Cependant, certains de ces paramètres ont un impact imprévisible sur le comportement du système en général, du fait de l'émergence de nombreuses propriétés de celui-ci \cite{couzin_collective_2002}. Il est donc difficile de proposer le comportement inverse : laisser l'utilisateur choisir un paramètre concernant des propriétés émergentes, puis retrouver quels paramètres individuels adapter pour retrouver la propriété demandée. Kira et Potter \cite{kira_exerting_2009} ont proposé une approche \textit{machine learning} pour réaliser cette fonction.
 	
 	Ce type d'interaction se réalise à un niveau très proche de l'implémentation de l'agent, nous parlerons donc ici d'interaction bas niveau.
+	
+	\paragraph{}
+	Ce type d'interaction compte aussi les contrôles de la simulation elle même, la lancer, la mettre en pause, l'accélérer, l'arrêter etc. Ces contrôles sont le plus souvent directement présent au niveau des plateformes présentant des environnements de simulations.
 		
 	\subsubsection{Contrôle du Comportement}
 	À l'inverse des interactions bas niveau, la sélection de comportement permet un contrôle très haut niveau. Ici, au lieu de changer un paramètre, l'utilisateur peut changer la manière d'opérer des agents qu'il sélectionne, changer leur algorithme, pour leur demander par exemple de suivre, d'éviter, ou encore de surveiller d'autres robots ou lieux \cite{coppin_controlling_2012}. Ceci implique que la simulation propose un ensemble de ces algorithmes que les agents soient capables de tous d'exécuter et que l'utilisateur connaissent les implications et fonctions de ces différents comportements sur les agents, ainsi que la répartition spatiales de ces derniers.
