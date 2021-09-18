@@ -1,27 +1,28 @@
 \chapter{Etat de l'art: Simulations Multi-Agents et Environnements Immersifs}
 \label{ChapitreEAVR}
 
-	Dans ce chapitre nous présentons différentes approches utilisées afin d'interagir avec des systèmes multi-agents, ainsi que différentes approches pour les en visualiser différentes propriétés. Nous étendons ensuite nos observations à l'interaction et la visualisation en ce qui concerne les environnement immersifs, où l'utilisateur est plongé au cœur de l'application, souvent grâce à un casque de réalité virtuelle.
+	Dans ce chapitre nous présentons différentes approches utilisées afin d'interagir avec des systèmes multi-agents, ainsi que différentes approches pour en visualiser différentes propriétés. Nous étendons ensuite nos observations à l'interaction et la visualisation en ce qui concerne les environnement immersifs, où l'utilisateur est plongé au cœur de l'application.
 	
 \boitemagique{Sébastien Picault \cite{picault_simulation_2013}}{"\textit{Pour être un tant soit peu polyvalent et pouvoir en particulier être utilisé pour la production de jeux vidéo, de simulateurs de conduite, etc., un moteur de simulation doit être en mesure de gérer non seulement des simulations « classiques » n'impliquant que des agents logiciels, mais également des situations dans lesquelles certains agents ont une matérialité extérieure au système : c'est le cas par exemple quand on doit interagir avec des réseaux de capteurs, des robots ou encore pire, des humains.}"}	
 
 	\section{Visualiser et Interagir avec une Simulation Multi-Agents}
 		
+	Les systèmes multi-agents, de part leur taille, leur complexité et leur fonctionnement centré sur l'individu et ses interactions amènent régulièrement de forte contrainte sur la visualisation des différents phénomènes qu'ils mettent en place.		
 		
 		\subsection{Visualisation de Simulations Multi-Agents}
 		
-		\subsubsection{Visualisation Micro-Macro}
-		Les simulations multi-agents proposent le plus souvent deux types de visualisation : une visualisation "macro", orientée population, et une visualisation "micro", orientée individu. Par exemple, la plateforme \textit{GAMA} \cite{taillandier_building_2019} propose différents niveaux de visualisations, permettant au concepteur du modèle multi-agents de créer ces différentes visualisations.
-		
+		Les simulations multi-agents proposent le plus souvent deux types de visualisation : une visualisation "macro", orientée population, et une visualisation "micro", orientée individu. Par exemple, la plateforme \textit{GAMA} \cite{taillandier_building_2019} propose différents niveaux de visualisations, permettant au concepteur du modèle multi-agents de créer ces différentes visualisations.		
 		Les visualisations orientées populations permettent en général d'observer les phénomènes émergents et/ou l'auto-organisation, là où les représentations micro, représentant souvent les agents eux mêmes ainsi que leur environnement, permettent d'observer la cohérence des comportements individuels par rapport aux attentes du concepteur.
 		
-		Ensuite nous voici au problème, la question, "quoi visualiser" ? Un système multi-agents est certes composés d'une multitude d'agents, mais ces agents, à l'aide d'interactions constantes multiples, génèrent un comportement complexe de plus haut niveau. Cette complexité, nous la retrouvons plus en général dans les systèmes complexes.
+		Louloudi et al. \cite{louloudi_new_2012} ont proposé dans leurs travaux de séparer la partie simulation multi-agents de la partie visualisation de leur programme. Cette séparation offre de pouvoir faire tourner le modèle sans les contraintes de la visualisation (souvent le respect du temps réel) lorsque la visualisation n'est pas nécessaire. Ils proposent un composant logiciel "relai" entre la simulation et la visualisation agissant comme un convertisseur universel. Or, les granularité de temps et d'espaces peuvent varier fortement d'un modèle multi-agents à un autre, ainsi que le type même de données à transmettre, ce qui, couplé à un besoin de transmettre en retour des informations depuis l'application de visualisation vers le simulateur rendent cette notion de relai \textit{universel} bien difficile à mettre en place. Toutefois, la notion de représentation incluse dans GAMA, qui permet d'être déconnectée de la simulation en elle même est en accord avec la proposition de Louloudi et al.
+		
+		Ensuite nous voici au problème, la question, "quoi visualiser" ? Un système multi-agents est certes composés d'une multitude d'agents, mais ces agents, à l'aide d'interactions constantes et multiples, génèrent un comportement complexe de plus haut niveau. Cette complexité, nous la retrouvons plus en général dans les systèmes complexes, qui partagent alors ces problématiques de visualisation.
 		
 		\subsubsection{Visualisation de Systèmes Complexes}
 		
 		La visualisation de systèmes multi-agents nous ramène très rapidement aux problèmes de visualisation de systèmes complexes, dont ils font souvent partie. Pour illustrer cette problématique, Joël de Rosnay parle de "Macroscope" \cite{de_rosnay_macroscope_1975}. Nous disposons de télescopes pour observer l'infiniment loin, de microscope pour ce qui est infiniment petit, il propose donc la notion de macroscope pour ce qui est infiniment complexe. Cet outil de visualisation ne pourrait pas, contrairement aux autres outils cités, se contenter de zoomer sur une image déjà existante, mais devrait construire une image, ou plusieurs, afin de rendre compte des différents mécanismes complexes régissant l'ensemble du systèmes, à plusieurs échelles de taille, et de temps.
 		
-		Ainsi Hutzler dans ces travaux de thèse \cite{hutzler_du_2000} décompose se processus de macroscope en trois étape, qu'il décrit :
+		Ainsi Hutzler dans ces travaux de thèse \cite{hutzler_du_2000} décompose ce processus de macroscope en trois étapes, qu'il décrit :
 		
 		"\textit{Pour ce faire, trois opérations sont nécessaires : \textbf{mesurer} le fonctionnement du système par un ensemble de données numériques, \textbf{filtrer et organiser} ces données, et enfin en \textbf{construire} une représentation sensible à destination de l'utilisateur.}" - Hutzler \cite{hutzler_du_2000}.
 
@@ -30,14 +31,26 @@
 		
 		 Ces visualisations ont alors un intérêt au moins double. Elles permettent au concepteur de s'assurer que le modèle se comporte comme attendu, sans qu'un problème de conception, un "\textit{bug}", ne vienne troubler le système. Elles permettent aussi au concepteur de communiquer sur sa simulation, afin de partager ses résultats, de les confronter à des experts non-initiés à la simulation, ou encore dans un cadre pédagogique.
 
-		"\textit{Le scientifique a alors la responsabilité de traduire sous forme
-graphique le résultat de son travail, ce qui fait de lui, sinon un artiste, du moins un dessinateur.}" - Hutzler \cite{hutzler_du_2000}.
+		"\textit{Le scientifique a alors la responsabilité de traduire sous forme graphique le résultat de son travail, ce qui fait de lui, sinon un artiste, du moins un dessinateur.}" - Hutzler \cite{hutzler_du_2000}.
 
-	\paragraph{}
-	Ainsi, tout concepteur de système multi-agents complexes se voit en charge de concevoir avec lui un macroscope. Les différentes granularités présentées par différents systèmes, mais aussi la variété de données intéressantes à observer, très dépendante de l'usage même de ce macroscope, rendent sa systématisation impossible. Que l'outil s'adresse à un "concepteur", à un "opérateur", ou encore à un "spectateur", nous ressentons instinctivement que sa forme ne sera pas du tout la même. 
+	Ainsi, tout concepteur de système multi-agents complexes se voit en charge de concevoir avec lui le macroscope adapté. Les différentes granularités (de temps et de taille) présentées par différents systèmes, mais aussi la variété de données intéressantes à observer, très dépendante de l'usage même de ce macroscope, rendent sa systématisation impossible. Que l'outil s'adresse à un "concepteur", à un "opérateur", ou encore à un "spectateur", nous ressentons instinctivement que sa forme ne sera pas du tout la même. 
 	Si certaines propriétés émergentes sont directement observables, comme par exemple les autoroutes de fourmis, visibles dès que l'on observe l'emplacement individuel de ses sous-systèmes, bien d'autres sont par natures inobservables, comme par exemple le processus permettant aux fourmis de trouver le chemin le plus court pour former leur autoroute vers de la nourriture. Il faut alors construire des métaphores, des représentations, capables de traduire le comportement inobservable afin qu'un utilisateur puisse s'en construire une représentation mentale fidèle au modèle complexe observé.
 
 		"\textit{La construction d'un modèle cognitif pourra ainsi s'effectuer dans certains cas par la confrontation « directe » du sujet au système complexe, grâce à la médiation de son appareil sensori-moteur (essentiellement la vision, l'audition, le toucher, la proprioception). Mais cette construction s'effectuera également, dans d'autre cas, par la confrontation avec des représentations visuelles, sonores, langagières du monde, elles-mêmes élaborées pour mettre en évidence les parties d'un système et leurs interactions.}" - Hutzler \cite{hutzler_du_2000}.
+		
+		Hutzler présente ensuite en quoi la vision est le médium le plus adapté pour transmettre une grande quantité de données, et qu'il peut être renforcé par l'utilisation d'autres sens. Il souligne toutefois la forte subjectivité que représente l'action de percevoir. En effet, les illusions d'optiques illustrant ce point sont nombreuses, la culture, l'expérience et bien d'autres facteurs peuvent influencer la manière dont nous observons une même image.
+		
+		Ensuite, plusieurs ligne de conduite sont énoncées, que nous allons décrire rapidement pour conclure cette section :
+		\begin{itemize}
+			\item Diversité de formes de représentation : proposer d'observer différents composants hétérogènes comme tel, ou comme s'ils étaient homogènes, au choix de l'utilisateur.
+			\item Diversité des niveaux de représentation : visualiser les composants de manières atomique ou composite, selon les besoins de l'utilisateur. (Il donne l'exemple d'une machine outil en fonctionnement qui peut être synthétisée par un cercle vert, mais lorsque celle-ci présente une erreur, la visualisation devra montrer l'ensemble de ses composants afin d'aider au diagnostic.)
+			\item Diversité de sources d'information : collecter les données nécessairent depuis plusieurs sources. Permettre aussi de les trier, traiter ete organiser avant de les présenter à l'utilisateur.
+			\item Modularité : ajouter / retirer dynamiquement des élements, définir la composition de la représentation.
+			\item Structuration : permettre d'observer la notion de structure, de hiérarchisation en niveaux, dynamiquement selon les besoins de l'utilisateur.
+			\item Interaction : permettre d'observer les actions et perceptions des différents composants, et "permettre de manipuler une interaction à la manière d'un composant". (Il donne ici le statut de composant aux interactions elles mêmes.)
+		\end{itemize}
+		
+		Nous allons désormais aborder différents points concernant les interactions avec des systèmes multi-agents.
 		
 		\subsection{Interactions avec des Systèmes Multi-Agents}
 		%Systèmes en général non immersif, on s'arrête à la RA, et [de ce que j'ai vu], sans utilisation d'interacteurs tangibles.
@@ -77,14 +90,12 @@ graphique le résultat de son travail, ce qui fait de lui, sinon un artiste, du 
 		Ce type d'interaction se retrouve dans le modèle "Voyelles" proposé par Y. Demazeau \cite{demazeau_interactions_1995}. Celui-ci analyse les modèles multi-agents sous 4 points de vues : "\textbf{A}gents", "\textbf{E}nvironnement", "\textbf{I}nteractions" et "\textbf{O}rganisations" (AEIO). Là où ce modèle nous intéresse dans ce chapitre, c'est lorsque J.Tisseau propose d'y ajouter le "U" d'"\textbf{U}tilisateur" \cite{tisseau_realite_2001}, pour former "AEIOU". Dans cette définition, l'utilisateur intervient à souhait dans la simulation, en prenant le contrôle d'un agent, utilisant ses capacités motrices et surchargeant son module de décision. Les autres agents de la simulation réagissent alors à l'utilisateur comme s'il était toujours un agent tout à fait normal. 
 		L'utilisateur possède ainsi, à volonté, un "avatar" dans la simulation, interagissant tel un émissaire virtuel avec l'environnement, avec l'ensemble des autres agents (qui peuvent être des avatars d'autres utilisateurs) et autres systèmes modélisés. Il interagit alors avec les agents de la simulation de manière "horizontale". Par exemple, dans le \textit{serious game} "FORMAT-STORE" \cite{mathieu_serious_2011}, le joueur prend le contrôle de l'agent "vendeur" qu'il contrôle avec clavier et souris, et interagit avec les autres agents "clients" de l'environnement, les étales et le magasin.
 		
-		À l'inverse, l'agent contrôlé peut avoir une grande influence sur le comportement de la simulation, dans le rôle de "\textit{leader}" des autres agents. Ainsi, l'utilisateur est capable de contrôler le comportement d'un grand nombre d'agents, en n'en contrôlant qu'un seul, ou quelques uns, comme les agents dits "\textit{stakeholders}" des travaux de Brown et al. \cite{brown_human-swarm_2014}.
+		À l'inverse, l'agent contrôlé peut avoir une grande influence sur le comportement de la simulation, dans le rôle de "\textit{leader}" des autres agents. Ainsi, l'utilisateur est capable de contrôler le comportement d'un grand nombre d'agents, en n'en contrôlant qu'un seul, ou quelques uns, comme les agents dits "\textit{stakeholders}" des travaux de Brown et al. \cite{brown_human-swarm_2014}, influant les autres agents au points de permettre le contrôle de la forme de l'ensemble du groupe d'agents.
 	
 	
 	\section{Visualisation et Interactions en Environnements Immersifs}	
 	
 	Nous élargissons désormais nos recherches aux environnements immersifs en général, sans applications directes aux systèmes multi-agents. Ces travaux serviront de base à notre réflexion, couplée à ce que nous avons déjà vu concernant les interactions et visualisations avec des modèles multi-agents.
-		
-		Louloudi et. al. \cite{louloudi_new_2012} ont proposé dans leurs travaux de séparer la partie simulation multi-agents de la partie visualisation de leur programme. Cette séparation offre de pouvoir faire tourner le modèle sans les contraintes de la visualisation (souvent le respect du temps réel) lorsque la visualisation n'est pas nécessaire. Ils proposent un composant logiciel "relai" entre la simulation et la visualisation agissant comme un convertisseur universel. Or, les granularité de temps et d'espaces peuvent varier fortement d'un modèle multi-agents à un autre, ainsi que le type même de données à transmettre, ce qui, couplé à un besoin de transmettre en retour des informations depuis l'application de visualisation vers le simulateur rendent cette notion de relai \textit{universel} bien difficile à mettre en place.
 	
 	\subsection{Visualisation en Environnements Immersifs}
 	
@@ -156,7 +167,15 @@ graphique le résultat de son travail, ce qui fait de lui, sinon un artiste, du 
 				
 			Les TUI ont par la suite prouvé leurs capacités à faciliter l'immersion et l'apprentissage de ses utilisateurs \cite{zuckerman_tui_2013, fleck_marker-based_2015, cheng_affordances_2013}, et sont donc nombreux dans les applications pédagogiques. Par exemple, \textit{DEAPE Learn} propose une combinaison d'objets tangibles et de réalité augmentée afin d'illustrer et d'enseigner différents principes d'électromagnétisme, qui sont connus pour être abstrait et difficiles à comprendre pour les étudiants \cite{da_costa_realite_2019}. Une loupe augmentée est proposé dans des travaux visant à rapprocher les visiteurs de musées des différentes œuvres, en proposant des informations complémentaires aux objets que les utilisateurs regardent à travers \cite{damala_loupe_2016}. Un peu différemment, Veytizou et al. ont proposé d'utiliser une balance et des sphères de poids équivalents pour permettre à des enfants de répondre à une question de type "Likert", de 1 à 5 (ou 7). Les enfants sont connus pour donner des réponses très extrêmes à ces échelles, et l'utilisation de leur balance à réduit cette propension aux extrêmes tout en conservant des notes cohérentes \cite{veytizou_could_2018}.
 	
-	
+	La notion de "confontation directe" de l'utilisateur au système complexe étudié vue plus tôt dans une citation de Hutzler \cite{hutzler_du_2000} peut ainsi directement se rapporter aux interactions tangibles en environnement immersif. Ainsi, l'utilisateur utilise ses propres facultés sensori-motrices, immergés avec le système qu'il observe, pour le comprendre.
 	
 				
 	\section*{Conclusion}
+	
+		Nous avons vu dans ce chapitre que représenter un système multi-agents et interagir avec n'est pas trivial. Souvent visualisé sous deux échelles différentes, une échelle micro concernant chaque individu (leur énergie, leur faim, leur action en cours etc.), et une échelle macro concernant le système lui même (la population, la démographie etc.), ils nécessitent parfois des niveaux intermédiaires. Il est aussi possible de représenter des abstractions, et/ou des métaphores, afin d'augmenter la qualité de l'information transmise à l'observateur. Le macroscope est un outil lui même complexe, et dépends de ce qu'en attends l'utilisateur. Il sera en effet différent pour un "concepteur", un "spectateur" ou encore un "opérateur".
+		
+		Ensuite différents niveaux d'interactions sont possibles avec les agents, du très haut niveau en contrôlant leur paramètres ou la vitesse de la simulation jusqu'à un très bas niveau où l'utilisateur prend le contrôle d'un agent.
+		
+		L'environnement immersif nous offre une troisième dimension, étoffant les possibilité de visualisation et de manipulation. L'utilisateur doit alors pouvoir naviguer dans l'environnement, sélectionner et manipuler différentes entitées et pouvoir contrôler l'application en elle même. Les interface tangibles proposent des interactions naturelles, afin de faciliter l'apprentissage et/ou la prise en main de situations virtuelles complexes.
+		
+		Nous présentons dans le chapitre suivant nos différentes propositions concernant les moyens d'interactions et de visualisation avec notre système multi-agents d'une colonie d'abeilles. Nous proposons dans cette première version l'utilisation d'un interacteur tangible couplé à l'utilisation d'une manette du casque de réalité virtuelle, afin de confronter directement l'utilisateur à la colonie, de manière immersive. Ensuite, cet utilisateur pourra observer et manipuler soit directement la colonie via les cadres de la ruches, soit un nuage de points en trois dimension répartis sur trois axes, représentation abstraite de l'état interne de la colonie et ainsi des mécanismes de l'auto-organisation dont fait preuve la colonie.
