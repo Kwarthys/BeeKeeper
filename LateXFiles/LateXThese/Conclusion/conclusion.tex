@@ -2,12 +2,49 @@
 \addcontentsline{toc}{chapter}{Conclusion}
 \chaptermark{Conclusion}
 
-	Comment l'ensemble se comporte et avis critique sur la totalité. Notamment le modèle multi agent simplifié qui apporte une quantité gigantesque de biais.
-\section*{Discussions et Perspectives}
-	Tout est possible, pousser le modèle de l'abeille de la simulation, pousser le domaine tangible avec peut être un cadre manette (un cadre avec un ou deux boutons?)
-	\subsection{Perspectives Court-Terme}	
-	\subsection{Perspectives Moyen-Terme}	
-	\subsection{Perspectives Long-Terme}		
+Il est désormais temps de synthétiser les différents travaux et notions abordés pendant cette thèse, fortement marquée par la pluridisciplinarité. Nous parlons en effet aussi bien de la biologie de l'abeille domestique que d'interactions tangibles en environnement immersifs, en passant par les algorithmes de prises de décisions pour des systèmes multi-agents.
+
+Dans ces travaux nous proposons une simulation de colonie d'abeilles interactive, permettant à l'utilisateur de réaliser quelques actions apicoles classiques en environnement immersif et à l'aide d'un interacteur tangible.
+
+%Ch1
+Nous avons commencé par présenter les notions de systèmes complexes, émergence, chaos, auto-organisation et boucles de rétroactions. Nous avons ensuite présenté un état de l'art sur les connaissances biologiques actuelles de l'abeille domestique, et les nombreuses hypothèses toujours présentes autour de leur comportement.
+
+%Ch2
+Ensuite, nous avons présenté un état de l'art concernant la prise de décisions d'agents réactifs dans des simulations à base d'agents, afin de trouver un modèle nous permettant de modéliser une colonie d'abeilles. Les modèles à seuils semblent adaptés, mais ne permettent pas en l'état d'inclure un type de tâche dont nous avons besoin. Les tâches ne présentant pas de stimulus déclencheur évident. Nous proposons alors de construire un modèle à base de seuil adapté, utilisant différentes notions de motivation interne.
+
+%Ch3
+La motivation interne que nous appelons motivation "guide" permet ainsi à nos agents d'avoir une notion de leur efficacité dans leur tâche actuelle. Ainsi, en couplant la motivation source, servant de stimulus artificiel, avec cette motivation guide pour calculer un score cohérent à une tâche sans stimulus déclencheur évident, nous pouvons utiliser un modèle à base de seuil.
+
+%Ch4
+Nous présentons ensuite notre modèle informatique tiré de la biologie de la colonie d'abeilles virtuelle. L'implémentation du simulateur est détaillée par la suite, de son architecture logicielle à son comportement dynamique, notamment l'utilisation de nombreux \textit{threads} afin de réduire les temps de simulations. Nous décrivons ensuite le processus de calibration du modèle de la colonie, concernant majoritairment les quantités et effets des phéromones et hormones régissant la physiologie et les décisions de nos abeilles virtuelles. Nous y présentons aussi nos deux versions du modèle de la colonie, importantes dans notre démarche incrémentale de la mise en place de ce système complexe.
+
+%Ch5
+Ces modèles et leur simulateur sont ensuite évalués suivant deux hypothèses, auto-organisation et cohérence biologique. La première version du modèle parvient à reproduire l'auto-organisation mais pas de manière fidèle à la biologie, les processus étant nettement accélérés afin de valider le modèle. La deuxième version quant à elle parvient à valider nos deux hypothèses, avec toutefois quelques points à améliorer. La littérature biologique va nous guider pour la suite de ces travaux, dans les nouvelles versions du modèle de la colonie.
+
+\paragraph{}
+
+%Ch6
+Changement de domaine, le système multi-agents et son simulateur désormais validés, nous nous attaquons aux questions de visualisations et d'interactions avec de tels systèmes dans la littérature. Rapidement, nos recherche s'élargissent dans le domaine de la visualisation et de l'interaction avec des systèmes complexes, qui présentent de nombreux défis. En effet, les différences d'échelles, de niveaux, de granularité temporelle et spatiale rendent ces systèmes difficiles à représenter, et à expliquer. Nous effectuons ensuite un tour d'horizon concernant les visualisation et interactions en environnement immersifs, plongeant l'utilisateur au centre de la simulation. Nous nous intéressons particulièrement aux interactions tangibles, n'ayant plus à prouver leurs intérêts didactiques.
+
+%Ch7
+Cet état de l'art terminé, nous décrivons nos différentes propositions en matière de visualisation et d'interaction. Un modèle 3D de la ruche et de ses cadres permettent à l'utilisateur d'avoir une vision "réaliste" de la colonie. Un interacteur tangible, sous la forme d'un cadre réel (mais vide), permet à l'utilisateur d'intéragir naturellement avec les cadres de la simulation, les déplaçant directement avec le cadre physique. Ensuite, une nuage de points répartis sur trois axes, le "Graph3D", permet de rendre compte de manière plus abstraite de l'état interne de la colonie. Présentant la corrélation entre l'âge réel, l'âge physiologique et les échanges de phéromones de chaque agents, il permet d'observer directement l'état interne de la colonie.
+
+%Ch8
+Une fois décrits, ces propositions ont été évaluées lors d'une expérimentation réalisée avec quinze apiculteurs du \textit{GDSA29}. Pour des raisons matérielles, sanitaires et des contraintes de temps, l'interacteur tangible ne faisait pas partie de cette expérimentation. Nous avons pu confronter le Graph3D et l'environnement immersif à la réalité des apiculteurs, et avons obtenus de précieux retours. Ils ont en effet confirmés l'intérêt pédagogique d'une interaction avec une simulation de colonie d'abeilles en environnement immersif. Le Graph3D quant à lui n'a pas rempli son rôle. En effet, nous l'avons créer dans le but d'obtenir une visualisation des mécanismes régissant la répartition des tâches au sein de la colonie, mais aussi pour qu'il \textit{enseigne} ces mécanismes. Or, montrer et enseigner sont des actions bien différentes.
 	
-\section*{Conclusion}
+	 La pluridisciplinarité de nos travaux nous a permis de travailler beaucoup d'aspects différents de nos propositions, mais la contrainte de temps nous a ainsi empêché de tous les développer comme nous le souhaitions. C'est donc naturellement que de nombreuses perspectives s'offrent à nous, dans de nombreux domaines.
+	
+\section*{Perspectives}
+	Nous proposons ici de présenter les différentes perspectives énoncée le long de ce document en trois catégories, des plus court-termes au plus long-termes.
+	
+	\subsection{Perspectives Court-Termes}	
+	Nous avons présenté dans les perspectives du \textit{Chapitre \ref{ChapitreEvalSMA}} une nouvelle version du modèle de prise de décision pour nos agents réactifs à base de seuils et de motivations internes. L'implémentation de cet algorithme pourra être appliqué à des problèmes classiques du domaines. Sa relative simplicité et son intégration plus douce dans les modèles à seuils plus classiques promettent des résultats intéressants. Son intégration au modèle multi-agents de la colonie pourrait quand à elle nécessiter plus de temps, sans qu'il soit simple de dire combien.
+	
+	Une nouvelle version du Graph3D, en tant qu'outil de visualisation et non plus de vulgarisation, présentée dans le chapitre précédent, pourrait aussi être réalisée dans un temps relativement court. L'ajout du "couloir" représentant les trajectoires classiques des agents respectant le polyéthisme d'âge dans la visualisation aiderai à détecter les instances où l'auto-organisation provoque de profonds changement dans la démographie de la colonie.
+	\subsection{Perspectives Moyen-Termes}	
+	Difficile de dire si cette perspective tient du moyen ou du long terme, mais le développement d'un outil pédagogique à base du Graph3D, visant à vulgariser, mettre en valeur et expliquer les différents mécanismes à l'œuvre dans l'auto-organisation de la colonie serait tout à fait intéressant. Tenant plus du scénario didactique, cette application, immersive ou non, pourrait aussi utiliser les interactions tangibles que nous avons explorer pour améliorer l'expérience pédagogique.
+	\subsection{Perspectives Long-Termes}
+	Le modèle multi-agents de la colonie présente à l'heure actuelle de nombreuses simplifications. Comme énoncé dans le \textit{Chapitre \ref{ChapitreEvalSMA}}, la nourriture y est au plus simple. Intégrer une simulation plus poussées des flux de nourriture serait un immense atout pour la simulation et les possibilités alors offertes. Cependant, ce simple ajout a des répercussions sur l'ensemble du système et nécessite alors un travail beaucoup plus poussé. Il sera lors nécessaire d'ajouter dans la simulation le rôle des "receveuses", clés dans l'auto-organisation de la colonie. Le butinage ainsi que les quantités de nourritures rapportées, consommées et entreposées devront être tirées de la biologie. Le comportement des butineuses, des receveuses et des nourrices devront alors être revu afin d'intégrer ces changements. Il sera sûrement nécessaire d'introduire une nouvelle phéromone émise par le couvain, l'Ocimène, guidant les nourrices vers les larves ayant besoin de nourriture (elle se déplace pour l'instant aléatoirement). Le butinage plus poussé nous offrira l'opportunité d'intégrer un module pour l'environnement extérieur, nous permettant alors de simuler différentes floraisons et conditions climatiques, impactant la collecte de ressource de la colonie. De plus, une fois cette chaine de la nourriture mise en place, nous pourrions alors simuler des attaques du parasite "Nosema". Il sera aussi possible de simuler des attaques de l'acarien "Varroa", et son impact sur la colonie. Si les flux de nourritures n'ont pas l'air nécessaire à son intégration, ce parasite affaibli les butineuses, et c'est en ça que ce flux doit être présent pour obtenir des résutlats intéressants.
+	
+	Tout est lié, cette simple propriété de système complexe rend difficile l'ajout de "petites" modifications. Toutes ces "petites" modifications nécessitent la plupart du temps de nombreuses autre "petits" ajouts, rendant la mise à jour conséquente.
 	
