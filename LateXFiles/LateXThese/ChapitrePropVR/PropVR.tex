@@ -13,20 +13,20 @@
 	
 	Pour permettre à un utilisateur d'effectuer une division, voici la liste des actions qu'il doit pouvoir effectuer (construite en collaboration avec un apiculteur du \textit{GDSA29}), et dont l'implémentation est décrite dans la section suivante :
 		\begin{itemize}
-			\item Attraper un cadre.
-			\item Frapper le cadre manipulé : cette action permet d'en faire tomber les abeilles, afin de pouvoir observer le contenu du cadre. Cette action est presque systématique pour l'apiculteur.
-			\item Lâcher le cadre manipulé : soit dans la ruche sur un emplacement de cadre vide, soit à l'extérieur, permettant ainsi de laisser un emplacement vide. Un cadre peut aussi être lâché dans une deuxième ruche, permettant de simuler la division.
-			\item Valider la division : cette action importante isole l'une des deux ruches (au choix de l'utilisateur). Les cadres et abeilles alors présents dans l'autre ruche sont retirés de la simulation.
-			\item Accélérer le temps : l'utilisateur demande au simulateur de ne plus respecter le temps réel pendant une période donnée. Le simulateur alors débridé calcule plus rapidement. Cette période d'accélération terminée, le simulateur repasse en mode temps réel.
-			\item Redémarrer la simulation.
-			\item Arrêter la simulation, fermer l'application.		
+			\item attraper un cadre;
+			\item frapper le cadre manipulé : cette action permet d'en faire tomber les abeilles, afin de pouvoir observer le contenu du cadre ( cette action est presque systématique pour l'apiculteur);
+			\item lâcher le cadre manipulé : soit dans la ruche sur un emplacement de cadre vide, soit à l'extérieur, permettant ainsi de laisser un emplacement vide (un cadre peut aussi être lâché dans une deuxième ruche, permettant de simuler la division);
+			\item valider la division : cette action importante isole l'une des deux ruches (au choix de l'utilisateur). Les cadres et abeilles alors présents dans l'autre ruche sont retirés de la simulation;
+			\item accélérer le temps : l'utilisateur demande au simulateur de ne plus respecter le temps réel pendant une période donnée ( Le simulateur alors débridé calcule plus rapidement pour cette période, puis repasse en mode temps réel);
+			\item redémarrer la simulation;
+			\item arrêter la simulation, fermer l'application.
 		\end{itemize}	
 		
 		D'autre part, l'utilisateur doit pouvoir visualiser certaines informations au sujet de la colonie en général ou de chaque individu. Nous remontons pour l'instant les informations suivantes à l'utilisateur, en vue d'une visualisation adaptée :
 		\begin{itemize}
-			\item Position dans la ruche de chaque agent (incluant les agents hors de la ruche, en butinage).
-			\item Le contenu des différents cadres.
-			\item L'état de chaque agent : sa tâche en cours, son âge réel, son âge physiologique ainsi que la quantité de phéromones qu'il a échangées.
+			\item la position dans la ruche de chaque agent (incluant les agents hors de la ruche, en butinage);
+			\item ee contenu des différents cadres;
+			\item l'état de chaque agent : sa tâche en cours, son âge réel, son âge physiologique ainsi que la quantité de phéromones qu'il a échangées.
 		\end{itemize}		
 
 	\section{Architecture Logicielle}
@@ -81,8 +81,8 @@
 	Le serveur utilise le protocole TCP pour communiquer des accusés de réception au client. Dans deux cas la réponse TCP du serveur est un peu plus complexe. Le premier cas, lors du démarrage ou du redémarrage d'une simulation, le serveur envoie via TCP les identifiants ordonnés des cadres présents, permettant au client d'en connaitre le nombre et leurs positions les uns par rapport aux autres. Le second concerne la mort des agents. C'est en effet une information importante, nous ne voulons pas que le client la rate, car elle ne sera pas renvoyée. Ainsi, les identifiants des agents morts sont communiqués au client via TCP, sur une demande du client. 
 	Le Tableau \ref{tabServClient} récapitule les principales communications du serveur vers le client, en omettant les accusés de réceptions simples.
 	
-	Le tableau nous informe aussi de la fréquence des envois UDP, sur sa colonne "Fréq". En effet, afin de ne pas surcharger le client et le réseau, ces informations ne sont pas envoyées systématiquement. Le serveur fonctionne de manière autonome par rapport à la simulation, et possède ses propres pas de temps définis. Ce découplage permet de ne pas envoyer de données à chaque pas de temps du simulateur, ce qui pourrait poser problème lorsque ce dernier est débridé. Le volume de données transitant par le réseau est alors relativement constant, peu importe si la simulation est en avance rapide ou non. En effet, lors d'une avance rapide, le serveur cesse d'envoyer les positions des agents, les agents en butinage ainsi que le contenu des cadres. Ne sont envoyées que les activités des agents, la commande ayant "\textit{STATES}". En effet, en avance rapide, ces informations concernant chaque abeille changent extrêmement rapidement et ne sont alors pas pertinentes pour l'utilisateur et surchargeraient l'outil de visualisation. Ces envois reprennent normalement à la fin de l'avance rapide.
-	Les fréquences sont données dans le tableau en pas de temps réseau. Par exemple, la commande "CONTENT" n'est envoyée qu'un pas de temps réseau sur 20, lorsque le simulateur est en mode temps réel. 
+	Le tableau nous informe aussi de la fréquence des envois UDP, sur sa colonne "Fréq". En effet, afin de ne pas surcharger le client et le réseau, ces informations ne sont pas envoyées systématiquement. Le serveur fonctionne de manière autonome par rapport à la simulation, et possède ses propres pas de temps définis. Ce découplage permet de ne pas envoyer de données à chaque pas de temps du simulateur, ce qui pourrait poser problème lorsque ce dernier est débridé. Le volume de données transitant par le réseau est alors relativement constant, peu importe si la simulation est en avance rapide ou non. En effet, lors d'une avance rapide, le serveur cesse d'envoyer les positions des agents, les agents en butinage ainsi que le contenu des cadres. Ne sont envoyées que les activités des agents, la commande "\textit{STATES}" (ici et dans la suite de ce document, les commandes/messages sont nommés par leur mot clé). En effet, en avance rapide, ces informations concernant chaque abeille changent extrêmement rapidement et ne sont alors pas pertinentes pour l'utilisateur et surchargeraient l'outil de visualisation. Ces envois reprennent normalement à la fin de l'avance rapide.
+	Les fréquences sont données dans le tableau en pas de temps réseau. Par exemple, la commande "\textit{CONTENT}" n'est envoyée qu'un pas de temps réseau sur 20, lorsque le simulateur est en mode temps réel. 
 	
  	Le serveur est aussi bridé afin de ne pas pouvoir être plus rapide que la simulation. Si le pas de temps du simulateur est plus long que celui du serveur, alors ce dernier passe en attente jusqu'au pas de temps suivant du simulateur. Ceci évite d'envoyer des données inutiles, car strictement équivalentes.
 	
@@ -161,8 +161,8 @@
 		
 		Nous avons donc opté pour une interaction classique que nous retrouvons régulièrement, surtout dans les jeux vidéo. L'utilisateur contrôle un avatar à l'aide de son clavier, qu'il déplace dans l'environnement virtuel. L'avatar ne possède pas de modèle 3D, l'utilisateur voit comme "à la première personne", à travers les yeux virtuels de son avatar. Un viseur se trouve au centre de l'écran, et permet d'interagir avec l'environnement au clic de la souris. Lorsque l'utilisateur effectue un clic gauche, le moteur 3D trace alors une ligne partant de la caméra passant par ce viseur afin de retrouver avec quoi l'utilisateur souhaite interagir. Lorsque rien n'est trouvé, rien ne se passe. Quand un objet permettant l'interaction est détecté, alors l'interaction est lancée. Ici, ce sont les cadres de la ruche avec lesquels nous pouvons interagir.
 		
-		Lorsque l'utilisateur interagit avec un cadre, la requête "\textit{FrUP}" est envoyée au serveur (que nous retrouvons dans la Table \ref{tabClientServ}) et le cadre est détaché de la ruche et placé dans "les mains" de l'utilisateur. Ce cadre va désormais suivre tous ses mouvements. Une touche est associé avec la commande pour "frapper" le cadre, permettant d'en faire tomber les agents. Dans la réalité il est important de réaliser cette action avec le cadre au dessus de la ruche, sinon les abeilles ne sachant par encore voler sont perdues. Nous n'avons pour l'instant pas mis en place ce mécanisme dans le simulateur. Les agents qui chutent sont replacés aléatoirement sur les autres cadres présents dans la ruche.
-		L'utilisateur peut éloigner ou rapprocher le cadre de sa caméra grâce à la molette de sa souris. Il peut aussi le faire pivoter sur ses 3 axes à l'aide de 6 touches de clavier, deux touches par axe, une négative et une positive. Par exemple, "a" permet de faire pivoter le cadre autour de son axe vertical vers la gauche, et "e" sur le même axe mais vers la droite. De cette manière l'utilisateur peut observer avec attention le contenu du cadre.
+		Lorsque l'utilisateur interagit avec un cadre, la requête "\textit{FrUP}" est envoyée au serveur (que nous retrouvons dans la Table \ref{tabClientServ}) et le cadre est détaché de la ruche et placé dans "les mains" de l'utilisateur. Ce cadre va désormais suivre tous ses mouvements. Une touche est associée avec la commande pour "frapper" le cadre, permettant d'en faire tomber les abeilles virtuelles. Dans la réalité il est important de réaliser cette action avec le cadre au dessus de la ruche, sinon les abeilles ne sachant par encore voler sont perdues. Nous n'avons pour l'instant pas mis en place ce mécanisme dans le simulateur. Les agents qui chutent sont replacés aléatoirement sur les autres cadres présents dans la ruche.
+		L'utilisateur peut éloigner ou rapprocher le cadre de sa caméra grâce à la molette de sa souris. Il peut aussi le faire pivoter sur ses 3 axes à l'aide de 6 touches de clavier, deux touches par axe, une négative et une positive. Par exemple, une touche permet de faire pivoter le cadre autour de son axe vertical vers la gauche, et une autre sur le même axe mais vers la droite. De cette manière l'utilisateur peut observer avec attention le contenu du cadre.
 		
 		Pour replacer le cadre dans la ruche, l'utilisateur doit l'approcher de l'emplacement où il souhaite le mettre, puis faire un clic gauche. Une fois assez proche, l'application placera un cadre "fantôme" rouge, permettant à l'utilisateur de savoir qu'en lâchant le cadre, ce dernier ira prendre la place du cadre fantôme. En effet, il est assez compliqué de replacer le cadre correctement une fois l'avoir fait pivoter dans les 3 directions, c'est pourquoi nous avons mis en place cette aide. Il est ainsi possible de replacer un cadre précisément à l'emplacement que l'on souhaite. Lâcher le cadre alors que le cadre fantôme n'est pas apparu le laissera flotter là où il a été lâché. La commande signalant au serveur la pose du cadre ne se fait que lorsque celui-ci est replacé dans la ruche.
 		
@@ -202,7 +202,7 @@
 		
 	\section{Interactions Immersives}
 	\label{immersionSansTangibles}
-		Nous avons ensuite travaillé sur un autre mode d'interactions, prenant place dans un environnement immersif. L'utilisateur utilise alors un casque de réalité virtuelle \textit{Oculus Quest 2} et les manettes associées, afin de visualiser et d'interagir avec l'environnement 3D.
+		Nous avons ensuite travaillé sur un mode d'interactions en environnement immersif. L'utilisateur utilise alors un casque de réalité virtuelle \textit{Oculus Quest 2} et les manettes associées, afin de visualiser et d'interagir avec l'environnement 3D.
 		
 		 L'utilisateur se déplace dans l'application interactive en se déplaçant physiquement. L'interaction avec les cadres se fait via les manettes. L'utilisateur va placer ses mains (et donc ses manettes), de manière à ce que les représentations de ses manettes dans l'environnement se superposent à la partie supérieure du cadre. Il peut alors maintenir appuyé un bouton par manette afin de saisir le cadre, qui suivra désormais les mouvements de ses mains. Replacer un cadre dans la ruche est assez proche de la version Clavier Souris. L'utilisateur doit placer le cadre suffisamment proche de l'emplacement où il souhaite l'insérer, et le lâcher. Le cadre ira alors se placer automatiquement à l'emplacement libre le plus proche. Les autres fonctionnalités d'interactions sont obtenues via différents boutons sur les manettes.
 		
@@ -236,9 +236,9 @@
 		
 		Trois modes ont été implémentés pour cette version :		
 		\begin{enumerate}
-			\item Mode Cadre : le bouton principal permet de réaliser une division. Le bouton secondaire permet de saisir et de lâcher les cadres virtuels à l'aide du cadre physique.
-			\item Mode Temps : le bouton principal divisé en plusieurs cadrans permet d'accélérer la simulation pour différents temps définis.
-			\item Mode Visualisation : le bouton principal ainsi que la position de la manette permettent de manipuler le "Graph3D", nous parlerons de ce mode et du "Graph3D" dans la Section \ref{Manip3D}.
+			\item mode Cadre : le bouton principal permet de réaliser une division. Le bouton secondaire permet de saisir et de lâcher les cadres virtuels à l'aide du cadre physique;
+			\item mode Temps : le bouton principal divisé en plusieurs cadrans permet d'accélérer la simulation pour différents temps définis;
+			\item mode Visualisation : le bouton principal ainsi que la position de la manette permettent de manipuler le "Graph3D", nous parlerons de ce mode et du "Graph3D" dans la Section \ref{Manip3D}.
 		\end{enumerate}
 		
 		La Figure \ref{ManetteVR} illustre la vision de la manette par l'utilisateur dans chacun de ces trois modes. On y observe notamment le bouton principal divisé en quatre cadrans, différenciés par des couleurs tranchées. Un autre bouton de la manette, au dessus du bouton principal, permet de faire défiler les modes les uns à la suite des autres. Un texte flottant au dessus de la manette permet à l'utilisateur de rapidement identifier le mode courant. De plus, des textes et couleurs sont plaqués sur la manette, s'adaptant aux différents modes afin de toujours refléter la fonction du bouton. Le bouton principal ainsi que le bouton de mode sont utilisés avec le pouce, le bouton secondaire est une gâchette généralement actionnée avec l'index.
@@ -272,7 +272,7 @@
 		
 		Une autre possibilité d'amélioration pour cette interaction est de diminuer la taille des cibles infra-rouge. En effet, leur taille nous empêche de traquer plusieurs cadres sans que ceux-ci ne se gênent pour ensuite rentrer dans la ruche. De plus petits capteurs permettraient de traquer l'ensemble des cadres de la ruche, rendant la manipulation encore plus naturelle. Il sera alors nécessaire de détecter lorsque l'utilisateur saisit et lâche un cadre via les mouvements et positions des cadres, puisque des pressions de boutons ne seront plus nécessaires.
 		
-		Quelques prototypes ont été réalisés de ces deux propositions, mais beaucoup de travail reste à faire.
+		Quelques prototypes de ces deux propositions ont été réalisés, mais beaucoup de travail reste à faire.
 		
 		Frapper un cadre se fait par l'appui d'un autre bouton sur la manette. En effet, nos premiers essais de détection de frappe sur le cadre via le \textit{tracking} (changements brusques de vitesses) nous donnaient des comportements trop imprévisibles. En effet, les données sont bruitées et le coup sec que les apiculteurs donnent au cadre pour en faire tomber les abeilles est difficile à isoler. Nous pensons intégrer une centrale inertielle au cadre afin de ne pas détecter le choc via les caméras, mais directement depuis le cadre. Il serait peut être possible d'utiliser les données du \textit{tracking} en y appliquant un traitement adapté.
 		
@@ -282,7 +282,7 @@
 		
 	\section{Un Graphique 3D pour Visualiser et Comprendre l'Auto-Organisation}
 	\label{Manip3D}
-		Dans le but d'offrir une visualisation mettant en valeur les mécanismes de l'auto-organisation au sein de la colonie d'abeilles, nous proposons d'utiliser un graphique en 3 dimensions (sur 3 axes), sobrement surnommé le "\textit{Graph3D}". Comme nous l'avons vu dans la Section \ref{sectionVisuComplexe}, nous cherchons ici à obtenir une visualisation légèrement abstraite du système, afin d'y confronter directement l'utilisateur et de mettre en valeur les mécanismes et effets de l'auto-organisation.
+		Dans le but d'offrir une visualisation mettant en valeur les mécanismes de l'auto-organisation au sein de la colonie d'abeilles, nous proposons d'utiliser un graphique en 3 dimensions (sur 3 axes), sobrement surnommé le "\textit{Graph3D}". Comme nous l'avons vu dans la Section \ref{sectionVisuComplexe}, nous cherchons ici à obtenir une visualisation abstraite du système, afin d'y confronter directement l'utilisateur et de mettre en valeur les mécanismes et effets de l'auto-organisation.
 		
 		\subsection{Fonctionnement du Graph3D}
 		
@@ -315,7 +315,7 @@
 	\subsubsection{Échelles des Axes}
 	L'axe du Graph3D représentant l'âge physiologique représente directement le taux d'HJ des agents, qui est compris dans $[0;1]$ dans la simulation. Il est donc simple de répartir les points sur cet axe.
 	
-	Les deux autres en revanche, ne sont pas bornés. Aucun agent ne va mourir au même âge, à cause de la pénalité causée par le butinage. Plus un agent butine, plus il va mourir jeune. De même pour les échanges de phéromones, chaque agent en possède une valeur unique, une somme pondérée qu'il est difficile de borner. Nous savons toutefois que ces deux valeurs sont forcément positives. Nous avons donc proposé deux modes de représentation, sans avoir à ce jour tranché sur lequel utiliser, d'autres seraient peut-être plus adaptés. Un mode relatif "instant t", où l'agent avec la valeur la plus élevée est placé à l'extrémité de l'axe, et la position des autres en est déduit linéairement. Un mode relatif "absolu" fonctionnant de la même manière que le précédent, mais en prenant en compte l'ensemble de la simulation. Ainsi, un agent à l'extrémité d'un axe possède la valeur sur cet axe la plus élevée de toute la simulation.
+	Les deux autres en revanche, ne sont pas bornés. Aucun agent ne va mourir au même âge, à cause de la pénalité causée par le butinage. Plus un agent butine, plus il va mourir jeune. De même pour les échanges de phéromones, chaque agent en possède une valeur unique, une somme pondérée qu'il est difficile de borner. Nous savons toutefois que ces deux valeurs sont forcément positives. Nous avons donc proposé deux modes de représentation, sans avoir à ce jour décidé lequel utiliser, d'autres seraient peut-être plus adaptés. Un mode relatif "instant t", où l'agent avec la valeur la plus élevée est placé à l'extrémité de l'axe, et la position des autres en est déduit linéairement. Un mode relatif "absolu" fonctionnant de la même manière que le précédent, mais en prenant en compte l'ensemble de la simulation. Ainsi, un agent à l'extrémité d'un axe possède la valeur sur cet axe la plus élevée de toute la simulation.
 	
 	De plus, afin d'améliorer la perception des faibles valeurs de l'axe des échanges de phéromones, les positions sur cet axe sont sur une échelle logarithmique.
 	
@@ -324,11 +324,7 @@
 	
 	\subsection{Manipulation du Graph3D}
 	
-		\subsubsection{Clavier Souris}
-		Dans la version Clavier Souris, le Graph3D est manipulé en utilisant trois positions prédéfinies. Les touches "1", "2" et "3" sont chacune associées à une rotation du Graph3D, qui viendra à l'appui se placer devant l'utilisateur dans la rotation souhaitée. Ensuite l'utilisateur peut naviguer autour du graphique afin de mieux en saisir la profondeur. Toutefois, sur un écran le Graph3D est relativement difficile à lire, du fait de la projection en deux dimensions. Le Graph3D a été pensé pour fonctionner en environnement immersif.
-		
-		\subsubsection{Environnement Immersif et Manette}
-		Équipé d'un casque de réalité virtuelle, l'utilisateur peut manipuler le graphique à l'aide d'une manette. De la même manière que la version Clavier Souris, le Graph3D possède des ancres de rotation, et appuyer sur un des quatre cadrans du bouton principal sélectionne l'une de ses rotations. Lors de la sélection, le Graph3D vient se placer juste au dessus de la manette, dans la rotation souhaitée. L'utilisateur peut aussi appuyer sur le bouton secondaire de la manette afin de "saisir" le graphique. Une fois saisi, le graphique est "fixé" sur la manette, ainsi les mouvements de poignets de l'utilisateur déplaceront le graphique, en position comme en rotation. Cette méthode de manipulation, aidée par le casque de réalité virtuelle, permet de mieux ressentir les trois axes du Graph3D. De plus, cette dernière méthode de manipulation permet une interaction plus naturelle avec l'objet de visualisation, en effet, la manipulation du graphique s'effectue de la même façon que la manipulation d'objets réels, comme nous l'avons vu dans le \textit{Chapitre \ref{ChapitreEAVR}}.
+		Équipé d'un casque de réalité virtuelle, l'utilisateur peut manipuler le graphique à l'aide d'une manette. Le Graph3D possède des ancres de rotation, et appuyer sur un des quatre cadrans du bouton principal (dans le bon mode) sélectionne l'une de ces rotations. Lors de la sélection, le Graph3D vient se placer juste au dessus de la manette, dans la rotation souhaitée. L'utilisateur peut aussi appuyer sur le bouton secondaire de la manette afin de "saisir" le graphique. Une fois saisi, le graphique est "fixé" sur la manette, ainsi les mouvements de poignets de l'utilisateur déplaceront le graphique, en position comme en rotation. Cette méthode de manipulation permet de percevoir correctement les trois axes du Graph3D, du fait de la stéréoscopie offerte par le casque de réalité virtuelle. De plus, cette méthode de manipulation permet une interaction naturelle avec l'objet de visualisation, en effet, la manipulation du graphique s'effectue de la même façon que la manipulation d'objets réels, comme nous l'avons vu dans le \textit{Chapitre \ref{ChapitreEAVR}}.
 		
 	
 	

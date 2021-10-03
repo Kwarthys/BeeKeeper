@@ -33,7 +33,7 @@
 			
 			Nous avons donc deux hypothèses principales :
 			\begin{itemize}
-				\item \textbf{H1, Auto-Organisation} : notre modèle de colonie d'abeilles virtuelle permet l'auto-organisation des agents parmi les tâches de butinage et de soin au couvain.
+				\item \textbf{H1, Auto-Organisation} : notre modèle de colonie d'abeilles virtuelle permet l'auto-organisation des agents parmi les tâches de butinage et de soin au couvain;
 				\item \textbf{H2, Fidélité} : notre modèle est capable d'approcher les dynamiques de populations et de répartition des tâches observées dans les colonies d'abeilles réelles après une division.
 			\end{itemize}
 			
@@ -49,10 +49,10 @@
 			
 			Afin de valider \textbf{H1} dans le cadre du modèle simplifié nous avons mis en place 5 scénarios :
 			\begin{itemize}
-				\item \textbf{Scénario 1.1} : répartition initiale aléatoire des âges avec 150 agents adultes et 150 larves.
-				\item \textbf{Scénario 1.2} : 150 adultes et 150 larves mais tous les agents adultes commencent très jeunes.
-				\item \textbf{Scénario 1.3} : 150 adultes et 150 larves, mais tous les agents adultes commencent âgés.
-				\item \textbf{Scénario 1.4} : répartition initiale aléatoire des âges avec 150 adultes et 50 larves.
+				\item \textbf{Scénario 1.1} : répartition initiale aléatoire des âges avec 150 agents adultes et 150 larves;
+				\item \textbf{Scénario 1.2} : 150 adultes et 150 larves mais tous les agents adultes commencent très jeunes;
+				\item \textbf{Scénario 1.3} : 150 adultes et 150 larves, mais tous les agents adultes commencent âgés;
+				\item \textbf{Scénario 1.4} : répartition initiale aléatoire des âges avec 150 adultes et 50 larves;
 				\item \textbf{Scénario 1.5} : répartition initiale aléatoire des âges avec 150 adultes et 300 larves.
 			\end{itemize}
 			
@@ -60,9 +60,9 @@
 			
 			Afin de valider \textbf{H1} et \textbf{H2} pour le modèle complet nous avons mis en place 4 scénarios :			
 			\begin{itemize}
-					\item \textbf{Scénario 2.1} : répartition initiale avec seulement des abeilles adultes très jeunes.
-					\item \textbf{Scénario 2.2} : répartition initiale avec 50\% d'abeilles adultes jeunes, et 50\% d'abeilles adultes âgées.
-					\item \textbf{Scénario 2.3} : répartition initiale avec 100\% d'abeilles adultes âgées.
+					\item \textbf{Scénario 2.1} : répartition initiale avec seulement des abeilles adultes très jeunes;
+					\item \textbf{Scénario 2.2} : répartition initiale avec 50\% d'abeilles adultes jeunes, et 50\% d'abeilles adultes âgées;
+					\item \textbf{Scénario 2.3} : répartition initiale avec 100\% d'abeilles adultes âgées;
 					\item \textbf{Scénario 2.4} : répartition initiale avec 50\% d'abeilles adultes jeunes, et 50\% d'abeilles adulte âgées. La reine commence à pondre 30 jours après la division, au lieu de 21.
 			\end{itemize}
 			
@@ -103,7 +103,7 @@
 	
 	Les Figures \ref{sc1}, \ref{sc2}, \ref{sc3} et \ref{sc4} présentent graphiquement respectivement les résultats des scénario 2.1, 2.2, 2.3 et 2.4. Sous la forme de différentes courbes de populations au court du temps, ces figures nous renseignent sur la vie de nos colonies virtuelles juste après une division. Quelques indicateurs de temps ont été placés afin d'en faciliter la lecture : T0 indique le début de la simulation, le moment ou la division vient d'être réalisée. Par exemple, T0+11 indique le 11ème jour après la division. Nous y observons les populations de nourrices, de butineuses, mais aussi de couvain ainsi que la population totale des adultes de la colonie, soit la somme des populations de nourrices et de butineuses. Dans ces simulations, des agents naissent et meurent régulièrement, ce qui rend la validation de \textbf{H1} moins triviale : le ratio adultes par larves n'est pas constant. Voici nos résultats :
 		
-		\textbf{Scénario 2.1} (Figure \ref{sc1}) : répartition initiale des physiologies avec uniquement de très jeunes abeilles adultes, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). Par ordre chronologique, nous observons à T0+11 un important changement dans la répartition du travail, où le nombre de nourrices chute drastiquement au profit du nombre de butineuses. La quantité de couvain n'a de cesse de chuter jusqu'à T0+21 où il atteint zéro. La population totale cesse alors de croitre. À T0+22, la reine commence sa ponte, le couvain repart à la hausse, mais le nombre de nourrices continue de chuter. Nous observons ensuite une chute de la population totale : les butineuses commencent à mourir de vieillesse. En effet, la reine vient seulement de recommencer à pondre. La population repart à la hausse à T0+43, lorsque les premières pontes de la reine émergent enfin, venant renforcer le faible contingent de nourrices. Enfin, à T0+58, nous observons à nouveau un transfert de répartition du travail : la population de nourrices qui croit alors très rapidement, va voir nombre de ses agents partir butiner. La population de nourrices se stabilise ensuite jusqu'à la fin de la simulation, 80 jours après la division, alors que le couvain augmente en permanence. À la fin de la simulation, la colonie compte 534 nourrices pour 1410 adultes au total, et 1102 agents du couvain, ce qui fait environ 315 larves\footnote{\label{footCalculLarves} Dans le cas d'un couvain homogène, la larve ne représentant que 6 jours des 21 jours de l'œuf à l'émergence, nous estimons la population de larves à $\frac{6}{21}$ de la population totale du couvain. Les œufs et nymphes ne nous intéressent pas ici, car ils ne requirent pas de soin de la part des nourrices}. Nous obtenons ainsi environ 38\% de nourrices par rapport au nombre total d'adultes, pour un ratio ouvrières par larve d'environ 4,47 et un ratio nourrices par larve de 1,70.
+		\textbf{Scénario 2.1} (Figure \ref{sc1}) : répartition initiale des physiologies avec uniquement de très jeunes abeilles adultes, départ avec 500 adultes et 500 agents de couvain (1/3 d'œufs, 1/3 de larves et 1/3 de nymphes). Par ordre chronologique, nous observons à T0+11 un important changement dans la répartition du travail, où le nombre de nourrices chute drastiquement au profit du nombre de butineuses. La quantité de couvain n'a de cesse de chuter jusqu'à T0+21 où il atteint zéro. La population totale cesse alors de croitre. À T0+22, la reine commence sa ponte, le couvain repart à la hausse, mais le nombre de nourrices continue de chuter. Nous observons ensuite une chute de la population totale : les butineuses commencent à mourir de vieillesse. En effet, la reine vient seulement de recommencer à pondre. La population repart à la hausse à T0+43, lorsque les premières pontes de la reine émergent enfin, venant renforcer le faible contingent de nourrices. Enfin, à T0+58, nous observons à nouveau un transfert de répartition du travail : la population de nourrices qui croit alors très rapidement, va voir nombre de ses agents partir butiner. La population de nourrices se stabilise ensuite jusqu'à la fin de la simulation, 80 jours après la division, alors que le couvain augmente en permanence. À la fin de la simulation, la colonie compte 534 nourrices pour 1410 adultes au total, et 1102 agents du couvain, ce qui fait environ 315 larves\footnote{\label{footCalculLarves} Dans le cas d'un couvain homogène, la larve ne représentant que 6 jours des 21 jours de l'œuf à l'émergence, nous estimons la population de larves à $\frac{6}{21}$ de la population totale du couvain. Les œufs et nymphes ne nous intéressent pas ici, car ils ne requirent pas de soin de la part des nourrices.}. Nous obtenons ainsi environ 38\% de nourrices par rapport au nombre total d'adultes, pour un ratio ouvrières par larve d'environ 4,47 et un ratio nourrices par larve de 1,70.
 	
 	\begin{figure}
 	\centering
@@ -177,7 +177,7 @@
 		\begin{table}
 		\centering
 		\begin{tabularx}{\textwidth}{l|p{2cm}|p{1.5cm}|X|X|X}
-    	& Population \newline Initiale & Délai Ponte & Ratio Nourrices Adultes & Ratio Ouvrières Larves & Ratio Nourrices Larves\\
+    	& Population \newline Initiale & Délai Ponte & Proportion Nourrices Adultes & Ratio Ouvrières Larve & Ratio Nourrices Larve \\
    		\hline
    		2.1 & jeune & 20 jours & 38\% & 4,47 & 1,70 \\
    		2.2 & uniforme & 20 jours & 40\% & 4,65 & 1,86 \\
@@ -209,7 +209,7 @@
 		 
 		 Lors d'essais préliminaires sur de très grand nombre d'agents, nous observions dans nos simulations un "embouteillage" d'abeilles, où les agents se bloquent entre eux et leur navigation devient impossible. Il est peut être possible de régler ce soucis en gérant différemment les déplacements, mais il sera peut être nécessaire de changer d'approche quant à la spatialisation des agents dans la ruche et sur les cadres.
 		 
-		 De plus, il est intéressant de retrouver, pour nos deux scénarios ne causant pas la perte de la colonie, le ratio "nourrices par larves" à 1,70 et 1,86, car la littérature nous donne une valeur d'environ 2.
+		 De plus, nos deux scénarios ne causant pas la perte de la colonie ont un ratio "nourrices par larve" à 1,70 et 1,86. La littérature biologique nous indique qu'une nourrice prend en charge l'équivalent de deux larves. Est-ce que cela signifie que que nous devons retrouver une ratio "nourrices par larve" de 0,5 ? Les nourrices "en trop" que nous obtenons sont sûrement des abeilles virtuelles "en transition" pour devenir des butineuses, ils rentrent alors dans la catégorie des "abeilles d'âge moyen" vues dans le \textit{Chapitre \ref{ChapitreEASMA}}, notamment les receveuses.
 	
 	
 	\section{Perspectives d'Améliorations}
