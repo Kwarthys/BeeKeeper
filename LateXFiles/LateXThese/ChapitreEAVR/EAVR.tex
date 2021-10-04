@@ -24,7 +24,7 @@
 		Nous pouvons aussi mettre en place un visualisation totalement séparée de la simulation, dans un soucis de performances et de modularités. Cette séparation offre de pouvoir exécuter le modèle sans les contraintes de la visualisation, lorsqu'elle n'est pas nécessaire. Ainsi Louloudi et al. \cite{louloudi_new_2012} proposent un composant logiciel "relai" entre la simulation multi-agents et la visualisation agissant comme un convertisseur universel.
 		Or, les types mêmes de données à transmettre ainsi que les granularités de temps et d'espaces peuvent varier fortement au sein même d'un modèle multi-agents, mais aussi d'un modèle multi-agents à un autre, ce qui, couplé à un besoin de transmettre en retour des informations depuis l'application de visualisation vers le simulateur, rendent cette notion de relai \textit{universel} bien difficile à mettre en place.
 		
-		Nous voici désormais au cœur de la problématique, nous nous posons la question, "Quoi visualiser ?". Un système multi-agents est certes composé d'une multitude d'agents, mais ces agents, à l'aide d'interactions constantes et multiples, génèrent un comportement complexe de plus haut niveau. Cette complexité, nous la retrouvons plus généralement dans les systèmes complexes, qui présentent aussi ces problématiques de visualisation.
+		Nous voici désormais au cœur de la problématique, nous nous posons la question, "Quoi visualiser ?". Un système multi-agents est certes composé d'une multitude d'agents, mais ces agents, à l'aide d'interactions constantes et multiples, génèrent un comportement complexe de plus haut niveau. Nous retrouvons plus généralement ces problématiques dans les systèmes complexes, qui présentent ces mêmes défis de visualisation.
 		
 		\subsubsection{Visualisation de Systèmes Complexes}
 		\label{sectionVisuComplexe}
@@ -107,7 +107,7 @@
 	
 	\subsection{Visualisation en Environnements Immersifs}
 	
-	Les trois dimensions offertes par les environnements immersifs font de la position dans l'espace la manière principale d'afficher des données. Placées par rapport à un autre objet, comme des unités représentées sur une carte \cite{durbin_battlefield_1998} ou des pathologies sur un corps \cite{coffey_interactive_2011}, les données permettent une lecture rapide et efficace. Ces données sont alors représentées elles-mêmes par un modèle 3D, qui peut lui aussi ajouter un niveau d'information sur leur nature. Certains auteurs utilisent même du son pour représenter l'intensité d'un paramètre, comme par exemple la métaphore d'un compteur Geiger \cite{frohlich_exploring_1999}.
+	Les trois dimensions offertes par les environnements immersifs font de la position dans l'espace la manière principale d'afficher des données. Placées par rapport à un autre objet, comme des unités représentées sur une carte \cite{durbin_battlefield_1998} ou des pathologies sur un corps \cite{coffey_interactive_2011}, les données permettent une lecture rapide et efficace. Ces données sont alors représentées elles-mêmes par un modèle 3D, qui peut lui aussi ajouter un niveau d'information sur leur nature. Certains auteurs utilisent du son pour représenter l'intensité d'un paramètre, comme par exemple Fröhlich et al. \cite{frohlich_exploring_1999} qui utilisent la métaphore d'un compteur Geiger, adaptant la fréquence d'émission d'un "clic" en fonction de l'intensité du paramètre.
 	
 	
 		
@@ -143,7 +143,7 @@
 	Ces méthodes permettent aussi de représenter le "clic" traditionnel des interfaces classiques sur des boutons d'interface 2D, utilisables alors sur des interfaces 2D "flottantes" dans l'environnement virtuel.
 	
 	\subsubsection{Contrôle du Système dans un Environnement Virtuel}
-	Ces contrôles permettent à l'utilisateur de modifier le fonctionnement de la simulation, ou de ses interactions, en sélectionnant le plus souvent des comportements prédéfinis. Ces interactions sont mises en place de manière similaire à la mise en place des précédentes lorsque sont utilisés des menus tirés des interfaces 2D. Mais des commandes vocales, des commandes gestuelles ou l'utilisation d'outils réels dont la position a un sens permettent aussi de piloter ce genre d'interactions.
+	Ces contrôles permettent à l'utilisateur de modifier le fonctionnement de la simulation, ou de ses interactions, en sélectionnant le plus souvent des comportements prédéfinis. Ces interactions peuvent se réaliser à l'aide d'interfaces 2D flottantes, de commandes vocales, de commandes gestuelles ou encore avec l'utilisation d'objets réels traqués (dont la position est connue de l'application) dont différentes positions prédéfinies ont un sens, permettent aussi de piloter ce genre d'interactions.
 	
 	
 	\subsubsection{Interacteurs Tangibles}
