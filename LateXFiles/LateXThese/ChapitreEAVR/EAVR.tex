@@ -11,8 +11,13 @@
 		
 		\subsection{Visualisation de Simulations Multi-Agents}
 		
+		Une visualisation totalement séparée de la simulation peut être mise en place dans un souci de performances et de modularité. Cette séparation offre de pouvoir exécuter le modèle sans les contraintes de la visualisation, lorsqu'elle n'est pas nécessaire. Ainsi Louloudi et al. \cite{louloudi_new_2012} proposent un composant logiciel "relai" entre la simulation multi-agents et la visualisation agissant comme un convertisseur universel.
+		Or, les types mêmes de données à transmettre ainsi que les granularités de temps et d'espaces peuvent varier fortement au sein même d'un modèle multi-agents, mais aussi d'un modèle multi-agents à un autre, ce qui, couplé à un besoin de transmettre en retour des informations depuis l'application de visualisation vers le simulateur, rendent cette notion de relai \textit{universel} bien difficile à mettre en place.
+		
+		\paragraph{}
+		
 		Les simulations multi-agents proposent le plus souvent deux types de visualisations : une visualisation "macro", orientée population, et une visualisation "micro", orientée individu. Par exemple, la plateforme \textit{GAMA} \cite{taillandier_building_2019} permet au concepteur du modèle multi-agents de créer différents types de visualisations. La Figure \ref{GAMA} illustre cette propriété, tirée des travaux réalisés pour développer GAMA \cite{taillandier_building_2019}. Elle montre à droite quatre visualisations "micro" de quatre simulations de fourmis, et à gauche une visualisation "macro" sous la forme d'un graphique montrant les quantités de nourritures ramassées par chacune des simulations, donc ici par chacune des colonies de fourmis.
-		Les visualisations orientées population permettent en général d'observer les phénomènes émergents et/ou l'auto-organisation, là où les représentations micro, représentant souvent les agents eux-mêmes ainsi que leur environnement, permettent d'observer la cohérence des comportements individuels par rapport aux attentes du concepteur. Cependant, si les visualisations "macro" permettent d'observer le résultat de l'auto-organisation ou de phénomènes émergents, elles permettent difficilement d'observer les mécanismes de mise en place et de maintient de ces phénomènes.
+		Les visualisations orientées population permettent en général d'observer les phénomènes émergents et/ou l'auto-organisation, là où les représentations micro, représentant souvent les agents eux-mêmes ainsi que leur environnement, permettent d'observer la cohérence des comportements individuels par rapport aux attentes du concepteur (selon les propriétés observées, une vision du dessus représentant un grand nombre d'agents et leur environnement peut déjà être considéré comme une vision macro, étant capable par exemple de montrer les autoroutes de fourmis). Cependant, si les visualisations "macro" permettent d'observer le résultat de l'auto-organisation ou de phénomènes émergents, elles permettent difficilement d'observer les mécanismes de mise en place et de maintient de ces phénomènes.
 		
 		\begin{figure}
 			\centering
@@ -21,15 +26,12 @@
 			\label{GAMA}
 		\end{figure}
 		
-		Nous pouvons aussi mettre en place une visualisation totalement séparée de la simulation, dans un souci de performances et de modularités. Cette séparation offre de pouvoir exécuter le modèle sans les contraintes de la visualisation, lorsqu'elle n'est pas nécessaire. Ainsi Louloudi et al. \cite{louloudi_new_2012} proposent un composant logiciel "relai" entre la simulation multi-agents et la visualisation agissant comme un convertisseur universel.
-		Or, les types mêmes de données à transmettre ainsi que les granularités de temps et d'espaces peuvent varier fortement au sein même d'un modèle multi-agents, mais aussi d'un modèle multi-agents à un autre, ce qui, couplé à un besoin de transmettre en retour des informations depuis l'application de visualisation vers le simulateur, rendent cette notion de relai \textit{universel} bien difficile à mettre en place.
-		
 		Nous voici désormais au cœur de la problématique, nous nous posons la question, "Quoi visualiser ?". Un système multi-agents est certes composé d'une multitude d'agents, mais ces agents, à l'aide d'interactions constantes et multiples, génèrent un comportement complexe de plus haut niveau. Nous retrouvons plus généralement ces problématiques dans les systèmes complexes, qui présentent ces mêmes défis de visualisation.
 		
 		\subsubsection{Visualisation de Systèmes Complexes}
 		\label{sectionVisuComplexe}
 		
-		Pour illustrer les problématiques de visualisations apportées par les systèmes complexes, Joël de Rosnay parle de "Macroscope" \cite{de_rosnay_macroscope_1975} : nous disposons de télescopes pour observer l'infiniment loin, de microscopes pour ce qui est infiniment petit, il propose donc la notion de macroscope pour ce qui est infiniment complexe. Cet outil de visualisation ne pourrait pas, contrairement aux autres outils cités, se contenter de zoomer sur une image déjà existante, mais devrait construire une image, ou plusieurs, afin de rendre compte des différents mécanismes complexes régissant l'ensemble du système, à plusieurs échelles de taille et de temps.
+		Pour illustrer les problématiques de visualisation apportées par les systèmes complexes, Joël de Rosnay parle de "Macroscope" \cite{de_rosnay_macroscope_1975} : nous disposons de télescopes pour observer l'infiniment loin, de microscopes pour ce qui est infiniment petit, il propose donc la notion de macroscope pour observer ce qui est infiniment complexe. Cet outil de visualisation ne pourrait pas, contrairement aux autres outils cités, se contenter de zoomer sur une image déjà existante, mais devrait construire une image, ou plusieurs, afin de rendre compte des différents mécanismes complexes régissant l'ensemble du système, à plusieurs échelles de taille et de temps.
 		
 		Ainsi Hutzler dans ses travaux de thèse \cite{hutzler_du_2000} décompose ce processus de macroscope en trois étapes, qu'il décrit :
 		
@@ -157,7 +159,7 @@
 			\begin{figure}
 			\centering
 			\includegraphics[width=.8\textwidth]{Pictures/Figures/KnobSlider.JPG}
-			\caption{Tiré des travaux de Kim et al. \cite{kim_knobslider_2019}. Le "KnobSlider", un interacteur tangible capable de changer de forme afin de servir soit de bouton rotatif (C), soit de slider (A).}
+			\caption[Le "KnobSlider" tiré des travaux de Kim et al. \cite{kim_knobslider_2019}]{Tiré des travaux de Kim et al. \cite{kim_knobslider_2019}. Le "KnobSlider", un interacteur tangible capable de changer de forme afin de servir soit de bouton rotatif (C), soit de slider (A).}
 			\label{KnobSlider}
 		\end{figure}
 			
@@ -170,12 +172,12 @@
 				
 	\section*{Synthèse}
 	
-		Nous avons vu dans ce chapitre que représenter un système multi-agents et interagir avec n'est pas trivial. Souvent visualisés à deux échelles différentes, une échelle micro concernant chaque individu (leur énergie, leur faim, leur action en cours etc.), et une échelle macro concernant le système lui-même (la population, la démographie, les objectifs, etc.), les simulations à base d'agents nécessitent parfois des niveaux intermédiaires. Il est aussi possible d'utiliser des abstractions, et/ou des métaphores, afin d'augmenter la qualité de l'information transmise à l'observateur. Le macroscope est un outil lui-même complexe, et dépend de ce qu'en attend l'utilisateur. Il sera en effet différent pour un "concepteur", un "spectateur" ou encore un "opérateur".
+		Nous avons vu dans ce chapitre que représenter un système multi-agents et interagir avec n'est pas trivial. Souvent visualisés à deux échelles différentes, une échelle micro concernant l'état de chaque individu, et une échelle macro concernant le système lui-même (la population, la démographie, les objectifs, etc.), les simulations à base d'agents nécessitent parfois des niveaux intermédiaires. Il est aussi possible d'utiliser des abstractions, et/ou des métaphores, afin d'augmenter la qualité de l'information transmise à l'observateur. Le macroscope est un outil lui-même complexe, et dépend de ce qu'en attend l'utilisateur. Il sera en effet différent pour un "concepteur", un "spectateur" ou encore un "opérateur".
 		
 		Ensuite, différents niveaux d'interactions sont possibles avec les agents, du très haut niveau en contrôlant leurs paramètres ou la vitesse de la simulation, jusqu'à un très bas niveau où, par exemple, l'utilisateur prend le contrôle d'un agent ou en modifie quelques propriétés.
 		
 		L'environnement immersif nous offre une troisième dimension, étoffant les possibilités de visualisation et de manipulation. L'utilisateur doit alors pouvoir naviguer dans l'environnement, sélectionner et manipuler différentes entités et pouvoir contrôler l'application en elle-même. Les interfaces tangibles proposent des interactions naturelles, afin de faciliter l'apprentissage et/ou la prise en main de situations virtuelles complexes.
 		
 		Nous présentons dans le chapitre suivant nos différentes propositions concernant les moyens d'interactions et de visualisations avec notre système multi-agents d'une colonie d'abeilles. Forts ce de que nous venons de voir, nous proposons dans une première version l'utilisation d'un interacteur tangible couplé à l'utilisation d'une manette du casque de réalité virtuelle, afin de confronter directement l'utilisateur à la colonie, de manière immersive.	
-		L'utilisateur peut alors manipuler la colonie virtuelle via l'interacteur tangible, et en observer la représentation "\textit{concrète}" : la ruche et ses cadres, sur lesquels apparaissent nos abeilles virtuelles.
-		Il pourra aussi observer la colonie via un nuage de points en trois dimensions, représentation "\textit{abstraite}" de l'état interne de la colonie et ainsi des mécanismes de l'auto-organisation dont fait preuve la colonie.
+		L'utilisateur peut alors manipuler la colonie virtuelle via l'interacteur tangible (il interagit alors avec le système multi-agent par "\textbf{modification de son environnement}"), et en observer la représentation "\textit{concrète}" : la ruche et ses cadres, sur lesquels apparaissent nos abeilles virtuelles.
+		Il pourra aussi observer la colonie via un nuage de points en trois dimensions, représentation "\textit{abstraite}" de l'état interne de tous les agents, et ainsi des mécanismes permettant l'auto-organisation dont la colonie entière fait preuve.
