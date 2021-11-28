@@ -5,7 +5,7 @@
 		
 		Nous nous sommes ainsi intéressés en particulier au cas de la division. La division est un geste apicole séparant une colonie, dont la population est trop importante, en deux colonies. Une colonie trop populeuse laissée en autonomie va "essaimer" : les ouvrières vont élever une nouvelle reine, puis une bonne partie va la suivre lors de son envol pour former une nouvelle colonie, ailleurs. La division permet à l'apiculteur de prévenir un éventuel essaimage et de garder le contrôle sur les deux nouvelles colonies, au lieu d'en perdre une dans la nature. Pour réaliser une division, les apiculteurs collectent différents cadres et les abeilles présentes dessus, et essayent de diviser au mieux la colonie en deux. Une nouvelle ruche est alors remplie de quelques cadres, en essayant d'y intégrer des abeilles de tous âges, du couvain de tout âge ainsi que différentes ressources. Les proportions doivent être à peu près les mêmes pour la colonie source et la nouvelle colonie, afin de ne pas en condamner une. Les espaces vides laissés par les cadres déplacés de chaque ruche sont comblés par de nouveaux cadres, vides.
 		
-		Dans les quelques jours suivant la division, les ouvrières vont adapter leur physiologie pour compenser un potentiel déséquilibre dans la répartition des tâches. Les nourrices commencent à élever une nouvelle reine, à partir d'une très jeune larve. Tant que la nouvelle reine ne commencera pas à pondre, la colonie est en danger. Le couvain apporté par la division grandit et émerge peu à peu. Une vingtaine de jours après la division, la reine commence à pondre alors qu'il ne reste quasiment plus de couvain datant d'avant la division. Une fois la ponte démarée, la colonie reprend une vie normale, sans que la division ne laisse de trace sur son organisation.
+		Dans les quelques jours suivant la division, les ouvrières vont adapter leur physiologie pour compenser un potentiel déséquilibre dans la répartition des tâches. Les nourrices commencent à élever une nouvelle reine, à partir d'une très jeune larve. Tant que la nouvelle reine ne commencera pas à pondre, la colonie est en danger. Le couvain apporté par la division grandit et émerge peu à peu. Une vingtaine de jours après la division, la reine commence à pondre alors qu'il ne reste quasiment plus de couvain datant d'avant la division. Une fois la ponte démarrée, la colonie reprend une vie normale, sans que la division ne laisse de trace sur son organisation.
 		
 		
 
@@ -25,7 +25,7 @@
 		D'autre part, l'utilisateur doit pouvoir visualiser certaines informations au sujet de la colonie en général ou de chaque individu. Nous remontons pour l'instant les informations suivantes à l'utilisateur, en vue d'une visualisation adaptée :
 		\begin{itemize}
 			\item la position dans la ruche de chaque agent (incluant les agents hors de la ruche, en butinage);
-			\item ee contenu des différents cadres;
+			\item le contenu des différents cadres;
 			\item l'état de chaque agent : sa tâche en cours, son âge réel, son âge physiologique ainsi que la quantité de phéromones qu'il a échangées.
 		\end{itemize}		
 
@@ -110,7 +110,7 @@
 		\hline
 		REBASE & target, {combIds} & Demande au serveur de prendre en compte la division réalisée par l'utilisateur, en gardant la colonie source ou destination selon "target", ainsi que la liste des identifiants des cadres "combId" à conserver.\\
 		\hline
-		Deaths & - & Demande au serveur la liste des agents morts depuis la dernière requète "Deaths".\\
+		Deaths & - & Demande au serveur la liste des agents morts depuis la dernière requête "Deaths".\\
 		\hline
 		\end{tabularx}
 	\caption{Tableau récapitulant les messages TCP du client vers le serveur, et leurs effets.}
@@ -185,7 +185,7 @@
 		 \hline
 		 FrUp & Clic gauche en visant un cadre lorsqu'aucun cadre n'est déjà manipulé. & Pression du bouton secondaire de la manette dans le mode "cadre" lorsque le cadre physique se superpose à un cadre virtuel et ne "contient" pas déjà un cadre virtuel.\\
 		 \hline
-		 FrDOWN & Clic gauche lorsqu'un cadre est manipulé, et qu'il est suffisament proche d'un emplacement libre de la ruche. & Pression du bouton secondaire de la manette dans le mode "Cadre" lorsque le cadre physique "contient" un cadre virtuel et qu'il se superpose à un emplacement libre de la ruche.\\
+		 FrDOWN & Clic gauche lorsqu'un cadre est manipulé, et qu'il est suffisamment proche d'un emplacement libre de la ruche. & Pression du bouton secondaire de la manette dans le mode "Cadre" lorsque le cadre physique "contient" un cadre virtuel et qu'il se superpose à un emplacement libre de la ruche.\\
 		 \hline
 		 FrHit & Pression de la touche "F" lorsqu'un cadre est manipulé. & Non-Implémenté.\\
 		 \hline
